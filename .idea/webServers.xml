@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="621b7706-28ca-458c-9da6-92fb0541c439" name="kiaboo" url="http://ftp.cluster028.hosting.ovh.net">
+        <fileTransfer host="ftp.cluster028.hosting.ovh.net" port="21">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

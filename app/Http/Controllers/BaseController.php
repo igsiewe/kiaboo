@@ -1,0 +1,118 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Exception;
+use Illuminate\Http\Request;
+
+class BaseController extends Controller
+{
+       /**
+     * success response method.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function sendResponse($data, $message)
+    {
+        $response = [
+            'status' => 200,
+            'message' => $message,
+            'data' => $data,
+        ];
+
+        return response()->json($response);
+    }
+
+    /**
+     * success response method.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function errorResponse($message, $statusCode)
+    {
+        $response = [
+           // 'success' => false,
+            'status' => $statusCode,
+            'message' => $message,
+         //   "data" => $data,
+        ];
+
+        return response()->json($response,$statusCode);
+    }
+
+    public function notFound($message = null)
+    {
+        return response()->json([
+            'message' => $message ?? 'not found',
+        ], 404);
+    }
+
+    public function badRequest($message = null)
+    {
+        return response()->json([
+            'message' => $message ?? 'invalid request',
+        ], 400);
+    }
+
+    public function error($message = null, Exception $ex = null)
+    {
+        return response()->json([
+            'message' => $message ?? 'an error occurred',
+            'exception' => $ex,
+        ], 500);
+    }
+
+    public function created($data = null, $msg = null)
+    {
+        $response = [
+            'success' => true,
+            'message' => $msg,
+            'data' => $data,
+        ];
+
+        return response()->json($response, 201);
+    }
+
+    public function created_Message($message = null)
+    {
+        return response()->json([
+            'message' => $message ?? 'successful created',
+        ], 201);
+    }
+
+    public function updated($msg = null)
+    {
+        $response = [
+            'success' => true,
+            'message' => $msg,
+        ];
+
+        return response()->json($response, 200);
+    }
+
+    public function ok($message = null)
+    {
+        return response()->json([
+            'message' => $message ?? 'successful',
+        ], 200);
+    }
+
+    public function delete($message = null)
+    {
+        return response()->json([
+            'message' => $message ?? 'successful',
+        ], 200);
+    }
+
+    public function respondWithToken($token, $user = null, $partenaires = null, $transactions = null)
+    {
+        return response()->json([
+            'token_type' => 'bearer',
+            'scope'=> "am_application_scope default",
+            'access_token' => $token,
+            'user' => $user,
+            'transactions'=> $transactions,
+            'partenaires'=> $partenaires,
+        ], 200);
+    }
+}
