@@ -56,7 +56,7 @@ class ApiProdM2UController extends Controller
             $data=collect($json)->first();
             $firstName = $data->FirstName;
             $lastName = $data->LastName;
-            $accountNumber = $data->Wallets[0]->AccountNumber;
+            $accountNumber = "";// $data->Wallets[0]->AccountNumber;
             if($firstName==null && $lastName==null){
                 return response()->json([
                     'status' => 'echec',
