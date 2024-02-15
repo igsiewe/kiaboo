@@ -208,7 +208,7 @@ class ApiOMController extends Controller
         $service = ServiceEnum::DEPOT_OM->value;
 
         // Vérifie si l'utilisateur est autorisé à faire cette opération
-        if($apiCheck->checkUserValidity()==false){
+        if(!$apiCheck->checkUserValidity()){
             return response()->json([
                 'status'=>'error',
                 'message'=>'Votre compte est désactivé. Veuillez contacter votre distributeur',
@@ -216,7 +216,7 @@ class ApiOMController extends Controller
         }
 
         // Vérifie si le solde de l'utilisateur lui permet d'effectuer cette opération
-        if($apiCheck->checkUserBalance($montant)==false){
+        if(!$apiCheck->checkUserBalance($montant)){
             return response()->json([
                 'status'=>'error',
                 'message'=>'Votre solde est insuffisant pour effectuer cette opération',
@@ -225,7 +225,7 @@ class ApiOMController extends Controller
 
         //Vérifie si l'utilisateur n'a pas initié une operation similaire dans les 5 dernières minutes
 
-        if($apiCheck->checkFiveLastTransaction($customerNumber, $montant, $service)==true){
+        if($apiCheck->checkFiveLastTransaction($customerNumber, $montant, $service)){
             return response()->json([
                 'status'=>'error',
                 'message'=>'Une transaction similaire a été faite il y\'a moins de 5 minutes',

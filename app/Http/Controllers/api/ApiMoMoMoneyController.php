@@ -173,7 +173,7 @@ class ApiMoMoMoneyController extends Controller
         $service = ServiceEnum::DEPOT_MOMO->value;
 
         // Vérifie si l'utilisateur est autorisé à faire cette opération
-        if($apiCheck->checkUserValidity()==false){
+        if(!$apiCheck->checkUserValidity()){
             return response()->json([
                 'status'=>'error',
                 'message'=>'Votre compte est désactivé. Veuillez contacter votre distributeur',
@@ -181,7 +181,7 @@ class ApiMoMoMoneyController extends Controller
         }
 
         // Vérifie si le solde de l'utilisateur lui permet d'effectuer cette opération
-        if($apiCheck->checkUserBalance($montant)==false){
+        if(!$apiCheck->checkUserBalance($montant)){
             return response()->json([
                 'status'=>'error',
                 'message'=>'Votre solde est insuffisant pour effectuer cette opération',
@@ -190,7 +190,7 @@ class ApiMoMoMoneyController extends Controller
 
         //Vérifie si l'utilisateur n'a pas initié une operation similaire dans les 5 dernières minutes
 
-        if($apiCheck->checkFiveLastTransaction($customerNumber, $montant, $service)==true){
+        if($apiCheck->checkFiveLastTransaction($customerNumber, $montant, $service)){
             return response()->json([
                 'status'=>'error',
                 'message'=>'Une transaction similaire a été faite il y\'a moins de 5 minutes',
@@ -236,6 +236,7 @@ class ApiMoMoMoneyController extends Controller
         $accessToken = $dataAcessToken->access_token;
         $referenceID = $this->gen_uuid();
         $subcriptionKey = '1466a4536a3c476ab18baf82ce82a1f3';
+        $customerPhone = "237".$customerNumber;
         $response = Http::withOptions(['verify' => false,])->withHeaders(
             [
                 'Authorization'=> 'Bearer '.$accessToken,
@@ -247,13 +248,13 @@ class ApiMoMoMoneyController extends Controller
             ->Post("https://proxy.momoapi.mtn.com/disbursement/v1_0/deposit", [
                 "amount" => $montant,
                 "currency" => "XAF",
-                "externalId" => ".$idTransaction.",
+                "externalId" => $idTransaction,
                 "payee" => [
                     "partyIdType" => "MSISDN",
-                    "partyId" => "237".$customerNumber,
+                    "partyId" => $customerPhone,
                 ],
-                "payerMessage" => "N".Auth::user()->id,
-                "payeeNote" => "N".Auth::user()->id
+                "payerMessage" => "Agent :".Auth::user()->telephone,
+                "payeeNote" => "Agent : ".Auth::user()->telephone
             ]);
 
         if($response->status()==202){
@@ -396,7 +397,7 @@ class ApiMoMoMoneyController extends Controller
                 [
                     'status'=>$response->status(),
                     'error'=>$response->body(),
-                    'message'=>$response,
+                    'message'=>$response->boddy(),
                 ],$response->status()
             );
         }
