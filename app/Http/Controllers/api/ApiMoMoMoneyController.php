@@ -603,21 +603,7 @@ class ApiMoMoMoneyController extends Controller
         }
     }
 
-    public function MOMO_Retrait_CheckStatus(Request $request){
-        $validator = Validator::make($request->all(), [
-            'referenceID' => 'required|String',
-            'montant' => 'required|numeric|min:50|max:500000',
-
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $validator->errors()->first(),
-            ], 400);
-        }
-        $referenceID=$request->referenceID;
-        $montant=$request->montant;
+    public function MOMO_Retrait_CheckStatus($referenceID){
 
         //On se rassure que la transaction est bien en status en attente
         $Transaction = Transaction::where('paytoken',$referenceID)->where('service_id',ServiceEnum::RETRAIT_MOMO->value)->where('status',2);
@@ -661,8 +647,9 @@ class ApiMoMoMoneyController extends Controller
         $data = json_decode($response->body());
 
         if($response->status()==200){
-             $reason = json_decode($data->reason);
+
             if($data->status=="PENDING"){
+                $reason = json_decode($data->reason);
                 return response()->json(
                     [
                         'status'=>202,
@@ -688,7 +675,7 @@ class ApiMoMoMoneyController extends Controller
             }
 
             if($data->status=="SUCCESSFUL"){
-
+                $montant = $data->amount;
                 $user = User::where('id', Auth::user()->id);
                 $balanceBeforeAgent = $user->get()->first()->balance_after;
                 $balanceAfterAgent = floatval($balanceBeforeAgent) + floatval($montant);

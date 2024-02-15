@@ -102,12 +102,12 @@ Route::middleware('auth:api')->group(function () {
         Route::controller(ApiMoMoMoneyController::class)->group(function () {
             Route::post('operation/momo/depot', 'MOMO_Depot')->name("MOMO_Depot");
             Route::post('operation/momo/retrait', 'MOMO_Retrait')->name("MOMO_Retrait");
-
+            Route::get('operation/momo/retrait/status/{referenceID}', 'MOMO_Retrait_CheckStatus')->name("MOMO_Retrait_CheckStatus");
             Route::post('operation/momo/transfert', 'MOMO_Transfert')->name("MOMO_Transfert");
 
             Route::get('momo/customer/name/{customerPhone}', 'MOMO_CustomerName')->name("MOMO_CustomerName");
             Route::get('momo/retrait/callback/status/{referenceID}', 'MOMO_Retrait_CallBack')->name("MOMO_Retrait_CallBack");
-            Route::post('operation/momo/retrait/status', 'MOMO_Retrait_CheckStatus')->name("MOMO_Retrait_CheckStatus");
+
         });
 
         //M2U
