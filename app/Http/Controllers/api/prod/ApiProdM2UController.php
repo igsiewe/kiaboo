@@ -52,12 +52,10 @@ class ApiProdM2UController extends Controller
 
         if($response->status()==200){
             $json = json_decode($response, false);
-          //  dd($json);
             $data=collect($json)->first();
-            dd($data);
-            $firstName = $data->firstName;
-            $lastName = $data->lastName;
-            $accountNumber = $data->accountNumber;
+            $firstName = $data->FirstName;
+            $lastName = $data->LastName;
+            $accountNumber = $data->PID; //accountNumber;
             if($firstName==null && $lastName==null){
                 return response()->json([
                     'status' => 'echec',
