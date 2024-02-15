@@ -111,19 +111,10 @@ Route::middleware('auth:api')->group(function () {
         });
 
         //M2U
-        Route::controller(ApiM2UController::class)->group(function () {
-            Route::get('m2u/custumer/name/{CustomerNumber}', 'M2U_NameCustomer')->name("M2U_NameCustomer");
-            Route::post('operation/m2u/localuser/{customerNumber}', 'M2U_NameCustomer')->name("M2U_NameCustomers");
-            Route::post('operation/m2u/depot', 'M2U_depot')->name("M2U_depot");
-            Route::post('operation/m2u/transfertstatus', 'M2U_getTransfertStatus')->name("M2U_getTransfertStatus");
-            Route::post('operation/m2u/retrait/CPPayCash', 'M2U_RetraitCPPayCash')->name("M2U_RetraitCPPayCash");
-        });
-
-        //Production
         Route::group(['prefix' => 'prod'], function () {
             //M2U
             Route::controller(ApiProdM2UController::class)->group(function () {
-                Route::get('m2u/custumer/name/{CustomerNumber}', 'M2U_NameCustomer')->name("M2U_PROD_NameCustomer");
+                Route::get('operation/m2u/custumer/name/{CustomerNumber}', 'M2U_NameCustomer')->name("M2U_PROD_NameCustomer");
                 Route::post('operation/m2u/depot', 'M2U_depot')->name("M2U_PROD_depot");
                 Route::post('operation/m2u/transfertstatus', 'M2U_getTransfertStatus')->name("M2U_PROD_getTransfertStatus");
                 Route::post('operation/m2u/retrait/CPPayCash', 'M2U_RetraitCPPayCash')->name("M2U_PROD_RetraitCPPayCash");
