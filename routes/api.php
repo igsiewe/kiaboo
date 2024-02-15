@@ -97,30 +97,28 @@ Route::middleware('auth:api')->group(function () {
             Route::get('om/custumer/name/{CustomerNumber}', 'OM_NameCustomer')->name("OM_NameCustomer");
             Route::post('operation/om/depot', 'OM_Depot')->name("OM_Depot");
         });
-
+        Route::group(['prefix' => 'operation'], function () {
         //MTN Mobile Money
-        Route::controller(ApiMoMoMoneyController::class)->group(function () {
-            Route::post('operation/momo/depot', 'MOMO_Depot')->name("MOMO_Depot");
-            Route::post('operation/momo/retrait', 'MOMO_Retrait')->name("MOMO_Retrait");
-            Route::get('operation/momo/retrait/status/{referenceID}', 'MOMO_Retrait_CheckStatus')->name("MOMO_Retrait_CheckStatus");
-            Route::post('operation/momo/transfert', 'MOMO_Transfert')->name("MOMO_Transfert");
-
-            Route::get('momo/customer/name/{customerPhone}', 'MOMO_CustomerName')->name("MOMO_CustomerName");
-            Route::get('momo/retrait/callback/status/{referenceID}', 'MOMO_Retrait_CallBack')->name("MOMO_Retrait_CallBack");
-
-        });
-
+            Route::group(['prefix' => 'momo'], function () {
+                Route::controller(ApiMoMoMoneyController::class)->group(function () {
+                    Route::post('depot', 'MOMO_Depot')->name("MOMO_Depot");
+                    Route::post('retrait', 'MOMO_Retrait')->name("MOMO_Retrait");
+                    Route::get('retrait/status/{referenceID}', 'MOMO_Retrait_CheckStatus')->name("MOMO_Retrait_CheckStatus");
+                    Route::post('transfert', 'MOMO_Transfert')->name("MOMO_Transfert");
+                    Route::get('customer/name/{customerPhone}', 'MOMO_CustomerName')->name("MOMO_CustomerName");
+                  //  Route::get('momo/retrait/callback/status/{referenceID}', 'MOMO_Retrait_CallBack')->name("MOMO_Retrait_CallBack");
+                });
+            });
         //M2U
-        Route::group(['prefix' => 'prod'], function () {
-            //M2U
-            Route::controller(ApiProdM2UController::class)->group(function () {
-                Route::get('operation/m2u/custumer/name/{CustomerNumber}', 'M2U_NameCustomer')->name("M2U_PROD_NameCustomer");
-                Route::post('operation/m2u/depot', 'M2U_depot')->name("M2U_PROD_depot");
-                Route::post('operation/m2u/transfertstatus', 'M2U_getTransfertStatus')->name("M2U_PROD_getTransfertStatus");
-                Route::post('operation/m2u/retrait/CPPayCash', 'M2U_RetraitCPPayCash')->name("M2U_PROD_RetraitCPPayCash");
+            Route::group(['prefix' => 'm2u'], function () {
+                Route::controller(ApiProdM2UController::class)->group(function () {
+                    Route::get('custumer/name/{CustomerNumber}', 'M2U_NameCustomer')->name("M2U_PROD_NameCustomer");
+                    Route::post('depot', 'M2U_depot')->name("M2U_PROD_depot");
+                    Route::post('transfertstatus', 'M2U_getTransfertStatus')->name("M2U_PROD_getTransfertStatus");
+                    Route::post('retrait/CPPayCash', 'M2U_RetraitCPPayCash')->name("M2U_PROD_RetraitCPPayCash");
+                });
             });
         });
-
-    });
+      });
     });
 });
