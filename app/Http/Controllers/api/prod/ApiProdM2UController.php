@@ -81,7 +81,7 @@ class ApiProdM2UController extends Controller
                 'user' => Auth::user()->id,
                 'customerPhone'=>$customerNumber,
             ]);
-            $body = json_decode($response->body());
+            //$body = json_decode($response->body());
             return response()->json([
                 'code' => $response->status(),
                 'message' =>"1. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
