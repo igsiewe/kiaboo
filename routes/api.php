@@ -100,7 +100,7 @@ Route::middleware('auth:api')->group(function () {
 
         //Production
         Route::group(['prefix' => 'prod'], function () {
-        //MTN Mobile Money
+            //MTN Mobile Money
             Route::group(['prefix' => 'momo'], function () {
                 Route::controller(ApiMoMoMoneyController::class)->group(function () {
                     Route::post('depot', 'MOMO_Depot')->name("MOMO_Depot");
@@ -111,7 +111,7 @@ Route::middleware('auth:api')->group(function () {
                   //  Route::get('momo/retrait/callback/status/{referenceID}', 'MOMO_Retrait_CallBack')->name("MOMO_Retrait_CallBack");
                 });
             });
-        //M2U
+            //M2U
             Route::group(['prefix' => 'm2u'], function () {
                 Route::controller(ApiProdM2UController::class)->group(function () {
                     Route::get('custumer/name/{CustomerNumber}', 'M2U_NameCustomer')->name("M2U_PROD_NameCustomer");
