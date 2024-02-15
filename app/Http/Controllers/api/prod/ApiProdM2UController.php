@@ -925,7 +925,7 @@ class ApiProdM2UController extends Controller
                 "AppID"=> "8SZpExWP0fxu6rKQEDva03KVT",
                 "WalletNumber"=>'237'.$customerNumber,
             ]  );
-
+        dd($response);
         if($response->status()==401){
             return response()->json([
                 'status' => 'echec',
