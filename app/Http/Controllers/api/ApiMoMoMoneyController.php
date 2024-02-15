@@ -259,7 +259,7 @@ class ApiMoMoMoneyController extends Controller
 
         if($response->status()==202){
 
-            $checkStatus = $this->MOMO_Depot_Status($referenceID, $accessToken);
+            $checkStatus = $this->MOMO_Depot_Status( $accessToken, $subcriptionKey, $referenceID);
             $datacheckStatus = json_decode($checkStatus->getContent());
 
             if($checkStatus->getStatusCode() !=200){
@@ -360,7 +360,6 @@ class ApiMoMoMoneyController extends Controller
                     }
                 }
 
-
                 return response()->json([
                     'success' => true,
                     'message' => "SUCCESSFULL", // $resultat->message,
@@ -403,15 +402,15 @@ class ApiMoMoMoneyController extends Controller
         }
     }
 
-    public function MOMO_Depot_Status($referenceId, $token){
+    public function MOMO_Depot_Status( $token, $subcriptionKey, $referenceId){
 
-        $http = "https://sandbox.momodeveloper.mtn.com/disbursement/v1_0/deposit/".$referenceId;
+        $http = "https://proxy.momoapi.mtn.com/disbursement/v1_0/deposit/".$referenceId;
 
         $response = Http::withOptions(['verify' => false,])->withHeaders(
             [
                 'Authorization'=> 'Bearer '.$token,
-                'Ocp-Apim-Subscription-Key'=> '76d0402f5dc440f6a5b4f5e9df3ca108',
-                'X-Target-Environment'=> 'sandbox',
+                'Ocp-Apim-Subscription-Key'=> $subcriptionKey,
+                'X-Target-Environment'=> 'mtncameroon',
             ])
             ->Get($http);
         $data = json_decode($response->body());
