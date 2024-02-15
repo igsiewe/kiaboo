@@ -268,7 +268,7 @@ class ApiMoMoMoneyController extends Controller
                     'message'=>$datacheckStatus->message,
                 ],$checkStatus->getStatusCode());
             }
-            $financialTransactionId = $datacheckStatus->financialTransactionId;
+            //$financialTransactionId = $datacheckStatus->financialTransactionId;
             //$dataResponse = json_decode($response->body());
             try {
                 DB::beginTransaction();
@@ -284,7 +284,7 @@ class ApiMoMoMoneyController extends Controller
                 //on met à jour la table transaction
 
                 $Transaction = Transaction::where('id',$idTransaction)->where('service_id',$service)->update([
-                    'reference_partenaire'=>$financialTransactionId,
+                    'reference_partenaire'=>$referenceID, //$financialTransactionId,
                     'balance_before'=>$balanceBeforeAgent,
                     'balance_after'=>$balanceAfterAgent,
                     'debit'=>$montant,
@@ -414,7 +414,7 @@ class ApiMoMoMoneyController extends Controller
             ])
             ->Get($http);
         $data = json_decode($response->body());
-        dd($data);
+        //dd($data);
         if($response->status()==200){
             return response()->json(
                 [
@@ -423,7 +423,7 @@ class ApiMoMoMoneyController extends Controller
                     'externalId'=>$data->externalId,
                     'message'=>"Terminée avec succès",
                     'description'=>$data->status,
-                    'financialTransactionId'=>$data->financialTransactionId,
+                   // 'financialTransactionId'=>$data->financialTransactionId,
                 ],200
             );
         }else{
