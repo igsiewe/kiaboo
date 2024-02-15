@@ -396,7 +396,7 @@ class ApiMoMoMoneyController extends Controller
                 [
                     'status'=>$response->status(),
                     'error'=>$response->body(),
-                    'message'=>$response->boddy(),
+                    'message'=>$response->body(),
                 ],$response->status()
             );
         }
