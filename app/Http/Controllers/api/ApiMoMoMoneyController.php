@@ -665,7 +665,7 @@ class ApiMoMoMoneyController extends Controller
                 return response()->json(
                     [
                         'status'=>202,
-                        'message'=>$data->reason->message." - Transaction en attente de confirmation par le client",
+                        'message'=>$data->reason["message"]." - Transaction en attente de confirmation par le client",
 
                     ],202
                 );
