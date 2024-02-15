@@ -54,6 +54,7 @@ class ApiProdM2UController extends Controller
             $json = json_decode($response, false);
 
             $data=collect($json)->first();
+            dd($data);
             $firstName = $data->FirstName;
             $lastName = $data->LastName;
             $accountNumber = "";// $data->Wallets[0]->AccountNumber;
