@@ -647,9 +647,9 @@ class ApiMoMoMoneyController extends Controller
         $data = json_decode($response->body());
 
         if($response->status()==200){
-
+            dd($data);
             if($data->status=="PENDING"){
-                $reason = json_decode($data->reason);
+               // $reason = json_decode($data->reason);
                 return response()->json(
                     [
                         'status'=>202,
