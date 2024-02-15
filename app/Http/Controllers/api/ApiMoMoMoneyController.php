@@ -661,11 +661,12 @@ class ApiMoMoMoneyController extends Controller
         $data = json_decode($response->body());
 
         if($response->status()==200){
+
             if($data->status=="PENDING"){
                 return response()->json(
                     [
                         'status'=>202,
-                        'message'=>$data->reason["message"]." - Transaction en attente de confirmation par le client",
+                        'message'=>$data->reason,//." - Transaction en attente de confirmation par le client",
 
                     ],202
                 );
