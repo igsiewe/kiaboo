@@ -243,7 +243,7 @@ class ApiMoMoMoneyController extends Controller
                 'X-Reference-Id'=> $referenceID,
                 'Ocp-Apim-Subscription-Key'=> $subcriptionKey,
                 'X-Target-Environment'=> 'mtncameroon',
-                'X-Callback-Url'=>'https://allinone.kiaboo.net/callback/cico'
+                //'X-Callback-Url'=>'https://kiaboogroup.com/callback/cico'
             ])
             ->Post("https://proxy.momoapi.mtn.com/disbursement/v1_0/deposit", [
                 "amount" => $montant,
