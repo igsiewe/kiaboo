@@ -901,4 +901,77 @@ class ApiProdM2UController extends Controller
             ], 200);
         }
     }
+
+    public function M2U_WalletCustomer($customerNumber)
+    {
+
+        if (strlen($customerNumber) !=9){
+            return response()->json([
+                'status'=>'error',
+                'message'=>'Le numéro de téléphone incorrect'
+            ],404);
+        }
+
+        $endpoint = 'https://apps.m2u.money/LocateWallet';
+        $response = Http::withOptions(['verify' => false,])
+            ->withHeaders(
+                [
+                    'Content-Type'=> 'application/json',
+                ])
+
+            ->Post($endpoint, [
+                "LoginName"=> "CM949513",
+                "APIKey"=> "oh09DFok0T4ecUz1kzw2o9SoVslEwE3eMpvgtpzrhE4uv",
+                "AppID"=> "8SZpExWP0fxu6rKQEDva03KVT",
+                "WalletNumber"=>'237'.$customerNumber,
+            ]  );
+
+        if($response->status()==401){
+            return response()->json([
+                'status' => 'echec',
+                'message'=>'Aucun client trouvé',
+            ],401);
+        }
+
+        if($response->status()==200){
+            $json = json_decode($response, false);
+            $data=collect($json)->first();
+            $firstName = $data->FirstName;
+            $lastName = $data->LastName;
+            $accountNumber = $data->PID; //accountNumber;
+            if($firstName==null && $lastName==null){
+                return response()->json([
+                    'status' => 'echec',
+                    'firstName' => $firstName,
+                    'lastName' => $lastName,
+                    'message'=>'Ce numéro de client n\'existe pas',
+                ],404);
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'firstName' => $firstName,
+                'lastName' => $lastName,
+                'accountNumber' => $accountNumber,
+                'message'=>'Client trouvé',
+            ],200);
+            //  return response()->json($response->json());
+        }else{
+            Log::error([
+                'code'=> $response->status(),
+                'function' => "M2U_NameCustomer",
+                'response'=>$response->body(),
+                'user' => Auth::user()->id,
+                'customerPhone'=>$customerNumber,
+            ]);
+            //$body = json_decode($response->body());
+            return response()->json([
+                'code' => $response->status(),
+                'message' =>"1. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
+            ],$response->status());
+        }
+
+
+    }
+
 }

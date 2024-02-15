@@ -115,6 +115,7 @@ Route::middleware('auth:api')->group(function () {
             Route::group(['prefix' => 'm2u'], function () {
                 Route::controller(ApiProdM2UController::class)->group(function () {
                     Route::get('custumer/name/{CustomerNumber}', 'M2U_NameCustomer')->name("M2U_PROD_NameCustomer");
+                    Route::get('custumer/wallet/{CustomerNumber}', 'M2U_WalletCustomer')->name("M2U_PROD_WalletCustomer");
                     Route::post('depot', 'M2U_depot')->name("M2U_PROD_depot");
                     Route::post('transfertstatus', 'M2U_getTransfertStatus')->name("M2U_PROD_getTransfertStatus");
                     Route::post('retrait/CPPayCash', 'M2U_RetraitCPPayCash')->name("M2U_PROD_RetraitCPPayCash");
