@@ -268,8 +268,8 @@ class ApiMoMoMoneyController extends Controller
                     'message'=>$datacheckStatus->message,
                 ],$checkStatus->getStatusCode());
             }
-
-            $dataResponse = json_decode($response->body());
+            $financialTransactionId = $datacheckStatus->financialTransactionId;
+            //$dataResponse = json_decode($response->body());
             try {
                 DB::beginTransaction();
                 //On Calcule la commission
@@ -284,7 +284,7 @@ class ApiMoMoMoneyController extends Controller
                 //on met à jour la table transaction
 
                 $Transaction = Transaction::where('id',$idTransaction)->where('service_id',$service)->update([
-                    'reference_partenaire'=>$reference,
+                    'reference_partenaire'=>$financialTransactionId,
                     'balance_before'=>$balanceBeforeAgent,
                     'balance_after'=>$balanceAfterAgent,
                     'debit'=>$montant,
@@ -402,7 +402,7 @@ class ApiMoMoMoneyController extends Controller
         }
     }
 
-    public function MOMO_Depot_Status( $token, $subcriptionKey, $referenceId){
+    public function MOMO_Depot_Status($token, $subcriptionKey, $referenceId){
 
         $http = "https://proxy.momoapi.mtn.com/disbursement/v1_0/deposit/".$referenceId;
 
@@ -422,6 +422,7 @@ class ApiMoMoMoneyController extends Controller
                     'externalId'=>$data->externalId,
                     'message'=>"Terminée avec succès",
                     'description'=>$data->status,
+                    'financialTransactionId'=>$data->financialTransactionId,
                 ],200
             );
         }else{
@@ -647,7 +648,7 @@ class ApiMoMoMoneyController extends Controller
         $data = json_decode($response->body());
 
         if($response->status()==200){
-            dd($data);
+
             if($data->status=="PENDING"){
                // $reason = json_decode($data->reason);
                 return response()->json(
@@ -764,7 +765,7 @@ class ApiMoMoMoneyController extends Controller
                         'function' => "MOMO_Retrait_CheckStatus",
                         'response'=>$e->getMessage(),
                         'user' => Auth::user()->id,
-                        'request' => $request->all()
+                        'referenceID' => $$referenceID,
                     ]);
                     return response()->json(
                         [
@@ -780,7 +781,7 @@ class ApiMoMoMoneyController extends Controller
                 'function' => "MOMO_Retrait_CheckStatus",
                 'response'=>$response->body(),
                 'user' => Auth::user()->id,
-                'request' => $request->all()
+                'referenceID' => $$referenceID,
             ]);
             return response()->json(
                 [
