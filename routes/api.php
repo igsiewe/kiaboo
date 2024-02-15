@@ -97,7 +97,9 @@ Route::middleware('auth:api')->group(function () {
             Route::get('om/custumer/name/{CustomerNumber}', 'OM_NameCustomer')->name("OM_NameCustomer");
             Route::post('operation/om/depot', 'OM_Depot')->name("OM_Depot");
         });
-        Route::group(['prefix' => 'operation'], function () {
+
+        //Production
+        Route::group(['prefix' => 'prod'], function () {
         //MTN Mobile Money
             Route::group(['prefix' => 'momo'], function () {
                 Route::controller(ApiMoMoMoneyController::class)->group(function () {
