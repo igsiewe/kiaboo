@@ -65,6 +65,7 @@ class ApiProdM2UController extends Controller
                     'message'=>'Ce numéro de client n\'existe pas',
                 ],404);
             }
+            dd($data);
             if(!$data->Wallets){
                 return response()->json([
                     'status' => 'echec',
@@ -316,7 +317,7 @@ class ApiProdM2UController extends Controller
                     //   "ContactPID" => "CM8205-0471",
                     "OTP" => "SibSnfeSdksSji2023_@" //Le password du Teller
                 ]  );
-            dd( json_decode($response->body()) );
+          //  dd( json_decode($response->body()) );
             if($response->status()==200) {
 
                 $json = json_decode($response, false);
