@@ -42,7 +42,7 @@ class ApiProdM2UController extends Controller
                 "AppID"=> "8SZpExWP0fxu6rKQEDva03KVT",
                 "PhoneNumber"=>'237'.$customerNumber,
             ]  );
-        dd($response);
+        dd($response->body());
         if($response->status()==401){
             return response()->json([
                 'status' => 'echec',
