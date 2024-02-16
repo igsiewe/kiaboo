@@ -11,6 +11,7 @@ use App\Models\Transaction;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -65,9 +66,11 @@ class ApiProdM2UController extends Controller
                     'message'=>'Ce numéro de client n\'existe pas',
                 ],404);
             }
+
+            //Je convertis en tableau associatif
             $element = json_decode($response, associative: true);
-            dd($element);
-            if(!$data->Wallets){
+
+            if(!Arr::has($element, "Wallets")){ //On teste si l'utilisateur a un wallet actif
                 return response()->json([
                     'status' => 'echec',
                     'firstName' => $firstName,
