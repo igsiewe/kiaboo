@@ -42,7 +42,7 @@ class ApiProdM2UController extends Controller
                 "AppID"=> "8SZpExWP0fxu6rKQEDva03KVT",
                 "PhoneNumber"=>'237'.$customerNumber,
             ]  );
-        dd(json_decode($response->body()));
+
         if($response->status()==401){
             return response()->json([
                 'status' => 'echec',
@@ -55,7 +55,8 @@ class ApiProdM2UController extends Controller
             $data=collect($json)->first();
             $firstName = $data->FirstName;
             $lastName = $data->LastName;
-            $accountNumber = $data->PID; //accountNumber;
+           // $accountNumber = $data->PID; //accountNumber;
+
             if($firstName==null && $lastName==null){
                 return response()->json([
                     'status' => 'echec',
@@ -64,7 +65,15 @@ class ApiProdM2UController extends Controller
                     'message'=>'Ce numéro de client n\'existe pas',
                 ],404);
             }
-
+            if(!$data->Wallet){
+                return response()->json([
+                    'status' => 'echec',
+                    'firstName' => $firstName,
+                    'lastName' => $lastName,
+                    'message'=>'Ce numéro de client n\'a pas de compte actif',
+                ],404);
+            }
+            $accountNumber = $data->Wallet[0]->accountNumber;
             return response()->json([
                 'status' => 'success',
                 'firstName' => $firstName,
