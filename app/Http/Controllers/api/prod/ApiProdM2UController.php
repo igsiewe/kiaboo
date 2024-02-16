@@ -69,7 +69,7 @@ class ApiProdM2UController extends Controller
 
             //Je convertis en tableau associatif
             $element = json_decode($response, associative: true);
-
+dd(Arr::has($element, "Wallets"));
             if(!Arr::has($element, "Wallets")){ //On teste si l'utilisateur a un wallet actif
                 return response()->json([
                     'status' => 'echec',
