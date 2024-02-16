@@ -67,6 +67,20 @@ class ApiProdM2UController extends Controller
                 ],404);
             }
 
+            //Je convertis en tableau associatif
+            $element = json_decode($response, associative: true);
+
+            dd(Arr::has($element, "Wallets"));
+
+            if(!Arr::has($element, "Wallets")){ //On teste si l'utilisateur a un wallet actif
+                return response()->json([
+                    'status' => 'echec',
+                    'firstName' => $firstName,
+                    'lastName' => $lastName,
+                    'message'=>'Ce numéro de client n\'a pas de compte actif',
+                ],404);
+            }
+
             $accountNumber = $data->Wallets[0]->AccountNumber;
             return response()->json([
                 'status' => 'success',
