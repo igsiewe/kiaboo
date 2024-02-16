@@ -414,17 +414,29 @@ class ApiMoMoMoneyController extends Controller
             ])
             ->Get($http);
         $data = json_decode($response->body());
-        dd($data);
+       // dd($data);
         if($response->status()==200){
+            if($data->status=="SUCCESSFUL"){
+                return response()->json(
+                    [
+                        'status'=>200,
+                        'amount'=>$data->amount,
+                        'externalId'=>$data->externalId,
+                        'message'=>"Terminée avec succès",
+                        'description'=>$data->status,
+                        // 'financialTransactionId'=>$data->financialTransactionId,
+                    ],200
+                );
+            }
             return response()->json(
                 [
-                    'status'=>200,
+                    'status'=>404,
                     'amount'=>$data->amount,
                     'externalId'=>$data->externalId,
-                    'message'=>"Terminée avec succès",
+                    'message'=>$data->reason,
                     'description'=>$data->status,
-                   // 'financialTransactionId'=>$data->financialTransactionId,
-                ],200
+                    // 'financialTransactionId'=>$data->financialTransactionId,
+                ],404
             );
         }else{
             Log::error([
