@@ -192,7 +192,7 @@ class ApiProdM2UController extends Controller
         $service = ServiceEnum::DEPOT_M2U->value;
 
         // Vérifie si l'utilisateur est autorisé à faire cette opération
-        if($apiCheck->checkUserValidity()==false){
+        if(!$apiCheck->checkUserValidity()){
             return response()->json([
                 'status'=>'error',
                 'message'=>'Votre compte est désactivé. Veuillez contacter votre distributeur',
@@ -200,7 +200,7 @@ class ApiProdM2UController extends Controller
         }
 
         // Vérifie si le solde de l'utilisateur lui permet d'effectuer cette opération
-        if($apiCheck->checkUserBalance($montant)==false){
+        if(!$apiCheck->checkUserBalance($montant)){
             return response()->json([
                 'status'=>'error',
                 'message'=>'Votre solde est insuffisant pour effectuer cette opération',
@@ -209,7 +209,7 @@ class ApiProdM2UController extends Controller
 
         //Vérifie si l'utilisateur n'a pas initié une operation similaire dans les 5 dernières minutes
 
-        if($apiCheck->checkFiveLastTransaction($customerNumber, $montant, $service)==true){
+        if($apiCheck->checkFiveLastTransaction($customerNumber, $montant, $service)){
             return response()->json([
                 'status'=>'error',
                 'message'=>'Une transaction similaire a été faite il y\'a moins de 5 minutes',
@@ -316,7 +316,7 @@ class ApiProdM2UController extends Controller
                     //   "ContactPID" => "CM8205-0471",
                     "OTP" => "SibSnfeSdksSji2023_@" //Le password du Teller
                 ]  );
-
+            dd( json_encode($response->body()) );
             if($response->status()==200) {
 
                 $json = json_decode($response, false);
