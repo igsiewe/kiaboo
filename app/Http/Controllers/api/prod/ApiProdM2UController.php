@@ -52,11 +52,11 @@ class ApiProdM2UController extends Controller
         }
 
         if($response->status()==200){
+
             $json = json_decode($response, false);
             $data=collect($json)->first();
             $firstName = $data->FirstName;
             $lastName = $data->LastName;
-           // $accountNumber = $data->PID; //accountNumber;
 
             if($firstName==null && $lastName==null){
                 return response()->json([
@@ -70,7 +70,7 @@ class ApiProdM2UController extends Controller
             //Je convertis en tableau associatif
             $element = json_decode($response, associative: true);
 
-            dd(Arr::has($element, "Wallets"), $element);
+            dd(Arr::has($element, "PID"), $element);
 
             if(!Arr::has($element, "Wallets")){ //On teste si l'utilisateur a un wallet actif
                 return response()->json([
