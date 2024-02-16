@@ -316,8 +316,8 @@ class ApiProdM2UController extends Controller
                     "FirstName" => $firstName,
                     "LastName" => $lastName,
                     "PhoneNumber" => $customerNumber,
+                    "PartnerTellerID"=>Auth::user()->id,
                     "UseDefaultWallet" => "No",
-                    //   "ContactPID" => "CM8205-0471",
                     "OTP" => "SibSnfeSdksSji2023_@" //Le password du Teller
                 ]  );
           //  dd( json_decode($response->body()) );
@@ -706,6 +706,7 @@ class ApiProdM2UController extends Controller
                     "TargetPhoneNumber"=>$request->TargetPhoneNumber, //'237'.$request->TargetPhoneNumber,
                     "FirstName"=>$request->FirstName,
                     "LastName"=>$request->LastName,
+                    "PartnerTellerID"=>Auth::user()->id,
                     "WalletNumber"=>"XAF-01-CM9539-001",
                     "OTP"=>"SibSnfeSdksSji2023_@"
                 ]  );
