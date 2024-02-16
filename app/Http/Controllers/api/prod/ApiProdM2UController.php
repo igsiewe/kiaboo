@@ -65,7 +65,7 @@ class ApiProdM2UController extends Controller
                     'message'=>'Ce numéro de client n\'existe pas',
                 ],404);
             }
-
+            dd($data);
             $accountNumber = $data->Wallet[0]->accountNumber;
             return response()->json([
                 'status' => 'success',
