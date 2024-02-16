@@ -316,7 +316,7 @@ class ApiProdM2UController extends Controller
                     //   "ContactPID" => "CM8205-0471",
                     "OTP" => "SibSnfeSdksSji2023_@" //Le password du Teller
                 ]  );
-            dd( json_encode($response->body()) );
+            dd( json_decode($response->body()) );
             if($response->status()==200) {
 
                 $json = json_decode($response, false);
