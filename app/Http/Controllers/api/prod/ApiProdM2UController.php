@@ -73,6 +73,7 @@ class ApiProdM2UController extends Controller
                     'message'=>'Ce numéro de client n\'a pas de compte actif',
                 ],404);
             }
+            dd($data->Wallets[0]);
             $accountNumber = $data->Wallets[0]->accountNumber;
             return response()->json([
                 'status' => 'success',
