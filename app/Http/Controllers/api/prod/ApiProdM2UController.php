@@ -65,7 +65,8 @@ class ApiProdM2UController extends Controller
                     'message'=>'Ce numéro de client n\'existe pas',
                 ],404);
             }
-            dd($data);
+            $element = json_decode($response, associative: true);
+            dd($element);
             if(!$data->Wallets){
                 return response()->json([
                     'status' => 'echec',
