@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Http\Controllers\api\prod\ApiProdMoMoMoneyController;
 use App\Http\Controllers\BaseController;
 use App\Http\Enums\ServiceEnum;
 use App\Http\Enums\UserRolesEnum;
-use App\Models\Commission;
-use App\Models\distributeur;
 use App\Models\favoris;
-use App\Models\Partenaire;
-use App\Models\Service;
 use App\Models\sous_distributeur;
 use App\Models\stock_uv_circulation;
 use App\Models\Transaction;
@@ -21,7 +18,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use function MongoDB\BSON\toJSON;
 
 class ApiOperationAgent extends BaseController
 {
@@ -601,7 +597,7 @@ class ApiOperationAgent extends BaseController
             $commissionAgent=doubleval($commission->commission_agent);
             //On traite le depot par appel API Depot MOMO
 
-            $api = new ApiMoMoMoneyController();
+            $api = new ApiProdMoMoMoneyController();
             $description = $reference.'->'.Auth::user()->id;
 
             $response = $api->MOMO_Depot($request->customer_phone, $request->montant);

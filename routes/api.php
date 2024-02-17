@@ -1,21 +1,16 @@
 <?php
 
 use App\Http\Controllers\api\ApiApproDistributeurController;
-use App\Http\Controllers\api\ApiApproSousDistributeurController;
 use App\Http\Controllers\api\ApiAuthController;
 use App\Http\Controllers\api\ApiCommissionController;
-use App\Http\Controllers\api\ApiM2UController;
-use App\Http\Controllers\api\ApiMoMoMoneyController;
 use App\Http\Controllers\api\ApiOMController;
-use App\Http\Controllers\api\ApiOperationAgent;
-use App\Http\Controllers\api\ApiOrangeMoneyController;
 use App\Http\Controllers\api\ApiParrainageController;
 use App\Http\Controllers\api\ApiSmsController;
 use App\Http\Controllers\api\ApiTransactionsController;
 use App\Http\Controllers\api\ApiUserController;
+use App\Http\Controllers\api\prod\ApiProdMoMoMoneyController;
 use App\Http\Controllers\api\prod\ApiProdM2UController;
 use App\Http\Controllers\api\prod\ApiProduction_MoMo;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -98,17 +93,25 @@ Route::middleware('auth:api')->group(function () {
             Route::post('operation/om/depot', 'OM_Depot')->name("OM_Depot");
         });
 
+        //SandBox
+        Route::group(['prefix' => 'prod'], function () {
+
+        });
+
         //Production
         Route::group(['prefix' => 'prod'], function () {
             //MTN Mobile Money
             Route::group(['prefix' => 'momo'], function () {
-                Route::controller(ApiMoMoMoneyController::class)->group(function () {
+                Route::controller(ApiProdMoMoMoneyController::class)->group(function () {
                     Route::post('depot', 'MOMO_Depot')->name("MOMO_Depot");
                     Route::post('retrait', 'MOMO_Retrait')->name("MOMO_Retrait");
-                    Route::get('retrait/status/{referenceID}', 'MOMO_Retrait_CheckStatus')->name("MOMO_Retrait_CheckStatus");
+
+                    Route::get('retrait/status/{referenceID}', 'MOMO_Retrait_Status')->name("MOMO_Retrait_Status");
+                    Route::get('depot/status/{referenceID}', 'MOMO_Depot_Status')->name("MOMO_Depot_Status");
+
                     Route::post('transfert', 'MOMO_Transfert')->name("MOMO_Transfert");
                     Route::get('customer/name/{customerPhone}', 'MOMO_CustomerName')->name("MOMO_CustomerName");
-                  //  Route::get('momo/retrait/callback/status/{referenceID}', 'MOMO_Retrait_CallBack')->name("MOMO_Retrait_CallBack");
+
                 });
             });
             //M2U

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\api\prod;
 
 use App\Http\Controllers\api\ApiCheckController;
 use App\Http\Controllers\api\ApiCommissionController;
@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
-class ApiMoMoMoneyController extends Controller
+class ApiProdMoMoMoneyController extends Controller
 {
     protected $client;
 
@@ -491,7 +491,7 @@ class ApiMoMoMoneyController extends Controller
         $service = ServiceEnum::RETRAIT_MOMO->value;
 
         // Vérifie si l'utilisateur est autorisé à faire cette opération
-        if($apiCheck->checkUserValidity()==false){
+        if(!$apiCheck->checkUserValidity()){
             return response()->json([
                 'status'=>'error',
                 'message'=>'Votre compte est désactivé. Veuillez contacter votre distributeur',
@@ -618,7 +618,7 @@ class ApiMoMoMoneyController extends Controller
         }
     }
 
-    public function MOMO_Retrait_CheckStatus($referenceID){
+    public function MOMO_Retrait_Status($referenceID){
 
         //On se rassure que la transaction est bien en status en attente
         $Transaction = Transaction::where('paytoken',$referenceID)->where('service_id',ServiceEnum::RETRAIT_MOMO->value)->where('status',2);
@@ -675,7 +675,7 @@ class ApiMoMoMoneyController extends Controller
             }
             if($data->status=="FAILED"){
                 $updateTransaction=$Transaction->update([
-                    'status'=>3, // Le client n'a pas validé dans les délai et l'opérateur l'a annule
+                    'status'=>3, // Le client n'a pas validé dans les délais et l'opérateur l'a annule
                     'paytoken'=>$referenceID,
                     'date_end_trans'=>Carbon::now(),
                     'description'=>$data->status,
@@ -746,7 +746,7 @@ class ApiMoMoMoneyController extends Controller
                         if($responseNotification->success==true){
                             Log::info([
                                 'code'=> 200,
-                                'function' => "MOMO_Retrait_CheckStatus",
+                                'function' => "MOMO_Retrait_Status",
                                 'response'=>"Notification envoyée avec succès",
                                 'user' => Auth::user()->id,
                              //   'request' => $request->all()
@@ -754,7 +754,7 @@ class ApiMoMoMoneyController extends Controller
                         }else{
                             Log::error([
                                 'code'=> 500,
-                                'function' => "MOMO_Retrait_CheckStatus",
+                                'function' => "MOMO_Retrait_Status",
                                 'response'=>$resultNotification,
                                 'user' => Auth::user()->id,
                               //  'request' => $request->all()
@@ -792,7 +792,7 @@ class ApiMoMoMoneyController extends Controller
             }
             Log::error([
                 'code'=> $response->status(),
-                'function' => "MOMO_Retrait_CheckStatus",
+                'function' => "MOMO_Retrait_Status",
                 'response'=>$response->body(),
                 'user' => Auth::user()->id,
                 'referenceID' => $$referenceID,
@@ -806,7 +806,7 @@ class ApiMoMoMoneyController extends Controller
         }else{
             Log::error([
                 'code'=> $response->status(),
-                'function' => "MOMO_Depot_Status",
+                'function' => "MOMO_Retrait_Status",
                 'response'=>$response,
                 'user' => Auth::user()->id,
 
