@@ -461,8 +461,9 @@ class ApiProdMoMoMoneyController extends Controller
                 'X-Target-Environment'=> 'mtncameroon',
             ])
             ->Get($http);
+
         $data = json_decode($response->body());
-      //  dd($response->status(),$data);
+
         if($response->status()==200){
             if($data->status=="SUCCESSFUL"){
                 return response()->json(
