@@ -257,7 +257,7 @@ class ApiProdMoMoMoneyController extends Controller
                 "payerMessage" => "Agent :".Auth::user()->telephone,
                 "payeeNote" => "Agent : ".Auth::user()->telephone
             ]);
-        dd(json_decode($response->body()));
+        dd($response->body());
         if($response->status()==202){
 
             $checkStatus = $this->MOMO_Depot_Status( $accessToken, $subcriptionKey, $referenceID);
