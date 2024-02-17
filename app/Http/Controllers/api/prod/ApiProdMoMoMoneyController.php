@@ -449,7 +449,7 @@ class ApiProdMoMoMoneyController extends Controller
 
         $dataAcessToken = json_decode($responseToken->getContent());
         $token = $dataAcessToken->access_token;
-        dd($token);
+
         $subcriptionKey = '1466a4536a3c476ab18baf82ce82a1f3';
 
         $http = "https://proxy.momoapi.mtn.com/disbursement/v1_0/deposit/".$referenceId;
@@ -462,7 +462,7 @@ class ApiProdMoMoMoneyController extends Controller
             ])
             ->Get($http);
         $data = json_decode($response->body());
-
+        dd($data);
         if($response->status()==200){
             if($data->status=="SUCCESSFUL"){
                 return response()->json(
