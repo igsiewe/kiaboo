@@ -221,7 +221,7 @@ class ApiProdMoMoMoneyController extends Controller
                 'X-Reference-Id'=> $referenceID,
                 'Ocp-Apim-Subscription-Key'=> $subcriptionKey,
                 'X-Target-Environment'=> 'mtncameroon',
-                //'X-Callback-Url'=>'https://kiaboogroup.com/callback/cico'
+                'X-Callback-Url'=>'https://kiaboogroup.com/api/momo/callback/'
             ])
             ->Post("https://proxy.momoapi.mtn.com/disbursement/v1_0/deposit", [
                 "amount" => $montant,
@@ -598,7 +598,7 @@ class ApiProdMoMoMoneyController extends Controller
                 'X-Reference-Id'=> $referenceID,
                 'Ocp-Apim-Subscription-Key'=> '886cc9e141ab492f80d9567b3c46d59c',
                 'X-Target-Environment'=> 'mtncameroon',
-           //     'X-Callback-Url'=> 'https://allinone.kiaboo.cm/api/momo/retrait/callback/status/'.$referenceID,
+                'X-Callback-Url'=> 'https://kiaboogroup.com/api/momo/callback/',
             ])
             ->Post('https://proxy.momoapi.mtn.com/collection/v1_0/requesttowithdraw', [
 
