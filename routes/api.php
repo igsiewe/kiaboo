@@ -107,7 +107,7 @@ Route::middleware('auth:api')->group(function () {
                     Route::post('retrait', 'MOMO_Retrait')->name("MOMO_Retrait");
 
                     Route::get('retrait/status/{referenceID}', 'MOMO_Retrait_Status')->name("MOMO_Retrait_Status");
-                    Route::get('depot/status/{referenceID}', 'MOMO_Depot_Status')->name("MOMO_Depot_Status");
+                    Route::get('depot/status/{referenceID}', 'MOMO_Depot_Status_Api')->name("MOMO_Depot_Status_Api");
 
                     Route::post('transfert', 'MOMO_Transfert')->name("MOMO_Transfert");
                     Route::get('customer/name/{customerPhone}', 'MOMO_CustomerName')->name("MOMO_CustomerName");

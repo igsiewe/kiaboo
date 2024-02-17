@@ -415,6 +415,74 @@ class ApiProdMoMoMoneyController extends Controller
             ])
             ->Get($http);
         $data = json_decode($response->body());
+
+        if($response->status()==200){
+            if($data->status=="SUCCESSFUL"){
+                return response()->json(
+                    [
+                        'status'=>200,
+                        'amount'=>$data->amount,
+                        'externalId'=>$data->externalId,
+                        'message'=>"Terminée avec succès",
+                        'description'=>$data->status,
+                        // 'financialTransactionId'=>$data->financialTransactionId,
+                    ],200
+                );
+            }
+            return response()->json(
+                [
+                    'status'=>404,
+                    'amount'=>$data->amount,
+                    'externalId'=>$data->externalId,
+                    'message'=>$data->reason,
+                    'description'=>$data->status,
+                    // 'financialTransactionId'=>$data->financialTransactionId,
+                ],404
+            );
+        }else{
+            Log::error([
+                'code'=> $response->status(),
+                'function' => "MOMO_Depot_Status",
+                'response'=>$response,
+                'user' => Auth::user()->id,
+
+            ]);
+            return response()->json(
+                [
+                    'status'=>$response->status(),
+                    'message'=>$data->message,
+                ],$response->status()
+            );
+        }
+    }
+
+    public function MOMO_Depot_Status_Api($referenceId){
+
+        //On génère le token de la transation
+        $responseToken = $this->MOMO_Disbursement_GetTokenAccess();
+        if($responseToken->status()!=200){
+            return response()->json(
+                [
+                    'status'=>$responseToken->status(),
+                    'message'=>$responseToken["message"],
+                ],$responseToken->status()
+            );
+        }
+
+        $dataAcessToken = json_decode($responseToken->getContent());
+        $token = $dataAcessToken->access_token;
+        $subcriptionKey = '1466a4536a3c476ab18baf82ce82a1f3';
+
+        $http = "https://proxy.momoapi.mtn.com/disbursement/v1_0/deposit/".$referenceId;
+
+        $response = Http::withOptions(['verify' => false,])->withHeaders(
+            [
+                'Authorization'=> 'Bearer '.$token,
+                'Ocp-Apim-Subscription-Key'=> $subcriptionKey,
+                'X-Target-Environment'=> 'mtncameroon',
+            ])
+            ->Get($http);
+        $data = json_decode($response->body());
         dd($data);
         if($response->status()==200){
             if($data->status=="SUCCESSFUL"){
