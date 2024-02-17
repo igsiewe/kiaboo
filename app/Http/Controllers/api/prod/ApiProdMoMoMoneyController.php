@@ -51,30 +51,7 @@ class ApiProdMoMoMoneyController extends Controller
 
     public function MOMO_Disbursement_GetTokenAccess(){
 
-        $response = Http::withOptions(['verify' => false,])->withHeaders(['Ocp-Apim-Subscription-Key'=> '1466a4536a3c476ab18baf82ce82a1f3'])->withBasicAuth('b7159130-4563-46be-ba8b-4c5225345a03', 'dec401d6543f4e00a599a89b0429e57e')
-            ->Post('https://proxy.momoapi.mtn.com/disbursement/token/');
-        if($response->status()==200){
-            return response()->json($response->json());
-        }else{
-            Log::error([
-                'code'=> $response->status(),
-                'function' => "MOMO_Depot",
-                'response'=>$response->body(),
-                'user' => Auth::user()->id,
-            ]);
-            return response()->json(
-                [
-                    'status'=>$response->status(),
-                    'message'=>$response->body(),
-                ],$response->status()
-            );
-        }
-
-    }
-
-    public function MOMO_Depot_GetTokenAccess(){
-
-        $response = Http::withOptions(['verify' => false,])->withHeaders(['Ocp-Apim-Subscription-Key'=> '1466a4536a3c476ab18baf82ce82a1f3'])->withBasicAuth('cc0e937a-0b3f-4a69-b2aa-88eb00a05686', '398a7961a06246058d8814c0b1c18337')
+        $response = Http::withOptions(['verify' => false,])->withHeaders(['Ocp-Apim-Subscription-Key'=> '1466a4536a3c476ab18baf82ce82a1f3'])->withBasicAuth('a6b77dbc-cf59-450a-bd47-1c8a00768dec', '6d2377a32f8a42918ccb4e8db1a51c64')
             ->Post('https://proxy.momoapi.mtn.com/disbursement/token/');
         if($response->status()==200){
             return response()->json($response->json());
@@ -257,7 +234,6 @@ class ApiProdMoMoMoneyController extends Controller
                 "payerMessage" => "Agent :".Auth::user()->telephone,
                 "payeeNote" => "Agent : ".Auth::user()->telephone
             ]);
-        dd($response->status(), json_decode($response->body()));
 
         if($response->status()==202){
 
@@ -339,17 +315,19 @@ class ApiProdMoMoMoneyController extends Controller
                 $message = "Le dépôt MOMO de " . $montant . " F CFA a été effectué avec succès au ".$customerNumber;
                 $subtitle ="Success";
                 $appNotification = new ApiNotification();
+
                 $envoiNotification = $appNotification->sendNotificationPushFireBase($idDevice, $title, $subtitle, $message);
+
                 if($envoiNotification->status()==200){
                     $resultNotification=json_decode($envoiNotification->getContent());
                     $responseNotification=$resultNotification->response ;
+
                     if($responseNotification->success==true){
                         Log::info([
                             'code'=> 200,
                             'function' => "MOMO_Depot",
                             'response'=>"Notification envoyée avec succès",
                             'user' => Auth::user()->id,
-                            //'request' => $request->all()
                         ]);
                     }else{
                         Log::error([
@@ -357,7 +335,6 @@ class ApiProdMoMoMoneyController extends Controller
                             'function' => "MOMO_Depot",
                             'response'=>$resultNotification,
                             'user' => Auth::user()->id,
-                         //   'request' => $request->all()
                         ]);
                     }
                 }
@@ -526,7 +503,7 @@ class ApiProdMoMoMoneyController extends Controller
     }
 
     public function MOMO_Collection_GetTokenAccess(){
-        $response = Http::withOptions(['verify' => false,])->withHeaders(['Ocp-Apim-Subscription-Key'=> '886cc9e141ab492f80d9567b3c46d59c'])->withBasicAuth('b7159130-4563-46be-ba8b-4c5225345a03', 'dec401d6543f4e00a599a89b0429e57e')
+        $response = Http::withOptions(['verify' => false,])->withHeaders(['Ocp-Apim-Subscription-Key'=> '886cc9e141ab492f80d9567b3c46d59c'])->withBasicAuth('a6b77dbc-cf59-450a-bd47-1c8a00768dec', '6d2377a32f8a42918ccb4e8db1a51c64')
             ->Post('https://proxy.momoapi.mtn.com/collection/token/');
         if($response->status()==200){
             return response()->json($response->json());
@@ -894,90 +871,4 @@ class ApiProdMoMoMoneyController extends Controller
 
     }
 
-    public function MOMO_Payment_CallBack(Request $request){
-
-        //Implementation de la fonction de callback
-       $data = file_get_contents('php://input');
-
-      // $data = file_get_contents('https://allinone.kiaboo.net/api/v1/callback');
-       $data = json_decode($data);
-        dd($data);
-       $financialTransactionId = $data->financialTransactionId;
-       $status = $data->externalId;
-
-
-      //  $status = $request->input('status');
-      //  $financialTransactionId = $request->input('financialTransactionId');
-
-        if($status=="SUCCESSFUL"){
-            $getLastTransactionId = Transaction::where("id","775724")->update([
-                "callback_response"=>"SUCCESSFUL = ".$financialTransactionId
-            ]);
-            return response()->json(
-                [
-                    'status'=>200,
-                    'message'=>"Transaction effectuée avec succès",
-                ],200
-            );
-        }else{
-            $getLastTransactionId = Transaction::where("id","775724")->update([
-                "callback_response"=>'FAILLURE = '.$financialTransactionId
-            ]);
-            return response()->json(
-                [
-                    'status'=>500,
-                    'message'=>"Une erreur est survenue lors de la mise à jour de la transaction",
-                ],500
-            );
-        }
-
-    }
-
-    public function MOMO_transfert(Request $request){
-        $validator = Validator::make($request->all(), [
-            'customerPhone' => 'required|numeric|digits:9',
-            'amount' => 'required|numeric|min:50|max:500000',
-        ]);
-        //On génère le token de la transation
-        $responseToken = $this->MOMO_Depot_GetTokenAccess();
-        if($responseToken->status()!=200){
-            return response()->json(
-                [
-                    'status'=>$responseToken->status(),
-                    'message'=>$responseToken["message"],
-                ],$responseToken->status()
-            );
-        }
-
-        $dataAcessToken = json_decode($responseToken->getContent());
-        $AccessToken = $dataAcessToken->access_token;
-        $referenceID = $this->gen_uuid();
-        $montant = $request->amount;
-        $customerNumber = $request->customerPhone;
-        $idTransaction=rand(1000,9999);
-
-        $response = Http::withOptions(['verify' => false,])->withHeaders(
-            [
-                'Authorization'=> 'Bearer '.$AccessToken,
-                'X-Reference-Id'=> $referenceID,
-                'Ocp-Apim-Subscription-Key'=> '1466a4536a3c476ab18baf82ce82a1f3',
-                'X-Target-Environment'=> 'mtncameroon',
-                'X-Callback-Url'=>'https://allinone.kiaboo.net/callback/cico'
-            ])
-
-            ->Post('https://proxy.momoapi.mtn.com/disbursement/v2_0/transfer', [
-                'amount' => "'.$montant.'",
-                'currency' => 'XAF',
-                'externalId' => "'.$idTransaction.'",
-                'payee' => [
-                    'partyIdType' => 'MSISDN',
-                    'partyId' => '237'.$customerNumber,
-                ],
-                'payerMessage' => "N".Auth::user()->id,
-                'payeeNote' => "N".Auth::user()->id
-            ]);
-
-        dd($response);
-
-    }
 }
