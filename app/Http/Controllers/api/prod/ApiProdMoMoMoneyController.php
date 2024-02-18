@@ -411,7 +411,7 @@ class ApiProdMoMoMoneyController extends Controller
                     ],200
                 );
             }
-            if($data->message=="NOT_ENOUGH_FUNDS"){
+            if($data->reason=="NOT_ENOUGH_FUNDS"){
                 return response()->json(
                     [
                         'status'=>404,
