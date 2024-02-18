@@ -886,7 +886,7 @@ class ApiProdMoMoMoneyController extends Controller
             Log::error([
                 'code'=> $response->status(),
                 'function' => "MOMO_Retrait_Status",
-                'response'=>$response,
+                'response'=>$response->body(),
                 'user' => Auth::user()->id,
 
             ]);
@@ -894,7 +894,7 @@ class ApiProdMoMoMoneyController extends Controller
                 [
                     'error'=>false,
                     'status'=>$response->status(),
-                    'message'=>$response->body(),
+                    'message'=>'Ressource introuvable',
                 ],$response->status()
             );
         }
