@@ -29,8 +29,9 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     // public routes
     //CallBack
     Route::controller(ApiProdMoMoMoneyController::class)->group(function (){
-        Route::post('momo/callback/','MomoCallBack')->MoMoCallback;
+        Route::post('momo/callback/','MomoCallBack')->name("MoMoCallback");
     });
+
     Route::group(['prefix' => 'v1'], function () {
 
          Route::controller(ApiAuthController::class)->group(function () {
@@ -99,7 +100,7 @@ Route::middleware('auth:api')->group(function () {
         });
 
         //SandBox
-        Route::group(['prefix' => 'prod'], function () {
+        Route::group(['prefix' => 'sandbox'], function () {
 
         });
 
@@ -114,6 +115,7 @@ Route::middleware('auth:api')->group(function () {
 
                     Route::get('retrait/status/{referenceID}', 'MOMO_Retrait_Status')->name("MOMO_Retrait_Status");
                     Route::get('depot/status/{referenceID}', 'MOMO_Depot_Status_Api')->name("MOMO_Depot_Status_Api");
+                    Route::get('retrait/status/trans/{referenceID}', 'MOMO_Retrait_Status_Api')->name("MOMO_Retrait_Status_Api");
 
                     Route::post('transfert', 'MOMO_Transfert')->name("MOMO_Transfert");
                     Route::get('customer/name/{customerPhone}', 'MOMO_CustomerName')->name("MOMO_CustomerName");
