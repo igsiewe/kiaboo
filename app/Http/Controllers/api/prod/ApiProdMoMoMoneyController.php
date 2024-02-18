@@ -900,6 +900,78 @@ class ApiProdMoMoMoneyController extends Controller
         }
     }
 
+    public function MOMO_Retrait_Status_Api($referenceID){
+
+        //On génère le token de la transation
+        $responseToken = $this->MOMO_Collection_GetTokenAccess();
+
+        if($responseToken->status()!=200){
+            return response()->json(
+                [
+                    'status'=>$responseToken->status(),
+                    'message'=>$responseToken["message"],
+                ],$responseToken->status()
+            );
+        }
+
+        $dataAcessToken = json_decode($responseToken->getContent());
+        $AccessToken = $dataAcessToken->access_token;
+
+        $http = "https://proxy.momoapi.mtn.com/collection/v1_0/requesttopay/".$referenceID;
+
+        $response = Http::withOptions(['verify' => false,])->withHeaders(
+            [
+                'Authorization'=> 'Bearer '.$AccessToken,
+                'Ocp-Apim-Subscription-Key'=> '886cc9e141ab492f80d9567b3c46d59c',
+                'X-Target-Environment'=> 'mtncameroon',
+            ])->Get($http);
+
+        $data = json_decode($response->body());
+
+        if($response->status()==200){
+
+            if($data->status=="PENDING"){
+                // $reason = json_decode($data->reason);
+                return response()->json(
+                    [
+                        'status'=>202,
+                        'message'=>"PENDING - Transaction en attente de confirmation par le client",
+
+                    ],202
+                );
+            }
+            if($data->status=="FAILED"){
+                return response()->json(
+                    [
+                        'status'=>402,
+                        'message'=>$data->status." - Le client n'a pas validé la transaction dans les délais et l'opérateur l'a annulé",
+
+                    ],402
+                );
+            }
+
+            if($data->status=="SUCCESSFUL"){
+
+                        return response()->json(
+                            [
+                                'status'=>200,
+                                'message'=>$data->status." - Transaction en succès",
+
+                            ],200
+                        );
+                    }
+        }else{
+            return response()->json(
+                [
+                    'status'=>404,
+                    'message'=>$data->status." - Transaction en succès",
+
+                ],404
+            );
+        }
+
+    }
+
     public function MOMO_Retrait_CallBack($referenceID){
 
     }
