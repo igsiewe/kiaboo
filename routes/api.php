@@ -27,7 +27,10 @@ use Illuminate\Support\Facades\Route;
 // These routes, can be accessed without token
 Route::group(['middleware' => ['cors', 'json.response']], function () {
     // public routes
-
+    //CallBack
+    Route::controller(ApiProdMoMoMoneyController::class)->group(function (){
+        Route::post('momo/callback/','MomoCallBack')->MoMoCallback;
+    });
     Route::group(['prefix' => 'v1'], function () {
 
          Route::controller(ApiAuthController::class)->group(function () {
@@ -40,6 +43,8 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::controller(ApiSmsController::class)->group(function () {
             //Route::get('sms/{tel}/{msg}', 'SendSMS')->name("SendSMS");
         });
+
+
 });
 
 Route::middleware('auth:api')->group(function () {
@@ -99,6 +104,7 @@ Route::middleware('auth:api')->group(function () {
         });
 
         //Production
+
         Route::group(['prefix' => 'prod'], function () {
             //MTN Mobile Money
             Route::group(['prefix' => 'momo'], function () {

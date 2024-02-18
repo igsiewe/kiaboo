@@ -465,6 +465,7 @@ class ApiProdMoMoMoneyController extends Controller
         $data = json_decode($response->body());
 
         if($response->status()==200){
+            dd($data->status);
             if($data->status=="SUCCESSFUL"){
                 return response()->json(
                     [
@@ -870,6 +871,10 @@ class ApiProdMoMoMoneyController extends Controller
     }
 
     public function MOMO_Retrait_CallBack($referenceID){
+
+    }
+
+    public function MomoCallBack(){
 
     }
 
