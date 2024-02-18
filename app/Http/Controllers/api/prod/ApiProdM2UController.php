@@ -320,7 +320,7 @@ class ApiProdM2UController extends Controller
                     "UseDefaultWallet" => "No",
                     "OTP" => "SibSnfeSdksSji2023_@" //Le password du Teller
                 ]  );
-          //  dd( json_decode($response->body()) );
+            dd( json_decode($response->body()) );
             if($response->status()==200) {
 
                 $json = json_decode($response, false);
