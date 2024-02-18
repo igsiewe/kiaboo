@@ -411,6 +411,17 @@ class ApiProdMoMoMoneyController extends Controller
                     ],200
                 );
             }
+            if($data->message=="NOT_ENOUGH_FUNDS"){
+                return response()->json(
+                    [
+                        'status'=>404,
+                        'amount'=>$data->amount,
+                        'externalId'=>$data->externalId,
+                        'message'=>"Le solde du compte chez le partenaire est insuffisant",
+                        'description'=>$data->status,
+                    ],404
+                );
+            }
             return response()->json(
                 [
                     'status'=>404,
@@ -485,13 +496,12 @@ class ApiProdMoMoMoneyController extends Controller
             if($data->message=="NOT_ENOUGH_FUNDS"){
                 return response()->json(
                     [
-                        'status'=>200,
+                        'status'=>404,
                         'amount'=>$data->amount,
                         'externalId'=>$data->externalId,
-                        'message'=>"Lee solde du compte chez le partenaire est insuffisant",
+                        'message'=>"Le solde du compte chez le partenaire est insuffisant",
                         'description'=>$data->status,
-                        // 'financialTransactionId'=>$data->financialTransactionId,
-                    ],200
+                    ],404
                 );
             }
             return response()->json(
