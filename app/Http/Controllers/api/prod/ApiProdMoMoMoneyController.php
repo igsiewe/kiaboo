@@ -927,7 +927,7 @@ class ApiProdMoMoMoneyController extends Controller
             ])->Get($http);
 
         $data = json_decode($response->body());
-dd($data);
+
         if($response->status()==200){
 
             if($data->status=="PENDING"){
@@ -963,8 +963,8 @@ dd($data);
         }else{
             return response()->json(
                 [
-                    'status'=>404,
-                    'message'=>$data->status." - Transaction en succès",
+                    'status'=>$response->status(),
+                    'message'=>$response->body()
 
                 ],404
             );
