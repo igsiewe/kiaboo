@@ -320,7 +320,7 @@ class ApiProdM2UController extends Controller
                     "UseDefaultWallet" => "No",
                     "OTP" => "SibSnfeSdksSji2023_@" //Le password du Teller
                 ]  );
-            dd( json_decode($response->body()) );
+            //dd( json_decode($response->body()) );
             if($response->status()==200) {
 
                 $json = json_decode($response, false);
@@ -331,7 +331,12 @@ class ApiProdM2UController extends Controller
                         'message' => 'Une error s\'est produite. Veuillez contacter votre support',
                     ], $dataResultat->OK);
                 }
-
+                if ($dataResultat->Result != "Success") {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Une error s\'est produite. Veuillez contacter votre support',
+                    ], $dataResultat->OK);
+                }
                 //On met à jour la table transaction
 
                 //Par mesure de sécurité je rappelle les données de l'utilisateur
@@ -343,13 +348,13 @@ class ApiProdM2UController extends Controller
                 try {
                     DB::beginTransaction();
                     $Transaction = Transaction::where('id', $idTransaction)->where('service_id', $service)->update([
-                        'reference_partenaire' => $reference,
+                        'reference_partenaire' => $dataResultat->TransactionID,
                         'balance_before' => $balanceBeforeAgent,
                         'balance_after' => $balanceAfterAgent,
                         'debit' => $montant,
                         'credit' => 0,
                         'status' => 1, //End successfully
-                        'paytoken' => $reference,
+                        'paytoken' => $dataResultat->TransactionID,
                         'date_end_trans' => Carbon::now(),
                         'description' => 'SUCCESSFULL',
                         'message' => $dataResultat->Description,
@@ -750,13 +755,13 @@ class ApiProdM2UController extends Controller
                 try {
                     DB::beginTransaction();
                     $Transaction = Transaction::where('id', $idTransaction)->where('service_id', $service)->update([
-                        'reference_partenaire' => $reference,
+                        'reference_partenaire' => $dataResultat->TransactionID, // $reference,
                         'balance_before' => $balanceBeforeAgent,
                         'balance_after' => $balanceAfterAgent,
                         'debit' => 0,
                         'credit' => $request->Amount,
                         'status' => 1, //End successfully
-                        'paytoken' => $reference,
+                        'paytoken' => $dataResultat->TransactionID, // $reference,
                         'date_end_trans' => Carbon::now(),
                         'description' => 'SUCCESSFULL',
                         'message' => $dataResultat->Description,
