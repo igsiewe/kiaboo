@@ -213,6 +213,10 @@ class ApiProdMoMoMoneyController extends Controller
         $dataAcessToken = json_decode($responseToken->getContent());
         $accessToken = $dataAcessToken->access_token;
         $referenceID = $this->gen_uuid();
+        //On gardee l'UID de la transaction initiee
+        $saveUID = Transaction::where('id',$idTransaction)->update([
+            "paytoken"=>$referenceID
+        ]);
         $subcriptionKey = '1466a4536a3c476ab18baf82ce82a1f3';
         $customerPhone = "237".$customerNumber;
         $response = Http::withOptions(['verify' => false,])->withHeaders(
@@ -565,6 +569,7 @@ class ApiProdMoMoMoneyController extends Controller
         //Initie la transaction
         $device = $request->deviceId;
         $init_transaction = $apiCheck->init_Retrait($request->amount, $request->customerPhone, $service,"", $device);
+
         $dataTransactionInit = json_decode($init_transaction->getContent());
 
         if($init_transaction->getStatusCode() !=200){
@@ -575,7 +580,6 @@ class ApiProdMoMoMoneyController extends Controller
         }
         $idTransaction = $dataTransactionInit->transId; //Id de la transaction initiée
         $reference = $dataTransactionInit->reference; //Référence de la transaction initiée
-
         //On génère le token de la transation
         $responseToken = $this->MOMO_Collection_GetTokenAccess();
         if($responseToken->status()!=200){
@@ -592,6 +596,10 @@ class ApiProdMoMoMoneyController extends Controller
 
         //Référence de la transaction
         $referenceID = $this->gen_uuid();
+        //On gardee l'UID de la transaction initiee
+        $saveUID = Transaction::where('id',$idTransaction)->update([
+            "paytoken"=>$referenceID
+        ]);
         $customerPhone = "237".$request->customerPhone;
         $response = Http::withOptions(['verify' => false,])->withHeaders(
             [
