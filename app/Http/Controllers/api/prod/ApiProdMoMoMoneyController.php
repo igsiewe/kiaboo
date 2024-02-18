@@ -469,7 +469,7 @@ class ApiProdMoMoMoneyController extends Controller
         $data = json_decode($response->body());
 
         if($response->status()==200){
-            dd($data->status);
+
             if($data->status=="SUCCESSFUL"){
                 return response()->json(
                     [
@@ -477,6 +477,18 @@ class ApiProdMoMoMoneyController extends Controller
                         'amount'=>$data->amount,
                         'externalId'=>$data->externalId,
                         'message'=>"Terminée avec succès",
+                        'description'=>$data->status,
+                        // 'financialTransactionId'=>$data->financialTransactionId,
+                    ],200
+                );
+            }
+            if($data->message=="NOT_ENOUGH_FUNDS"){
+                return response()->json(
+                    [
+                        'status'=>200,
+                        'amount'=>$data->amount,
+                        'externalId'=>$data->externalId,
+                        'message'=>"Lee solde du compte chez le partenaire est insuffisant",
                         'description'=>$data->status,
                         // 'financialTransactionId'=>$data->financialTransactionId,
                     ],200
