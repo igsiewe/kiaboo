@@ -141,8 +141,9 @@
                     <li><a href="{{route("grilleCommission")}}"><i class="fa fa-star"></i>Grille commission</a></li>
                 </ul>
             </li>
-            @endif
+
             <li><a href="{{route("listUtilisateurs")}}"><i data-feather="users"></i>Utilisateurs</a></li>
+            @endif
         </ul>
     </div>
     @yield('content')
