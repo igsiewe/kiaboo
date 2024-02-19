@@ -229,7 +229,7 @@ class WebUtilisateurController extends Controller
         if(Auth::user()->id==$id){
             return redirect()->back()->withErrors('You cannot update your own account');
         }
-        $utilisateur = User::where("id",$id)->where("status_delete",0);
+        $utilisateur = User::find($id);
 
         //On vérifie si son solde est à 0
         if($utilisateur->balance_after != 0){
