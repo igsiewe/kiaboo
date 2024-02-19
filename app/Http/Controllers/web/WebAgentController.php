@@ -105,7 +105,7 @@ class WebAgentController extends Controller
             'ville'=>'required|integer',
             'quartier'=>'required|string',
             'adresse'=>'required|string',
-            'seuil'=>'required|integer',
+           // 'seuil'=>'required|integer',
             'numcni'=>'required|string',
             'datecni'=>'required',
         ]);
@@ -118,6 +118,10 @@ class WebAgentController extends Controller
         if(Auth::user()->type_user_id == UserRolesEnum::DISTRIBUTEUR->value){
             if($updateAgent->type_user_id != UserRolesEnum::AGENT->value ){
                 return redirect()->back()->withErrors('You cannot authorize to modify users of this type');
+            }
+
+            if($request->seuil==null || $request->seuil==0){
+                return redirect()->back()->withErrors('Veuillez définir le plafon de cet agent');
             }
         }
 
