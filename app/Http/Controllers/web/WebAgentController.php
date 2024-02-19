@@ -152,7 +152,9 @@ class WebAgentController extends Controller
             $updateAgent->ville_id = $request->ville;
             $updateAgent->quartier = $request->quartier;
             $updateAgent->adresse = $request->adresse;
-            $updateAgent->seuilapprovisionnement=$request->seuil;
+            if(Auth::user()->type_user_id == UserRolesEnum::DISTRIBUTEUR->value) {
+                $updateAgent->seuilapprovisionnement = $request->seuil;
+            }
             $updateAgent->distributeur_id = $request->mondistributeur;
             $updateAgent->numcni = $request->numcni;
             $updateAgent->datecni = $request->datecni;
