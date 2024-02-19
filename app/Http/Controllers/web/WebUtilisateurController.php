@@ -20,7 +20,7 @@ class WebUtilisateurController extends Controller
         $utilisateurs = User::where('type_user_id', "!=",UserRolesEnum::AGENT->value)->where("id", "!=", Auth::user()->id)->where("status_delete",0);
         $mesdistributeurs=Distributeur::all()->sortBy("name_distributeur");
         $typeUtilisateurs = TypeUser::where("status",1)->orderBy("name_type_user")->get();
-        dd("dsfgd");
+        dd($utilisateurs);
         if(Auth::user()->type_user_id==UserRolesEnum::DISTRIBUTEUR->value){
             $utilisateurs = $utilisateurs->where('distributeur_id', auth()->user()->distributeur_id)->where('id','<>',Auth::user()->id);
             $mesdistributeurs=Distributeur::where('id',Auth::user()->distributeur_id)->orderBy("name_distributeur");
