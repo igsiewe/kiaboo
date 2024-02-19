@@ -132,6 +132,7 @@
                     <li><a href="{{route("listAgent")}}"><i class="fa fa-user-cog"></i>Agents</a></li>
                 </ul>
             </li>
+            @if(Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::SUPADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::ADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::BACKOFFICE->value)
             <li>
                 <a href="#"><i data-feather="settings"></i>Paramètres <i class="fa fa-chevron-right dropdown-icon"></i></a>
                 <ul class="">
@@ -140,6 +141,7 @@
                     <li><a href="{{route("grilleCommission")}}"><i class="fa fa-star"></i>Grille commission</a></li>
                 </ul>
             </li>
+            @endif
             <li><a href="{{route("listUtilisateurs")}}"><i data-feather="users"></i>Utilisateurs</a></li>
         </ul>
     </div>
