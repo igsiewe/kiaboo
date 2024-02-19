@@ -120,9 +120,9 @@ class WebAgentController extends Controller
                 return redirect()->back()->withErrors('You cannot authorize to modify users of this type');
             }
 
-            if($request->seuil==null || $request->seuil==0){
-                return redirect()->back()->withErrors('Veuillez définir le plafon de cet agent');
-            }
+//            if($request->seuil==null || $request->seuil==0){
+//                return redirect()->back()->withErrors('Veuillez définir le plafon de cet agent');
+//            }
         }
 
 
@@ -152,9 +152,9 @@ class WebAgentController extends Controller
             $updateAgent->ville_id = $request->ville;
             $updateAgent->quartier = $request->quartier;
             $updateAgent->adresse = $request->adresse;
-            if(Auth::user()->type_user_id == UserRolesEnum::DISTRIBUTEUR->value) {
-                $updateAgent->seuilapprovisionnement = $request->seuil;
-            }
+//            if(Auth::user()->type_user_id == UserRolesEnum::DISTRIBUTEUR->value) {
+//                $updateAgent->seuilapprovisionnement = $request->seuil;
+//            }
             $updateAgent->distributeur_id = $request->mondistributeur;
             $updateAgent->numcni = $request->numcni;
             $updateAgent->datecni = $request->datecni;
