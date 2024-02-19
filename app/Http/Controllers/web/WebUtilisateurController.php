@@ -120,15 +120,15 @@ class WebUtilisateurController extends Controller
         ]);
 
         if(Auth::user()->status == 0){
-            return redirect()->back()->withErrors('You cannot authorize to perform this operation_');
+            return redirect()->back()->withErrors('You cannot authorize to perform this operation.');
         }
         if(Auth::user()->type_user_id != UserRolesEnum::DISTRIBUTEUR->value){
-            return redirect()->back()->withErrors('You cannot authorize to modify');
+            return redirect()->back()->withErrors('You cannot authorize to modify users of this type');
         }
 
         if(Auth::user()->type_user_id == UserRolesEnum::DISTRIBUTEUR->value){ //Les distributeur ne peuvent créer que des distributeurs
             if($request->typeuser !=UserRolesEnum::DISTRIBUTEUR->value){
-                return redirect()->back()->withErrors('You cannot authorize to perform this operation__');
+                return redirect()->back()->withErrors('You cannot authorize to perform this operation');
             }
         }
 

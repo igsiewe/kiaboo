@@ -18,7 +18,7 @@ class WebAgentController extends Controller
 
     public function listAgent(){
 
-        $agents = User::where('type_user_id', UserRolesEnum::AGENT->value);
+        $agents = User::where('type_user_id', UserRolesEnum::AGENT->value)->where("stqtus_delete",0);
         $mesdistributeurs = Distributeur::where("status",1);
         if(Auth::user()->type_user_id==UserRolesEnum::DISTRIBUTEUR->value){
             $agents = $agents->where('distributeur_id', auth()->user()->distributeur_id);
@@ -112,10 +112,21 @@ class WebAgentController extends Controller
         if(Auth::user()->status == 0){
             return redirect()->back()->withErrors('You cannot authorize to perform this operation');
         }
-        if(Auth::user()->type_user_id != UserRolesEnum::DISTRIBUTEUR->value){
-            return redirect()->back()->withErrors('You cannot authorize to perform this operation');
+
+        $updateAgent = User::find($id);
+
+        if(Auth::user()->type_user_id == UserRolesEnum::DISTRIBUTEUR->value){
+            if($updateAgent->type_user_id != UserRolesEnum::AGENT->value ){
+                return redirect()->back()->withErrors('You cannot authorize to modify users of this type');
+            }
         }
 
+
+        if(Auth::user()->type_user_id == UserRolesEnum::ADMIN->value || Auth::user()->type_user_id == UserRolesEnum::SUPADMIN->value ){
+            if($updateAgent->type_user_id == UserRolesEnum::AGENT->value ){
+                return redirect()->back()->withErrors('You cannot authorize to modify users of this type : AGENT');
+            }
+        }
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator->errors()->first());
         }
@@ -126,7 +137,7 @@ class WebAgentController extends Controller
         if($checkDateCni==true){
             return redirect()->back()->withErrors('Please check the date of your CNI. It cannot great than today');
         }
-        $updateAgent = User::find($id);
+
         if($updateAgent->status== 0){
             return redirect()->back()->withErrors('Please unblock this agent to update it');
         }
@@ -200,6 +211,6 @@ class WebAgentController extends Controller
             return redirect()->back()->withErrors('Impossible de supprimer cet agent car il a des transactions');
         }
         $agent->delete();
-        return redirect()->back()->with('success', 'Distributeur supprimé avec succès');
+        return redirect()->back()->with('success', 'Agent supprimé avec succès');
     }
 }
