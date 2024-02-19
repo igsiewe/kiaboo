@@ -199,7 +199,10 @@ class WebUtilisateurController extends Controller
         if(Auth::user()->id==$id){
             return redirect()->back()->withErrors('You cannot update your own account');
         }
-        $utilisateur = User::where("id",$id)->where("status_delete",0);
+        $utilisateur = User::find($id);
+        if($utilisateur->status_delete ==1){
+            return redirect()->back()->withErrors('User not found');
+        }
         $utilisateur->status = 1;
         $utilisateur->updated_at = now();
         $utilisateur->updated_by = auth()->user()->id;
@@ -211,7 +214,10 @@ class WebUtilisateurController extends Controller
         if(Auth::user()->id==$id){
             return redirect()->back()->withErrors('You cannot update your own account');
         }
-        $utilisateur = User::where("id",$id)->where("status_delete",0);
+        $utilisateur = User::find($id);
+        if($utilisateur->status_delete ==1){
+            return redirect()->back()->withErrors('User not found');
+        }
         $utilisateur->status = 0;
         $utilisateur->updated_at = now();
         $utilisateur->updated_by = auth()->user()->id;
