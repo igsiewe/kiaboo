@@ -18,7 +18,7 @@ class WebAgentController extends Controller
 
     public function listAgent(){
 
-        $agents = User::where('type_user_id', UserRolesEnum::AGENT->value)->where("stqtus_delete",0);
+        $agents = User::where('type_user_id', UserRolesEnum::AGENT->value)->where("status_delete",0);
         $mesdistributeurs = Distributeur::where("status",1);
         if(Auth::user()->type_user_id==UserRolesEnum::DISTRIBUTEUR->value){
             $agents = $agents->where('distributeur_id', auth()->user()->distributeur_id);
@@ -182,7 +182,7 @@ class WebAgentController extends Controller
     }
 
     public function getMesAgents($idDistributeur){
-        $listagents = User::where("distributeur_id",$idDistributeur)->where("type_user_id",UserRolesEnum::AGENT->value)->orderBy("name","asc")->orderBy("surname","asc")->get();
+        $listagents = User::where("distributeur_id",$idDistributeur)->where("status_delete",0)->where("type_user_id",UserRolesEnum::AGENT->value)->orderBy("name","asc")->orderBy("surname","asc")->get();
         return view('pages.topupagent.show_agent_distributeur', compact('listagents'));
     }
 
