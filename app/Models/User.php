@@ -52,6 +52,9 @@ class User extends Authenticatable
         "last_connexion",
         "numcni",
         "datecni",
+        "deleted_at",
+        "deleted_by",
+        "status_delete"
     ];
 
     public function ville()

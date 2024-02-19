@@ -17,7 +17,7 @@ class WebUtilisateurController extends Controller
 {
     public function listUtilisateurs(){
 
-        $utilisateurs = User::where('type_user_id', "!=",UserRolesEnum::AGENT->value);
+        $utilisateurs = User::where('type_user_id', "!=",UserRolesEnum::AGENT->value)->where("id", "!=", Auth::user()->id)->where("status_delete",0);
         $mesdistributeurs=Distributeur::all()->sortBy("name_distributeur");
         $typeUtilisateurs = TypeUser::where("status",1)->orderBy("name_type_user")->get();
         if(Auth::user()->type_user_id==UserRolesEnum::DISTRIBUTEUR->value){
@@ -146,8 +146,16 @@ class WebUtilisateurController extends Controller
             return redirect()->back()->withErrors('Please check the date of your CNI. It cannot great than today');
         }
         $updateAgent = User::find($id);
+
         if($updateAgent->status== 0){
             return redirect()->back()->withErrors('Please unblock this agent to update it');
+        }
+
+        if($updateAgent->status_delete== 1){
+            return redirect()->back()->withErrors('You cannot update this agent');
+        }
+        if($updateAgent->id== Auth::user()->id){
+            return redirect()->back()->withErrors('You cannot update yourself');
         }
         if($updateAgent !=null){
             $updateAgent->name = $request->name;
@@ -171,7 +179,7 @@ class WebUtilisateurController extends Controller
     }
 
     public function getUpdateUtilisateur($id){
-        $detailutilisateur  = User::where('id', $id)->with('ville')->first();
+        $detailutilisateur  = User::where('id', $id)->where("status_delete",0)->with('ville')->first();
         $ville = ville::where("status",1)->orderBy("name_ville","asc")->get();
         $mesdistributeurs = Distributeur::where("status",1);
         $typeUtilisateurs = TypeUser::where("status",1)->orderBy("name_type_user")->get();
@@ -189,7 +197,7 @@ class WebUtilisateurController extends Controller
         if(Auth::user()->id==$id){
             return redirect()->back()->withErrors('You cannot update your own account');
         }
-        $utilisateur = User::find($id);
+        $utilisateur = User::where("id",$id)->where("status_delete",0);
         $utilisateur->status = 1;
         $utilisateur->updated_at = now();
         $utilisateur->updated_by = auth()->user()->id;
@@ -201,7 +209,7 @@ class WebUtilisateurController extends Controller
         if(Auth::user()->id==$id){
             return redirect()->back()->withErrors('You cannot update your own account');
         }
-        $utilisateur = User::find($id);
+        $utilisateur = User::where("id",$id)->where("status_delete",0);
         $utilisateur->status = 0;
         $utilisateur->updated_at = now();
         $utilisateur->updated_by = auth()->user()->id;
@@ -213,7 +221,7 @@ class WebUtilisateurController extends Controller
         if(Auth::user()->id==$id){
             return redirect()->back()->withErrors('You cannot update your own account');
         }
-        $utilisateur = User::find($id);
+        $utilisateur = User::where("id",$id)->where("status_delete",0);
 
         //On vérifie si son solde est à 0
         if($utilisateur->balance_after != 0){

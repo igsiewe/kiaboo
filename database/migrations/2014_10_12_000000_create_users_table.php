@@ -49,6 +49,10 @@ return new class extends Migration
             $table->foreignId("created_by")->references("id")->on("users");
             $table->string("'reference_last_transaction',",100)->nullable();
             $table->integer("last_service_id")->nullable();
+            $table->integer("status_delete")->nullable()->default(0)->comment("0 : no deleted, 1:deleted");;
+            $table->dateTime("deleted_at")->nullable();
+            $table->foreignId("deleted_by")->references("id")->on("users");
+
             $table->rememberToken();
             $table->timestamps();
         });

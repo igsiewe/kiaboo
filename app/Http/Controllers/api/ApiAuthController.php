@@ -75,6 +75,7 @@ class ApiAuthController extends BaseController
             'login' => $request->login,
             'password' => $request->password,
             'status' => 1,
+            'status_delete'=>0,
            // 'type_user_id' => UserRolesEnum::AGENT->value
         ];
 
