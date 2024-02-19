@@ -101,6 +101,7 @@ class WebUtilisateurController extends Controller
         $newUtilisateur->numcni = $request->numcni;
         $newUtilisateur->datecni = $request->datecni;
         $newUtilisateur->moncodeparrainage = "KIAB".$this->genererChaineAleatoire(8);
+        $newUtilisateur->status_delete =0;
         $newUtilisateur->save();
         return redirect()->back()->with('success', 'Agent created successfully');
     }
@@ -233,7 +234,14 @@ class WebUtilisateurController extends Controller
         if($utilisateur->transactions->count() > 0){ //On vérifie s'il a des transactions d'approvisionnement
             return redirect()->back()->withErrors('Impossible de supprimer cet utilisateur');
         }
-        $utilisateur->delete();
+        $utilisateur->update([
+            "status_delete"=>1,
+            "deleted_at"=>Carbon::now(),
+            "deleted_by"=>Auth::user()->id,
+            "status"=>0,
+            "updated_by"=>Auth::user()->id,
+            "updated_at"=>Carbon::now(),
+        ]);
         return redirect()->back()->with('success', 'Utilisateur supprimé avec succès');
     }
 }
