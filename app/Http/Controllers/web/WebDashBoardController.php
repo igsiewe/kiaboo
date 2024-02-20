@@ -82,7 +82,7 @@ class WebDashBoardController extends Controller
                 ];
             })->sortByDesc("volume")->take(5)->values();
 
-            $bestAgents = DB::table("transactions")->where("status", StatusTransEnum::VALIDATED->value)
+            $bestAgents = DB::table("transactions")->where("transactions.status", StatusTransEnum::VALIDATED->value)
                 ->join("users", "users.id","transactions.source")
                 ->where("fichier","agent")
                 ->selectRaw('kb_users.id, kb_users.login, kb_users.name, kb_users.surname, sum(kb_transactions.debit+kb_transactions.credit) as ca')
