@@ -285,7 +285,7 @@
         function getDetailTransaction(id) {
             $("#detailTransactions").html("");
             $.ajax({
-                url: "/reconciliations/transaction/edit/"+id,
+                url: "/reconciliation/transactions/edit/"+id,
                 type: "GET",
                 success: function (data) {
                     $("#detailTransactions").html(data);
