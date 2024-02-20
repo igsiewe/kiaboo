@@ -629,7 +629,7 @@ class ApiProdMoMoMoneyController extends Controller
                 'X-Reference-Id'=> $referenceID,
                 'Ocp-Apim-Subscription-Key'=> '886cc9e141ab492f80d9567b3c46d59c',
                 'X-Target-Environment'=> 'mtncameroon',
-                'X-Callback-Url'=> 'https://kiaboogroup.com/api/momo/callback/',
+                'X-Callback-Url'=> 'https://kiaboogroup.com/api/momo/callback',
             ])
             ->Post('https://proxy.momoapi.mtn.com/collection/v1_0/requesttowithdraw', [
 
