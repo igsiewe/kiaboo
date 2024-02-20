@@ -71,7 +71,8 @@ class WebDashBoardController extends Controller
             $bestAgents =$bestAgents->selectRaw('kb_users.id, kb_users.login, kb_users.name, kb_users.surname, kb_distributeurs.name_distributeur, sum(kb_transactions.debit+kb_transactions.credit) as ca')
                 ->groupBy('name', 'surname','login','id')
                 ->orderBy('ca', 'desc')
-                ->limit(5);
+                ->limit(5)
+                ->get();
 
      //     dd($bestAgents->get());
 
