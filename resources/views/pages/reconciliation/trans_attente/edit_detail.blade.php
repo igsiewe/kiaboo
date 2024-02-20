@@ -42,9 +42,9 @@
                         <td nowrap>Montant :</td>
                         <td nowrap>
                             @if($transactions->debit==0)
-                                <span style="text-decoration-line: underline; display: flex">{{number_format($transactions->credit,0,',',' ')." edit_detail.blade.php".$money}}</span>
+                                <span style="text-decoration-line: underline; display: flex">{{number_format($transactions->credit,0,',',' ')." ".$money}}</span>
                             @else
-                                <span style="text-decoration-line: underline; display: flex">{{number_format($transactions->debit,0,',',' ')." edit_detail.blade.php".$money}}</span>
+                                <span style="text-decoration-line: underline; display: flex">{{number_format($transactions->debit,0,',',' ')." ".$money}}</span>
                             @endif
                         </td>
                         <td nowrap>Client :</td>
@@ -55,21 +55,21 @@
                     <tr>
                         <td nowrap>Solde avant :</td>
                         <td nowrap><span
-                                    style="text-decoration-line: underline; display: flex">{{number_format($transactions->balance_before,0,","," ")." edit_detail.blade.php".$money}}</span>
+                                    style="text-decoration-line: underline; display: flex">{{number_format($transactions->balance_before,0,","," ")." ".$money}}</span>
                         </td>
                         <td nowrap>Solde après :</td>
                         <td nowrap><span
-                                    style="text-decoration-line: underline; display: flex">{{number_format($transactions->balance_after,0,","," ")." edit_detail.blade.php".$money}}</span>
+                                    style="text-decoration-line: underline; display: flex">{{number_format($transactions->balance_after,0,","," ")." ".$money}}</span>
                         </td>
                     </tr>
                     <tr>
                         <td nowrap>Commission Distributeur :</td>
                         <td>
-                            <span style="text-decoration-line: underline; display: flex">{{number_format($transactions->commission_distributeur,0,","," ")." edit_detail.blade.php".$money}}</span>
+                            <span style="text-decoration-line: underline; display: flex">{{number_format($transactions->commission_distributeur,0,","," ")." ".$money}}</span>
                         </td>
                         <td nowrap>Commission Agent :</td>
                         <td nowrap><span
-                                    style="text-decoration-line: underline; display: flex">{{number_format($transactions->commission_agent,0,","," ")." edit_detail.blade.php".$money}}</span>
+                                    style="text-decoration-line: underline; display: flex">{{number_format($transactions->commission_agent,0,","," ")." ".$money}}</span>
                         </td>
                     </tr>
                 </table>
