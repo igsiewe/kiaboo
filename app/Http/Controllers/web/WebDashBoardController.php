@@ -101,7 +101,10 @@ class WebDashBoardController extends Controller
                 }
                 else
                 {
-                    dd($data->envoi,$i );
+                    $result = array_filter($data, function ($item) {
+                        return $item["mois"] === $i;
+                    });
+                    dd($result);
                     $envoi->add($data["envoi"][$i]);
 
                 }
