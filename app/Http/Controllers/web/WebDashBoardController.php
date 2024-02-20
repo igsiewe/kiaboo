@@ -101,7 +101,7 @@ class WebDashBoardController extends Controller
                 }
                 else
                 {
-                    $result =$data->first()->mois;
+                    $result =$data->first()["envoi"];
                     dd($result);
                     $envoi->add($data["envoi"][$i]);
 
