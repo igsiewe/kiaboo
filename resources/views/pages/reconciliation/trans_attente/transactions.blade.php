@@ -24,7 +24,7 @@
                     <div class="card-header stat-widget card-shadow-danger border-danger">
                         <div class="widget-chat-wrapper-outer">
                             <div class="widget-chart-content">
-                                <form action="{{route("listTransactions.filtre")}}" id="frmFiltre" name="frmFiltre" method="post">
+                                <form action="{{route("transactionEnattente.filtre")}}" id="frmFiltre" name="frmFiltre" method="post">
                                     @csrf
                                     <div class="row">
                                         <div class="col-md-12 col-lg-2">
