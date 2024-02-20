@@ -13,6 +13,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class WebReconciliationController extends Controller
 {
@@ -114,5 +115,18 @@ class WebReconciliationController extends Controller
             ]
         );
 
+    }
+
+    public function getDetailTransaction($id){
+        $transactions  = DB::table('transactions')
+            ->join("users","users.id","transactions.source")
+            ->join('services', 'transactions.service_id', '=', 'services.id')
+            ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
+            ->select('users.login as agent','transactions.id','transactions.reference','transactions.reference_partenaire','transactions.date_transaction','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.commission','transactions.commission_agent','transactions.commission_distributeur','transactions.balance_before','transactions.balance_after' ,'transactions.status','services.name_service','services.logo_service','type_services.name_type_service','type_services.id as type_service_id','transactions.date_operation', 'transactions.heure_operation','transactions.description')
+            ->where("transactions.fichier","agent")
+            ->where("transactions.id",$id)
+            ->get()->first();
+        $money = "F CFA";
+        return view('pages.reconciliation.trans_attente.edit_detail', compact('transactions','money'));
     }
 }

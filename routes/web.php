@@ -79,6 +79,7 @@ Route::middleware(['auth','checkStatus'])->group(function (){
             Route::any('/transactions/attente', 'transactionEnattente')->name("transactionEnattente");
             Route::any('/transactions/attente/search', 'transactionEnattenteSearch')->name("transactionEnattente.filtre");
             Route::any('/transactions/corrigees', 'transactionCorrigees')->name("transactionCorrigees");
+            Route::get('/transactions/edit/{id}', 'getDetailTransaction')->name("getDetailTransactionEnAttente");
         });
     });
     Route::group(['prefix' => 'commissions'], function () {
