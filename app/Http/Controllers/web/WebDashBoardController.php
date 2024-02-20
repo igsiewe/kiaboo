@@ -90,7 +90,7 @@ class WebDashBoardController extends Controller
                 ->groupBy('mois')
                 ->orderBy('mois', 'desc')->get()->toArray();
 
-
+dd($resultGraphe);
 
 
            $mesdata=($resultGraphe->map(function (array $item)
