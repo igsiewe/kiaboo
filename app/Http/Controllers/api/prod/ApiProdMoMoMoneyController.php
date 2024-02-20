@@ -979,8 +979,7 @@ class ApiProdMoMoMoneyController extends Controller
     public function MomoCallBack(Request $request){
 
         $momocallBackResponse = file_get_contents('php://input');
-        $response = json_decode($momocallBackResponse);
-        $data = $response->body();
+        $data = json_decode($momocallBackResponse);
         $externalId = $data->externalId;
         $Transaction = Transaction::where("id",$externalId);
 
