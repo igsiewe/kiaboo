@@ -113,11 +113,11 @@
                                                     <i data-feather="user"></i>
                                                 </div>
                                                 <div class="tr-text">
-                                                    <h4 title="{{$best["login"]}}">{{$best["name"]." ".$best["surname"]}}</h4>
+                                                    <h4 title="{{$best->login}}">{{$best->name." ".$best->surname}}</h4>
                                                     @if(Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::DISTRIBUTEUR->value)
-                                                         <p>{{$best["login"]}}</p>
+                                                         <p>{{$best->login}}</p>
                                                     @else
-                                                        <p>{{$best["name_distributeur"]}}</p>
+                                                        <p>{{$best->name_distributeur}}</p>
                                                     @endif
 
                                                 </div>
