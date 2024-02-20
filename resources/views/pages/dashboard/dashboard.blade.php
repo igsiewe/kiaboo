@@ -219,12 +219,12 @@
             },
             colors: ['#b3baff', '#90e0db'],
             series: [{
-                name: 'Withdrawal',
+                name: 'Retrait',
                 data: @isset($retrait)
                     {{$retrait}}
                     @endisset
             }, {
-                name: 'Deposite',
+                name: 'Dépôt',
                 data: @isset($envoi)
                     {{$envoi}}
                     @endisset

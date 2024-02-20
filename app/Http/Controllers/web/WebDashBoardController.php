@@ -107,7 +107,7 @@ class WebDashBoardController extends Controller
                     "retrait" =>$item["credit"],
                 ];
             }));
-
+dd($mesdata);
             $envoi = collect();
             for($i = 1;$i <= 12; $i++)
             {
@@ -123,14 +123,6 @@ class WebDashBoardController extends Controller
                 }
             }
 
-            $mesdata=($resultGraphe->map(function (array $item)
-            {
-                return [
-                    "month" =>$item["month"],
-                    "envoi" =>$item["debit"],
-                    "retrait" =>$item["credit"],
-                ];
-            }));
             $retrait = collect();
             for($i = 1;$i <= 12; $i++)
             {
