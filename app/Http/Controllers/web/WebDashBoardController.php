@@ -81,14 +81,7 @@ class WebDashBoardController extends Controller
                 ->groupBy('mois')
                 ->orderBy('mois', 'desc');
 dd($resultGraphe->get());
-            $resultGraphe = $query->get()->map(function (Transaction $transaction){
-                return [
-                    "year" => Carbon::parse($transaction->created_at)->year,
-                    "month" => Carbon::parse($transaction->created_at)->month,
-                    "debit" => $transaction->debit,
-                    "credit" => $transaction->credit,
-                ];
-            });
+
 
            $mesdata=($resultGraphe->map(function (array $item)
             {
