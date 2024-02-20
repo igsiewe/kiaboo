@@ -88,7 +88,7 @@ class WebDashBoardController extends Controller
                 ->whereYear('transactions.date_transaction', Carbon::now()->year)
                 ->selectRaw('month(kb_transactions.date_transaction) as mois, sum(kb_transactions.debit) as debit, sum(kb_transactions.credit) as credit')
                 ->groupBy('mois')
-                ->orderBy('mois', 'desc');
+                ->orderBy('mois', 'desc')->get();
 
 
 
