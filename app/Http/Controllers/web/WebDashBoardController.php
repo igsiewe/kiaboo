@@ -101,6 +101,7 @@ class WebDashBoardController extends Controller
                 }
                 else
                 {
+                    dd($data);
                     $result =$data["envoi"];
                     dd($result);
                     $envoi->add($data["envoi"][$i]);
