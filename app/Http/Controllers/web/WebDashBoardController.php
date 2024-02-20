@@ -65,7 +65,7 @@ class WebDashBoardController extends Controller
                 ->join("distributeurs","distributeurs.id","users.distributeur_id")
                 ->where("transactions.fichier","agent");
 
-            if(Auth::users()->type_user_id==UserRolesEnum::DISTRIBUTEUR->value){
+            if(Auth::user()->type_user_id==UserRolesEnum::DISTRIBUTEUR->value){
                 $bestAgents = $bestAgents ->where("users.distributeur_id", Auth::user()->distributeur_id);
             }
             $bestAgents =$bestAgents->selectRaw('kb_users.id, kb_users.login, kb_users.name, kb_users.surname, kb_distributeurs.name_distributeur, sum(kb_transactions.debit+kb_transactions.credit) as ca')
