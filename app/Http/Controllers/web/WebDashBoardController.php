@@ -97,7 +97,7 @@ class WebDashBoardController extends Controller
                     "retrait" =>$item["credit"],
                 ];
             }));
-dd($query->get());
+
             $envoi = collect();
             for($i = 1;$i <= 12; $i++)
             {
