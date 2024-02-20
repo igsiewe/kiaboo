@@ -30,8 +30,6 @@ class WebDashBoardController extends Controller
             })->whereHas('auteur',function ($query) use ($auth){
                 $query->whereIn("id",$auth);
             });
-dd($query->get());
-    // dd($query->get()->take(5));
 
         $volumeofTransaction=0;
         $currentBalance=0;
@@ -84,6 +82,7 @@ dd($query->get());
                 ];
             })->sortByDesc("volume")->take(5)->values();
 
+            dd($bestAgents);
 
 /*            $resultGraphe= $query->selectRaw('year(kb_transactions.created_at) year, month(kb_transactions.created_at) month, sum(kb_transactions.debit) debit, sum(kb_transactions.credit) credit')
                 ->whereYear('transactions.created_at','=',Carbon::now()->year)
