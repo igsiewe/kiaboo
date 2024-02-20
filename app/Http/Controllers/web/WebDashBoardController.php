@@ -86,11 +86,9 @@ class WebDashBoardController extends Controller
             }
             $resultGraphe= $dataGraphee
                 ->whereYear('transactions.date_transaction', Carbon::now()->year)
-                ->selectRaw('month(kb_transactions.date_transaction) as mois, sum(kb_transactions.debit) as debit, sum(kb_transactions.credit) as credit')
+                ->selectRaw('month(kb_transactions.date_transaction) as mois, sum(kb_transactions.debit) as envoi, sum(kb_transactions.credit) as retrait')
                 ->groupBy('mois')
                 ->orderBy('mois', 'desc')->get()->toArray();
-
-dd($resultGraphe);
 
 
            $mesdata=($resultGraphe->map(function (array $item)
@@ -105,7 +103,7 @@ dd($resultGraphe);
             $envoi = collect();
             for($i = 1;$i <= 12; $i++)
             {
-                $data  = $mesdata->where("month",$i);
+                $data  = $resultGraphe->where("month",$i);
 
                 if ($data == null || $data->isEmpty())
                 {
@@ -120,7 +118,7 @@ dd($resultGraphe);
             $retrait = collect();
             for($i = 1;$i <= 12; $i++)
             {
-                $data  = $mesdata->where("month",$i);
+                $data  = $resultGraphe->where("month",$i);
 
                 if ($data == null || $data->isEmpty())
                 {
