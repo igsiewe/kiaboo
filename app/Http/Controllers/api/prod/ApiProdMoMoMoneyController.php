@@ -982,7 +982,10 @@ class ApiProdMoMoMoneyController extends Controller
         $data = json_decode($momocallBackResponse);
         $externalId = $data->externalId;
         $Transaction = Transaction::where("id",$externalId);
-
+        $logFile = "callback.json";
+        $log = fopen($logFile,"a");
+        fwrite($log, $momocallBackResponse);
+        fclose($log);
         if($Transaction->count()>0){
             $status=3;
             if($data->status=="SUCCESSFULL"){
