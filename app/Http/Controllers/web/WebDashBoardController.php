@@ -82,7 +82,15 @@ class WebDashBoardController extends Controller
                 ];
             })->sortByDesc("volume")->take(5)->values();
 
-            dd($bestAgents);
+            $bestAgents = DB::table("transactions")->where("status", StatusTransEnum::VALIDATED->value)
+                ->join("users", "users.id","transactions.source")
+                ->where("fichier","agent")
+                ->selectRaw('kb_users.id, kb_users.login, kb_users.name, kb_users.surname, sum(kb_transactions.debit+kb_transactions.credit) as ca')
+                ->groupBy('name', 'surname','login','id')
+                ->orderBy('ca', 'desc')
+                ->limit(5);
+
+          dd($bestAgents);
 
 /*            $resultGraphe= $query->selectRaw('year(kb_transactions.created_at) year, month(kb_transactions.created_at) month, sum(kb_transactions.debit) debit, sum(kb_transactions.credit) credit')
                 ->whereYear('transactions.created_at','=',Carbon::now()->year)
