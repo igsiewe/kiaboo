@@ -75,12 +75,22 @@ class WebDashBoardController extends Controller
                 ->limit(5)
                 ->get();
 
-            $resultGraphe= $transAgent
+            //---------------
+            $dataGraphee = DB::table("transactions")->where("transactions.status", StatusTransEnum::VALIDATED->value)
+                ->join("users", "users.id","transactions.source")
+                ->join("distributeurs","distributeurs.id","users.distributeur_id")
+                ->where("transactions.fichier","agent");
+
+            if(Auth::user()->type_user_id==UserRolesEnum::DISTRIBUTEUR->value){
+                $dataGraphee = $dataGraphee ->where("users.distributeur_id", Auth::user()->distributeur_id);
+            }
+            $resultGraphe= $dataGraphee
                 ->whereYear('transactions.date_transaction', Carbon::now()->year)
                 ->selectRaw('month(kb_transactions.date_transaction) as mois, sum(kb_transactions.debit) as debit, sum(kb_transactions.credit) as credit')
                 ->groupBy('mois')
                 ->orderBy('mois', 'desc');
-dd($resultGraphe->get());
+
+           dd($resultGraphe->get());
 
 
            $mesdata=($resultGraphe->map(function (array $item)
