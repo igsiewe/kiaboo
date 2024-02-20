@@ -1005,6 +1005,7 @@ class ApiProdMoMoMoneyController extends Controller
                     $balanceAfterAgent = floatval($balanceBeforeAgent) + floatval($montant);
                     $reference_partenaire=$data->financialTransactionId;
                     $agent = $user->first()->id;
+                    $reference = $Transaction->first()->reference;
                     try{
                         DB::beginTransaction();
                         $updateTransaction=$Transaction->update([
@@ -1026,7 +1027,7 @@ class ApiProdMoMoMoneyController extends Controller
                             'user_last_transaction_id'=>$agent,
                             'last_service_id'=>ServiceEnum::RETRAIT_MOMO->value,
                             'reference_last_transaction'=>$reference_partenaire,
-                            'remember_token'=>$Transaction->first()->reference,
+                            'remember_token'=>$reference,
                             'total_commission'=>$commission_agent,
                         ]);
 
@@ -1065,7 +1066,7 @@ class ApiProdMoMoMoneyController extends Controller
                             'function' => "MOMO_Retrait_CheckStatus",
                             'response'=>$e->getMessage(),
                             'user' => $agent,
-                            'referenceID' => $Transaction->first()->reference,
+                            'referenceID' => $reference,
                         ]);
                     }
 
