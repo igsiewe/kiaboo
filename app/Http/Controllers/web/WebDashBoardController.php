@@ -77,7 +77,7 @@ class WebDashBoardController extends Controller
             $resultGraphe= $query->selectRaw('year(kb_transactions.created_at) annee, month(kb_transactions.created_at) mois, sum(kb_transactions.debit) debit, sum(kb_transactions.credit) credit')
                 ->whereYear('transactions.created_at','=',Carbon::now()->year)
                 ->groupBy('annee', 'mois')
-                ->orderBy('anneee', 'desc')
+                ->orderBy('annee', 'desc')
                  ->orderBy('mois', 'desc');
 dd($resultGraphe->get());
             $resultGraphe = $query->get()->map(function (Transaction $transaction){
