@@ -94,7 +94,7 @@ class WebDashBoardController extends Controller
             for($i = 1;$i <= 12; $i++)
             {
                 $data  = collect($resultGraphe)->where('mois', $i);
-
+dd($data);
                 if ($data == null || $data->isEmpty())
                 {
                     $envoi->add(0);
