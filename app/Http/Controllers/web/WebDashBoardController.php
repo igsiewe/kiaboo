@@ -10,6 +10,7 @@ use App\Http\Enums\UserRolesEnum;
 use App\Models\Distributeur;
 use App\Models\Memo;
 use App\Models\Transaction;
+use App\Models\TypeUser;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -59,34 +60,15 @@ class WebDashBoardController extends Controller
             $revenue = $query->get()->sum("commission_distributeur");
             $lastTransactions = $query->orderBy('transactions.date_transaction', 'desc')->limit(5)->get();
 
-
-            $bestAgents = $query->get()->map(function (Transaction $transaction){
-                return [
-                    "volume" => $transaction->debit + $transaction->credit,
-                    "commission" => $transaction->commission_distributeur,
-                    "name" => $transaction->auteur->name,
-                    "surname" => $transaction->auteur->surname,
-                    "login" => $transaction->auteur->login,
-                    "id" => $transaction->auteur->id,
-                    "name_distributeur" => $transaction->auteur()->first()->distributeur->name_distributeur,
-                ];
-            })->groupBy("name","surname","login","id","name_distributeur")->map(function ($item){
-                return [
-                    "volume" => $item->sum("volume"),
-                    "commission" => $item->sum("commission"),
-                    "name" => $item->first()["name"],
-                    "surname" => $item->first()["surname"],
-                    "login" => $item->first()["login"],
-                    "id" => $item->first()["id"],
-                    "name_distributeur" => $item->first()["name_distributeur"],
-                ];
-            })->sortByDesc("volume")->take(5)->values();
-
             $bestAgents = DB::table("transactions")->where("transactions.status", StatusTransEnum::VALIDATED->value)
                 ->join("users", "users.id","transactions.source")
                 ->join("distributeurs","distributeurs.id","users.distributeur_id")
-                ->where("fichier","agent")
-                ->selectRaw('kb_users.id, kb_users.login, kb_users.name, kb_users.surname, kb_distributeurs.name_distributeur, sum(kb_transactions.debit+kb_transactions.credit) as ca')
+                ->where("transactions.fichier","agent");
+
+            if(Auth::users()->type_user_id==UserRolesEnum::DISTRIBUTEUR->value){
+                $bestAgents = $bestAgents ->where("users.distributeur_id", Auth::user()->distributeur_id);
+            }
+            $bestAgents =$bestAgents->selectRaw('kb_users.id, kb_users.login, kb_users.name, kb_users.surname, kb_distributeurs.name_distributeur, sum(kb_transactions.debit+kb_transactions.credit) as ca')
                 ->groupBy('name', 'surname','login','id')
                 ->orderBy('ca', 'desc')
                 ->limit(5);
