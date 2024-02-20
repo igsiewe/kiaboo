@@ -84,8 +84,9 @@ class WebDashBoardController extends Controller
 
             $bestAgents = DB::table("transactions")->where("transactions.status", StatusTransEnum::VALIDATED->value)
                 ->join("users", "users.id","transactions.source")
+                ->join("distributeurs","distributeurs.id","users.distributeur_id")
                 ->where("fichier","agent")
-                ->selectRaw('kb_users.id, kb_users.login, kb_users.name, kb_users.surname, sum(kb_transactions.debit+kb_transactions.credit) as ca')
+                ->selectRaw('kb_users.id, kb_users.login, kb_users.name, kb_users.surname, kb_distributeurs.name_distributeur, sum(kb_transactions.debit+kb_transactions.credit) as ca')
                 ->groupBy('name', 'surname','login','id')
                 ->orderBy('ca', 'desc')
                 ->limit(5);
