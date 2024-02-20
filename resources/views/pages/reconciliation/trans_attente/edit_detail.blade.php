@@ -26,7 +26,7 @@
                                     style="text-decoration-line: underline; display: flex">{{$transactions->date_transaction}}</span>
                         </td>
                         <td nowrap>Statut :</td>
-                        <td nowrap><span class="badge bg-success">{{$transactions->description}}</span></td>
+                        <td nowrap><span class="badge bg-warning">{{$transactions->description}}</span></td>
                     </tr>
                     <tr>
                         <td nowrap>Service :</td>
@@ -77,6 +77,7 @@
         </div>
 
         <div class="modal-footer">
+            <button type="button" class="btn btn-primary">Check Status</button>
             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
 
         </div>
