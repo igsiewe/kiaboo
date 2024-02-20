@@ -983,9 +983,11 @@ class ApiProdMoMoMoneyController extends Controller
         $externalId = $data->externalId;
         $Transaction = Transaction::where("id",$externalId);
 
-        $transaction = $Transaction->update([
+        $execute = $Transaction->update([
             "message"=>$data->status,
         ]);
+
+        dd($Transaction);
     }
 
 }
