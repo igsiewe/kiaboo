@@ -94,7 +94,7 @@ dd($resultGraphe);
             $envoi = collect();
             for($i = 1;$i <= 12; $i++)
             {
-                $data  = $resultGraphe['month'][$i];
+                $data  = $resultGraphe['mois'];
 
                 if ($data == null || $data->isEmpty())
                 {
