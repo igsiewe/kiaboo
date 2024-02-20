@@ -101,9 +101,7 @@ class WebDashBoardController extends Controller
                 }
                 else
                 {
-                    $result = array_filter($data, function ($item) {
-                        return $item["mois"] === 2;
-                    });
+                    $result =$data->first()->mois;
                     dd($result);
                     $envoi->add($data["envoi"][$i]);
 
