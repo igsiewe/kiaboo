@@ -1006,6 +1006,8 @@ class ApiProdMoMoMoneyController extends Controller
                     $reference_partenaire=$data->financialTransactionId;
                     $agent = $user->first()->id;
                     $reference = $Transaction->first()->reference;
+                    $phoneCustomer = $Transaction->first()->customer_phone;
+                    $device_notification = $Transaction->first()->device_notification;
                     try{
                         DB::beginTransaction();
                         $updateTransaction=$Transaction->update([
@@ -1035,10 +1037,10 @@ class ApiProdMoMoMoneyController extends Controller
                         DB::commit();
 
                         $title = "Kiaboo";
-                        $message = "Le retrait MOMO de " . $montant . " F CFA a été effectué avec succès au ".$Transaction->first()->customer_phone;
+                        $message = "Le retrait MOMO de " . $montant . " F CFA a été effectué avec succès au ".$phoneCustomer;
                         $subtitle ="Success";
                         $appNotification = new ApiNotification();
-                        $envoiNotification = $appNotification->sendNotificationPushFireBase($Transaction->first()->device_notification, $title, $subtitle, $message);
+                        $envoiNotification = $appNotification->sendNotificationPushFireBase($device_notification, $title, $subtitle, $message);
                         if($envoiNotification->status()==200){
                             $resultNotification=json_decode($envoiNotification->getContent());
                             $responseNotification=$resultNotification->response ;
