@@ -976,8 +976,16 @@ class ApiProdMoMoMoneyController extends Controller
 
     }
 
-    public function MomoCallBack(){
+    public function MomoCallBack(Request $request){
 
+        $momocallBackResponse = file_get_contents('php://input');
+        $data = json_decode($momocallBackResponse);
+        $externalId = $data->externalId;
+        $Transaction = Transaction::where("id",$externalId);
+
+        $transaction = $Transaction->update([
+            "message"=>$data->status,
+        ]);
     }
 
 }
