@@ -60,23 +60,25 @@ class WebDashBoardController extends Controller
             $revenue = $query->get()->sum("commission_distributeur");
             $lastTransactions = $query->orderBy('transactions.date_transaction', 'desc')->limit(5)->get();
 
-            $bestAgents = DB::table("transactions")->where("transactions.status", StatusTransEnum::VALIDATED->value)
+            $transAgent = DB::table("transactions")->where("transactions.status", StatusTransEnum::VALIDATED->value)
                 ->join("users", "users.id","transactions.source")
                 ->join("distributeurs","distributeurs.id","users.distributeur_id")
                 ->where("transactions.fichier","agent");
 
             if(Auth::user()->type_user_id==UserRolesEnum::DISTRIBUTEUR->value){
-                $bestAgents = $bestAgents ->where("users.distributeur_id", Auth::user()->distributeur_id);
+                $transAgent = $transAgent ->where("users.distributeur_id", Auth::user()->distributeur_id);
             }
-            $bestAgents =$bestAgents->selectRaw('kb_users.id, kb_users.login, kb_users.name, kb_users.surname, kb_distributeurs.name_distributeur, sum(kb_transactions.debit+kb_transactions.credit) as volume, sum(kb_transactions.commission_agent) as commission')
+
+            $bestAgents =$transAgent->selectRaw('kb_users.id, kb_users.login, kb_users.name, kb_users.surname, kb_distributeurs.name_distributeur, sum(kb_transactions.debit+kb_transactions.credit) as volume, sum(kb_transactions.commission_agent) as commission')
                 ->groupBy('users.name', 'users.surname','users.login','users.id')
                 ->orderBy('volume', 'desc')
                 ->limit(5)
                 ->get();
 
-            $resultGraphe= $query->selectRaw('year(kb_transactions.created_at) annee, month(kb_transactions.created_at) mois, sum(kb_transactions.debit) debit, sum(kb_transactions.credit) credit')
-                ->whereYear('transactions.created_at','=',Carbon::now()->year)
-                ->groupBy('annee', 'mois')
+            $resultGraphe= $transAgent
+                ->whereYear('transactions.date_transaction', Carbon::now()->year)
+                ->selectRaw('month(kb_transactions.date_transaction) as mois, sum(kb_transactions.debit) as debit, sum(kb_transactions.credit) as credit')
+                ->groupBy('mois')
                 ->orderBy('mois', 'desc');
 dd($resultGraphe->get());
             $resultGraphe = $query->get()->map(function (Transaction $transaction){
