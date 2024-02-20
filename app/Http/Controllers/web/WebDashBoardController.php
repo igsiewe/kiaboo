@@ -78,7 +78,7 @@ class WebDashBoardController extends Controller
                 ->whereYear('transactions.created_at','=',Carbon::now()->year)
                 ->groupBy('year', 'month')
                 ->orderBy('year', 'desc');
-dd($resultGraphe);
+dd($resultGraphe->get());
             $resultGraphe = $query->get()->map(function (Transaction $transaction){
                 return [
                     "year" => Carbon::parse($transaction->created_at)->year,
