@@ -30,7 +30,7 @@ class WebDashBoardController extends Controller
             })->whereHas('auteur',function ($query) use ($auth){
                 $query->whereIn("id",$auth);
             });
-dd($query);
+dd($query->get());
     // dd($query->get()->take(5));
 
         $volumeofTransaction=0;
