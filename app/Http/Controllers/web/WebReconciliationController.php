@@ -43,7 +43,7 @@ class WebReconciliationController extends Controller
         $transactions  =$query->orderByDesc('transactions.date_transaction')->limit(100)->get();
         $listagents =    $listagents->orderBy("name")->orderBy("surname")->get();
 
-        return view('pages.reconciliation.trans_trans_attente.transactions', compact('transactions','money','listagents','listpartenaires','listservices'));
+        return view('pages.reconciliation.trans_attente.transactions', compact('transactions','money','listagents','listpartenaires','listservices'));
     }
 
     public function transactionEnattenteSearch(Request $request){
