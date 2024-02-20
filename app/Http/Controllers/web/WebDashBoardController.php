@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\web;
 
 use App\Http\Controllers\Controller;
+use App\Http\Enums\StatusTransEnum;
 use App\Http\Enums\TypeServiceEnum;
 use App\Http\Enums\UserRoles;
 use App\Http\Enums\UserRolesEnum;
@@ -23,7 +24,7 @@ class WebDashBoardController extends Controller
 
         $query = Transaction::with(['service.typeService','auteur.distributeur'])
             ->where("fichier","agent")
-            ->where('status',1)
+            ->where('status',StatusTransEnum::VALIDATED->value)
             ->whereHas('service',function ($query){
                 $query->whereIn("type_service_id",[TypeServiceEnum::ENVOI->value,TypeServiceEnum::RETRAIT->value,TypeServiceEnum::FACTURE->value]);
             })->whereHas('auteur',function ($query) use ($auth){
@@ -122,6 +123,14 @@ class WebDashBoardController extends Controller
                 }
             }
 
+            $mesdata=($resultGraphe->map(function (array $item)
+            {
+                return [
+                    "month" =>$item["month"],
+                    "envoi" =>$item["debit"],
+                    "retrait" =>$item["credit"],
+                ];
+            }));
             $retrait = collect();
             for($i = 1;$i <= 12; $i++)
             {
