@@ -73,7 +73,7 @@ class WebDashBoardController extends Controller
                 ->orderBy('ca', 'desc')
                 ->limit(5);
 
-          dd($bestAgents->get());
+     //     dd($bestAgents->get());
 
 /*            $resultGraphe= $query->selectRaw('year(kb_transactions.created_at) year, month(kb_transactions.created_at) month, sum(kb_transactions.debit) debit, sum(kb_transactions.credit) credit')
                 ->whereYear('transactions.created_at','=',Carbon::now()->year)
