@@ -980,7 +980,7 @@ class ApiProdMoMoMoneyController extends Controller
 
         $momocallBackResponse = file_get_contents('php://input');
         $data = json_decode($momocallBackResponse);
-        var_dump($data);
+        dd($data);
 
         $externalId = $data->externalId;
         $Transaction = Transaction::find($externalId);
