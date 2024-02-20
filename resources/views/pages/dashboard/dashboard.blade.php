@@ -122,15 +122,7 @@
 
                                                 </div>
                                             </div>
-                                            <div class="tr-rate">
-                                                <p>
 
-                                                <div class="tr-text">
-                                                    <h4 title="Turnover">{{number_format($best["volume"],0,","," ")." ".$money}}</h4>
-                                                    <p title="Commission">{{number_format($best["commission"],0,","," ")." ".$money}}</p>
-                                                </div>
-                                                </p>
-                                            </div>
                                         </div>
                                     </div>
                                 @endforeach
