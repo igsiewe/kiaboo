@@ -68,9 +68,9 @@ class WebDashBoardController extends Controller
             if(Auth::user()->type_user_id==UserRolesEnum::DISTRIBUTEUR->value){
                 $bestAgents = $bestAgents ->where("users.distributeur_id", Auth::user()->distributeur_id);
             }
-            $bestAgents =$bestAgents->selectRaw('kb_users.id, kb_users.login, kb_users.name, kb_users.surname, kb_distributeurs.name_distributeur, sum(kb_transactions.debit+kb_transactions.credit) as ca')
-                ->groupBy('name', 'surname','login','id')
-                ->orderBy('ca', 'desc')
+            $bestAgents =$bestAgents->selectRaw('kb_users.id, kb_users.login, kb_users.name, kb_users.surname, kb_distributeurs.name_distributeur, sum(kb_transactions.debit+kb_transactions.credit) as volume, sum(kb_transactions.commission_agent) as commission')
+                ->groupBy('users.name', 'users.surname','users.login','users.id')
+                ->orderBy('volume', 'desc')
                 ->limit(5)
                 ->get();
 
