@@ -90,7 +90,6 @@ class WebDashBoardController extends Controller
                 ->groupBy('mois')
                 ->orderBy('mois', 'desc')->get()->toArray();
 
-dd($resultGraphe);
             $envoi = collect();
             for($i = 1;$i <= 12; $i++)
             {
