@@ -68,19 +68,17 @@ class WebDashBoardController extends Controller
             if(Auth::user()->type_user_id==UserRolesEnum::DISTRIBUTEUR->value){
                 $bestAgents = $bestAgents ->where("users.distributeur_id", Auth::user()->distributeur_id);
             }
-            $bestAgents =$bestAgents->selectRaw('kb_users.id, kb_users.login, kb_users.name, kb_users.surname, kb_distributeurs.name_distributeur, sum(kb_transactions.debit+kb_transactions.credit) as volume, sum(kb_transactions.commission) as commission')
+            $bestAgents =$bestAgents->selectRaw('kb_users.id, kb_users.login, kb_users.name, kb_users.surname, kb_distributeurs.name_distributeur, sum(kb_transactions.debit+kb_transactions.credit) as volume, sum(kb_transactions.commission_agent) as commission')
                 ->groupBy('users.name', 'users.surname','users.login','users.id')
                 ->orderBy('volume', 'desc')
                 ->limit(5)
                 ->get();
 
-     //     dd($bestAgents->get());
-
-/*            $resultGraphe= $query->selectRaw('year(kb_transactions.created_at) year, month(kb_transactions.created_at) month, sum(kb_transactions.debit) debit, sum(kb_transactions.credit) credit')
+            $resultGraphe= $query->selectRaw('year(kb_transactions.created_at) year, month(kb_transactions.created_at) month, sum(kb_transactions.debit) debit, sum(kb_transactions.credit) credit')
                 ->whereYear('transactions.created_at','=',Carbon::now()->year)
                 ->groupBy('year', 'month')
-                ->orderBy('year', 'desc');*/
-
+                ->orderBy('year', 'desc');
+dd($resultGraphe);
             $resultGraphe = $query->get()->map(function (Transaction $transaction){
                 return [
                     "year" => Carbon::parse($transaction->created_at)->year,
