@@ -105,11 +105,19 @@
             <li>
                 <a href="{{route("listTransactions")}}"><i data-feather="list"></i>Transactions</a>
             </li>
+
             <li>
                 <a href="#"><i data-feather="gift"></i>Commissions <i class="fa fa-chevron-right dropdown-icon"></i></a>
                 <ul class="">
                     <li><a href="{{route("listAgentCommissions")}}"><i class="fa fa-star"></i>Agents</a></li>
                     <li><a href="{{route("listDistributeurCommissions")}}"><i class="fa fa-star"></i>Distributeurs</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#"><i data-feather="alert-circle"></i>Réconciliation <i class="fa fa-chevron-right dropdown-icon"></i></a>
+                <ul class="">
+                    <li><a href="{{route("transactionEnattente")}}"><i class="fa fa-star"></i>Transaction en attente</a></li>
+                    <li><a href="{{route("transactionCorrigees")}}"><i class="fa fa-star"></i>Transaction corrigées</a></li>
                 </ul>
             </li>
             <li class="sidebar-title">
