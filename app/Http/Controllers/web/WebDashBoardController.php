@@ -91,15 +91,6 @@ class WebDashBoardController extends Controller
                 ->orderBy('mois', 'desc')->get()->toArray();
 
 
-           $mesdata=($resultGraphe->map(function (array $item)
-            {
-                return [
-                    "month" =>$item["month"],
-                    "envoi" =>$item["debit"],
-                    "retrait" =>$item["credit"],
-                ];
-            }));
-
             $envoi = collect();
             for($i = 1;$i <= 12; $i++)
             {
