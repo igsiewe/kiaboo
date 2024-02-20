@@ -980,16 +980,21 @@ class ApiProdMoMoMoneyController extends Controller
 
         $momocallBackResponse = file_get_contents('php://input');
         $data = json_decode($momocallBackResponse);
-
-        dd($data);
         $externalId = $data->externalId;
         $Transaction = Transaction::where("id",$externalId);
 
-        $execute = $Transaction->update([
-            "message"=>$data->status,
-        ]);
-
-        dd($Transaction);
+        if($Transaction->count()>0){
+            $status=3;
+            if($data->status=="SUCCESSFULL"){
+                $status =1;
+            }
+            $execute = $Transaction->update([
+                "description"=>$data->status,
+                "status"=>$status,
+                'paytoken'=>$data->financialTransactionId,
+                "message"=>$data->payeeNote
+            ]);
+        }
     }
 
 }
