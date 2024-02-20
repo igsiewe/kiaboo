@@ -8,6 +8,7 @@ use App\Http\Controllers\web\WebCommissionController;
 use App\Http\Controllers\web\WebDashBoardController;
 use App\Http\Controllers\web\WebDistributeurController;
 use App\Http\Controllers\web\WebExportExcelController;
+use App\Http\Controllers\web\WebReconciliationController;
 use App\Http\Controllers\web\WebServiceController;
 use App\Http\Controllers\web\WebTransactionsController;
 use App\Http\Controllers\web\WebUtilisateurController;
@@ -70,11 +71,14 @@ Route::middleware(['auth','checkStatus'])->group(function (){
         //    Route::any('/transaction/annuler/{id}', 'CancelAgentTopUp')->name("CancelAgentTopUp");
             Route::get('/transaction/edit/{id}', 'getDetailTransaction')->name("getDetailTransaction");
             Route::any('/transaction/search', 'listTransactionsFiltre')->name("listTransactions.filtre");
+        });
+    });
 
-            Route::any('/reconciliation/transactions/entente', 'transactionEnattente')->name("transactionEnattente");
-            Route::any('/reconciliation/transactions/corrigees', 'transactionCorrigees')->name("transactionCorrigees");
-
-            ;
+    Route::group(['prefix' => 'reconciliation'], function () {
+        Route::controller(WebReconciliationController::class)->group(function () {
+            Route::any('/transactions/attente', 'transactionEnattente')->name("transactionEnattente");
+            Route::any('/transactions/attente/search', 'transactionEnattenteSearch')->name("transactionEnattente.filtre");
+            Route::any('/transactions/corrigees', 'transactionCorrigees')->name("transactionCorrigees");
         });
     });
     Route::group(['prefix' => 'commissions'], function () {

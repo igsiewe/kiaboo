@@ -4,6 +4,7 @@ namespace App\Http\Controllers\web;
 
 use App\Http\Controllers\Controller;
 use App\Http\Enums\ServiceEnum;
+use App\Http\Enums\StatusTransEnum;
 use App\Http\Enums\TypeServiceEnum;
 use App\Http\Enums\UserRolesEnum;
 use App\Models\ApproDistributeur;
@@ -31,7 +32,7 @@ class WebTransactionsController extends Controller
 
         $query = Transaction::with(['service.typeService','auteur.distributeur'])
             ->where("fichier","agent")
-            ->where('status',1)
+            ->where('status',StatusTransEnum::VALIDATED->value)
             ->whereHas('service',function ($query){
                 $query->whereIn("type_service_id",[TypeServiceEnum::ENVOI->value,TypeServiceEnum::RETRAIT->value,TypeServiceEnum::FACTURE->value]);
             })->whereHas('auteur',function ($query) use ($auth){
@@ -73,7 +74,7 @@ class WebTransactionsController extends Controller
 
          $query = Transaction::with(['service.typeService','auteur.distributeur'])
             ->where("fichier","agent")
-            ->where('status',1)
+            ->where('status',StatusTransEnum::VALIDATED->value)
             ->whereHas('service',function ($query){
                 $query->whereIn("type_service_id",[TypeServiceEnum::ENVOI->value,TypeServiceEnum::RETRAIT->value,TypeServiceEnum::FACTURE->value]);
             })->whereHas('auteur',function ($query) use ($auth){
@@ -129,7 +130,7 @@ class WebTransactionsController extends Controller
             ->join('services', 'transactions.service_id', '=', 'services.id')
             ->select('users.distributeur_id','distributeurs.name_distributeur','transactions.agent_id','agent.telephone','agent.login as ref_agent','agent.name as name_agent','agent.surname as surname_agent','transactions.id','transactions.reference','transactions.date_transaction','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.balance_before_partenaire','transactions.balance_after_partenaire' ,'services.name_service','services.logo_service','users.type_user_id','users.name as name_operateur', 'users.surname as surname_operateur','transactions.id')
             ->where("transactions.fichier","distributeur")
-            ->where('transactions.status',1)
+            ->where('transactions.status',StatusTransEnum::VALIDATED->value)
             ->where("users.type_user_id", UserRolesEnum::DISTRIBUTEUR->value);
 
         $seuilDepasse = User::where("type_user_id", UserRolesEnum::AGENT->value);
@@ -158,7 +159,7 @@ class WebTransactionsController extends Controller
             ->join('services', 'transactions.service_id', '=', 'services.id')
             ->select('users.distributeur_id','distributeurs.name_distributeur','transactions.agent_id','agent.login as ref_agent','agent.name as name_agent','agent.surname as surname_agent','transactions.id','transactions.reference','transactions.date_transaction','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.balance_before_partenaire','transactions.balance_after_partenaire' ,'services.name_service','services.logo_service','users.type_user_id','users.name as name_operateur', 'users.surname as surname_operateur','transactions.description')
             ->where("transactions.fichier","distributeur")
-            ->where('transactions.status',1)
+            ->where('transactions.status',StatusTransEnum::VALIDATED->value)
             ->where("users.type_user_id", UserRolesEnum::DISTRIBUTEUR->value)
             ->where("transactions.id",$id)->first();
 
@@ -182,7 +183,7 @@ class WebTransactionsController extends Controller
             ->join('services', 'transactions.service_id', '=', 'services.id')
             ->select('transactions.agent_id','users.distributeur_id','distributeurs.name_distributeur','transactions.agent_id','agent.telephone','agent.login as ref_agent','agent.name as name_agent','agent.surname as surname_agent','transactions.id','transactions.reference','transactions.date_transaction','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.balance_before_partenaire','transactions.balance_after_partenaire' ,'services.name_service','services.logo_service','users.type_user_id','users.name as name_operateur', 'users.surname as surname_operateur','transactions.description','transactions.id')
             ->where("transactions.fichier","distributeur")
-            ->where('transactions.status',1)
+            ->where('transactions.status',StatusTransEnum::VALIDATED->value)
             ->where("users.type_user_id", UserRolesEnum::DISTRIBUTEUR->value)
             ->whereDate('transactions.created_at', '>=', $startDate)
             ->whereDate('transactions.created_at', '<=', $endDate);
