@@ -1055,7 +1055,7 @@ class ApiProdMoMoMoneyController extends Controller
                                 Log::error([
                                     'code'=> 500,
                                     'function' => "MOMO_Retrait_Status",
-                                    'response'=>$resultNotification,
+                                    'response'=>$resultNotification->body(),
                                     'user' => $agent,
                                 ]);
                             }
