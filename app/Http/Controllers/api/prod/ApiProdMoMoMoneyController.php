@@ -7,6 +7,7 @@ use App\Http\Controllers\api\ApiCommissionController;
 use App\Http\Controllers\api\ApiNotification;
 use App\Http\Controllers\Controller;
 use App\Http\Enums\ServiceEnum;
+use App\Http\Enums\TypeServiceEnum;
 use App\Models\Transaction;
 use App\Models\User;
 use Carbon\Carbon;
@@ -225,7 +226,7 @@ class ApiProdMoMoMoneyController extends Controller
                 'X-Reference-Id'=> $referenceID,
                 'Ocp-Apim-Subscription-Key'=> $subcriptionKey,
                 'X-Target-Environment'=> 'mtncameroon',
-                'X-Callback-Url'=>'https://kiaboogroup.com/api/momo/callback/'
+                'X-Callback-Url'=>'https://kiaboogroup.com/api/momo/callback'
             ])
             ->Post("https://proxy.momoapi.mtn.com/disbursement/v1_0/deposit", [
                 "amount" => $montant,
@@ -981,25 +982,97 @@ class ApiProdMoMoMoneyController extends Controller
         $momocallBackResponse = file_get_contents('php://input');
         $data = json_decode($momocallBackResponse);
         $externalId = $data->externalId;
-        $Transaction = Transaction::find($externalId);
+
+        //On se rassure que la transaction est bien en status en attente
+        $Transaction = Transaction::where('id',$externalId)->where('service_id',ServiceEnum::RETRAIT_MOMO->value)->where('status',2);
 
         if($Transaction->count()>0){
-            $status=3;
-            if($data->status=="SUCCESSFULL"){
-                $status =1;
+            if($Transaction->first()->service_id ==ServiceEnum::RETRAIT_MOMO->value){
+
+                if($data->status=="FAILED"){
+                    $updateTransaction=$Transaction->update([
+                        'status'=>3, // Le client n'a pas validé dans les délais et l'opérateur l'a annule
+                        'reference_partenaire'=>$data->financialTransactionId,
+                        'date_end_trans'=>Carbon::now(),
+                        'description'=>$data->status,
+                    ]);
+                }
+
+                if($data->status=="SUCCESSFUL"){
+                    $montant = $data->amount;
+                    $user = User::where('id', $Transaction->first()->created_by);
+                    $balanceBeforeAgent = $user->get()->first()->balance_after;
+                    $balanceAfterAgent = floatval($balanceBeforeAgent) + floatval($montant);
+                    $reference_partenaire=$data->financialTransactionId;
+                    $agent = $user->first()->id;
+                    try{
+                        DB::beginTransaction();
+                        $updateTransaction=$Transaction->update([
+                            'balance_before'=>$balanceAfterAgent,
+                            'balance_after'=>$balanceAfterAgent,
+                            'status'=>1, // Successful
+                            'date_end_trans'=>Carbon::now(),
+                            'description'=>$data->status,
+                            'reference_partenaire'=>$reference_partenaire,
+                        ]);
+
+                        $commission_agent = Transaction::where("fichier","agent")->where("commission_agent_rembourse",0)->where("source",$agent)->sum("commission_agent");
+
+                        $debitAgent = DB::table("users")->where("id", $agent)->update([
+                            'balance_after'=>$balanceAfterAgent,
+                            'balance_before'=>$balanceBeforeAgent,
+                            'last_amount'=>$montant,
+                            'date_last_transaction'=>Carbon::now(),
+                            'user_last_transaction_id'=>$agent,
+                            'last_service_id'=>ServiceEnum::RETRAIT_MOMO->value,
+                            'reference_last_transaction'=>$reference_partenaire,
+                            'remember_token'=>$Transaction->first()->reference,
+                            'total_commission'=>$commission_agent,
+                        ]);
+
+
+                        DB::commit();
+
+                        $title = "Kiaboo";
+                        $message = "Le retrait MOMO de " . $montant . " F CFA a été effectué avec succès au ".$Transaction->first()->customer_phone;
+                        $subtitle ="Success";
+                        $appNotification = new ApiNotification();
+                        $envoiNotification = $appNotification->sendNotificationPushFireBase($Transaction->first()->device_notification, $title, $subtitle, $message);
+                        if($envoiNotification->status()==200){
+                            $resultNotification=json_decode($envoiNotification->getContent());
+                            $responseNotification=$resultNotification->response ;
+                            if($responseNotification->success==true){
+                                Log::info([
+                                    'code'=> 200,
+                                    'function' => "MOMO_Retrait_Status",
+                                    'response'=>"Notification envoyée avec succès",
+                                    'user' => $agent,
+                                ]);
+                            }else{
+                                Log::error([
+                                    'code'=> 500,
+                                    'function' => "MOMO_Retrait_Status",
+                                    'response'=>$resultNotification,
+                                    'user' => $agent,
+                                ]);
+                            }
+
+                        }
+                    }catch(\Exception $e){
+                        DB::rollBack();
+                        Log::error([
+                            'code'=> $e->getCode(),
+                            'function' => "MOMO_Retrait_CheckStatus",
+                            'response'=>$e->getMessage(),
+                            'user' => $agent,
+                            'referenceID' => $Transaction->first()->reference,
+                        ]);
+                    }
+
+                }
+
+
             }
-            $execute = $Transaction->update([
-                "description"=>$data->status,
-                "status"=>$status,
-                'paytoken'=>$data->financialTransactionId,
-                "message"=>$data->payeeNote
-            ]);
         }
-        $logFile = "callback.json";
-        $log = fopen($logFile,"a");
-        fwrite($log, $momocallBackResponse);
-        fclose($log);
-
     }
-
 }
