@@ -729,7 +729,7 @@ class ApiProdMoMoMoneyController extends Controller
         $dataAcessToken = json_decode($responseToken->getContent());
         $AccessToken = $dataAcessToken->access_token;
 
-        $http = "https://proxy.momoapi.mtn.com/collection/v1_0/requesttopay/".$referenceID;
+        $http = "https://proxy.momoapi.mtn.com/collection/v1_0/requesttowithdraw/".$referenceID;
 
         $response = Http::withOptions(['verify' => false,])->withHeaders(
             [
@@ -917,7 +917,7 @@ class ApiProdMoMoMoneyController extends Controller
         $dataAcessToken = json_decode($responseToken->getContent());
         $AccessToken = $dataAcessToken->access_token;
 
-        $http = "https://proxy.momoapi.mtn.com/collection/v1_0/requesttopay/".$referenceID;
+        $http = "https://proxy.momoapi.mtn.com/collection/v1_0/requesttowithdraw/".$referenceID;
 
         $response = Http::withOptions(['verify' => false,])->withHeaders(
             [
