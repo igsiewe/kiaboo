@@ -993,6 +993,9 @@ class ApiProdMoMoMoneyController extends Controller
         $data = json_decode($momocallBackResponse);
         $externalId = $data->externalId;
 
+        Log::info([
+            "externalId"=>$externalId
+        ]);
         //On se rassure que la transaction est bien en status en attente
         $Transaction = Transaction::where('id',$externalId);
 
@@ -1085,8 +1088,6 @@ class ApiProdMoMoMoneyController extends Controller
                     }
 
                 }
-
-
             }
 
             if($Transaction->first()->service_id ==ServiceEnum::DEPOT_MOMO->value){
@@ -1107,7 +1108,6 @@ class ApiProdMoMoMoneyController extends Controller
                     ]);
                 }
             }
-
         }
     }
 }
