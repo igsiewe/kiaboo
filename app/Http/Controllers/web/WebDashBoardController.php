@@ -103,7 +103,7 @@ class WebDashBoardController extends Controller
                 {
                    // $data = json_encode($data);
 
-                    dd($data->envoi);
+                    dd($data);
                     $envoi->add($data["envoi"][$i]);
 
                 }
