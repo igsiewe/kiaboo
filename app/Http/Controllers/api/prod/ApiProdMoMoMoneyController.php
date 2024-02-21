@@ -233,7 +233,7 @@ class ApiProdMoMoMoneyController extends Controller
             ->Post("https://proxy.momoapi.mtn.com/disbursement/v1_0/deposit", [
                 "amount" => $montant,
                 "currency" => "XAF",
-                "externalId" => ".$idTransaction.",
+                "externalId" => $idTransaction,
                 "payee" => [
                     "partyIdType" => "MSISDN",
                     "partyId" => $customerPhone,
