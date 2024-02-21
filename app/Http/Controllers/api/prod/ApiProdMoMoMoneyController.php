@@ -497,6 +497,7 @@ class ApiProdMoMoMoneyController extends Controller
                         'externalId'=>$data->externalId,
                         'message'=>"Terminée avec succès",
                         'description'=>$data->status,
+                        'response'=>$data,
                         // 'financialTransactionId'=>$data->financialTransactionId,
                     ],200
                 );
