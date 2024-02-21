@@ -208,7 +208,7 @@
                 height: 350,
                 type: 'line',
                 toolbar: {
-                    show: false,
+                    show: true,
                 }
             },
             dataLabels: {
