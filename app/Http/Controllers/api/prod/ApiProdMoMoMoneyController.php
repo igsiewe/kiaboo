@@ -1085,6 +1085,9 @@ class ApiProdMoMoMoneyController extends Controller
             }
 
             if($Transaction->first()->service_id ==ServiceEnum::DEPOT_MOMO->value){
+                Log::info([
+                    "callback"=>$data->body(),
+                ]);
                 if($data->status=="SUCCESSFUL"){
                     $updateTransaction = $Transaction->update([
                         'reference_partenaire'=>$data->financialTransactionId
