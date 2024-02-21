@@ -91,6 +91,8 @@ class WebDashBoardController extends Controller
                 ->orderBy('mois', 'desc')->get()->toArray();
 
             $envoi = collect();
+            $retrait = collect();
+
             for($i = 1;$i <= 12; $i++)
             {
                 $data  = collect($resultGraphe)->where('mois', $i)->all();
@@ -101,26 +103,9 @@ class WebDashBoardController extends Controller
                 }
                 else
                 {
-                   // $data = json_encode($data);
+                    $envoi->add($data[0]->envoi);
+                    $retrait->add($data[0]->retrait);
 
-                    dd($data[0]->envoi, $data);
-                    $envoi->add($data["envoi"][$i]);
-
-                }
-            }
-
-            $retrait = collect();
-            for($i = 1;$i <= 12; $i++)
-            {
-                $data  = $resultGraphe->where("month",$i);
-
-                if ($data == null || $data->isEmpty())
-                {
-                    $retrait->add(0);
-                }
-                else
-                {
-                    $retrait->add($data->first()["retrait"]);
                 }
             }
 
