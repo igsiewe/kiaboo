@@ -109,6 +109,7 @@ class WebDashBoardController extends Controller
             }
 
         }
+        dd($envoi, $retrait);
         return view('pages.dashboard.dashboard', compact('volumeofTransaction','currentBalance','revenue','agent','money','lastTransactions','bestAgents','envoi','retrait'));
 
     }
