@@ -80,7 +80,7 @@ class WebAgentController extends Controller
         $newAgent->login ="+237".$request->telephone;
         $newAgent->email_verified_at = Carbon::now();
         $newAgent->created_by = Auth::user()->id;
-        $newAgent->telephone = "+237".$request->telephone;
+        $newAgent->telephone = $request->telephone;
         $newAgent->email = $request->email;
         $newAgent->ville_id = $request->ville;
         $newAgent->quartier = $request->quartier;
