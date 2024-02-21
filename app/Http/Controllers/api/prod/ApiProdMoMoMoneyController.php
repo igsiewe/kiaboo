@@ -895,7 +895,11 @@ class ApiProdMoMoMoneyController extends Controller
 
         if($Transaction->count()>0){
             if($Transaction->first()->service_id ==ServiceEnum::RETRAIT_MOMO->value){
-
+                Log::info([
+                    'function' => "MOMO_Retrait",
+                    'response'=>$data,
+                    'user' => $agent,
+                ]);
                 if($data->status=="FAILED"){
                     $updateTransaction=$Transaction->update([
                         'status'=>3, // Le client n'a pas validé dans les délais et l'opérateur l'a annule
@@ -985,7 +989,11 @@ class ApiProdMoMoMoneyController extends Controller
             }
 
             if($Transaction->first()->service_id ==ServiceEnum::DEPOT_MOMO->value){
-
+                Log::info([
+                    'function' => "MOMO_Depot",
+                    'response'=>$data,
+                    'user' => $agent,
+                ]);
                 if($data->status=="FAILED"){
                     $updateTransaction=$Transaction->update([
                         'status'=>3, // Le dépôt n'a pas aboutit
