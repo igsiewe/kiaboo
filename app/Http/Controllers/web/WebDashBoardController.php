@@ -100,6 +100,7 @@ class WebDashBoardController extends Controller
                 if ($data == null || $data==[])
                 {
                     $envoi->add(0);
+                    $retrait->add(0);
                 }
                 else
                 {
