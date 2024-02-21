@@ -200,7 +200,7 @@ class ApiProdMoMoMoneyController extends Controller
 
         $idTransaction = $dataInit->transId; //Id de la transaction initiée
         $reference = $dataInit->reference; //Référence de la transaction initiée
-        dd($idTransaction, $reference);
+
         //On génère le token de la transation
         $responseToken = $this->MOMO_Disbursement_GetTokenAccess();
         if($responseToken->status()!=200){
@@ -233,7 +233,7 @@ class ApiProdMoMoMoneyController extends Controller
             ->Post("https://proxy.momoapi.mtn.com/disbursement/v1_0/deposit", [
                 "amount" => $montant,
                 "currency" => "XAF",
-                "externalId" => $idTransaction,
+                "externalId" => ".$idTransaction.",
                 "payee" => [
                     "partyIdType" => "MSISDN",
                     "partyId" => $customerPhone,
@@ -1093,6 +1093,14 @@ class ApiProdMoMoMoneyController extends Controller
                 Log::info([
                     "callback"=>$data->financialTransactionId,
                 ]);
+                if($data->status=="FAILED"){
+                    $updateTransaction=$Transaction->update([
+                        'status'=>3, // Le dépôt n'a pas abouti
+                        'reference_partenaire'=>$data->financialTransactionId,
+                        'date_end_trans'=>Carbon::now(),
+                        'description'=>$data->status,
+                    ]);
+                }
                 if($data->status=="SUCCESSFUL"){
                     $updateTransaction = $Transaction->update([
                         'reference_partenaire'=>$data->financialTransactionId
