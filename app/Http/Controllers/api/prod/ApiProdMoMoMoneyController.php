@@ -965,6 +965,7 @@ class ApiProdMoMoMoneyController extends Controller
                             [
                                 'status'=>200,
                                 'message'=>$data->status." - Transaction en succès",
+                                'response'=>$data
 
                             ],200
                         );
