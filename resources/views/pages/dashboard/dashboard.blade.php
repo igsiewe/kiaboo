@@ -217,7 +217,7 @@
             stroke: {
                 curve: 'smooth'
             },
-            colors: ['#b3baff', '#90e0db'],
+            colors: ['#90e0db','#b3baff'],
             series: [{
                 name: 'Retrait',
                 data: @isset($retrait)
