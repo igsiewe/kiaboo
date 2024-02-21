@@ -60,7 +60,7 @@ class WebDashBoardController extends Controller
                 ->join("users", "users.id","transactions.source")
                 ->join("distributeurs","distributeurs.id","users.distributeur_id")
                 ->where("transactions.fichier","agent")
-                ->where('status',StatusTransEnum::VALIDATED->value)
+                ->where('transactions.status',StatusTransEnum::VALIDATED->value)
                 ->whereHas('service',function ($query){
                     $query->whereIn("type_service_id",[TypeServiceEnum::ENVOI->value,TypeServiceEnum::RETRAIT->value,TypeServiceEnum::FACTURE->value]);
                 });
