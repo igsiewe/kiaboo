@@ -197,9 +197,10 @@ class ApiProdMoMoMoneyController extends Controller
                 'message'=>$dataInit->message,
             ],$init_transaction->getStatusCode());
         }
+
         $idTransaction = $dataInit->transId; //Id de la transaction initiée
         $reference = $dataInit->reference; //Référence de la transaction initiée
-
+        dd($idTransaction, $reference);
         //On génère le token de la transation
         $responseToken = $this->MOMO_Disbursement_GetTokenAccess();
         if($responseToken->status()!=200){
