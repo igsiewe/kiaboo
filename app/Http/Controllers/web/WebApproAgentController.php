@@ -43,7 +43,7 @@ class WebApproAgentController extends Controller
         }
         $balanceDistributeur = $Distributeur->first()->balance_after;
         $newBalanceDistributeur = doubleval($balanceDistributeur)-doubleval($request->amount);
-        if(doubleval($balanceDistributeur)<=doubleval($request->amount)){
+        if(doubleval($balanceDistributeur)<doubleval($request->amount)){
             return redirect()->back()->withErrors('You don\'t have enough balance to perform this operation');
         }
         $agent = User::where('id', $request->agent)->get();
