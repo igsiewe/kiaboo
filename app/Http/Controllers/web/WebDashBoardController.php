@@ -59,7 +59,7 @@ class WebDashBoardController extends Controller
             $transAgent = DB::table("transactions")->where("transactions.status", StatusTransEnum::VALIDATED->value)
                 ->join("users", "users.id","transactions.source")
                 ->join("distributeurs","distributeurs.id","users.distributeur_id")
-                ->join("services","services,id","transactions,service_id")
+                ->join("services","services.id","transactions.service_id")
                 ->join("type_services","type_services.id","services.type_service_id")
                 ->where("transactions.fichier","agent")
                 ->where('transactions.status',StatusTransEnum::VALIDATED->value)
