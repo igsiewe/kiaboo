@@ -180,7 +180,7 @@
                                                 <th scope="col">#</th>
                                                 <th scope="col">Date</th>
 {{--                                                <th scope="col">TransactionID</th>--}}
-                                                <th scope="col">TransactionID</th>
+                                                <th scope="col" title="Partner transaction ID">PartnerTransID</th>
                                                 <th scope="col">Service</th>
                                                 <th scope="col">Amount</th>
                                                 <th scope="col">Balance After</th>
