@@ -59,11 +59,11 @@ class WebDashBoardController extends Controller
             $transAgent = DB::table("transactions")->where("transactions.status", StatusTransEnum::VALIDATED->value)
                 ->join("users", "users.id","transactions.source")
                 ->join("distributeurs","distributeurs.id","users.distributeur_id")
+                ->join("services","services,id","transactions,service_id")
+                ->join("type_services","type_services.id","services.type_service_id")
                 ->where("transactions.fichier","agent")
                 ->where('transactions.status',StatusTransEnum::VALIDATED->value)
-                ->whereHas('service',function ($query){
-                    $query->whereIn("type_service_id",[TypeServiceEnum::ENVOI->value,TypeServiceEnum::RETRAIT->value,TypeServiceEnum::FACTURE->value]);
-                });
+                ->whereIn("type_services.id", [TypeServiceEnum::ENVOI->value,TypeServiceEnum::RETRAIT->value,TypeServiceEnum::FACTURE->value]);
 
             if(Auth::user()->type_user_id==UserRolesEnum::DISTRIBUTEUR->value){
                 $transAgent = $transAgent ->where("users.distributeur_id", Auth::user()->distributeur_id);
