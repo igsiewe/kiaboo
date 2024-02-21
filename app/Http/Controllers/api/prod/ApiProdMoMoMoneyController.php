@@ -251,7 +251,7 @@ class ApiProdMoMoMoneyController extends Controller
                     'message'=>$datacheckStatus->message,
                 ],$checkStatus->getStatusCode());
             }
-            //$financialTransactionId = $datacheckStatus->financialTransactionId;
+            $financialTransactionId = $datacheckStatus->financialTransactionId;
             //$dataResponse = json_decode($response->body());
             try {
                 DB::beginTransaction();
@@ -267,7 +267,7 @@ class ApiProdMoMoMoneyController extends Controller
                 //on met à jour la table transaction
 
                 $Transaction = Transaction::where('id',$idTransaction)->where('service_id',$service)->update([
-                    'reference_partenaire'=>$referenceID, //$financialTransactionId,
+                    'reference_partenaire'=>$financialTransactionId,
                     'balance_before'=>$balanceBeforeAgent,
                     'balance_after'=>$balanceAfterAgent,
                     'debit'=>$montant,
