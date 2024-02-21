@@ -114,9 +114,9 @@
                 </ul>
             </li>
             <li>
-                <a href="#"><i data-feather="alert-circle"></i>Réconciliation <i class="fa fa-chevron-right dropdown-icon"></i></a>
+                <a href="#"><i data-feather="timer"></i>Réconciliation <i class="fa fa-chevron-right dropdown-icon"></i></a>
                 <ul class="">
-                    <li><a href="{{route("transactionEnattente")}}" title="Transactions en attente"><i class="fa fa-timer"></i>Trans. en attente</a></li>
+                    <li><a href="{{route("transactionEnattente")}}" title="Transactions en attente"><i class="fa fa-times"></i>Trans. en attente</a></li>
 {{--                    <li><a href="{{route("transactionCorrigees")}}" title="Transactions corrigées"><i class="fa fa-pen"></i>Trans. corrigées</a></li>--}}
                 </ul>
             </li>
