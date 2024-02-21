@@ -208,11 +208,11 @@
                 height: 350,
                 type: 'line',
                 toolbar: {
-                    show: true,
+                    show: false,
                 }
             },
             dataLabels: {
-                enabled: true
+                enabled: false
             },
             stroke: {
                 curve: 'smooth'
