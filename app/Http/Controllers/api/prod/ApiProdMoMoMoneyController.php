@@ -246,12 +246,18 @@ class ApiProdMoMoMoneyController extends Controller
             $datacheckStatus = json_decode($checkStatus->getContent());
 
             if($checkStatus->getStatusCode() !=200){
+                $updateTransaction=Transaction::where("id",$idTransaction)->update([
+                    'status'=>3, // Le dépôt n'a pas abouti, on passe en statut pending
+                    //'reference_partenaire'=>$data->financialTransactionId,
+                    'date_end_trans'=>Carbon::now(),
+                    'description'=>"FAILED",
+                ]);
                 return response()->json([
                     'status'=>'error',
                     'message'=>$datacheckStatus->message,
                 ],$checkStatus->getStatusCode());
             }
-            $financialTransactionId = $datacheckStatus->financialTransactionId;
+            //$financialTransactionId = $datacheckStatus->financialTransactionId;
             //$dataResponse = json_decode($response->body());
             try {
                 DB::beginTransaction();
