@@ -216,6 +216,7 @@ class ApiProdMoMoMoneyController extends Controller
         $referenceID = $this->gen_uuid();
         //On gardee l'UID de la transaction initiee
         $saveUID = Transaction::where('id',$idTransaction)->update([
+            'reference_partenaire'=>$referenceID,
             "paytoken"=>$referenceID
         ]);
         $subcriptionKey = '1466a4536a3c476ab18baf82ce82a1f3';
@@ -273,7 +274,7 @@ class ApiProdMoMoMoneyController extends Controller
                 //on met à jour la table transaction
 
                 $Transaction = Transaction::where('id',$idTransaction)->where('service_id',$service)->update([
-                    'reference_partenaire'=>$referenceID, //$financialTransactionId,
+                   // 'reference_partenaire'=>$referenceID, //$financialTransactionId,
                     'balance_before'=>$balanceBeforeAgent,
                     'balance_after'=>$balanceAfterAgent,
                     'debit'=>$montant,
@@ -1085,7 +1086,9 @@ class ApiProdMoMoMoneyController extends Controller
 
             if($Transaction->first()->service_id ==ServiceEnum::DEPOT_MOMO->value){
                 if($data->status=="SUCCESSFUL"){
-                    $updateTransaction = $Transaction->update();
+                    $updateTransaction = $Transaction->update([
+                        'reference_partenaire'=>$data->financialTransactionId
+                    ]);
                 }
             }
 
