@@ -53,21 +53,24 @@ class WebDashBoardController extends Controller
 
             $volumeofTransaction = $query->sum("debit")+$query->sum("credit");
 
-
-
             $revenue = $query->get()->sum("commission_distributeur");
             $lastTransactions = $query->orderBy('transactions.date_transaction', 'desc')->limit(5)->get();
 
             $transAgent = DB::table("transactions")->where("transactions.status", StatusTransEnum::VALIDATED->value)
                 ->join("users", "users.id","transactions.source")
                 ->join("distributeurs","distributeurs.id","users.distributeur_id")
-                ->where("transactions.fichier","agent");
+                ->where("transactions.fichier","agent")
+                ->where('status',StatusTransEnum::VALIDATED->value)
+                ->whereHas('service',function ($query){
+                    $query->whereIn("type_service_id",[TypeServiceEnum::ENVOI->value,TypeServiceEnum::RETRAIT->value,TypeServiceEnum::FACTURE->value]);
+                });
 
             if(Auth::user()->type_user_id==UserRolesEnum::DISTRIBUTEUR->value){
                 $transAgent = $transAgent ->where("users.distributeur_id", Auth::user()->distributeur_id);
             }
 
             $bestAgents =$transAgent->selectRaw('kb_users.id, kb_users.login, kb_users.name, kb_users.surname, kb_distributeurs.name_distributeur, sum(kb_transactions.debit+kb_transactions.credit) as volume, sum(kb_transactions.commission_agent) as commission')
+
                 ->groupBy('users.name', 'users.surname','users.login','users.id')
                 ->orderBy('volume', 'desc')
                 ->limit(5)
