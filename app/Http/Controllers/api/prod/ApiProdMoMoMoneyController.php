@@ -936,7 +936,7 @@ class ApiProdMoMoMoneyController extends Controller
             ])->Get($http);
 
         $data = json_decode($response->body());
-dd($data);
+
         if($response->status()==200){
 
             if($data->status=="PENDING"){
@@ -1088,7 +1088,7 @@ dd($data);
 
             }
 
-            if($Transaction->first()->service_id ==ServiceEnum::DEPOT_MOMO->value && $status==0){
+            if($Transaction->first()->service_id ==ServiceEnum::DEPOT_MOMO->value){
                 Log::info([
                     "callback"=>$data->financialTransactionId,
                 ]);
