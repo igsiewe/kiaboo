@@ -51,10 +51,8 @@ class WebDashBoardController extends Controller
                 $agent = User::where("distributeur_id",Auth::user()->distributeur_id)->where("type_user_id",UserRolesEnum::AGENT->value)->count();
             }
 
+            $volumeofTransaction = $query->sum("debit")+$query->sum("credit");
 
-            $volumeofTransaction = $query->get()->sum(function(Transaction $item){
-              return $item->debit + $item->credit;
-            });
 
 
             $revenue = $query->get()->sum("commission_distributeur");
