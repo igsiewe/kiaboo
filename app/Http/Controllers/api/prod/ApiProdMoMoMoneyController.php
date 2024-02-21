@@ -991,10 +991,12 @@ class ApiProdMoMoMoneyController extends Controller
         $externalId = $data->externalId;
 
         //On se rassure que la transaction est bien en status en attente
-        $Transaction = Transaction::where('id',$externalId)->where('service_id',ServiceEnum::RETRAIT_MOMO->value)->where('status',2);
+        $Transaction = Transaction::where('id',$externalId);
 
         if($Transaction->count()>0){
-            if($Transaction->first()->service_id ==ServiceEnum::RETRAIT_MOMO->value){
+            $status = $Transaction->first()->status;
+
+            if($Transaction->first()->service_id ==ServiceEnum::RETRAIT_MOMO->value && $status==2){
 
                 if($data->status=="FAILED"){
                     $updateTransaction=$Transaction->update([
@@ -1084,7 +1086,7 @@ class ApiProdMoMoMoneyController extends Controller
 
             }
 
-            if($Transaction->first()->service_id ==ServiceEnum::DEPOT_MOMO->value){
+            if($Transaction->first()->service_id ==ServiceEnum::DEPOT_MOMO->value && $status==0){
                 Log::info([
                     "callback"=>$data->body(),
                 ]);
