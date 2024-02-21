@@ -56,7 +56,7 @@ class WebDashBoardController extends Controller
             $revenue = $query->get()->sum("commission_distributeur");
             $lastTransactions = $query->orderBy('transactions.date_transaction', 'desc')->limit(5)->get();
 
-            $transAgent = DB::table("transactions")->where("transactions.status", StatusTransEnum::VALIDATED->value)
+            $transAgent = DB::table("transactions")
                 ->join("users", "users.id","transactions.source")
                 ->join("distributeurs","distributeurs.id","users.distributeur_id")
                 ->join("services","services.id","transactions.service_id")
@@ -77,15 +77,8 @@ class WebDashBoardController extends Controller
                 ->get();
 
             //---------------
-            $dataGraphee = DB::table("transactions")->where("transactions.status", StatusTransEnum::VALIDATED->value)
-                ->join("users", "users.id","transactions.source")
-                ->join("distributeurs","distributeurs.id","users.distributeur_id")
-                ->where("transactions.fichier","agent");
 
-            if(Auth::user()->type_user_id==UserRolesEnum::DISTRIBUTEUR->value){
-                $dataGraphee = $dataGraphee ->where("users.distributeur_id", Auth::user()->distributeur_id);
-            }
-            $resultGraphe= $dataGraphee
+            $resultGraphe= $transAgent
                 ->whereYear('transactions.date_transaction', Carbon::now()->year)
                 ->selectRaw('month(kb_transactions.date_transaction) as mois, sum(kb_transactions.debit) as envoi, sum(kb_transactions.credit) as retrait')
                 ->groupBy('mois')
