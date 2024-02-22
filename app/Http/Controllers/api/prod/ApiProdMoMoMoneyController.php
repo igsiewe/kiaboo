@@ -1002,6 +1002,7 @@ class ApiProdMoMoMoneyController extends Controller
         header("Content-Type: application/json");
         $momocallBackResponse = file_get_contents('php://input');
         $data = json_decode($momocallBackResponse);
+        $element = json_decode($momocallBackResponse, associative: true);
         Log::info([
             "responseMomoCallBack"=>$data,
         ]);
@@ -1013,12 +1014,10 @@ class ApiProdMoMoMoneyController extends Controller
             $status = $Transaction->first()->status;
 
             if($Transaction->first()->service_id ==ServiceEnum::RETRAIT_MOMO->value && $status==2){
-                $element = json_decode($momocallBackResponse, associative: true);
+
                 $financialTransactionId = $Transaction->first()->paytoken;
-                Log::info([
-                    "existance_finacialTransactionId"=>Arr::has($element, "financialTransactionId"),
-                ]);
-                if(!Arr::has($element, "financialTransactionId")) {
+
+                if(Arr::has($element, "financialTransactionId")) {
                     $financialTransactionId = $data->financialTransactionId;
                 }
                 if($data->status=="FAILED"){
@@ -1109,12 +1108,9 @@ class ApiProdMoMoMoneyController extends Controller
             }
 
             if($Transaction->first()->service_id ==ServiceEnum::DEPOT_MOMO->value){
-                $element = json_decode($momocallBackResponse, associative: true);
-                Log::info([
-                    "existance_finacialTransactionId"=>Arr::has($element, "financialTransactionId"),
-                ]);
+
                 $financialTransactionId = $Transaction->first()->paytoken;
-                if(!Arr::has($element, "financialTransactionId")) {
+                if(Arr::has($element, "financialTransactionId")) {
                     $financialTransactionId = $data->financialTransactionId;
                 }
                 if($data->status=="FAILED"){
