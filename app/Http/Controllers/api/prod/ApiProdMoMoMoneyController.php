@@ -253,8 +253,9 @@ class ApiProdMoMoMoneyController extends Controller
                     'status'=>3, // Le dépôt n'a pas abouti, on passe en statut pending
                     //'reference_partenaire'=>$data->financialTransactionId,
                     'date_end_trans'=>Carbon::now(),
-                    'description'=>"FAILED",
+                    'description'=>$checkStatus->status,
                 ]);
+
                 return response()->json([
                     'status'=>'error',
                     'message'=>$datacheckStatus->message,
@@ -329,28 +330,7 @@ class ApiProdMoMoMoneyController extends Controller
                 $subtitle ="Success";
                 $appNotification = new ApiNotification();
 
-                $envoiNotification = $appNotification->sendNotificationPushFireBase($idDevice, $title, $subtitle, $message);
-
-//                if($envoiNotification->status()==200){
-//                    $resultNotification=json_decode($envoiNotification->getContent());
-//                    $responseNotification=$resultNotification->response ;
-//
-//                    if($responseNotification->success==true){
-//                        Log::info([
-//                            'code'=> 200,
-//                            'function' => "MOMO_Depot",
-//                            'response'=>"Notification envoyée avec succès",
-//                            'user' => Auth::user()->id,
-//                        ]);
-//                    }else{
-//                        Log::error([
-//                            'code'=> 500,
-//                            'function' => "MOMO_Depot",
-//                            'response'=>$resultNotification,
-//                            'user' => Auth::user()->id,
-//                        ]);
-//                    }
-//                }
+                $envoiNotification = $appNotification->sendNotificationPushFireBase($idDevice, $title, $subtitle, $message); //Push notification sur le telephone de l'agent
 
                 return response()->json([
                     'success' => true,
@@ -433,11 +413,11 @@ class ApiProdMoMoMoneyController extends Controller
             }
             //Je convertis en tableau associatif
             $element = json_decode($response, associative: true);
-            Log::info([
-                'reason'=>$element,
-            ]);
-            if(!Arr::has($element, "reason")) {
 
+            if(!Arr::has($element, "reason")) {
+                Log::info([
+                    'reason'=>$element,
+                ]);
                 if ($data->reason == "NOT_ENOUGH_FUNDS") {
                     return response()->json(
                         [
@@ -458,7 +438,6 @@ class ApiProdMoMoMoneyController extends Controller
                     'externalId'=>$data->externalId,
                     'message'=>$data->reason,
                     'description'=>$data->status,
-                    // 'financialTransactionId'=>$data->financialTransactionId,
                 ],404
             );
         }else{
@@ -1026,13 +1005,6 @@ class ApiProdMoMoMoneyController extends Controller
         //On se rassure que la transaction est bien en status en attente
         $Transaction = Transaction::where('id',$externalId);
 
-//        Log::info(
-//            [
-//                'reference_partenaire'=>$data->financialTransactionId,
-//                'externalId'=>$data->externalId,
-//                'ResponseCallbackMoMo'=>$data,
-//            ]
-//        );
         if($Transaction->count()>0){
             $status = $Transaction->first()->status;
 
