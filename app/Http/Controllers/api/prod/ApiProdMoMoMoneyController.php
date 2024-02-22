@@ -668,7 +668,7 @@ class ApiProdMoMoMoneyController extends Controller
             ]);
 
         Log::info([
-            "responseMoMoRetrait"=>json_decode($response->body()),
+            "responseMoMoRetrait"=>json_decode($response),
         ]);
 
         if($response->status()==202){
