@@ -1009,7 +1009,7 @@ class ApiProdMoMoMoneyController extends Controller
                 if($data->status=="FAILED"){
                     $updateTransaction=$Transaction->update([
                         'status'=>3, // Le client n'a pas validé dans les délais et l'opérateur l'a annule
-                        'reference_partenaire'=>$data->financialTransactionId,
+                       // 'reference_partenaire'=>$data->financialTransactionId,
                         'date_end_trans'=>Carbon::now(),
                         'description'=>$data->status,
                     ]);
