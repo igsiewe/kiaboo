@@ -995,6 +995,11 @@ class ApiProdMoMoMoneyController extends Controller
         //On se rassure que la transaction est bien en status en attente
         $Transaction = Transaction::where('id',$externalId);
 
+        Log::info(
+            [
+                'ResponseCallbackMoMo'=>$data,
+            ]
+        );
         if($Transaction->count()>0){
             $status = $Transaction->first()->status;
 
