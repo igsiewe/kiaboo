@@ -994,13 +994,13 @@ class ApiProdMoMoMoneyController extends Controller
         //On se rassure que la transaction est bien en status en attente
         $Transaction = Transaction::where('id',$externalId);
 
-        Log::info(
-            [
-                'reference_partenaire'=>$data->financialTransactionId,
-                'externalId'=>$data->externalId,
-                'ResponseCallbackMoMo'=>$data,
-            ]
-        );
+//        Log::info(
+//            [
+//                'reference_partenaire'=>$data->financialTransactionId,
+//                'externalId'=>$data->externalId,
+//                'ResponseCallbackMoMo'=>$data,
+//            ]
+//        );
         if($Transaction->count()>0){
             $status = $Transaction->first()->status;
 
@@ -1058,26 +1058,26 @@ class ApiProdMoMoMoneyController extends Controller
                         $subtitle ="Success";
                         $appNotification = new ApiNotification();
                         $envoiNotification = $appNotification->sendNotificationPushFireBase($device_notification, $title, $subtitle, $message);
-                        if($envoiNotification->status()==200){
-                            $resultNotification=json_decode($envoiNotification->getContent());
-                            $responseNotification=$resultNotification->response ;
-                            if($responseNotification->success==true){
-                                Log::info([
-                                    'code'=> 200,
-                                    'function' => "MOMO_Retrait_Status",
-                                    'response'=>"Notification envoyée avec succès",
-                                    'user' => $agent,
-                                ]);
-                            }else{
-                                Log::error([
-                                    'code'=> 500,
-                                    'function' => "MOMO_Retrait_Status",
-                                    'response'=>$resultNotification->body(),
-                                    'user' => $agent,
-                                ]);
-                            }
-
-                        }
+//                        if($envoiNotification->status()==200){
+//                            $resultNotification=json_decode($envoiNotification->getContent());
+//                            $responseNotification=$resultNotification->response ;
+//                            if($responseNotification->success==true){
+//                                Log::info([
+//                                    'code'=> 200,
+//                                    'function' => "MOMO_Retrait_Status",
+//                                    'response'=>"Notification envoyée avec succès",
+//                                    'user' => $agent,
+//                                ]);
+//                            }else{
+//                                Log::error([
+//                                    'code'=> 500,
+//                                    'function' => "MOMO_Retrait_Status",
+//                                    'response'=>$resultNotification->body(),
+//                                    'user' => $agent,
+//                                ]);
+//                            }
+//
+//                        }
                     }catch(\Exception $e){
                         DB::rollBack();
                         Log::error([
