@@ -13,6 +13,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -421,17 +422,22 @@ class ApiProdMoMoMoneyController extends Controller
                     ],200
                 );
             }
-            if($data->reason=="NOT_ENOUGH_FUNDS"){
-                return response()->json(
-                    [
-                        'status'=>404,
-                        'amount'=>$data->amount,
-                        'externalId'=>$data->externalId,
-                        'message'=>"Le solde du compte chez le partenaire est insuffisant",
-                        'description'=>$data->status,
-                    ],404
-                );
+            //Je convertis en tableau associatif
+            $element = json_decode($response, associative: true);
+            if(!Arr::has($element[0], "reason")) { //On teste si l'utilisateur a un wallet actif
+                if($data->reason=="NOT_ENOUGH_FUNDS"){
+                    return response()->json(
+                        [
+                            'status'=>404,
+                            'amount'=>$data->amount,
+                            'externalId'=>$data->externalId,
+                            'message'=>"Le solde du compte chez le partenaire est insuffisant",
+                            'description'=>$data->status,
+                        ],404
+                    );
+                }
             }
+
             return response()->json(
                 [
                     'status'=>404,
