@@ -260,8 +260,7 @@ class ApiProdMoMoMoneyController extends Controller
                     'message'=>$datacheckStatus->message,
                 ],$checkStatus->getStatusCode());
             }
-            //$financialTransactionId = $datacheckStatus->financialTransactionId;
-            //$dataResponse = json_decode($response->body());
+
             try {
                 DB::beginTransaction();
                 //On Calcule la commission
@@ -1128,6 +1127,14 @@ class ApiProdMoMoMoneyController extends Controller
             if($Transaction->first()->service_id ==ServiceEnum::DEPOT_MOMO->value){
 
                 if($data->status=="FAILED"){
+                    $updateTransaction=$Transaction->update([
+                        'status'=>3, // Le dépôt n'a pas abouti
+                        'reference_partenaire'=>$data->financialTransactionId,
+                        'date_end_trans'=>Carbon::now(),
+                        'description'=>$data->status,
+                    ]);
+                }
+                if($data->status=="CREATED"){
                     $updateTransaction=$Transaction->update([
                         'status'=>3, // Le dépôt n'a pas abouti
                         'reference_partenaire'=>$data->financialTransactionId,
