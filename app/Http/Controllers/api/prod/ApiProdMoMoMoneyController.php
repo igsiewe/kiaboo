@@ -405,7 +405,9 @@ class ApiProdMoMoMoneyController extends Controller
             ])
             ->Get($http);
         $data = json_decode($response->body());
-
+        Log::info([
+            'response'=>$data,
+        ]);
         if($response->status()==200){
             if($data->status=="SUCCESSFUL"){
                 return response()->json(
