@@ -331,26 +331,26 @@ class ApiProdMoMoMoneyController extends Controller
 
                 $envoiNotification = $appNotification->sendNotificationPushFireBase($idDevice, $title, $subtitle, $message);
 
-                if($envoiNotification->status()==200){
-                    $resultNotification=json_decode($envoiNotification->getContent());
-                    $responseNotification=$resultNotification->response ;
-
-                    if($responseNotification->success==true){
-                        Log::info([
-                            'code'=> 200,
-                            'function' => "MOMO_Depot",
-                            'response'=>"Notification envoyée avec succès",
-                            'user' => Auth::user()->id,
-                        ]);
-                    }else{
-                        Log::error([
-                            'code'=> 500,
-                            'function' => "MOMO_Depot",
-                            'response'=>$resultNotification,
-                            'user' => Auth::user()->id,
-                        ]);
-                    }
-                }
+//                if($envoiNotification->status()==200){
+//                    $resultNotification=json_decode($envoiNotification->getContent());
+//                    $responseNotification=$resultNotification->response ;
+//
+//                    if($responseNotification->success==true){
+//                        Log::info([
+//                            'code'=> 200,
+//                            'function' => "MOMO_Depot",
+//                            'response'=>"Notification envoyée avec succès",
+//                            'user' => Auth::user()->id,
+//                        ]);
+//                    }else{
+//                        Log::error([
+//                            'code'=> 500,
+//                            'function' => "MOMO_Depot",
+//                            'response'=>$resultNotification,
+//                            'user' => Auth::user()->id,
+//                        ]);
+//                    }
+//                }
 
                 return response()->json([
                     'success' => true,
@@ -360,7 +360,6 @@ class ApiProdMoMoMoneyController extends Controller
                     'data' => [],// $resultat,
                     'user'=>$userRefresh,
                     'transactions'=>$transactionsRefresh,
-                //    'transactionsEnAttente'=>$transactionEnAttente,
                 ], 200);
 
             }catch (\Exception $e) {
@@ -997,6 +996,8 @@ class ApiProdMoMoMoneyController extends Controller
 
         Log::info(
             [
+                'reference_partenaire'=>$data->financialTransactionId,
+                'externalId'=>$data->externalId,
                 'ResponseCallbackMoMo'=>$data,
             ]
         );
