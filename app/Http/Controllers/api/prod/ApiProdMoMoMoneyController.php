@@ -1101,7 +1101,7 @@ class ApiProdMoMoMoneyController extends Controller
                 if($data->status=="FAILED"){
                     $updateTransaction=$Transaction->update([
                         'status'=>3, // Le dépôt n'a pas abouti
-                        'reference_partenaire'=>$data->financialTransactionId,
+                        'reference_partenaire'=>$Transaction->first()->paytoken,//$data->financialTransactionId,
                         'date_end_trans'=>Carbon::now(),
                         'description'=>$data->status,
                     ]);
