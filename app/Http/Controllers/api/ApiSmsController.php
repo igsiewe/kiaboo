@@ -63,7 +63,7 @@ class ApiSmsController extends Controller
 
         $myBody['api_key'] = "7pceN52XATpxQfA";
         $myBody['password'] = "K!@b012345";
-        $myBody['sender'] = "Kiaboo";
+        $myBody['sender'] = "LMT";
         $myBody['phone'] = $recipient;
         $myBody['message'] = $content;
         $myBody['flag'] = "long_sms";
@@ -95,7 +95,6 @@ class ApiSmsController extends Controller
 //                "Success"=>false,
 //            ], 404);
 //        }
-
         $response = $this->SendCMR($tel, utf8_encode($msg));
         $retourApiSms = array();
         $code = Str::contains($response,"success");
