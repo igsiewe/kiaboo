@@ -1013,7 +1013,7 @@ class ApiProdMoMoMoneyController extends Controller
             $status = $Transaction->first()->status;
 
             if($Transaction->first()->service_id ==ServiceEnum::RETRAIT_MOMO->value && $status==2){
-                $element = json_decode($data, associative: true);
+                $element = json_decode($momocallBackResponse, associative: true);
                 $financialTransactionId = $Transaction->first()->paytoken;
                 if(!Arr::has($element, "financialTransactionId")) {
                     $financialTransactionId = $data->financialTransactionId;
@@ -1106,7 +1106,7 @@ class ApiProdMoMoMoneyController extends Controller
             }
 
             if($Transaction->first()->service_id ==ServiceEnum::DEPOT_MOMO->value){
-                $element = json_decode($data, associative: true);
+                $element = json_decode($momocallBackResponse, associative: true);
                 $financialTransactionId = $Transaction->first()->paytoken;
                 if(!Arr::has($element, "financialTransactionId")) {
                     $financialTransactionId = $data->financialTransactionId;
