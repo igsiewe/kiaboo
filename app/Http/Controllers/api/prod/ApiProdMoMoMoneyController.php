@@ -243,6 +243,9 @@ class ApiProdMoMoMoneyController extends Controller
                 "payeeNote" => "Agent : ".Auth::user()->telephone
             ]);
 
+        Log::info([
+            "responseMoMoDepot"=>json_decode($response->body()),
+        ]);
         if($response->status()==202){
 
             $checkStatus = $this->MOMO_Depot_Status( $accessToken, $subcriptionKey, $referenceID);
@@ -664,7 +667,9 @@ class ApiProdMoMoMoneyController extends Controller
                 "payerMessage" => "Transaction initiée par lagent N".Auth::user()->id." le ".Carbon::now()." vers le client ".$request->customerPhone,
             ]);
 
-
+        Log::info([
+            "responseMoMoRetrait"=>json_decode($response->body()),
+        ]);
 
         if($response->status()==202){
             //Le client a été notifié. Donc on reste en attente de sa confirmation (Saisie de son code secret)
@@ -993,14 +998,13 @@ class ApiProdMoMoMoneyController extends Controller
 
     }
 
-    public function MOMO_Retrait_CallBack($referenceID){
-
-    }
-
     public function MomoCallBack(Request $request){
         header("Content-Type: application/json");
         $momocallBackResponse = file_get_contents('php://input');
         $data = json_decode($momocallBackResponse);
+        Log::info([
+            "responseMomoCallBack"=>$data,
+        ]);
         $externalId = $data->externalId;
         //On se rassure que la transaction est bien en status en attente
         $Transaction = Transaction::where('id',$externalId);
