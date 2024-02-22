@@ -253,7 +253,8 @@ class ApiProdMoMoMoneyController extends Controller
                     'status'=>3, // Le dépôt n'a pas abouti, on passe en statut pending
                     //'reference_partenaire'=>$data->financialTransactionId,
                     'date_end_trans'=>Carbon::now(),
-                    'description'=>$checkStatus->status,
+                    'description'=>$checkStatus->description,
+                    'message'=>$checkStatus->message,
                 ]);
 
                 return response()->json([
@@ -454,6 +455,7 @@ class ApiProdMoMoMoneyController extends Controller
                 [
                     'status'=>$response->status(),
                     'message'=>$data->message,
+                    'description'=>$data->message,
                 ],$response->status()
             );
         }
