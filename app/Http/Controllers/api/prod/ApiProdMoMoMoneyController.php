@@ -384,6 +384,7 @@ class ApiProdMoMoMoneyController extends Controller
                 'X-Target-Environment'=> 'mtncameroon',
             ])
             ->Get($http);
+
         $data = json_decode($response->body());
         Log::info([
             'response'=>$data,
@@ -400,13 +401,14 @@ class ApiProdMoMoMoneyController extends Controller
                     ],200
                 );
             }
+
             if($data->status=="CREATED"){
                 return response()->json(
                     [
                         'status'=>201,
                         'amount'=>$data->amount,
                         'externalId'=>$data->externalId,
-                        'message'=>"Le maximum de dépôt pour ce compte dans la semaine est atteint.",
+                        'message'=>"Le maximum de dépôt pour ce compte dans la semaine est atteint -> ".$data->reason,
                         'description'=>$data->status,
                     ],201
                 );
