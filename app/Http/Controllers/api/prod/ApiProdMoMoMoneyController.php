@@ -415,13 +415,9 @@ class ApiProdMoMoMoneyController extends Controller
                 );
             }
             //Je convertis en tableau associatif
-            $element = json_decode($response, associative: true);
 
-            if(!Arr::has($element, "reason")) {
-                Log::info([
-                    'reason'=>$element,
-                ]);
-                if ($data->reason == "NOT_ENOUGH_FUNDS") {
+            if($data->status=="FAILED") {
+                //if ($data->reason == "NOT_ENOUGH_FUNDS") {
                     return response()->json(
                         [
                             'status' => 404,
@@ -431,9 +427,9 @@ class ApiProdMoMoMoneyController extends Controller
                             'description' => $data->status,
                         ], 404
                     );
-                }
-            }
+              //  }
 
+            }
             return response()->json(
                 [
                     'status'=>404,
