@@ -247,7 +247,7 @@ class ApiProdMoMoMoneyController extends Controller
 
             $checkStatus = $this->MOMO_Depot_Status( $accessToken, $subcriptionKey, $referenceID);
             $datacheckStatus = json_decode($checkStatus->getContent());
-
+            dd($datacheckStatus);
             if($checkStatus->getStatusCode() !=200){
                 $updateTransaction=Transaction::where("id",$idTransaction)->update([
                     'status'=>3, // Le dépôt n'a pas abouti, on passe en statut pending
