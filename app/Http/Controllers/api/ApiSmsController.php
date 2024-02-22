@@ -63,7 +63,7 @@ class ApiSmsController extends Controller
 
         $myBody['api_key'] = "7pceN52XATpxQfA";
         $myBody['password'] = "K!@b012345";
-        $myBody['sender'] = "LMT";
+        $myBody['sender'] = "Kiaboo";
         $myBody['phone'] = $recipient;
         $myBody['message'] = $content;
         $myBody['flag'] = "long_sms";

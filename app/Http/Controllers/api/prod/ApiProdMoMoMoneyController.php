@@ -992,10 +992,6 @@ class ApiProdMoMoMoneyController extends Controller
         $momocallBackResponse = file_get_contents('php://input');
         $data = json_decode($momocallBackResponse);
         $externalId = $data->externalId;
-
-        Log::info([
-            "externalId"=>$externalId
-        ]);
         //On se rassure que la transaction est bien en status en attente
         $Transaction = Transaction::where('id',$externalId);
 
@@ -1091,9 +1087,7 @@ class ApiProdMoMoMoneyController extends Controller
             }
 
             if($Transaction->first()->service_id ==ServiceEnum::DEPOT_MOMO->value){
-                Log::info([
-                    "callback"=>$data->financialTransactionId,
-                ]);
+
                 if($data->status=="FAILED"){
                     $updateTransaction=$Transaction->update([
                         'status'=>3, // Le dépôt n'a pas abouti
