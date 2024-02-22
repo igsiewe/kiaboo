@@ -418,8 +418,18 @@ class ApiProdMoMoMoneyController extends Controller
                         'externalId'=>$data->externalId,
                         'message'=>"Terminée avec succès",
                         'description'=>$data->status,
-                        // 'financialTransactionId'=>$data->financialTransactionId,
                     ],200
+                );
+            }
+            if($data->status=="CREATED"){
+                return response()->json(
+                    [
+                        'status'=>201,
+                        'amount'=>$data->amount,
+                        'externalId'=>$data->externalId,
+                        'message'=>"Le maximum de dépôt pour ce compte dans la semaine est atteint.",
+                        'description'=>$data->status,
+                    ],201
                 );
             }
             //Je convertis en tableau associatif
@@ -427,19 +437,20 @@ class ApiProdMoMoMoneyController extends Controller
             Log::info([
                 'reason'=>$element,
             ]);
-           // if(!Arr::has($element[0], "reason")) { //On teste si l'utilisateur a un wallet actif
-                if($data->reason=="NOT_ENOUGH_FUNDS"){
+            if(!Arr::has($element, "reason")) {
+
+                if ($data->reason == "NOT_ENOUGH_FUNDS") {
                     return response()->json(
                         [
-                            'status'=>404,
-                            'amount'=>$data->amount,
-                            'externalId'=>$data->externalId,
-                            'message'=>"Le solde du compte chez le partenaire est insuffisant",
-                            'description'=>$data->status,
-                        ],404
+                            'status' => 404,
+                            'amount' => $data->amount,
+                            'externalId' => $data->externalId,
+                            'message' => "Le solde du compte chez le partenaire est insuffisant",
+                            'description' => $data->status,
+                        ], 404
                     );
                 }
-           // }
+            }
 
             return response()->json(
                 [
@@ -511,6 +522,17 @@ class ApiProdMoMoMoneyController extends Controller
                         'response'=>$data,
                         // 'financialTransactionId'=>$data->financialTransactionId,
                     ],200
+                );
+            }
+            if($data->status=="CREATED"){
+                return response()->json(
+                    [
+                        'status'=>201,
+                        'amount'=>$data->amount,
+                        'externalId'=>$data->externalId,
+                        'message'=>"Le maximum de dépôt pour ce compte dans la semaine est atteint.",
+                        'description'=>$data->status,
+                    ],201
                 );
             }
             if($data->reason=="NOT_ENOUGH_FUNDS"){
