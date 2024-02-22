@@ -424,7 +424,10 @@ class ApiProdMoMoMoneyController extends Controller
             }
             //Je convertis en tableau associatif
             $element = json_decode($response, associative: true);
-            if(!Arr::has($element[0], "reason")) { //On teste si l'utilisateur a un wallet actif
+            Log::info([
+                'reason'=>$element,
+            ]);
+           // if(!Arr::has($element[0], "reason")) { //On teste si l'utilisateur a un wallet actif
                 if($data->reason=="NOT_ENOUGH_FUNDS"){
                     return response()->json(
                         [
@@ -436,7 +439,7 @@ class ApiProdMoMoMoneyController extends Controller
                         ],404
                     );
                 }
-            }
+           // }
 
             return response()->json(
                 [
