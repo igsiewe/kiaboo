@@ -1013,13 +1013,18 @@ class ApiProdMoMoMoneyController extends Controller
             $status = $Transaction->first()->status;
 
             if($Transaction->first()->service_id ==ServiceEnum::RETRAIT_MOMO->value && $status==2){
-
+                $element = json_decode($data, associative: true);
+                $financialTransactionId = $Transaction->first()->paytoken;
+                if(!Arr::has($element, "financialTransactionId")) {
+                    $financialTransactionId = $data->financialTransactionId;
+                }
                 if($data->status=="FAILED"){
                     $updateTransaction=$Transaction->update([
                         'status'=>3, // Le client n'a pas validé dans les délais et l'opérateur l'a annule
-                       // 'reference_partenaire'=>$data->financialTransactionId,
+                        'reference_partenaire'=>$financialTransactionId,
                         'date_end_trans'=>Carbon::now(),
                         'description'=>$data->status,
+                        'message'=>$data->reason,
                     ]);
                 }
 
@@ -1101,19 +1106,24 @@ class ApiProdMoMoMoneyController extends Controller
             }
 
             if($Transaction->first()->service_id ==ServiceEnum::DEPOT_MOMO->value){
-
+                $element = json_decode($data, associative: true);
+                $financialTransactionId = $Transaction->first()->paytoken;
+                if(!Arr::has($element, "financialTransactionId")) {
+                    $financialTransactionId = $data->financialTransactionId;
+                }
                 if($data->status=="FAILED"){
                     $updateTransaction=$Transaction->update([
                         'status'=>3, // Le dépôt n'a pas abouti
-                        'reference_partenaire'=>$Transaction->first()->paytoken,//$data->financialTransactionId,
+                        'reference_partenaire'=>$financialTransactionId,
                         'date_end_trans'=>Carbon::now(),
                         'description'=>$data->status,
+                        'message'=>$data->reason,
                     ]);
                 }
                 if($data->status=="CREATED"){
                     $updateTransaction=$Transaction->update([
                         'status'=>3, // Le dépôt n'a pas abouti
-                        'reference_partenaire'=>$data->financialTransactionId,
+                        'reference_partenaire'=>$financialTransactionId,
                         'date_end_trans'=>Carbon::now(),
                         'description'=>$data->status,
                     ]);
