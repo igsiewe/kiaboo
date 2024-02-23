@@ -1151,7 +1151,7 @@ class ApiProdM2UController extends Controller
                 ->Post($endpoint, [
                     "LoginName" => "CM949513",
                     "APIKey" => "oh09DFok0T4ecUz1kzw2o9SoVslEwE3eMpvgtpzrhE4uv",
-                    "AppID" => "8SZpExWP0fxu6rKQEDva03KVT_",
+                    "AppID" => "8SZpExWP0fxu6rKQEDva03KVT",
                     "PIN" => "765639", //  $request->PIN,
                     "TransactionNumber" => $request->TransactionNumber,
                 ]  );
@@ -1159,7 +1159,7 @@ class ApiProdM2UController extends Controller
             $json = json_decode($response, false);
             $data=collect($json)->first();
 
-            dd($data);
+            dd($data, $token);
             if($response->status()==200) {
 
                 if(Arr::has($data, "OK")) {
