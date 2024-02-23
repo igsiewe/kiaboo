@@ -84,7 +84,7 @@ class ApiNotification extends Controller
             if($data->success==1){
                 Log::alert([
                     "success"=>true,
-                    "response"=>$response,]);
+                    "response"=>$response->body(),]);
                 return response()->json([
                     "success"=>true,
                     "response"=>$data],200);
