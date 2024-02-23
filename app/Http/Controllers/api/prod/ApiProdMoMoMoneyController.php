@@ -244,7 +244,7 @@ class ApiProdMoMoMoneyController extends Controller
             ]);
 
         Log::info([
-            "responseMoMoDepot"=>json_decode($response->body()),
+            "responseMoMoDepot"=>json_decode($response->status()),
         ]);
         if($response->status()==202){
 
@@ -391,7 +391,7 @@ class ApiProdMoMoMoneyController extends Controller
 
         $data = json_decode($response->body());
         Log::info([
-            'response'=>$data,
+            'responseMoMoDepotStatus'=>$data,
         ]);
         if($response->status()==200){
             if($data->status=="SUCCESSFUL"){
