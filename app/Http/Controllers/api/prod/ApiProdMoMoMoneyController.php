@@ -412,7 +412,7 @@ class ApiProdMoMoMoneyController extends Controller
                         'status'=>201,
                         'amount'=>$data->amount,
                         'externalId'=>$data->externalId,
-                        'message'=>"Le maximum de dépôt pour ce compte dans la semaine est atteint -> ".$data->reason,
+                        'message'=>"Le maximum de dépôt pour ce compte dans la semaine est atteint -> ",
                         'description'=>$data->status,
                     ],201
                 );
