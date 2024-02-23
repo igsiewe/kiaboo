@@ -398,27 +398,6 @@ class ApiProdM2UController extends Controller
                     $subtitle ="Success";
                     $appNotification = new ApiNotification();
                     $envoiNotification = $appNotification->sendNotificationPushFireBase($idDevice, $title, $subtitle, $message);
-                    if($envoiNotification->status()==200){
-                        $resultNotification=json_decode($envoiNotification->getContent());
-                        $responseNotification=$resultNotification->response ;
-                        if($responseNotification->success==true){
-                            Log::info([
-                                'code'=> 200,
-                                'function' => "MOMO_Depot",
-                                'response'=>"Notification envoyée avec succès",
-                                'user' => Auth::user()->id,
-                                'request' => $request->all()
-                            ]);
-                        }else{
-                            Log::error([
-                                'code'=> 500,
-                                'function' => "MOMO_Depot",
-                                'response'=>$resultNotification,
-                                'user' => Auth::user()->id,
-                                'request' => $request->all()
-                            ]);
-                        }
-                    }
 
                     return response()->json([
                         'success' => true,
@@ -621,7 +600,7 @@ class ApiProdM2UController extends Controller
         }
     }
 
-    public function M2U_RetraitCPPayCash(Request $request){
+    public function M2U_RetraitCPPayCash(Request $request){ //CPPayCash
         $validator = Validator::make($request->all(), [
 
             "SecurityCode" => 'required|numeric',
@@ -881,6 +860,351 @@ class ApiProdM2UController extends Controller
         }
 
     }
+
+    public function M2U_ExecuteCashBack(Request $request){ //Retrait
+        $validator = Validator::make($request->all(), [
+
+            "TransactionNumber" => 'required|numeric',
+            "PIN" => 'required|numeric',
+            "Amount" => 'required|numeric',
+
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first(),
+            ], 400);
+        }
+
+        $apiCheck = new ApiCheckController();
+        $service = ServiceEnum::RETRAIT_M2U->value;
+
+        // Vérifie si l'utilisateur est autorisé à faire cette opération
+        if($apiCheck->checkUserValidity()==false){
+            return response()->json([
+                'status'=>'error',
+                'message'=>'Votre compte est désactivé. Veuillez contacter votre distributeur',
+            ],401);
+        }
+
+
+        // On vérifie si les commissions sont paramétrées
+        $functionCommission = new ApiCommissionController();
+        $lacommission =$functionCommission->getCommissionByService($service,$request->Amount);
+        if($lacommission->getStatusCode()!=200){
+            return response()->json([
+                'success' => false,
+                'message' => "Impossible de calculer la commission",
+            ], 400);
+        }
+        $commission=json_decode($lacommission->getContent());
+
+        $commissionFiliale = doubleval($commission->commission_kiaboo);
+        $commissionDistributeur=doubleval($commission->commission_distributeur);
+        $commissionAgent=doubleval($commission->commission_agent);
+
+        //Initie la transaction
+        $device = $request->deviceId;
+        $telephone = $request->TargetPhoneNumber;
+        if(strlen($telephone)==12){
+            if(substr($telephone,0,3)=="237"){
+                $telephone = substr($telephone,-9);
+            }
+        }
+        $init_transaction = $apiCheck->init_Retrait($request->Amount, $telephone, $service,"", $device);
+        $dataInit = json_decode($init_transaction->getContent());
+
+        if($init_transaction->getStatusCode() !=200){
+            return response()->json([
+                'status'=>'error',
+                'message'=>$dataInit->message,
+            ],$init_transaction->getStatusCode());
+        }
+        $idTransaction = $dataInit->transId; //Id de la transaction initiée
+        $reference = $dataInit->reference; //Référence de la transaction initiée
+
+        //On génére le token pour la transaction
+
+        $getToken=$this->M2U_getToken();
+        $datagetToken = json_decode($getToken->getContent());
+
+        if ($getToken->getStatusCode()==200) {
+
+            $token = $datagetToken->token;
+
+            $endpoint = 'https://apps.m2u.money/CPPayCash';
+            $response = Http::withOptions(['verify' => false,])
+                ->withHeaders(
+                    [
+                        'Content-Type' => 'application/json',
+                        'From' => $token,
+                    ])
+
+                ->Post($endpoint, [
+                    "LoginName"=>"CM949513",
+                    "APIKey"=>"oh09DFok0T4ecUz1kzw2o9SoVslEwE3eMpvgtpzrhE4uv",
+                    "AppID"=>"8SZpExWP0fxu6rKQEDva03KVT",
+                    "SecurityCode"=>$request->SecurityCode,
+                    "VoucherNumber"=>$request->VoucherNumber,
+                    "TargetPhoneNumber"=>$request->TargetPhoneNumber, //'237'.$request->TargetPhoneNumber,
+                    "FirstName"=>$request->FirstName,
+                    "LastName"=>$request->LastName,
+                    "PartnerTellerID"=>Auth::user()->id,
+                    "WalletNumber"=>"XAF-01-CM9539-001",
+                    "OTP"=>"SibSnfeSdksSji2023_@"
+                ]  );
+            if($response->status()==200) {
+
+                $json = json_decode($response, false);
+                $dataResultat = collect($json)->first();
+                if ($dataResultat->OK != 200) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' =>"1 - ".$dataResultat->Description,// 'Une error s\'est produite. Veuillez contacter votre support',
+                    ], 404);
+                }
+                if ($dataResultat->ReturnCode != 0) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' =>"2 - ".$dataResultat->Description,//  'Une error s\'est produite. Veuillez contacter votre support',
+                    ], 404);
+                }
+                isset($dataResultat->Result) ? $result = true : $result = false;
+                if($result==false){
+                    return response()->json([
+                        'status' => 'error',
+                        'message' =>"3 - ".$dataResultat->Description,//  'Une error s\'est produite. Veuillez contacter votre support',
+                    ], 404);
+                }
+                if ($result==true && $dataResultat->Result != "Success") {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' =>"4 - ".$dataResultat->Description,//  'Une error s\'est produite. Veuillez contacter votre support',
+                    ], 404);
+                }
+                //On met à jour la table transaction
+
+                //Par mesure de sécurité je rappelle les données de l'utilisateur
+                $user = User::where('id', Auth::user()->id);
+                $balanceBeforeAgent = $user->get()->first()->balance_after;
+                $balanceAfterAgent = floatval($balanceBeforeAgent) + floatval($request->Amount);
+                //on met à jour la table transaction
+
+                try {
+                    DB::beginTransaction();
+                    $Transaction = Transaction::where('id', $idTransaction)->where('service_id', $service)->update([
+                        'reference_partenaire' => $dataResultat->TransactionID, // $reference,
+                        'balance_before' => $balanceBeforeAgent,
+                        'balance_after' => $balanceAfterAgent,
+                        'debit' => 0,
+                        'credit' => $request->Amount,
+                        'status' => 1, //End successfully
+                        'paytoken' => $dataResultat->TransactionID, // $reference,
+                        'date_end_trans' => Carbon::now(),
+                        'description' => 'SUCCESSFULL',
+                        'message' => $dataResultat->Description,
+                        'commission' => $commission->commission_globale,
+                        'commission_filiale' => $commissionFiliale,
+                        'commission_agent' => $commissionAgent,
+                        'commission_distributeur' => $commissionDistributeur,
+                    ]);
+                    //La commmission de l'agent après chaque transaction
+
+                    $commission_agent = Transaction::where("fichier", "agent")->where("commission_agent_rembourse", 0)->where("source", Auth::user()->id)->sum("commission_agent");
+
+                    $debitAgent = DB::table("users")->where("id", Auth::user()->id)->update([
+                        'balance_after' => $balanceAfterAgent,
+                        'balance_before' => $balanceBeforeAgent,
+                        'last_amount' => $request->Amount,
+                        'date_last_transaction' => Carbon::now(),
+                        'user_last_transaction_id' => Auth::user()->id,
+                        'last_service_id' => $service,
+                        'reference_last_transaction' => $reference,
+                        'remember_token' => $reference,
+                        'total_commission' => $commission_agent,
+                    ]);
+                    DB::commit();
+                    $userRefresh = User::where('id', Auth::user()->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before', 'balance_after','total_commission', 'last_amount','sous_distributeur_id','date_last_transaction')->first();
+                    $transactionsRefresh = DB::table('transactions')
+                        ->join('services', 'transactions.service_id', '=', 'services.id')
+                        ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
+                        ->select('transactions.id','transactions.reference as reference','transactions.reference_partenaire','transactions.date_transaction','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.commission_agent as commission','transactions.balance_before','transactions.balance_after' ,'transactions.status','services.name_service','services.logo_service','type_services.name_type_service','type_services.id as type_service_id','transactions.date_operation', 'transactions.heure_operation','transactions.commission_agent_rembourse as commission_agent')
+                        ->where("fichier","agent")
+                        ->where("source",Auth::user()->id)
+                        ->where('transactions.status',1)
+                        ->orderBy('transactions.date_transaction', 'desc')
+                        ->limit(5)
+                        ->get();
+
+                    $idDevice = $device;
+                    $title = "Kiaboo";
+                    $message = "Le retrait M2U Money de " . $request->Amount . " F CFA a été effectué avec succès au ".$request->TargetPhoneNumber;
+                    $subtitle ="Success";
+                    $appNotification = new ApiNotification();
+                    $envoiNotification = $appNotification->sendNotificationPushFireBase($idDevice, $title, $subtitle, $message);
+                    if($envoiNotification->status()==200){
+                        $resultNotification=json_decode($envoiNotification->getContent());
+                        $responseNotification=$resultNotification->response ;
+                        if($responseNotification->success==true){
+                            Log::info([
+                                'code'=> 200,
+                                'function' => "M2U_RetraitCPPayCash",
+                                'response'=>"Notification envoyée avec succès",
+                                'user' => Auth::user()->id,
+                                'request' => $request->all()
+                            ]);
+                        }else{
+                            Log::error([
+                                'code'=> 500,
+                                'function' => "M2U_RetraitCPPayCash",
+                                'response'=>$resultNotification,
+                                'user' => Auth::user()->id,
+                                'request' => $request->all()
+                            ]);
+                        }
+                    }
+
+                    return response()->json([
+                        'success' => true,
+                        'message' => $dataResultat->Description.' Votre transaction a été effectuée avec succès',
+                        'textmessage' => $dataResultat->Description,
+                        'reference' => $reference,
+                        'data' => $response->body(),
+                        'user'=>$userRefresh,
+                        'transactions'=>$transactionsRefresh,
+                    ], 200);
+                }catch (\Exception $e){
+                    DB::rollBack();
+                    Log::error([
+                        'code'=> $e->getCode(),
+                        'function' => "depotM2U",
+                        'response'=>$e->getMessage(),
+                        'user' => Auth::user()->id,
+                        'customerPhone'=>$request->TargetPhoneNumber,
+                    ]);
+                    return response()->json([
+                        'success' => false,
+                        'message' =>"3. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
+                    ],$e->getCode());
+                }
+            }else{
+                Log::error([
+                    'code'=> $response->status(),
+                    'function' => "depotM2U",
+                    'response'=>$response->body(),
+                    'user' => Auth::user()->id,
+                    'customerPhone'=>$request->TargetPhoneNumber,
+                ]);
+
+                return response()->json([
+                    'code' => $response->status(),
+                    'message' =>"4. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
+                ],$response->status());
+            }
+        }else{
+
+            Log::error([
+                'code'=> $getToken->getStatusCode(),
+                'function' => "depotM2U",
+                'response'=>$getToken->getContent(),
+                'user' => Auth::user()->id,
+                'customerPhone'=>$request->TargetPhoneNumber,
+            ]);
+
+            return response()->json([
+                'status'=>'error',
+                'message' =>"5. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
+                'response'=>json_decode($getToken->getContent()),
+            ],$getToken->getStatusCode());
+        }
+
+    }
+
+    public function M2U_CashBackStatus(Request $request){ //GetCashTransferStatus
+
+        $validator = Validator::make($request->all(), [
+            'TransactionNumber' => 'required|numeric|digits:9',
+            'PIN' => 'required|numeric',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first(),
+            ], 400);
+        }
+        //On génére le token pour la transaction
+
+        $getToken=$this->M2U_getToken();
+        $datagetToken = json_decode($getToken->getContent());
+
+        if ($getToken->getStatusCode()==200) {
+
+            $token = $datagetToken->token;
+
+            $endpoint = 'https://apps.m2u.money/CashBackStatus';
+            $response = Http::withOptions(['verify' => false,])
+                ->withHeaders(
+                    [
+                        'Content-Type' => 'application/json',
+                        'From' => $token,
+                    ])
+
+                ->Post($endpoint, [
+                    "LoginName" => "CM949513",
+                    "APIKey" => "oh09DFok0T4ecUz1kzw2o9SoVslEwE3eMpvgtpzrhE4uv",
+                    "AppID" => "8SZpExWP0fxu6rKQEDva03KVT",
+                    "PID" => $request->PIN,
+                    "TransactionNumber" => $request->TransactionNumber,
+                ]  );
+            if($response->status()==200) {
+                $json = json_decode($response, false);
+                $data=collect($json)->first();
+                if(Arr::has($data, "OK")) {
+                    if ($data->OK == "200") {
+                        return response()->json([
+                            'success' => true,
+                            'message' => $data->Result,
+                            'ReturnCode'=>$data->ReturnCode,
+                            'TransactionExpired'=> $data->TransactionExpired,
+                            'PID'=> $data->PID,
+                            'Result'=> $data->Result,
+                            'AmountToBeReceived' => $data->AmountToBeReceived,
+                            'Amount'=> $data->Amount,
+                            'Taxes' =>$data->Taxes,
+                            'TotalAmount' => $data->TotalAmount,
+                            "Description" => $data->Description,
+                        ], 200);
+
+
+                    } else {
+                        return response()->json([
+                            'success' => false,
+                            'message' => $data->Description,
+                        ], 404);
+                    }
+                }else{
+                    return response()->json([
+                        'success' => false,
+                        'message' => $data->Description,
+                    ], 404);
+                }
+
+            }
+        }else{
+            Log::error(
+                [
+                    'code'=> $getToken->getStatusCode(),
+                    'function' => "M2U_CashBackStatus",
+                    'response'=>$getToken->getContent(),
+                ]
+            );
+            return response()->json([
+                'success' => false,
+                'message' => "7. Exception : Une erreur inatendue s'est produite, veuillez contacter votre superviseur si le problème persiste",
+            ], $getToken->getStatusCode());
+        }
+    }
+
 
     public function M2U_CheckSoldeTeller($amount, $token){
         $endpoint = 'https://apps.m2u.money/CPTransferConfirmation';
