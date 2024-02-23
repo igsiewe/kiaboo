@@ -1124,7 +1124,6 @@ class ApiProdM2UController extends Controller
 
         $validator = Validator::make($request->all(), [
             'TransactionNumber' => 'required|numeric',
-            'PIN' => 'required|numeric',
         ]);
         if ($validator->fails()) {
             return response()->json([
