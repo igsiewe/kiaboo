@@ -1156,9 +1156,13 @@ class ApiProdM2UController extends Controller
                     "PID" => $request->PIN,
                     "TransactionNumber" => $request->TransactionNumber,
                 ]  );
+
+            $json = json_decode($response, false);
+            $data=collect($json)->first();
+
+            dd($data);
             if($response->status()==200) {
-                $json = json_decode($response, false);
-                $data=collect($json)->first();
+
                 if(Arr::has($data, "OK")) {
                     if ($data->OK == "200") {
                         return response()->json([
