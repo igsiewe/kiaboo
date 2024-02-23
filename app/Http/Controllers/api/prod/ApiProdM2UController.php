@@ -1123,7 +1123,7 @@ class ApiProdM2UController extends Controller
     public function M2U_CashBackStatus(Request $request){ //GetCashTransferStatus
 
         $validator = Validator::make($request->all(), [
-            'TransactionNumber' => 'required|numeric|digits:9',
+            'TransactionNumber' => 'required|numeric',
             'PIN' => 'required|numeric',
         ]);
         if ($validator->fails()) {
