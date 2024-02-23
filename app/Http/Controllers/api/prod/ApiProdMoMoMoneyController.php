@@ -1113,13 +1113,18 @@ class ApiProdMoMoMoneyController extends Controller
                 if(Arr::has($element, "financialTransactionId")) {
                     $financialTransactionId = $data->financialTransactionId;
                 }
+                $reason=null;
+                if(Arr::has($element, "reason")) {
+                    $reason = $data->reason;
+                }
                 if($data->status=="FAILED"){
+
                     $updateTransaction=$Transaction->update([
                         'status'=>3, // Le dépôt n'a pas abouti
                         'reference_partenaire'=>$financialTransactionId,
                         'date_end_trans'=>Carbon::now(),
                         'description'=>$data->status,
-                        'message'=>$data->reason,
+                        'message'=>$reason==null?$Transaction->first()->message:$reason,
                     ]);
                 }
                 if($data->status=="CREATED"){
@@ -1128,6 +1133,7 @@ class ApiProdMoMoMoneyController extends Controller
                         'reference_partenaire'=>$financialTransactionId,
                         'date_end_trans'=>Carbon::now(),
                         'description'=>$data->status,
+                        'message'=>$reason==null?$Transaction->first()->message:$reason,
                     ]);
                 }
                 if($data->status=="SUCCESSFUL"){
