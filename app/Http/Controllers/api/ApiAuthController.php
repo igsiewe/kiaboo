@@ -450,8 +450,11 @@ class ApiAuthController extends BaseController
             return response()->json(['error' => $validator->errors()], 401);
         }
 
-        $user = User::where('login', $request->numero)->where('type_user_id',UserRolesEnum::AGENT->value)->where('status',1)->first();
+        $user = User::where('login', $request->numero)->where('type_user_id',UserRolesEnum::AGENT->value)->first();
         if ($user) {
+            if($user->first()->status ==0){
+                return response()->json(['success' => false, 'message' => 'Compte non actif'], 404);
+            }
             $otpcode = rand(100000, 999999);
             $numero = str_replace("+","",$request->numero);
             $send = new ApiSmsController();
