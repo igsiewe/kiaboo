@@ -443,7 +443,7 @@ class ApiProdMoMoMoneyController extends Controller
                     'status'=>404,
                     'amount'=>$data->amount,
                     'externalId'=>$data->externalId,
-                    'message'=>$data->reason,
+                    'message'=>"Rassurez vous que le client n'ait pas atteint son nombre de transactions hebdomadaire, sinpn consultez votre support technique.",//$data->reason,
                     'description'=>$data->status,
                 ],404
             );
