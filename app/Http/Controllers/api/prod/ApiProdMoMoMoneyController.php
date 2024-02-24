@@ -390,6 +390,7 @@ class ApiProdMoMoMoneyController extends Controller
             ->Get($http);
 
         $data = json_decode($response->body());
+        $element = json_decode($response, associative: true);
         Log::info([
             'responseMoMoDepotStatus'=>$data,
         ]);
@@ -420,18 +421,22 @@ class ApiProdMoMoMoneyController extends Controller
             //Je convertis en tableau associatif
 
             if($data->status=="FAILED") {
-                //if ($data->reason == "NOT_ENOUGH_FUNDS") {
-                    return response()->json(
-                        [
-                            'status' => 404,
-                            'amount' => $data->amount,
-                            'externalId' => $data->externalId,
-                            'message' => "Le solde du compte chez le partenaire est insuffisant",
-                            'description' => $data->status,
-                        ], 404
-                    );
-              //  }
 
+                    if(Arr::has($element, "reason")) {
+                        $reason = $data->reason;
+
+                        if ($reason == "NOT_ENOUGH_FUNDS") {
+                                return response()->json(
+                                    [
+                                        'status' => 404,
+                                        'amount' => $data->amount,
+                                        'externalId' => $data->externalId,
+                                        'message' => "Le solde du compte chez le partenaire est insuffisant. " . $reason,
+                                        'description' => $data->status,
+                                    ], 404
+                                );
+                        }
+                    }
             }
             return response()->json(
                 [

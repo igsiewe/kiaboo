@@ -865,7 +865,7 @@ class ApiProdM2UController extends Controller
         $validator = Validator::make($request->all(), [
 
             "TransactionNumber" => 'required|numeric',
-            "PIN" => 'required|numeric',
+            "OTP" => 'required|numeric',
             "Amount" => 'required|numeric',
 
         ]);
@@ -932,7 +932,7 @@ class ApiProdM2UController extends Controller
 
             $token = $datagetToken->token;
 
-            $endpoint = 'https://apps.m2u.money/CPPayCash';
+            $endpoint = 'https://apps.m2u.money/ExecuteCashBack';
             $response = Http::withOptions(['verify' => false,])
                 ->withHeaders(
                     [
@@ -941,17 +941,14 @@ class ApiProdM2UController extends Controller
                     ])
 
                 ->Post($endpoint, [
+                    "UserPID"=> "CM9539",
                     "LoginName"=>"CM949513",
                     "APIKey"=>"oh09DFok0T4ecUz1kzw2o9SoVslEwE3eMpvgtpzrhE4uv",
                     "AppID"=>"8SZpExWP0fxu6rKQEDva03KVT",
-                    "SecurityCode"=>$request->SecurityCode,
-                    "VoucherNumber"=>$request->VoucherNumber,
-                    "TargetPhoneNumber"=>$request->TargetPhoneNumber, //'237'.$request->TargetPhoneNumber,
-                    "FirstName"=>$request->FirstName,
-                    "LastName"=>$request->LastName,
-                    "PartnerTellerID"=>Auth::user()->id,
+                    "TransactionNumber"=> $request->TransactionNumber,
+                    "OTP"=>$request->OTP,
+                    "PIN"=>"765639",
                     "WalletNumber"=>"XAF-01-CM9539-001",
-                    "OTP"=>"SibSnfeSdksSji2023_@"
                 ]  );
             if($response->status()==200) {
 
@@ -1159,7 +1156,8 @@ class ApiProdM2UController extends Controller
             $json = json_decode($response, false);
             $data=collect($json)->first();
 
-            dd($data, $token);
+            dd($data);
+
             if($response->status()==200) {
 
                 if(Arr::has($data, "OK")) {
