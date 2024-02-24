@@ -431,7 +431,7 @@ class ApiProdMoMoMoneyController extends Controller
                                         'status' => 404,
                                         'amount' => $data->amount,
                                         'externalId' => $data->externalId,
-                                        'message' => "Le solde du compte chez le partenaire est insuffisant. " . $reason,
+                                        'message' => "Cette transaction de dépôt MTN ne peut pas aboutir pour l'instant. Veuillez informer votre support.",
                                         'description' => $data->status,
                                     ], 404
                                 );
