@@ -450,8 +450,8 @@ class ApiProdMoMoMoneyController extends Controller
         }else{
             Log::error([
                 'code'=> $response->status(),
-                'function' => "MOMO_Depot_Status",
-                'response'=>$response,
+                'function' => "MOMO_Depot",
+                'response'=>$response->body(),
                 'user' => Auth::user()->id,
 
             ]);
