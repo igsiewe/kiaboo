@@ -953,8 +953,6 @@ class ApiProdM2UController extends Controller
             $dataResultat = collect($json)->first();
             $element = json_decode($response, associative: true);
 
-
-
             if($response->status()==200) {
 
                 if(Arr::has($element[0], "OK")) {
@@ -1068,7 +1066,7 @@ class ApiProdM2UController extends Controller
                                         ]);
                                         return response()->json([
                                             'success' => false,
-                                            'message' =>"3. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
+                                            'message' =>"2. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
                                         ],$e->getCode());
                                     }
                         }
@@ -1076,7 +1074,7 @@ class ApiProdM2UController extends Controller
                 }else{
                     return response()->json([
                         'status' => 'error',
-                        'message' =>"2 - ".$dataResultat->Description,// 'Une error s\'est produite. Veuillez contacter votre support',
+                        'message' =>"3 - ".$dataResultat->Description,// 'Une error s\'est produite. Veuillez contacter votre support',
                     ], 404);
                 }
 
@@ -1091,14 +1089,12 @@ class ApiProdM2UController extends Controller
                     'CustomerPhoneNumber'=>$request->CustomerPhoneNumber,
                     'TransactionNumber'=>$request->TransactionNumber
                 ]);
-
                 return response()->json([
                     'code' => $response->status(),
                     'message' =>"4. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
                 ],$response->status());
             }
         }else{
-
             Log::error([
                 'code'=> $getToken->getStatusCode(),
                 'function' => "RetraitM2UCashBack",
@@ -1107,7 +1103,6 @@ class ApiProdM2UController extends Controller
                 'CustomerPhoneNumber'=>$request->CustomerPhoneNumber,
                 'TransactionNumber'=>$request->TransactionNumber
             ]);
-
             return response()->json([
                 'status'=>'error',
                 'message' =>"5. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
