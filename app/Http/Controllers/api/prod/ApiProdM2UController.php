@@ -1159,7 +1159,7 @@ class ApiProdM2UController extends Controller
             dd($element);
             if($response->status()==200) {
 
-                if(Arr::has($element, "OK")) {
+                if(Arr::has($element[0], "OK")) {
                     if ($data->OK == "200") {
                         if($data->TransactionExpired=="YES"){
                             return response()->json([
