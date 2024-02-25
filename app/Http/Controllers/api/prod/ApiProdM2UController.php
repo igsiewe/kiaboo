@@ -940,7 +940,6 @@ class ApiProdM2UController extends Controller
                         'Content-Type' => 'application/json',
                         'From' => $token,
                     ])
-
                 ->Post($endpoint, [
                     "TransactionNumber"=> $request->TransactionNumber,
                     "WalletNumber"=>"XAF-01-CM9539-001",
@@ -1091,7 +1090,7 @@ class ApiProdM2UController extends Controller
                 ]);
                 return response()->json([
                     'code' => $response->status(),
-                    'message' =>"4. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
+                    'message' =>"4 - ".$dataResultat->Description,//"4. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
                 ],$response->status());
             }
         }else{
