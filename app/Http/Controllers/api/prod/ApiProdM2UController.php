@@ -1156,6 +1156,7 @@ class ApiProdM2UController extends Controller
             $json = json_decode($response, false);
             $data=collect($json)->first();
             $element = json_decode($response, associative: true);
+            dd($element);
             if($response->status()==200) {
 
                 if(Arr::has($element, "OK")) {
