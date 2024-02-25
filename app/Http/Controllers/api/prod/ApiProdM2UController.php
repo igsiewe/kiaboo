@@ -1168,7 +1168,7 @@ class ApiProdM2UController extends Controller
                                 'ReturnCode'=>$data->ReturnCode,
                                 'TransactionExpired'=> $data->TransactionExpired,
                                 'PID'=> $data->PID,
-                                'CPID'=> $data->PID,
+                                'CPID'=> $data->CPID,
                                 'Result'=> $data->Result,
                                 'AmountToBeReceived' => $data->AmountToBeReceived,
                                 'Amount'=> $data->Amount,
