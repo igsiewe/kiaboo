@@ -16,4 +16,5 @@ enum ServiceEnum:int
     case PAIEMENT_COMMISSION_DISTRIBUTEUR =10;
     case DEPOT_M2U = 11;
     case RETRAIT_M2U = 12;
+    case RETRAIT_M2U_CB = 13;
 }
