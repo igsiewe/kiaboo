@@ -946,6 +946,7 @@ class ApiProdM2UController extends Controller
                     "WalletNumber"=>"XAF-01-CM9539-001",
                     "OTP"=>$request->OTP,
                     "PIN"=>"SibSnfeSdksSji2023_@",
+                    "PartnerTellerID"=>Auth::user()->id,
                 ]  );
 
             dd($response->body());
