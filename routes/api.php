@@ -130,8 +130,9 @@ Route::middleware('auth:api')->group(function () {
                     Route::post('depot', 'M2U_depot')->name("M2U_PROD_depot");
                     Route::post('transfertstatus', 'M2U_getTransfertStatus')->name("M2U_PROD_getTransfertStatus");
                     Route::post('retrait/CPPayCash', 'M2U_RetraitCPPayCash')->name("M2U_PROD_RetraitCPPayCash");
-                    Route::post('CashBackStatus', 'M2U_CashBackStatus')->name("M2U_CashBackStatus");
 
+                    Route::post('CashBackStatus', 'M2U_CashBackStatus')->name("M2U_CashBackStatus");
+                    Route::post('retrait/ExecuteCashBack', 'M2U_ExecuteCashBack')->name("M2U_PROD_ExecuteCashBack");
                 });
             });
         });

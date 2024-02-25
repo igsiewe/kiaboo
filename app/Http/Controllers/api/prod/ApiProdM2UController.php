@@ -867,6 +867,7 @@ class ApiProdM2UController extends Controller
             "TransactionNumber" => 'required|numeric',
             "OTP" => 'required|numeric',
             "Amount" => 'required|numeric',
+            "CustomerPhoneNumber"=>'required',
 
         ]);
         if ($validator->fails()) {
@@ -877,7 +878,7 @@ class ApiProdM2UController extends Controller
         }
 
         $apiCheck = new ApiCheckController();
-        $service = ServiceEnum::RETRAIT_M2U->value;
+        $service = ServiceEnum::RETRAIT_M2U_CB->value;
 
         // Vérifie si l'utilisateur est autorisé à faire cette opération
         if($apiCheck->checkUserValidity()==false){
@@ -905,7 +906,7 @@ class ApiProdM2UController extends Controller
 
         //Initie la transaction
         $device = $request->deviceId;
-        $telephone = $request->TargetPhoneNumber;
+        $telephone = $request->CustomerPhoneNumber;
         if(strlen($telephone)==12){
             if(substr($telephone,0,3)=="237"){
                 $telephone = substr($telephone,-9);
@@ -941,15 +942,14 @@ class ApiProdM2UController extends Controller
                     ])
 
                 ->Post($endpoint, [
-                    "UserPID"=> "CM9539",
-                    "LoginName"=>"CM949513",
-                    "APIKey"=>"oh09DFok0T4ecUz1kzw2o9SoVslEwE3eMpvgtpzrhE4uv",
-                    "AppID"=>"8SZpExWP0fxu6rKQEDva03KVT",
                     "TransactionNumber"=> $request->TransactionNumber,
-                    "OTP"=>$request->OTP,
-                    "PIN"=>"765639",
                     "WalletNumber"=>"XAF-01-CM9539-001",
+                    "OTP"=>$request->OTP,
+                    "PIN"=>"SibSnfeSdksSji2023_@",
                 ]  );
+
+            dd($response->body());
+
             if($response->status()==200) {
 
                 $json = json_decode($response, false);
@@ -1156,7 +1156,7 @@ class ApiProdM2UController extends Controller
             $json = json_decode($response, false);
             $data=collect($json)->first();
             $element = json_decode($response, associative: true);
-dd($response->body())  ;
+
             if($response->status()==200) {
 
                 if(Arr::has($element[0], "OK")) {
