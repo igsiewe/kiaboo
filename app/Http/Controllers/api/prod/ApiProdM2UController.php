@@ -980,7 +980,7 @@ class ApiProdM2UController extends Controller
                                             'debit' => 0,
                                             'credit' => $request->Amount,
                                             'status' => 1, //End successfully
-                                            'paytoken' => $dataResultat->TransactionID, // $reference,
+                                            'paytoken' => $request->TransactionNumber, // $reference,
                                             'date_end_trans' => Carbon::now(),
                                             'description' => 'SUCCESSFULL',
                                             'message' => $dataResultat->Description,
