@@ -1194,13 +1194,13 @@ class ApiProdM2UController extends Controller
                     } else {
                         return response()->json([
                             'success' => false,
-                            'message' => $data->Description,
+                            'message' => "1.".$data->Description,
                         ], 404);
                     }
                 }else{
                     return response()->json([
                         'success' => false,
-                        'message' => $data->Description,
+                        'message' => "2.".$data->Description,
                     ], 404);
                 }
             }else{
