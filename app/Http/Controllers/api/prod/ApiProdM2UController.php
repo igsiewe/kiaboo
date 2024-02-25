@@ -1156,27 +1156,41 @@ class ApiProdM2UController extends Controller
             $json = json_decode($response, false);
             $data=collect($json)->first();
 
-            dd($data);
-
             if($response->status()==200) {
 
                 if(Arr::has($data, "OK")) {
                     if ($data->OK == "200") {
-                        return response()->json([
-                            'success' => true,
-                            'message' => $data->Result,
-                            'ReturnCode'=>$data->ReturnCode,
-                            'TransactionExpired'=> $data->TransactionExpired,
-                            'PID'=> $data->PID,
-                            'Result'=> $data->Result,
-                            'AmountToBeReceived' => $data->AmountToBeReceived,
-                            'Amount'=> $data->Amount,
-                            'Taxes' =>$data->Taxes,
-                            'TotalAmount' => $data->TotalAmount,
-                            "Description" => $data->Description,
-                        ], 200);
-
-
+                        if($data->TransactionExpired=="YES"){
+                            return response()->json([
+                                'success' => false,
+                                'message' => $data->Result,
+                                'ReturnCode'=>$data->ReturnCode,
+                                'TransactionExpired'=> $data->TransactionExpired,
+                                'PID'=> $data->PID,
+                                'CPID'=> $data->PID,
+                                'Result'=> $data->Result,
+                                'AmountToBeReceived' => $data->AmountToBeReceived,
+                                'Amount'=> $data->Amount,
+                                'Taxes' =>$data->Taxes,
+                                'TotalAmount' => $data->TotalAmount,
+                                "Description" => $data->Description,
+                            ], 404);
+                        }  else{
+                            return response()->json([
+                                'success' => true,
+                                'message' => $data->Result,
+                                'ReturnCode'=>$data->ReturnCode,
+                                'TransactionExpired'=> $data->TransactionExpired,
+                                'PID'=> $data->PID,
+                                'CPID'=> $data->PID,
+                                'Result'=> $data->Result,
+                                'AmountToBeReceived' => $data->AmountToBeReceived,
+                                'Amount'=> $data->Amount,
+                                'Taxes' =>$data->Taxes,
+                                'TotalAmount' => $data->TotalAmount,
+                                "Description" => $data->Description,
+                            ], 202);
+                        }
                     } else {
                         return response()->json([
                             'success' => false,
@@ -1189,7 +1203,18 @@ class ApiProdM2UController extends Controller
                         'message' => $data->Description,
                     ], 404);
                 }
-
+            }else{
+                Log::error(
+                    [
+                        'code'=> $response->status(),
+                        'function' => "M2U_CashBackStatus",
+                        'response'=>$response->body(),
+                    ]
+                );
+                return response()->json([
+                    'success' => false,
+                    'message' => "1. Exception : Une erreur inatendue s'est produite, veuillez contacter votre superviseur si le problème persiste",
+                ], $response->status());
             }
         }else{
             Log::error(
@@ -1201,7 +1226,7 @@ class ApiProdM2UController extends Controller
             );
             return response()->json([
                 'success' => false,
-                'message' => "7. Exception : Une erreur inatendue s'est produite, veuillez contacter votre superviseur si le problème persiste",
+                'message' => "2. Exception : Une erreur inatendue s'est produite, veuillez contacter votre superviseur si le problème persiste",
             ], $getToken->getStatusCode());
         }
     }
