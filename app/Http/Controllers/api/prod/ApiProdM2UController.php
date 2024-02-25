@@ -1190,7 +1190,7 @@ class ApiProdM2UController extends Controller
                                 'Taxes' =>$data->Taxes,
                                 'TotalAmount' => $data->TotalAmount,
                                 "Description" => $data->Description,
-                            ], 202);
+                            ], 200);
                         }
                     } else {
                         return response()->json([
