@@ -963,111 +963,109 @@ class ApiProdM2UController extends Controller
                     }
                     if ($dataResultat->OK == "200") {
                         if ($dataResultat->Result == "Success") {
-                                   //On met à jour la table transaction
+                           //On met à jour la table transaction
+                            //Par mesure de sécurité je rappelle les données de l'utilisateur
+                            $user = User::where('id', Auth::user()->id);
+                            $balanceBeforeAgent = $user->get()->first()->balance_after;
+                            $balanceAfterAgent = floatval($balanceBeforeAgent) + floatval($request->Amount);
+                            //on met à jour la table transaction
+                            try {
+                                DB::beginTransaction();
+                                $Transaction = Transaction::where('id', $idTransaction)->where('service_id', $service)->update([
+                                    'reference_partenaire' => $dataResultat->TransactionID, // $reference,
+                                    'balance_before' => $balanceBeforeAgent,
+                                    'balance_after' => $balanceAfterAgent,
+                                    'debit' => 0,
+                                    'credit' => $request->Amount,
+                                    'status' => 1, //End successfully
+                                    'paytoken' => $request->TransactionNumber, // $reference,
+                                    'date_end_trans' => Carbon::now(),
+                                    'description' => 'SUCCESSFULL',
+                                    'message' => $dataResultat->Description,
+                                    'commission' => $commission->commission_globale,
+                                    'commission_filiale' => $commissionFiliale,
+                                    'commission_agent' => $commissionAgent,
+                                    'commission_distributeur' => $commissionDistributeur,
+                                ]);
+                                //La commmission de l'agent après chaque transaction
 
-                                    //Par mesure de sécurité je rappelle les données de l'utilisateur
-                                    $user = User::where('id', Auth::user()->id);
-                                    $balanceBeforeAgent = $user->get()->first()->balance_after;
-                                    $balanceAfterAgent = floatval($balanceBeforeAgent) + floatval($request->Amount);
-                                    //on met à jour la table transaction
+                                $commission_agent = Transaction::where("fichier", "agent")->where("commission_agent_rembourse", 0)->where("source", Auth::user()->id)->sum("commission_agent");
 
-                                    try {
-                                        DB::beginTransaction();
-                                        $Transaction = Transaction::where('id', $idTransaction)->where('service_id', $service)->update([
-                                            'reference_partenaire' => $dataResultat->TransactionID, // $reference,
-                                            'balance_before' => $balanceBeforeAgent,
-                                            'balance_after' => $balanceAfterAgent,
-                                            'debit' => 0,
-                                            'credit' => $request->Amount,
-                                            'status' => 1, //End successfully
-                                            'paytoken' => $request->TransactionNumber, // $reference,
-                                            'date_end_trans' => Carbon::now(),
-                                            'description' => 'SUCCESSFULL',
-                                            'message' => $dataResultat->Description,
-                                            'commission' => $commission->commission_globale,
-                                            'commission_filiale' => $commissionFiliale,
-                                            'commission_agent' => $commissionAgent,
-                                            'commission_distributeur' => $commissionDistributeur,
-                                        ]);
-                                        //La commmission de l'agent après chaque transaction
+                                $debitAgent = DB::table("users")->where("id", Auth::user()->id)->update([
+                                    'balance_after' => $balanceAfterAgent,
+                                    'balance_before' => $balanceBeforeAgent,
+                                    'last_amount' => $request->Amount,
+                                    'date_last_transaction' => Carbon::now(),
+                                    'user_last_transaction_id' => Auth::user()->id,
+                                    'last_service_id' => $service,
+                                    'reference_last_transaction' => $dataResultat->TransactionID,
+                                    'remember_token' => $dataResultat->TransactionID,
+                                    'total_commission' => $commission_agent,
+                                ]);
+                                DB::commit();
+                                $userRefresh = User::where('id', Auth::user()->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before', 'balance_after','total_commission', 'last_amount','sous_distributeur_id','date_last_transaction')->first();
+                                $transactionsRefresh = DB::table('transactions')
+                                    ->join('services', 'transactions.service_id', '=', 'services.id')
+                                    ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
+                                    ->select('transactions.id','transactions.reference as reference','transactions.reference_partenaire','transactions.date_transaction','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.commission_agent as commission','transactions.balance_before','transactions.balance_after' ,'transactions.status','services.name_service','services.logo_service','type_services.name_type_service','type_services.id as type_service_id','transactions.date_operation', 'transactions.heure_operation','transactions.commission_agent_rembourse as commission_agent')
+                                    ->where("fichier","agent")
+                                    ->where("source",Auth::user()->id)
+                                    ->where('transactions.status',1)
+                                    ->orderBy('transactions.date_transaction', 'desc')
+                                    ->limit(5)
+                                    ->get();
 
-                                        $commission_agent = Transaction::where("fichier", "agent")->where("commission_agent_rembourse", 0)->where("source", Auth::user()->id)->sum("commission_agent");
-
-                                        $debitAgent = DB::table("users")->where("id", Auth::user()->id)->update([
-                                            'balance_after' => $balanceAfterAgent,
-                                            'balance_before' => $balanceBeforeAgent,
-                                            'last_amount' => $request->Amount,
-                                            'date_last_transaction' => Carbon::now(),
-                                            'user_last_transaction_id' => Auth::user()->id,
-                                            'last_service_id' => $service,
-                                            'reference_last_transaction' => $dataResultat->TransactionID,
-                                            'remember_token' => $dataResultat->TransactionID,
-                                            'total_commission' => $commission_agent,
-                                        ]);
-                                        DB::commit();
-                                        $userRefresh = User::where('id', Auth::user()->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before', 'balance_after','total_commission', 'last_amount','sous_distributeur_id','date_last_transaction')->first();
-                                        $transactionsRefresh = DB::table('transactions')
-                                            ->join('services', 'transactions.service_id', '=', 'services.id')
-                                            ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
-                                            ->select('transactions.id','transactions.reference as reference','transactions.reference_partenaire','transactions.date_transaction','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.commission_agent as commission','transactions.balance_before','transactions.balance_after' ,'transactions.status','services.name_service','services.logo_service','type_services.name_type_service','type_services.id as type_service_id','transactions.date_operation', 'transactions.heure_operation','transactions.commission_agent_rembourse as commission_agent')
-                                            ->where("fichier","agent")
-                                            ->where("source",Auth::user()->id)
-                                            ->where('transactions.status',1)
-                                            ->orderBy('transactions.date_transaction', 'desc')
-                                            ->limit(5)
-                                            ->get();
-
-                                        $idDevice = $device;
-                                        $title = "Kiaboo";
-                                        $message = "Le retrait M2U Money de " . $request->Amount . " F CFA a été effectué avec succès au ".$request->TargetPhoneNumber;
-                                        $subtitle ="Success";
-                                        $appNotification = new ApiNotification();
-                                        $envoiNotification = $appNotification->sendNotificationPushFireBase($idDevice, $title, $subtitle, $message);
-                                        if($envoiNotification->status()==200){
-                                            $resultNotification=json_decode($envoiNotification->getContent());
-                                            $responseNotification=$resultNotification->response ;
-                                            if($responseNotification->success==true){
-                                                Log::info([
-                                                    'code'=> 200,
-                                                    'function' => "M2U_RetraitCPPayCash",
-                                                    'response'=>"Notification envoyée avec succès",
-                                                    'user' => Auth::user()->id,
-                                                    'request' => $request->all()
-                                                ]);
-                                            }else{
-                                                Log::error([
-                                                    'code'=> 500,
-                                                    'function' => "M2U_RetraitCPPayCash",
-                                                    'response'=>$resultNotification,
-                                                    'user' => Auth::user()->id,
-                                                    'request' => $request->all()
-                                                ]);
-                                            }
-                                        }
-
-                                        return response()->json([
-                                            'success' => true,
-                                            'message' => $dataResultat->Description.' Votre transaction a été effectuée avec succès',
-                                            'textmessage' => $dataResultat->Description,
-                                            'reference' => $dataResultat->TransactionID,
-                                            'user'=>$userRefresh,
-                                            'transactions'=>$transactionsRefresh,
-                                        ], 200);
-                                    }catch (\Exception $e){
-                                        DB::rollBack();
-                                        Log::error([
-                                            'code'=> $e->getCode(),
-                                            'function' => "RetraitM2UCashBack",
-                                            'response'=>$e->getMessage(),
+                                $idDevice = $device;
+                                $title = "Kiaboo";
+                                $message = "Le retrait M2U Money de " . $request->Amount . " F CFA a été effectué avec succès au ".$request->TargetPhoneNumber;
+                                $subtitle ="Success";
+                                $appNotification = new ApiNotification();
+                                $envoiNotification = $appNotification->sendNotificationPushFireBase($idDevice, $title, $subtitle, $message);
+                                if($envoiNotification->status()==200){
+                                    $resultNotification=json_decode($envoiNotification->getContent());
+                                    $responseNotification=$resultNotification->response ;
+                                    if($responseNotification->success==true){
+                                        Log::info([
+                                            'code'=> 200,
+                                            'function' => "M2U_RetraitCPPayCash",
+                                            'response'=>"Notification envoyée avec succès",
                                             'user' => Auth::user()->id,
-                                            'CustomerPhoneNumber'=>$request->CustomerPhoneNumber,
-                                            'TransactionNumber'=>$request->TransactionNumber
+                                            'request' => $request->all()
                                         ]);
-                                        return response()->json([
-                                            'success' => false,
-                                            'message' =>"2. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
-                                        ],$e->getCode());
+                                    }else{
+                                        Log::error([
+                                            'code'=> 500,
+                                            'function' => "M2U_RetraitCPPayCash",
+                                            'response'=>$resultNotification,
+                                            'user' => Auth::user()->id,
+                                            'request' => $request->all()
+                                        ]);
                                     }
+                                }
+
+                                return response()->json([
+                                    'success' => true,
+                                    'message' => $dataResultat->Description.' Votre transaction a été effectuée avec succès',
+                                    'textmessage' => $dataResultat->Description,
+                                    'reference' => $dataResultat->TransactionID,
+                                    'user'=>$userRefresh,
+                                    'transactions'=>$transactionsRefresh,
+                                ], 200);
+                            }catch (\Exception $e){
+                                DB::rollBack();
+                                Log::error([
+                                    'code'=> $e->getCode(),
+                                    'function' => "RetraitM2UCashBack",
+                                    'response'=>$e->getMessage(),
+                                    'user' => Auth::user()->id,
+                                    'CustomerPhoneNumber'=>$request->CustomerPhoneNumber,
+                                    'TransactionNumber'=>$request->TransactionNumber
+                                ]);
+                                return response()->json([
+                                    'success' => false,
+                                    'message' =>"2. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
+                                ],$e->getCode());
+                            }
                         }
                     }
                 }else{
@@ -1208,7 +1206,7 @@ class ApiProdM2UController extends Controller
                 );
                 return response()->json([
                     'success' => false,
-                    'message' => "1. Exception : Une erreur inatendue s'est produite, veuillez contacter votre superviseur si le problème persiste",
+                    'message' => "1. Exception : ".$data->Description,
                 ], $response->status());
             }
         }else{
