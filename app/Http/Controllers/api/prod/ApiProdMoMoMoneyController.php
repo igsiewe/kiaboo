@@ -340,7 +340,7 @@ class ApiProdMoMoMoneyController extends Controller
                     'success' => true,
                     'message' => "SUCCESSFULL", // $resultat->message,
                     'textmessage' =>"Le dépôt a été effectué avec succès", // $resultat->message,
-                    'reference' => $reference,// $resultat->data->data->txnid,
+                    'reference' =>Transaction::where('id',$idTransaction)->get()->first()->reference_partenaire,// $reference,// $resultat->data->data->txnid,
                     'data' => [],// $resultat,
                     'user'=>$userRefresh,
                     'transactions'=>$transactionsRefresh,
