@@ -47,7 +47,7 @@ class ApiNotification extends Controller
             if ($httpcode != 200) {
                 Log::error([
                     "success"=>false,
-                    "response"=>$response,
+                    "response"=>$response->body(),
                     "httpcode"=>$httpcode]);
 
                 return response()->json([
@@ -56,7 +56,7 @@ class ApiNotification extends Controller
 
              Log::alert([
             "success"=>true,
-            "response"=>$response,
+            "response"=>$response->body(),
             "httpcode"=>$httpcode]);
             return response()->json([
                 "response"=>$response],200);
@@ -91,7 +91,7 @@ class ApiNotification extends Controller
             }else{
                 Log::error([
                     "success"=>false,
-                    "response"=>$response,]);
+                    "response"=>$response->body(),]);
 
                 return response()->json([
                     "success"=>false,
@@ -101,11 +101,11 @@ class ApiNotification extends Controller
         }else{
             Log::error([
                 "success"=>false,
-                "response"=>$response,]);
+                "response"=>$response->body(),]);
 
             return response()->json([
                 "success"=>false,
-                "response"=>$response],400);
+                "response"=>$response->body()],400);
         }
     }
 }
