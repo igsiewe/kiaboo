@@ -24,24 +24,6 @@ use function PHPUnit\Framework\isEmpty;
 class WebTransactionsController extends Controller
 {
 
-    public $dataExport = null;
-//
-//    public function getDataExport(): mixed
-//    {
-//        return $this->dataExport;
-//    }
-//
-//    public function setDataExport(mixed $dataExport): WebTransactionsController
-//    {
-//        $this->dataExport = $dataExport;
-//        return $this;
-//    }
-
-    public function __construct($dataExport){
-        $this->dataExport = $dataExport;
-    }
-
-
     public function listTransactions(){
        // phpinfo() ;die;
         $money = "F CFA";
@@ -68,7 +50,7 @@ class WebTransactionsController extends Controller
 
         $transactions  =$query->orderByDesc('transactions.date_transaction')->limit(100)->get();
 
-        $this->dataExport = $transactions;
+
         $listagents =    $listagents->orderBy("name")->orderBy("surname")->get();
         return view('pages.transactions.transactions', compact('transactions','money','listagents','listpartenaires','listservices'));
     }
@@ -125,7 +107,7 @@ class WebTransactionsController extends Controller
         }
 
         $transactions  = $query->orderByDesc('transactions.date_transaction')->get();
-        $this->dataExport = $transactions;
+
 
         $listagents =$listagents->orderBy("name")->orderBy("surname")->get();
 
@@ -406,7 +388,7 @@ class WebTransactionsController extends Controller
     public function exportTransaction(){
         //$this->setDataExport()
 
-        $data = $this->dataExport;
+        $data = Transaction::all();
         return Excel::download(new TransactionExport ($data), 'transaction.xlsx');
     }
 
