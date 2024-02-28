@@ -24,7 +24,7 @@ use function PHPUnit\Framework\isEmpty;
 class WebTransactionsController extends Controller
 {
 
-    public mixed $dataExport;
+    public $dataExport = null;
 //
 //    public function getDataExport(): mixed
 //    {
