@@ -24,6 +24,12 @@ use function PHPUnit\Framework\isEmpty;
 class WebTransactionsController extends Controller
 {
 
+    protected mixed $data;
+
+    public function __construct($data){
+        $this->data = $data;
+    }
+
     public function listTransactions(){
        // phpinfo() ;die;
         $money = "F CFA";
