@@ -388,7 +388,11 @@ class WebTransactionsController extends BaseController
     }
 
     public function exportTransaction(){
-        return $this->exportTransaction();
+        //$this->setDataExport()
+
+        $data = $this->getData();
+        dd($this->data);
+        return Excel::download(new TransactionExport ($data), 'transaction.xlsx');
     }
 
 

@@ -35,13 +35,7 @@ class BaseController extends Controller
     }
 
 
-    public function exportTransaction(){
-        //$this->setDataExport()
 
-        //$data = $this->getData();
-        dd($this->data);
-        return Excel::download(new TransactionExport ($data), 'transaction.xlsx');
-    }
 
 
        /**
