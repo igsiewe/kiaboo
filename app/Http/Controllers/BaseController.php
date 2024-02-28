@@ -26,10 +26,10 @@ class BaseController extends Controller
     /**
      * @param mixed $data
      */
-    public function setData($data): void
+    public function setData($data): mixed
     {
 
-        $this->data = $data;
+        return $this->data = $data;
     }
 
 
