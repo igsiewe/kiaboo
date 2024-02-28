@@ -17,11 +17,11 @@ use Maatwebsite\Excel\Events\AfterSheet;
 class TransactionExport implements FromCollection, WithHeadings, WithEvents
 {
 
-//    protected $data;
-//
-//    public function __construct($data){
-//        $this->data = $data;
-//    }
+    protected $data;
+
+    public function __construct($data){
+        $this->data = $data;
+    }
 //
 //    /**
 //     * *@return array
@@ -36,23 +36,23 @@ class TransactionExport implements FromCollection, WithHeadings, WithEvents
 //    */
     public function collection()
     {
-        $transactions  = DB::table('transactions')
-            ->join("users","users.id","transactions.source")
-            ->join('services', 'transactions.service_id', '=', 'services.id')
-            ->join('partenaires', 'services.partenaire_id', '=', 'partenaires.id')
-            ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
-            ->select('transactions.reference','transactions.reference_partenaire','transactions.date_transaction','partenaires.name_partenaire','services.name_service','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.commission_agent','transactions.commission_distributeur','transactions.balance_before','transactions.balance_after','users.login as agent',)
-            ->where("transactions.fichier","agent")
-            ->where("users.distributeur_id",Auth::user()->distributeur_id)
-            ->where("users.type_user_id", UserRolesEnum::AGENT->value)
-            ->where('transactions.status',1)
-            ->where("services.type_service_id",TypeServiceEnum::ENVOI->value)
-            ->orwhere("services.type_service_id",TypeServiceEnum::RETRAIT->value)
-            ->orwhere("services.type_service_id",TypeServiceEnum::FACTURE->value)
-            ->orderByDesc('transactions.date_transaction')->get();
+//        $transactions  = DB::table('transactions')
+//            ->join("users","users.id","transactions.source")
+//            ->join('services', 'transactions.service_id', '=', 'services.id')
+//            ->join('partenaires', 'services.partenaire_id', '=', 'partenaires.id')
+//            ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
+//            ->select('transactions.reference','transactions.reference_partenaire','transactions.date_transaction','partenaires.name_partenaire','services.name_service','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.commission_agent','transactions.commission_distributeur','transactions.balance_before','transactions.balance_after','users.login as agent',)
+//            ->where("transactions.fichier","agent")
+//            ->where("users.distributeur_id",Auth::user()->distributeur_id)
+//            ->where("users.type_user_id", UserRolesEnum::AGENT->value)
+//            ->where('transactions.status',1)
+//            ->where("services.type_service_id",TypeServiceEnum::ENVOI->value)
+//            ->orwhere("services.type_service_id",TypeServiceEnum::RETRAIT->value)
+//            ->orwhere("services.type_service_id",TypeServiceEnum::FACTURE->value)
+//            ->orderByDesc('transactions.date_transaction')->get();
 
-
-        return $transactions;
+     //   $transactions = $this->data;
+        return $this->data;// $transactions;
     }
 
     /**
