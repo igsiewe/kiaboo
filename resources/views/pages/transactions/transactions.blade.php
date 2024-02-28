@@ -164,7 +164,7 @@
                                 <div role="group" class="btn-group-sm btn-group-lg">
                                     <form action="#" method="POST" name="exportform" enctype="multipart/form-data">
                                         @csrf
-                                        <a href="{{route("exportTransaction")}}" class="btn btn-danger" title="Exporter"><i class="fa fa-download"></i>  Tout exporter </a>
+                                        <a href="{{route("export.transaction")}}" class="btn btn-danger" title="Exporter"><i class="fa fa-download"></i>  Tout exporter </a>
                                     </form>
                                 </div>
                             </div>

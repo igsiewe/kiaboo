@@ -61,15 +61,17 @@ Route::middleware(['auth','checkStatus'])->group(function (){
         });
     });
 
+
     Route::group(['prefix' => 'transactions'], function () {
         Route::controller(WebTransactionsController::class)->group(function () {
-            Route::any('/list/transactions', 'listTransactions')->name("listTransactions");
+            Route::any('/list', 'listTransactions')->name("listTransactions");
             Route::any('/topup/agent', 'topupAgent')->name("topupAgent");
             Route::any('/topup/agent/search', 'getTopUpAgentFiltre')->name('topupAgent.filtre');
             Route::any('/topup/agent/{id}', 'getTopUpDetail')->name('topupAgent.detail');
+        //    Route::any('/transaction/annuler/{id}', 'CancelAgentTopUp')->name("CancelAgentTopUp");
             Route::get('/transaction/edit/{id}', 'getDetailTransaction')->name("getDetailTransaction");
             Route::any('/transaction/search', 'listTransactionsFiltre')->name("listTransactions.filtre");
-            Route::any('/export', 'exportTransaction')->name("exportTransaction");
+
         });
     });
 

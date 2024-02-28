@@ -137,8 +137,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/voku/portable-ascii" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/webmozart/assert" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/carbonphp/carbon-doctrine-types" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/openspout/openspout" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/rap2hpoutre/fast-excel" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
