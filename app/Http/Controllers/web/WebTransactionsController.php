@@ -50,7 +50,7 @@ class WebTransactionsController extends BaseController
         }
 
         $transactions  =$query->orderByDesc('transactions.date_transaction')->limit(100)->get();
-        dd($this->setData($transactions));
+
         $this->setData($transactions);
 
         $listagents =    $listagents->orderBy("name")->orderBy("surname")->get();
