@@ -380,7 +380,7 @@ class WebTransactionsController extends Controller
         return $rang;
     }
 
-    function transactionsGenerator() {
+    public function transactionsGenerator() {
         foreach (Transaction::cursor() as $user) {
             yield $user;
         }
