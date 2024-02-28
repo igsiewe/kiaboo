@@ -387,7 +387,12 @@ class WebTransactionsController extends BaseController
         return $rang;
     }
 
+    public function exportTransaction(){
+        if($this->getData() !=null){
+            return Excel::download(new TransactionExport ($this->getData()), 'transaction.xlsx');
+        }
 
+    }
 
 
 }
