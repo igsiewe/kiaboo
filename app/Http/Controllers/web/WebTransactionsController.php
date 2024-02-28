@@ -384,11 +384,12 @@ class WebTransactionsController extends Controller
         foreach (Transaction::cursor() as $user) {
             yield $user;
         }
+
     }
 
     public function exportTransaction(){
         // Export consumes only a few MB, even with 10M+ rows.
-       return (new FastExcel(transactionsGenerator()))->export('transactions.xlsx');
+       return (new FastExcel( $this->transactionsGenerator() ))->export('transactions.xlsx');
     }
 
 
