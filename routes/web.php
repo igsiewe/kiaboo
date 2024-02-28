@@ -61,7 +61,6 @@ Route::middleware(['auth','checkStatus'])->group(function (){
         });
     });
 
-
     Route::group(['prefix' => 'transactions'], function () {
         Route::controller(WebTransactionsController::class)->group(function () {
             Route::any('/list', 'listTransactions')->name("listTransactions");
@@ -71,6 +70,7 @@ Route::middleware(['auth','checkStatus'])->group(function (){
         //    Route::any('/transaction/annuler/{id}', 'CancelAgentTopUp')->name("CancelAgentTopUp");
             Route::get('/transaction/edit/{id}', 'getDetailTransaction')->name("getDetailTransaction");
             Route::any('/transaction/search', 'listTransactionsFiltre')->name("listTransactions.filtre");
+            Route::any('/transaction/export', 'exportTransaction')->name("exportTransaction");
         });
     });
 
@@ -115,6 +115,7 @@ Route::middleware(['auth','checkStatus'])->group(function (){
         Route::get('export/excel/approvisionnement', 'exportApprovisionnement')->name('export.approvisionnement');
         Route::get('export/excel/recharge', 'exportRecharge')->name('export.recharge');
     });
+
     Route::controller(WebAgentController::class)->group(function(){
         Route::get('agent/list', 'listAgent')->name('listAgent');
         Route::get('agent/edit/{id}', 'getUpdateUser')->name('getUpdateUser');
