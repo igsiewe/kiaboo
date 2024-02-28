@@ -8,12 +8,13 @@ use App\Models\Transaction;
 use http\Env\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
 
-class TransactionExport implements FromCollection, WithHeadings, WithEvents
+class TransactionExport implements FromArray, WithHeadings, WithEvents
 {
 
     protected $data;

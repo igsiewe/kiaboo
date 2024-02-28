@@ -71,7 +71,8 @@ Route::middleware(['auth','checkStatus'])->group(function (){
         //    Route::any('/transaction/annuler/{id}', 'CancelAgentTopUp')->name("CancelAgentTopUp");
             Route::get('/transaction/edit/{id}', 'getDetailTransaction')->name("getDetailTransaction");
             Route::any('/transaction/search', 'listTransactionsFiltre')->name("listTransactions.filtre");
-            Route::any('/export', 'exportTransaction')->name("exportTransaction");
+        //    Route::any('/export', 'exportTransaction')->name("exportTransaction");
+            Route::get('export', 'exportTransaction')->name('export.transactions');
         });
     });
 
@@ -112,7 +113,7 @@ Route::middleware(['auth','checkStatus'])->group(function (){
         Route::get('services/partenaire/{idPartenaire}', 'getServicePartenaire')->name('getServicePartenaire');
     });
     Route::controller(WebExportExcelController::class)->group(function(){
-        Route::get('export/excel/transaction', 'exportTransaction')->name('export.transactions');
+      //  Route::get('export/excel/transaction', 'exportTransaction')->name('export.transactions');
         Route::get('export/excel/approvisionnement', 'exportApprovisionnement')->name('export.approvisionnement');
         Route::get('export/excel/recharge', 'exportRecharge')->name('export.recharge');
     });
