@@ -70,7 +70,7 @@ Route::middleware(['auth','checkStatus'])->group(function (){
         //    Route::any('/transaction/annuler/{id}', 'CancelAgentTopUp')->name("CancelAgentTopUp");
             Route::get('/transaction/edit/{id}', 'getDetailTransaction')->name("getDetailTransaction");
             Route::any('/transaction/search', 'listTransactionsFiltre')->name("listTransactions.filtre");
-            Route::any('/transaction/export', 'exportTransaction')->name("exportTransaction");
+            Route::any('/export', 'exportTransaction')->name("exportTransaction");
         });
     });
 
