@@ -50,6 +50,7 @@ class WebTransactionsController extends BaseController
         }
 
         $transactions  =$query->orderByDesc('transactions.date_transaction')->limit(100)->get();
+
         $this->setData($transactions);
 
         $listagents =    $listagents->orderBy("name")->orderBy("surname")->get();
@@ -390,7 +391,7 @@ class WebTransactionsController extends BaseController
         //$this->setDataExport()
 
         //$data = Transaction::all();
-        dd($this->getData());
+
         return Excel::download(new TransactionExport ($this->getData()), 'transaction.xlsx');
     }
 
