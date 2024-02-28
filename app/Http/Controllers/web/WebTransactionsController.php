@@ -403,7 +403,7 @@ class WebTransactionsController extends Controller
     }
 
     public function exportTransaction(){
-        $data = $this->data;
+        $data = $this->dataExport;
         return Excel::download(new TransactionExport ($data), 'transaction.xlsx');
     }
 
