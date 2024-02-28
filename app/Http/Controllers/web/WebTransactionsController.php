@@ -384,7 +384,6 @@ class WebTransactionsController extends Controller
         foreach (Transaction::cursor() as $user) {
             yield $user;
         }
-
     }
 
     public function exportTransaction(){
