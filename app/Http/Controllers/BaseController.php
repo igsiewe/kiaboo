@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\TransactionExport;
 use Exception;
 use http\Env\Response;
 use Illuminate\Http\Request;
@@ -9,11 +10,12 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Events\AfterSheet;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BaseController extends Controller
 {
 
-    protected $data;
+    protected mixed $data;
 
     /**
      * @return mixed
@@ -32,6 +34,14 @@ class BaseController extends Controller
         return $this->data = $data;
     }
 
+
+    public function exportTransaction(){
+        //$this->setDataExport()
+
+        //$data = $this->getData();
+        dd($this->data);
+        return Excel::download(new TransactionExport ($data), 'transaction.xlsx');
+    }
 
 
        /**
