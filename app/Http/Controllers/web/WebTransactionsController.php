@@ -24,7 +24,7 @@ use function PHPUnit\Framework\isEmpty;
 class WebTransactionsController extends Controller
 {
 
-    protected mixed $data;
+    private mixed $data;
 
     public function __construct($data){
         $this->data = $data;
