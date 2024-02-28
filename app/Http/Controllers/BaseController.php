@@ -28,7 +28,7 @@ class BaseController extends Controller
      */
     public function setData($data): void
     {
-        dd($data);
+
         $this->data = $data;
     }
 
