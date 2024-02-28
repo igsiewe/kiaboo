@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BaseController;
 use App\Http\Controllers\web\WebAgentController;
 use App\Http\Controllers\web\WebApproAgentController;
 use App\Http\Controllers\web\WebApproDistributeurController;
@@ -76,6 +77,12 @@ Route::middleware(['auth','checkStatus'])->group(function (){
         });
     });
 
+
+    Route::group(['prefix' => 'transactions'], function () {
+        Route::controller(BaseController::class)->group(function () {
+            Route::get('export', 'exportTransaction')->name('export.transactions');
+        });
+    });
     Route::group(['prefix' => 'reconciliation'], function () {
         Route::controller(WebReconciliationController::class)->group(function () {
             Route::any('/transactions/attente', 'transactionEnattente')->name("transactionEnattente");
