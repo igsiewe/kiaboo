@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\web;
 
+use App\Exports\TransactionExport;
 use App\Http\Controllers\Controller;
 use App\Http\Enums\ServiceEnum;
 use App\Http\Enums\StatusTransEnum;
@@ -17,11 +18,17 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Rap2hpoutre\FastExcel\FastExcel;
+use Maatwebsite\Excel\Facades\Excel;
 use function PHPUnit\Framework\isEmpty;
 
 class WebTransactionsController extends Controller
 {
+
+    protected $dataExport;
+
+    public function __construct($dataExport){
+        $this->dataExport = $dataExport;
+    }
     public function listTransactions(){
        // phpinfo() ;die;
         $money = "F CFA";
@@ -48,7 +55,7 @@ class WebTransactionsController extends Controller
 
         $transactions  =$query->orderByDesc('transactions.date_transaction')->limit(100)->get();
         $listagents =    $listagents->orderBy("name")->orderBy("surname")->get();
-
+        $dataExport = $transactions;
         return view('pages.transactions.transactions', compact('transactions','money','listagents','listpartenaires','listservices'));
     }
 
@@ -104,6 +111,8 @@ class WebTransactionsController extends Controller
         }
 
         $transactions  = $query->orderByDesc('transactions.date_transaction')->get();
+        $dataExport = $transactions;
+
         $listagents =$listagents->orderBy("name")->orderBy("surname")->get();
 
 
@@ -380,15 +389,8 @@ class WebTransactionsController extends Controller
         return $rang;
     }
 
-    public function transactionsGenerator() {
-        foreach (Transaction::cursor() as $user) {
-            yield $user;
-        }
-    }
-
     public function exportTransaction(){
-        // Export consumes only a few MB, even with 10M+ rows.
-       return (new FastExcel( $this->transactionsGenerator() ))->export('transactions.xlsx');
+        return Excel::download(new TransactionExport ($dataExport), 'transaction.xlsx');
     }
 
 

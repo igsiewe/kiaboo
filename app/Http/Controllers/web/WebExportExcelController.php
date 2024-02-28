@@ -11,9 +11,9 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class WebExportExcelController extends BaseController
 {
-    public function exportTransaction(){
-        return Excel::download(new TransactionExport, 'transaction.xlsx');
-    }
+//    public function exportTransaction(){
+//        return Excel::download(new TransactionExport, 'transaction.xlsx');
+//    }
 
     public function exportApprovisionnement(){
         return Excel::download(new ApporivsionnementExport, 'approvisionnement.xlsx');
