@@ -388,6 +388,7 @@ class WebTransactionsController extends Controller
 
     public function exportTransaction(){
         // Export consumes only a few MB, even with 10M+ rows.
+        dd($this->transactionsGenerator() );
        return (new FastExcel( $this->transactionsGenerator() ))->export('transactions.xlsx');
     }
 
