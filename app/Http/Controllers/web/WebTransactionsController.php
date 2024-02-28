@@ -67,6 +67,7 @@ class WebTransactionsController extends Controller
         }
 
         $transactions  =$query->orderByDesc('transactions.date_transaction')->limit(100)->get();
+        dd($transactions);
         $this->dataExport = $this->setDataExport($transactions);
         dd($this->getDataExport());
         $listagents =    $listagents->orderBy("name")->orderBy("surname")->get();
