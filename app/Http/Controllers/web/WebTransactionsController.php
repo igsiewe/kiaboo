@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\web;
 
 use App\Exports\TransactionExport;
+use App\Http\Controllers\BaseController;
 use App\Http\Controllers\Controller;
 use App\Http\Enums\ServiceEnum;
 use App\Http\Enums\StatusTransEnum;
@@ -21,14 +22,8 @@ use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use function PHPUnit\Framework\isEmpty;
 
-class WebTransactionsController extends Controller
+class WebTransactionsController extends BaseController
 {
-
-    private mixed $data;
-
-    public function __construct($data){
-        $this->data = $data;
-    }
 
     public function listTransactions(){
        // phpinfo() ;die;
@@ -55,7 +50,7 @@ class WebTransactionsController extends Controller
         }
 
         $transactions  =$query->orderByDesc('transactions.date_transaction')->limit(100)->get();
-
+        $this->setData($transactions);
 
         $listagents =    $listagents->orderBy("name")->orderBy("surname")->get();
         return view('pages.transactions.transactions', compact('transactions','money','listagents','listpartenaires','listservices'));
@@ -113,7 +108,7 @@ class WebTransactionsController extends Controller
         }
 
         $transactions  = $query->orderByDesc('transactions.date_transaction')->get();
-
+        $this->setData($transactions);
 
         $listagents =$listagents->orderBy("name")->orderBy("surname")->get();
 
@@ -394,8 +389,8 @@ class WebTransactionsController extends Controller
     public function exportTransaction(){
         //$this->setDataExport()
 
-        $data = Transaction::all();
-        return Excel::download(new TransactionExport ($data), 'transaction.xlsx');
+        //$data = Transaction::all();
+        return Excel::download(new TransactionExport ($this->getData()), 'transaction.xlsx');
     }
 
 

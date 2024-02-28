@@ -52,7 +52,7 @@ class TransactionExport implements FromCollection, WithHeadings, WithEvents
 //            ->orderByDesc('transactions.date_transaction')->get();
 
      //   $transactions = $this->data;
-        return $this->data;// $transactions;
+        return $this->data;
     }
 
     /**
