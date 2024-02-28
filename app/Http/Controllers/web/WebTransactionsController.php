@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Rap2hpoutre\FastExcel\FastExcel;
 use function PHPUnit\Framework\isEmpty;
 
 class WebTransactionsController extends Controller
@@ -379,7 +380,16 @@ class WebTransactionsController extends Controller
         return $rang;
     }
 
+    function transactionsGenerator() {
+        foreach (User::cursor() as $user) {
+            yield $user;
+        }
+    }
 
+    public function exportTransaction(){
+        // Export consumes only a few MB, even with 10M+ rows.
+        (new FastExcel(transactionsGenerator()))->export('test.xlsx');
+    }
 
 
 }
