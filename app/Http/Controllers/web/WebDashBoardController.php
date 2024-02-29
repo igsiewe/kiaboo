@@ -83,29 +83,37 @@ class WebDashBoardController extends Controller
                 ->selectRaw('month(kb_transactions.date_transaction) as mois, sum(kb_transactions.debit) as envoi, sum(kb_transactions.credit) as retrait')
                 ->groupBy('mois')
                 ->orderBy('mois', 'desc')->get()->toArray();
-
             $envoi = collect();
             $retrait = collect();
-            $j= count($resultGraphe);
-            for($i = 1;$i <= 12; $i++)
-            {
-                $data  = collect($resultGraphe)->where('mois', $i)->all();
-                $sumretrait=0;
-                $sumenvoi=0;
-                if ($data == null || $data==[])
-                {
-                    $envoi->add(0);
-                    $retrait->add(0);
-                }
-                else
-                {
-                   $envoi->add($data[0]->envoi);
-                   $retrait->add($data[0]->retrait);
 
-                }
+            $resultGraphe->each(function ($op) use ($envoi,$retrait){
+                dd($op);
+            });
 
-            }
-            dd($resultGraphe, $envoi, $retrait);
+            //dd($resultGraphe, $envoi, $retrait);
+
+
+//            $envoi = collect();
+//            $retrait = collect();
+//            $j= count($resultGraphe);
+//            for($i = 1;$i <= 12; $i++)
+//            {
+//                $data  = collect($resultGraphe)->where('mois', $i)->all();
+//                $sumretrait=0;
+//                $sumenvoi=0;
+//                if ($data == null || $data==[])
+//                {
+//                    $envoi->add(0);
+//                    $retrait->add(0);
+//                }
+//                else
+//                {
+//                   $envoi->add($data[0]->envoi);
+//                   $retrait->add($data[0]->retrait);
+//
+//                }
+//
+//            }
         }
 
         return view('pages.dashboard.dashboard', compact('volumeofTransaction','currentBalance','revenue','agent','money','lastTransactions','bestAgents','envoi','retrait'));
