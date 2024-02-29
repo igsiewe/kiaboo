@@ -101,6 +101,7 @@ class WebAgentController extends Controller
         $tel = $request->telephone;
         $msg = $request->surname.", Votre compte KIABOO a été crée avec succès. Votre mot de passe temporraire est ".$newPassword.". Veuillez le changer dès votre première connexion";
         $sendSMS = $sms->SendSMS($tel,$msg);
+        dd($sendSMS);
         return redirect()->back()->with('success', 'Agent created successfully');
     }
 
