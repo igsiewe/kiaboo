@@ -2,9 +2,11 @@
 
 namespace App\Exports;
 
+use App\Http\Enums\StatusTransEnum;
 use App\Http\Enums\TypeServiceEnum;
 use App\Http\Enums\UserRolesEnum;
 use App\Models\Transaction;
+use App\Models\User;
 use http\Env\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -22,25 +24,18 @@ class TransactionExport implements FromCollection, WithHeadings, WithEvents, Wit
     {
 
 
-        $transactions  = DB::table('transactions')
-            ->join("users","users.id","transactions.source")
-            ->join('services', 'transactions.service_id', '=', 'services.id')
-            ->join('partenaires', 'services.partenaire_id', '=', 'partenaires.id')
-            ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
-            ->select('transactions.reference','transactions.reference_partenaire','transactions.date_transaction','partenaires.name_partenaire','services.name_service','transactions.debit','transactions.credit' ,'transactions.balance_before','transactions.balance_after','transactions.customer_phone','transactions.commission_agent','transactions.commission_distributeur','transactions.description as status','users.login','users.telephone','users.type_user_id')
+        $auth = Auth::user()->type_user_id==UserRolesEnum::DISTRIBUTEUR->value ? User::where("type_user_id",UserRolesEnum::AGENT->value)->where("distributeur_id",Auth::user()->distributeur_id)->pluck('id') :  User::where("type_user_id",UserRolesEnum::AGENT->value)->pluck('id');
 
-            ->where("transactions.fichier","agent")
-            ->where("users.distributeur_id",Auth::user()->distributeur_id)
-            ->where("users.type_user_id", UserRolesEnum::AGENT->value)
-            ->where('transactions.status',1)
-            ->where("services.type_service_id",TypeServiceEnum::ENVOI->value)
-            ->orwhere("services.type_service_id",TypeServiceEnum::RETRAIT->value)
-            ->orwhere("services.type_service_id",TypeServiceEnum::FACTURE->value)
-            ->orwhere("services.type_service_id",TypeServiceEnum::APPROVISIONNEMENT->value)
-            ->orwhere("services.type_service_id",TypeServiceEnum::ANNULATION->value)
-            ->orderByDesc('transactions.date_transaction')->get();
+        $query = Transaction::with(['service.typeService','auteur.distributeur'])
+            ->where("fichier","agent")
+            ->where('status',StatusTransEnum::VALIDATED->value)
+            ->whereHas('service',function ($query){
+                $query->whereIn("type_service_id",[TypeServiceEnum::ENVOI->value,TypeServiceEnum::RETRAIT->value,TypeServiceEnum::FACTURE->value]);
+            })->whereHas('auteur',function ($query) use ($auth){
+                $query->whereIn("id",$auth);
+            })->orderByDesc('transactions.date_transaction')->get();
 
-         return $transactions;
+         return $query;
     }
 
     /**
