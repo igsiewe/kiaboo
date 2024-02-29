@@ -165,7 +165,7 @@
                                     <form action="{{route("export.transactions")}}" method="GET" name="exportform" enctype="multipart/form-data">
                                         @csrf
                                         <button type="submit" class="btn btn-danger" title="Exporter"><i class="fa fa-download"></i>  Tout exporter </button>
-                                        <input type="text" name="excelFiltre" id="excelFiltre" @if(isset($excelFiltre)) value="{{$excelFiltre}}" @else value="0" @endif>
+                                        <input type="hidden" name="excelFiltre" id="excelFiltre" @if(isset($excelFiltre)) value="{{$excelFiltre}}" @else value="0" @endif>
                                     </form>
                                 </div>
                             </div>
