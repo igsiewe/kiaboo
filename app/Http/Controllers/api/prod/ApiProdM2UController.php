@@ -356,7 +356,7 @@ class ApiProdM2UController extends Controller
                         'status' => 1, //End successfully
                         'paytoken' => $dataResultat->TransactionID,
                         'date_end_trans' => Carbon::now(),
-                        'description' => 'SUCCESSFULL',
+                        'description' => 'SUCCESSFUL',
                         'message' => $dataResultat->Description,
                         'commission' => $commission->commission_globale,
                         'commission_filiale' => $commissionFiliale,
@@ -742,7 +742,7 @@ class ApiProdM2UController extends Controller
                         'status' => 1, //End successfully
                         'paytoken' => $dataResultat->TransactionID, // $reference,
                         'date_end_trans' => Carbon::now(),
-                        'description' => 'SUCCESSFULL',
+                        'description' => 'SUCCESSFUL',
                         'message' => $dataResultat->Description,
                         'commission' => $commission->commission_globale,
                         'commission_filiale' => $commissionFiliale,
@@ -980,7 +980,7 @@ class ApiProdM2UController extends Controller
                                     'status' => 1, //End successfully
                                     'paytoken' => $request->TransactionNumber, // $reference,
                                     'date_end_trans' => Carbon::now(),
-                                    'description' => 'SUCCESSFULL',
+                                    'description' => 'SUCCESSFUL',
                                     'message' => $dataResultat->Description,
                                     'commission' => $commission->commission_globale,
                                     'commission_filiale' => $commissionFiliale,

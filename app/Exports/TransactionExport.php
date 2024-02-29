@@ -33,6 +33,8 @@ class TransactionExport implements FromCollection, WithHeadings, WithEvents, Wit
             ->where("services.type_service_id",TypeServiceEnum::ENVOI->value)
             ->orwhere("services.type_service_id",TypeServiceEnum::RETRAIT->value)
             ->orwhere("services.type_service_id",TypeServiceEnum::FACTURE->value)
+            ->orwhere("services.type_service_id",TypeServiceEnum::APPROVISIONNEMENT->value)
+            ->orwhere("services.type_service_id",TypeServiceEnum::ANNULATION->value)
             ->orderByDesc('transactions.date_transaction')->get();
 
          return $transactions;
