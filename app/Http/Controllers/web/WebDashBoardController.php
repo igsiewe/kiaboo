@@ -82,15 +82,15 @@ class WebDashBoardController extends Controller
                 ->whereYear('transactions.date_transaction', Carbon::now()->year)
                 ->selectRaw('month(kb_transactions.date_transaction) as mois, sum(kb_transactions.debit) as envoi, sum(kb_transactions.credit) as retrait')
                 ->groupBy('mois')
-                ->orderBy('mois', 'desc')->get()->toArray();
+                ->orderBy('mois', 'desc');
 
             $envoi = collect();
             $retrait = collect();
-            $j= count($resultGraphe);
+            $j= $resultGraphe->count();
             for($i = 1;$i <= 12; $i++)
             {
                // $data  = collect($resultGraphe)->where('mois', $i)->all();
-                $data  = $resultGraphe->where('mois', $i)->all();
+                $data  = $resultGraphe->where('mois', $i)->get();
                 $sumretrait=0;
                 $sumenvoi=0;
                 if ($data == null || $data==[])
