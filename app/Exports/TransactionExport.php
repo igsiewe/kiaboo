@@ -20,7 +20,7 @@ class TransactionExport implements FromCollection, WithHeadings, WithEvents, Wit
 {
     public function collection()
     {
-        $select=DB::raw("(CASE WHEN kb_users.type_user_id= 5 THEN kb_users.login ELSE kb_users.telephone) as agent");
+        $select=DB::raw("(CASE WHEN kb_users.type_user_id= 5 THEN kb_users.login ELSE kb_users.telephone) as agents");
 
         $transactions  = DB::table('transactions')
             ->join("users","users.id","transactions.source")
