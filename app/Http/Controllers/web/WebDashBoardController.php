@@ -87,11 +87,12 @@ class WebDashBoardController extends Controller
             $retrait = collect();
 
             for ($i = 1; $i <= 12; $i++) {
-               $envoi->add(collect($resultGraphe)->where("mois",$i)->sum(function ($op) use ($envoi){
+               $data = collect($resultGraphe)->where("mois",$i);
+               $envoi->add($data->sum(function ($op) use ($envoi){
                      return $op->envoi;
                 }));
 
-                $retrait->add(collect($resultGraphe)->where("mois",$i)->sum(function ($op) use ($retrait){
+                $retrait->add($data->sum(function ($op) use ($retrait){
                     return $op->retrait;
                 }));
 
