@@ -100,7 +100,7 @@ class TransactionExport implements FromCollection, WithHeadings, WithEvents, Wit
           $row->commission_agent,
           $row->commission_distributeur,
           $row->balance_before,
-          $row->balance_after, $row->statut,
+          $row->balance_after, $row->status,
           $row->agent,
         ];
     }
