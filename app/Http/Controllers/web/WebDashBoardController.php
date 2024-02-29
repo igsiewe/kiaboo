@@ -105,11 +105,9 @@ class WebDashBoardController extends Controller
                         $sumenvoi=$data[$k]->sum("envoi");
                         $sumretrait=$data[$k]->sum(("retrait"));
                     }
-
-                }
-                if($i==1){
                     dd($sumretrait,$sumenvoi);
                 }
+
 
                 $envoi->add($sumenvoi);
                 $retrait->add($sumretrait);
