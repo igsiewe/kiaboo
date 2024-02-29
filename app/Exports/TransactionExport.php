@@ -20,12 +20,15 @@ class TransactionExport implements FromCollection, WithHeadings, WithEvents, Wit
 {
     public function collection()
     {
+        $select=DB::raw("(CASE WHEN users.type_user_id= 5 THEN users.login ELSE users.telephone) as agent");
+
         $transactions  = DB::table('transactions')
             ->join("users","users.id","transactions.source")
             ->join('services', 'transactions.service_id', '=', 'services.id')
             ->join('partenaires', 'services.partenaire_id', '=', 'partenaires.id')
             ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
-            ->select('transactions.reference','transactions.reference_partenaire','transactions.date_transaction','partenaires.name_partenaire','services.name_service','transactions.debit','transactions.credit' ,'transactions.balance_before','transactions.balance_after','transactions.customer_phone','transactions.commission_agent','transactions.commission_distributeur','transactions.description as status','transactions.source as agent')
+            ->select('transactions.reference','transactions.reference_partenaire','transactions.date_transaction','partenaires.name_partenaire','services.name_service','transactions.debit','transactions.credit' ,'transactions.balance_before','transactions.balance_after','transactions.customer_phone','transactions.commission_agent','transactions.commission_distributeur','transactions.description as status','transactions.login as agent')
+            ->select($select)
             ->where("transactions.fichier","agent")
             ->where("users.distributeur_id",Auth::user()->distributeur_id)
             ->where("users.type_user_id", UserRolesEnum::AGENT->value)
