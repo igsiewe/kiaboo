@@ -231,7 +231,7 @@ class ApiProdMoMoMoneyController extends Controller
                 'X-Target-Environment'=> 'mtncameroon',
                 'X-Callback-Url'=>'https://kiaboogroup.com/api/momo/callback'
             ])
-            ->Post("https://proxy.momoapi.mtn.com/disbursement/v1_0/deposit", [
+            ->Post("https://proxy.momoapi.mtn.com/disbursement/v1_0/transfer", [
                 "amount" => $montant,
                 "currency" => "XAF",
                 "externalId" => $idTransaction,
@@ -379,7 +379,7 @@ class ApiProdMoMoMoneyController extends Controller
 
     public function MOMO_Depot_Status($token, $subcriptionKey, $referenceId){
 
-        $http = "https://proxy.momoapi.mtn.com/disbursement/v1_0/deposit/".$referenceId;
+        $http = "https://proxy.momoapi.mtn.com/disbursement/v1_0/transfer/".$referenceId;
 
         $response = Http::withOptions(['verify' => false,])->withHeaders(
             [
