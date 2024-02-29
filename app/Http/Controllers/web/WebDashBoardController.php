@@ -107,7 +107,10 @@ class WebDashBoardController extends Controller
                     }
 
                 }
-dd($sumretrait,$sumenvoi);
+                if($i==1){
+                    dd($sumretrait,$sumenvoi);
+                }
+
                 $envoi->add($sumenvoi);
                 $retrait->add($sumretrait);
             }
