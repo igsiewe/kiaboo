@@ -1048,7 +1048,7 @@ class ApiProdMoMoMoneyController extends Controller
                     try{
                         DB::beginTransaction();
                         $updateTransaction=$Transaction->update([
-                            'balance_before'=>$balanceAfterAgent,
+                            'balance_before'=>$balanceBeforeAgent,
                             'balance_after'=>$balanceAfterAgent,
                             'status'=>1, // Successful
                             'date_end_trans'=>Carbon::now(),
