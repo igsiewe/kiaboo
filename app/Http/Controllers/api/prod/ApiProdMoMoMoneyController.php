@@ -1018,99 +1018,99 @@ class ApiProdMoMoMoneyController extends Controller
         if($Transaction->count()>0){
             $status = $Transaction->first()->status;
 
-            if($Transaction->first()->service_id ==ServiceEnum::RETRAIT_MOMO->value && $status==2){
-
-                $financialTransactionId = $Transaction->first()->paytoken;
-
-                if(Arr::has($element, "financialTransactionId")) {
-                    $financialTransactionId = $data->financialTransactionId;
-                }
-                if($data->status=="FAILED"){
-                    $updateTransaction=$Transaction->update([
-                        'status'=>3, // Le client n'a pas validé dans les délais et l'opérateur l'a annule
-                        'reference_partenaire'=>$financialTransactionId,
-                        'date_end_trans'=>Carbon::now(),
-                        'description'=>$data->status,
-                        'message'=>$data->reason,
-                    ]);
-                }
-
-                if($data->status=="SUCCESSFUL"){
-                    $montant = $data->amount;
-                    $user = User::where('id', $Transaction->first()->created_by);
-                    $balanceBeforeAgent = $user->get()->first()->balance_after;
-                    $balanceAfterAgent = floatval($balanceBeforeAgent) + floatval($montant);
-                    $reference_partenaire=$data->financialTransactionId;
-                    $agent = $user->first()->id;
-                    $reference = $Transaction->first()->reference;
-                    $phoneCustomer = $Transaction->first()->customer_phone;
-                    $device_notification = $Transaction->first()->device_notification;
-                    try{
-                        DB::beginTransaction();
-                        $updateTransaction=$Transaction->update([
-                            'balance_before'=>$balanceBeforeAgent,
-                            'balance_after'=>$balanceAfterAgent,
-                            'status'=>1, // Successful
-                            'date_end_trans'=>Carbon::now(),
-                            'description'=>$data->status,
-                            'reference_partenaire'=>$reference_partenaire,
-                        ]);
-
-                        $commission_agent = Transaction::where("fichier","agent")->where("commission_agent_rembourse",0)->where("source",$agent)->sum("commission_agent");
-
-                        $debitAgent = DB::table("users")->where("id", $agent)->update([
-                            'balance_after'=>$balanceAfterAgent,
-                            'balance_before'=>$balanceBeforeAgent,
-                            'last_amount'=>$montant,
-                            'date_last_transaction'=>Carbon::now(),
-                            'user_last_transaction_id'=>$agent,
-                            'last_service_id'=>ServiceEnum::RETRAIT_MOMO->value,
-                            'reference_last_transaction'=>$reference_partenaire,
-                            'remember_token'=>$reference,
-                            'total_commission'=>$commission_agent,
-                        ]);
-
-
-                        DB::commit();
-
-                        $title = "Kiaboo";
-                        $message = "Le retrait MOMO de " . $montant . " F CFA a été effectué avec succès au ".$phoneCustomer;
-                        $subtitle ="Success";
-                        $appNotification = new ApiNotification();
-                        $envoiNotification = $appNotification->sendNotificationPushFireBase($device_notification, $title, $subtitle, $message);
-//                        if($envoiNotification->status()==200){
-//                            $resultNotification=json_decode($envoiNotification->getContent());
-//                            $responseNotification=$resultNotification->response ;
-//                            if($responseNotification->success==true){
-//                                Log::info([
-//                                    'code'=> 200,
-//                                    'function' => "MOMO_Retrait_Status",
-//                                    'response'=>"Notification envoyée avec succès",
-//                                    'user' => $agent,
-//                                ]);
-//                            }else{
-//                                Log::error([
-//                                    'code'=> 500,
-//                                    'function' => "MOMO_Retrait_Status",
-//                                    'response'=>$resultNotification->body(),
-//                                    'user' => $agent,
-//                                ]);
-//                            }
+//            if($Transaction->first()->service_id ==ServiceEnum::RETRAIT_MOMO->value && $status==2){
 //
-//                        }
-                    }catch(\Exception $e){
-                        DB::rollBack();
-                        Log::error([
-                            'code'=> $e->getCode(),
-                            'function' => "MOMO_Retrait_CheckStatus",
-                            'response'=>$e->getMessage(),
-                            'user' => $agent,
-                            'referenceID' => $reference,
-                        ]);
-                    }
-
-                }
-            }
+//                $financialTransactionId = $Transaction->first()->paytoken;
+//
+//                if(Arr::has($element, "financialTransactionId")) {
+//                    $financialTransactionId = $data->financialTransactionId;
+//                }
+//                if($data->status=="FAILED"){
+//                    $updateTransaction=$Transaction->update([
+//                        'status'=>3, // Le client n'a pas validé dans les délais et l'opérateur l'a annule
+//                        'reference_partenaire'=>$financialTransactionId,
+//                        'date_end_trans'=>Carbon::now(),
+//                        'description'=>$data->status,
+//                        'message'=>$data->reason,
+//                    ]);
+//                }
+//
+//                if($data->status=="SUCCESSFUL"){
+//                    $montant = $data->amount;
+//                    $user = User::where('id', $Transaction->first()->created_by);
+//                    $balanceBeforeAgent = $user->get()->first()->balance_after;
+//                    $balanceAfterAgent = floatval($balanceBeforeAgent) + floatval($montant);
+//                    $reference_partenaire=$data->financialTransactionId;
+//                    $agent = $user->first()->id;
+//                    $reference = $Transaction->first()->reference;
+//                    $phoneCustomer = $Transaction->first()->customer_phone;
+//                    $device_notification = $Transaction->first()->device_notification;
+//                    try{
+//                        DB::beginTransaction();
+//                        $updateTransaction=$Transaction->update([
+//                            'balance_before'=>$balanceBeforeAgent,
+//                            'balance_after'=>$balanceAfterAgent,
+//                            'status'=>1, // Successful
+//                            'date_end_trans'=>Carbon::now(),
+//                            'description'=>$data->status,
+//                            'reference_partenaire'=>$reference_partenaire,
+//                        ]);
+//
+//                        $commission_agent = Transaction::where("fichier","agent")->where("commission_agent_rembourse",0)->where("source",$agent)->sum("commission_agent");
+//
+//                        $debitAgent = DB::table("users")->where("id", $agent)->update([
+//                            'balance_after'=>$balanceAfterAgent,
+//                            'balance_before'=>$balanceBeforeAgent,
+//                            'last_amount'=>$montant,
+//                            'date_last_transaction'=>Carbon::now(),
+//                            'user_last_transaction_id'=>$agent,
+//                            'last_service_id'=>ServiceEnum::RETRAIT_MOMO->value,
+//                            'reference_last_transaction'=>$reference_partenaire,
+//                            'remember_token'=>$reference,
+//                            'total_commission'=>$commission_agent,
+//                        ]);
+//
+//
+//                        DB::commit();
+//
+//                        $title = "Kiaboo";
+//                        $message = "Le retrait MOMO de " . $montant . " F CFA a été effectué avec succès au ".$phoneCustomer;
+//                        $subtitle ="Success";
+//                        $appNotification = new ApiNotification();
+//                        $envoiNotification = $appNotification->sendNotificationPushFireBase($device_notification, $title, $subtitle, $message);
+////                        if($envoiNotification->status()==200){
+////                            $resultNotification=json_decode($envoiNotification->getContent());
+////                            $responseNotification=$resultNotification->response ;
+////                            if($responseNotification->success==true){
+////                                Log::info([
+////                                    'code'=> 200,
+////                                    'function' => "MOMO_Retrait_Status",
+////                                    'response'=>"Notification envoyée avec succès",
+////                                    'user' => $agent,
+////                                ]);
+////                            }else{
+////                                Log::error([
+////                                    'code'=> 500,
+////                                    'function' => "MOMO_Retrait_Status",
+////                                    'response'=>$resultNotification->body(),
+////                                    'user' => $agent,
+////                                ]);
+////                            }
+////
+////                        }
+//                    }catch(\Exception $e){
+//                        DB::rollBack();
+//                        Log::error([
+//                            'code'=> $e->getCode(),
+//                            'function' => "MOMO_Retrait_CheckStatus",
+//                            'response'=>$e->getMessage(),
+//                            'user' => $agent,
+//                            'referenceID' => $reference,
+//                        ]);
+//                    }
+//
+//                }
+//            }
 
             if($Transaction->first()->service_id ==ServiceEnum::DEPOT_MOMO->value){
 
