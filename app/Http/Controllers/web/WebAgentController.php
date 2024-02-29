@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\web;
 
+use App\Http\Controllers\api\ApiSmsController;
 use App\Http\Controllers\Controller;
 use App\Http\Enums\UserRolesEnum;
 use App\Models\Distributeur;
@@ -46,8 +47,8 @@ class WebAgentController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
             'surname' => 'required|string',
-            'telephone'=>'required|string',
-            'email'=>'required|string',
+            'telephone'=>'required|string|unique:users',
+            'email'=>'required|string|unique:users',
             'ville'=>'required|integer',
             'quartier'=>'required|string',
             'adresse'=>'required|string',
@@ -66,6 +67,7 @@ class WebAgentController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator->errors()->first());
         }
+
         $datecni = $request->datecni;
         $now = Carbon::now();
         $checkDateCni = $now->gt($datecni);
@@ -94,6 +96,11 @@ class WebAgentController extends Controller
         $newAgent->seuilapprovisionnement=$request->seuil;
         $newAgent->moncodeparrainage = "KIAB".$this->genererChaineAleatoire(8);
         $newAgent->save();
+
+        $sms = new ApiSmsController();
+        $tel = $request->telephone;
+        $msg = $request->surname.", Votre compte KIABOO a été crée avec succès. Votre mot de passe temporraire est ".$newPassword.". Veuillez le changer dès votre première connexion";
+        $sendSMS = $sms->SendSMS($tel,$msg);
         return redirect()->back()->with('success', 'Agent created successfully');
     }
 
