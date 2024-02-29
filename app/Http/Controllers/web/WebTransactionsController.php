@@ -389,6 +389,7 @@ class WebTransactionsController extends BaseController
         $request->validate([
             "excelFiltre" =>"required",
         ]);
+        dd($request->all());
         if($request->excelFiltre !=0 and $request->excelFiltre !=1 ){
             return redirect()->back()->withInput()->withErrors(['error' => "Les conditions ne sont pas réunies pour appliquer l'exportation de données"]);
         }
