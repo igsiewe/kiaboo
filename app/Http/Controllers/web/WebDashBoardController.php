@@ -83,7 +83,7 @@ class WebDashBoardController extends Controller
                 ->selectRaw('month(kb_transactions.date_transaction) as mois, sum(kb_transactions.debit) as envoi, sum(kb_transactions.credit) as retrait')
                 ->groupBy('mois')
                 ->orderBy('mois', 'desc')->get()->toArray();
-
+            dd($resultGraphe);
             $envoi = collect();
             $retrait = collect();
 
