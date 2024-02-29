@@ -105,6 +105,7 @@ class WebDashBoardController extends Controller
 
                 }
             }
+            dd($envoi, $retrait);
 
         }
 
