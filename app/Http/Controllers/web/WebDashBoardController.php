@@ -86,7 +86,7 @@ class WebDashBoardController extends Controller
             $envoi = collect();
             $retrait = collect();
 
-            $resultGraphe->each(function ($op) use ($envoi,$retrait){
+            collect($resultGraphe)->each(function ($op) use ($envoi,$retrait){
                 dd($op);
             });
 
