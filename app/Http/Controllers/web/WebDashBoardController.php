@@ -86,7 +86,7 @@ class WebDashBoardController extends Controller
 
             $envoi = collect();
             $retrait = collect();
-            dd($resultGraphe, $resultGraphe->count());
+            dd($resultGraphe, count($resultGraphe));
             for($i = 1;$i <= 12; $i++)
             {
                 $data  = collect($resultGraphe)->where('mois', $i)->all();
