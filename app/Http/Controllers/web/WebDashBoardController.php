@@ -89,7 +89,8 @@ class WebDashBoardController extends Controller
             $j= count($resultGraphe);
             for($i = 1;$i <= 12; $i++)
             {
-                $data  = collect($resultGraphe)->where('mois', $i)->all();
+               // $data  = collect($resultGraphe)->where('mois', $i)->all();
+                $data  = $resultGraphe->where('mois', $i)->all();
                 $sumretrait=0;
                 $sumenvoi=0;
                 if ($data == null || $data==[])
@@ -102,12 +103,12 @@ class WebDashBoardController extends Controller
                    //$envoi->add($data[0]->envoi);
                    //$retrait->add($data[0]->retrait);
                     for ($k=0;$k<$j-1;$k++){
-                        $sumenvoi=array_sum($data->envoi);
-                        $sumretrait=array_sum($data->retrait);
+                        $sumenvoi=$data[$k]->sum("envoi");
+                        $sumretrait=$data[$k]->sum(("retrait"));
                     }
 
                 }
-
+dd($sumenvoi,$sumretrait);
                 $envoi->add($sumenvoi);
                 $retrait->add($sumretrait);
             }
