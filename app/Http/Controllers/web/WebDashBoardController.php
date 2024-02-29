@@ -99,8 +99,8 @@ class WebDashBoardController extends Controller
                 else
                 {
                     for ($l = 0; $l <= $j-1; $l++) {
-                        $envoi->add($data[$j]->envoi);
-                        $retrait->add($data[$j]->retrait);
+                        $envoi->add($data[$l]->envoi);
+                        $retrait->add($data[$l]->retrait);
                     }
 
                 }
