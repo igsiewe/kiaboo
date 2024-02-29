@@ -98,11 +98,8 @@ class WebDashBoardController extends Controller
                 }
                 else
                 {
-
-                        $envoi->add($data[$i]->envoi);
-                        $retrait->add($data[$i]->retrait);
-
-
+                    $envoi->add($data[0]->envoi);
+                    $retrait->add($data[0]->retrait);
                 }
             }
             dd($envoi, $retrait);
