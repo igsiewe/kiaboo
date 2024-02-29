@@ -389,7 +389,7 @@ class WebTransactionsController extends BaseController
         $request->validate([
             "excelFiltre" =>"required",
         ]);
-        dd($request->all());
+    //    dd($request->all());
 
         $auth = Auth::user()->type_user_id==UserRolesEnum::DISTRIBUTEUR->value ? User::where("type_user_id",UserRolesEnum::AGENT->value)->where("distributeur_id",Auth::user()->distributeur_id)->pluck('id') :  User::where("type_user_id",UserRolesEnum::AGENT->value)->pluck('id');
 
