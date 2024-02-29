@@ -18,13 +18,6 @@ use Maatwebsite\Excel\Events\AfterSheet;
 
 class TransactionExport implements FromCollection, WithHeadings, WithEvents, WithStrictNullComparison, WithMapping
 {
-
-    protected $data;
-
-    public function __construct($data){
-        $this->data = $data;
-    }
-
     public function collection()
     {
         $transactions  = DB::table('transactions')
