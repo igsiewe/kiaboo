@@ -16,7 +16,7 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStrictNullComparison;
 use Maatwebsite\Excel\Events\AfterSheet;
 
-class TransactionExport implements FromQuery, WithHeadings, WithEvents, WithStrictNullComparison, WithMapping
+class TransactionExport implements FromCollection, WithHeadings, WithEvents, WithStrictNullComparison, WithMapping
 {
 
     protected $data;
@@ -25,7 +25,7 @@ class TransactionExport implements FromQuery, WithHeadings, WithEvents, WithStri
         $this->data = $data;
     }
 
-    public function query()
+    public function collection()
     {
         $transactions  = DB::table('transactions')
             ->join("users","users.id","transactions.source")
@@ -40,7 +40,7 @@ class TransactionExport implements FromQuery, WithHeadings, WithEvents, WithStri
             ->where("services.type_service_id",TypeServiceEnum::ENVOI->value)
             ->orwhere("services.type_service_id",TypeServiceEnum::RETRAIT->value)
             ->orwhere("services.type_service_id",TypeServiceEnum::FACTURE->value)
-            ->orderByDesc('transactions.date_transaction')->query();
+            ->orderByDesc('transactions.date_transaction')->get();
 
          return $transactions;
     }
