@@ -113,9 +113,9 @@ Route::middleware(['auth','checkStatus'])->group(function (){
         Route::get('services/partenaire/{idPartenaire}', 'getServicePartenaire')->name('getServicePartenaire');
     });
     Route::controller(WebExportExcelController::class)->group(function(){
-        Route::get('export/excel/transaction', 'exportTransaction')->name('export.transactions');
-        Route::get('export/excel/approvisionnement', 'exportApprovisionnement')->name('export.approvisionnement');
-        Route::get('export/excel/recharge', 'exportRecharge')->name('export.recharge');
+        Route::get('export/transaction', 'exportTransaction')->name('export.transactions');
+        Route::get('export/approvisionnement', 'exportApprovisionnement')->name('export.approvisionnement');
+        Route::get('export/recharge', 'exportRecharge')->name('export.recharge');
     });
 
     Route::controller(WebAgentController::class)->group(function(){
