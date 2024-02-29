@@ -12,9 +12,11 @@ use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithStrictNullComparison;
 use Maatwebsite\Excel\Events\AfterSheet;
 
-class TransactionExport implements FromCollection, WithHeadings, WithEvents
+class TransactionExport implements FromQuery, WithHeadings, WithEvents, WithStrictNullComparison, WithMapping
 {
 
     protected $data;
@@ -22,37 +24,25 @@ class TransactionExport implements FromCollection, WithHeadings, WithEvents
     public function __construct($data){
         $this->data = $data;
     }
-//
-//    /**
-//     * *@return array
-//     */
-//
-//    public function array(): array
-//    {
-//        return $this->data->toArray();
-//    }
-//    /**
-//    * @return \Illuminate\Support\Collection
-//    */
-    public function collection()
-    {
-//        $transactions  = DB::table('transactions')
-//            ->join("users","users.id","transactions.source")
-//            ->join('services', 'transactions.service_id', '=', 'services.id')
-//            ->join('partenaires', 'services.partenaire_id', '=', 'partenaires.id')
-//            ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
-//            ->select('transactions.reference','transactions.reference_partenaire','transactions.date_transaction','partenaires.name_partenaire','services.name_service','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.commission_agent','transactions.commission_distributeur','transactions.balance_before','transactions.balance_after','users.login as agent',)
-//            ->where("transactions.fichier","agent")
-//            ->where("users.distributeur_id",Auth::user()->distributeur_id)
-//            ->where("users.type_user_id", UserRolesEnum::AGENT->value)
-//            ->where('transactions.status',1)
-//            ->where("services.type_service_id",TypeServiceEnum::ENVOI->value)
-//            ->orwhere("services.type_service_id",TypeServiceEnum::RETRAIT->value)
-//            ->orwhere("services.type_service_id",TypeServiceEnum::FACTURE->value)
-//            ->orderByDesc('transactions.date_transaction')->get();
 
-     //   $transactions = $this->data;
-        return $this->data;
+    public function query()
+    {
+        $transactions  = DB::table('transactions')
+            ->join("users","users.id","transactions.source")
+            ->join('services', 'transactions.service_id', '=', 'services.id')
+            ->join('partenaires', 'services.partenaire_id', '=', 'partenaires.id')
+            ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
+            ->select('transactions.reference','transactions.reference_partenaire','transactions.date_transaction','partenaires.name_partenaire','services.name_service','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.commission_agent','transactions.commission_distributeur','transactions.balance_before','transactions.balance_after','users.login as agent',)
+            ->where("transactions.fichier","agent")
+            ->where("users.distributeur_id",Auth::user()->distributeur_id)
+            ->where("users.type_user_id", UserRolesEnum::AGENT->value)
+            ->where('transactions.status',1)
+            ->where("services.type_service_id",TypeServiceEnum::ENVOI->value)
+            ->orwhere("services.type_service_id",TypeServiceEnum::RETRAIT->value)
+            ->orwhere("services.type_service_id",TypeServiceEnum::FACTURE->value)
+            ->orderByDesc('transactions.date_transaction')->get();
+
+         return $transactions;
     }
 
     /**
@@ -99,6 +89,25 @@ class TransactionExport implements FromCollection, WithHeadings, WithEvents
                     ->getStartColor()
                     ->setARGB('FF0000');
             },
+        ];
+    }
+
+    public function map($row):array
+    {
+        return[
+          $row->reference,
+          $row->reference_partenaire,
+          $row->date_transaction,
+          $row->name_partenaire,
+          $row->name_service,
+          $row->debit,
+          $row->credit,
+          $row->customer_phone,
+          $row->commission_agent,
+          $row->commission_distributeur,
+          $row->balance_before,
+          $row->balance_after,
+          $row->agent,
         ];
     }
 }
