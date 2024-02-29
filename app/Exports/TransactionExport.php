@@ -25,7 +25,7 @@ class TransactionExport implements FromCollection, WithHeadings, WithEvents, Wit
             ->join('services', 'transactions.service_id', '=', 'services.id')
             ->join('partenaires', 'services.partenaire_id', '=', 'partenaires.id')
             ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
-            ->select('transactions.reference','transactions.reference_partenaire','transactions.date_transaction','partenaires.name_partenaire','services.name_service','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.commission_agent','transactions.commission_distributeur','transactions.balance_before','transactions.balance_after','transactions.description as status','users.login as agent')
+            ->select('transactions.reference','transactions.reference_partenaire','transactions.date_transaction','partenaires.name_partenaire','services.name_service','transactions.debit','transactions.credit' ,'transactions.balance_before','transactions.balance_after','transactions.customer_phone','transactions.commission_agent','transactions.commission_distributeur','transactions.description as status','users.login as agent')
             ->where("transactions.fichier","agent")
             ->where("users.distributeur_id",Auth::user()->distributeur_id)
             ->where("users.type_user_id", UserRolesEnum::AGENT->value)
@@ -54,11 +54,11 @@ class TransactionExport implements FromCollection, WithHeadings, WithEvents, Wit
             'SERVICE',
             'DEBIT',
             'CREDIT',
+            'SOLDE AVANT',
+            'SOLDE APRES',
             'CLIENT',
             'COMMISSION AGENT',
             'COMMISSION DISTRIBUTEUR',
-            'SOLDE AVANT',
-            'SOLDE APRES',
             'STATUT',
             'AGENT',
         ];
@@ -98,11 +98,12 @@ class TransactionExport implements FromCollection, WithHeadings, WithEvents, Wit
           $row->name_service,
           $row->debit,
           $row->credit,
+          $row->balance_before,
+          $row->balance_after,
           $row->customer_phone,
           $row->commission_agent,
           $row->commission_distributeur,
-          $row->balance_before,
-          $row->balance_after, $row->status,
+          $row->status,
           $row->agent,
         ];
     }
