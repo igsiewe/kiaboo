@@ -162,9 +162,9 @@
                         <div class="card-group">
                             <div class="btn-actions-pane-right">
                                 <div role="group" class="btn-group-sm btn-group-lg">
-                                    <form action="#" method="POST" name="exportform" enctype="multipart/form-data">
+                                    <form action="{{route("export.transactions")}}" method="POST" name="exportform" enctype="multipart/form-data">
                                         @csrf
-                                        <a href="{{route("export.transactions")}}" class="btn btn-danger" title="Exporter"><i class="fa fa-download"></i>  Tout exporter </a>
+                                        <button type="submit" class="btn btn-danger" title="Exporter"><i class="fa fa-download"></i>  Tout exporter </button>
                                         <input type="text" name="excelFiltre" id="excelFiltre" @if(isset($excelFiltre)) value="{{$excelFiltre}}" @else value="0" @endif>
                                     </form>
                                 </div>

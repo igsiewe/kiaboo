@@ -390,9 +390,6 @@ class WebTransactionsController extends BaseController
             "excelFiltre" =>"required",
         ]);
         dd($request->all());
-        if($request->excelFiltre !=0 and $request->excelFiltre !=1 ){
-            return redirect()->back()->withInput()->withErrors(['error' => "Les conditions ne sont pas réunies pour appliquer l'exportation de données"]);
-        }
 
         $auth = Auth::user()->type_user_id==UserRolesEnum::DISTRIBUTEUR->value ? User::where("type_user_id",UserRolesEnum::AGENT->value)->where("distributeur_id",Auth::user()->distributeur_id)->pluck('id') :  User::where("type_user_id",UserRolesEnum::AGENT->value)->pluck('id');
 
