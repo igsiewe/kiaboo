@@ -51,10 +51,9 @@ class WebTransactionsController extends BaseController
 
         $transactions  =$query->orderByDesc('transactions.date_transaction')->limit(100)->get();
 
-        $this->setData($transactions);
-
+        $excelFiltre =0;
         $listagents =    $listagents->orderBy("name")->orderBy("surname")->get();
-        return view('pages.transactions.transactions', compact('transactions','money','listagents','listpartenaires','listservices'));
+        return view('pages.transactions.transactions', compact('transactions','money','listagents','listpartenaires','listservices','excelFiltre'));
     }
 
 
@@ -117,8 +116,8 @@ class WebTransactionsController extends BaseController
         if($request->partenaire != null){
             $listservices = Service::where("partenaire_id",$request->partenaire)->orderBy("name_service")->get();
         }
-
-        return view('pages.transactions.transactions', compact('transactions','money','listagents','listpartenaires','listservices'))->with(
+        $excelFiltre=1;
+        return view('pages.transactions.transactions', compact('transactions','money','listagents','listpartenaires','listservices','excelFiltre'))->with(
             [
                 "partenaire" =>$request->partenaire,
                 "service" =>$request->service,
