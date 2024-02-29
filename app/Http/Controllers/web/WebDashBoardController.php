@@ -90,7 +90,8 @@ class WebDashBoardController extends Controller
             for($i = 1;$i <= 12; $i++)
             {
                 $data  = collect($resultGraphe)->where('mois', $i)->all();
-
+                $sumretrait=0;
+                $sumenvoi=0;
                 if ($data == null || $data==[])
                 {
                     $envoi->add(0);
@@ -98,15 +99,17 @@ class WebDashBoardController extends Controller
                 }
                 else
                 {
-                   // $envoi->add($data[0]->envoi);
-                   // $retrait->add($data[0]->retrait);
-
-                    for ($k=0;$k<=$j-1;$k++){
-                       $envoi= $envoi->add($data[$k]->envoi);
-                       $retrait= $retrait->add($data[$k]->retrait);
+                   //$envoi->add($data[0]->envoi);
+                   //$retrait->add($data[0]->retrait);
+                    for ($k=0;$k<$j-1;$k++){
+                        $sumenvoi=array_sum($data->envoi);
+                        $sumretrait=array_sum($data->retrait);
                     }
 
                 }
+
+                $envoi->add($sumenvoi);
+                $retrait->add($sumretrait);
             }
 
         }
