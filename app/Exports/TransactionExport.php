@@ -27,7 +27,7 @@ class TransactionExport implements FromCollection, WithHeadings, WithEvents, Wit
             ->join('services', 'transactions.service_id', '=', 'services.id')
             ->join('partenaires', 'services.partenaire_id', '=', 'partenaires.id')
             ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
-            ->select('transactions.reference','transactions.reference_partenaire','transactions.date_transaction','partenaires.name_partenaire','services.name_service','transactions.debit','transactions.credit' ,'transactions.balance_before','transactions.balance_after','transactions.customer_phone','transactions.commission_agent','transactions.commission_distributeur','transactions.description as status',DB::select("IF(kb_users.type_user_id=5, kb_users.login,kb_users.telephone) as agent"))
+            ->select('transactions.reference','transactions.reference_partenaire','transactions.date_transaction','partenaires.name_partenaire','services.name_service','transactions.debit','transactions.credit' ,'transactions.balance_before','transactions.balance_after','transactions.customer_phone','transactions.commission_agent','transactions.commission_distributeur','transactions.description as status','users.login as agent','users.telephone','users.type_user_id')
 
             ->where("transactions.fichier","agent")
             ->where("users.distributeur_id",Auth::user()->distributeur_id)
@@ -107,7 +107,7 @@ class TransactionExport implements FromCollection, WithHeadings, WithEvents, Wit
           $row->commission_agent,
           $row->commission_distributeur,
           $row->status,
-          $row->agent,
+          $row->type_user_id=>5?$row->login:$row->telephone,
         ];
     }
 }
