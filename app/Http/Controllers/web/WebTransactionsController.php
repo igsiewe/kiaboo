@@ -385,51 +385,7 @@ class WebTransactionsController extends BaseController
         return $rang;
     }
 
-    public function exportTransaction(Request $request){
-        $request->validate([
-            "excelFiltre" =>"required",
-        ]);
-    //    dd($request->all());
 
-        $auth = Auth::user()->type_user_id==UserRolesEnum::DISTRIBUTEUR->value ? User::where("type_user_id",UserRolesEnum::AGENT->value)->where("distributeur_id",Auth::user()->distributeur_id)->pluck('id') :  User::where("type_user_id",UserRolesEnum::AGENT->value)->pluck('id');
-
-        $query = Transaction::with(['service.typeService','auteur.distributeur'])
-            ->where("fichier","agent")
-            ->where('status',StatusTransEnum::VALIDATED->value)
-            ->whereHas('service',function ($query){
-                $query->whereIn("type_service_id",[TypeServiceEnum::ENVOI->value,TypeServiceEnum::RETRAIT->value,TypeServiceEnum::FACTURE->value]);
-            })->whereHas('auteur',function ($query) use ($auth){
-                $query->whereIn("id",$auth);
-            });
-
-        $data = $query;
-
-        if($request->excelFiltre==1){
-
-            $startDate = $request->startDate;
-            $endDate = $request->endDate;
-            $query = $query->whereDate('transactions.created_at', '>=', $startDate)
-                ->whereDate('transactions.created_at', '<=', $endDate);
-
-            if($request->agent != null){
-                $query = $query->whereHas('auteur',function ($query) use ($request){
-                    $query->where("id",$request->agent);
-                });
-            }
-            if($request->partenaire != null){
-                $query = $query->whereHas('service',function ($query) use ($request){
-                    $query->where("partenaire_id",$request->partenaire);
-                });
-            }
-            if($request->service != null){
-                $query = $query->where("service_id",$request->service);
-            }
-            $data  = $query->orderByDesc('transactions.date_transaction')->get();
-        }
-
-       return Excel::download(new TransactionExport ($data), 'transaction.xlsx');
-
-    }
 
 
 }
