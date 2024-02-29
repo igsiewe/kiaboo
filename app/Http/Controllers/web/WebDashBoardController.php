@@ -104,7 +104,7 @@ class WebDashBoardController extends Controller
 
             }
             if($i=2){
-                dd($envoi[1]);
+                dd($envoi[0]);
             }
 
             dd($resultGraphe,$envoi, $retrait);
