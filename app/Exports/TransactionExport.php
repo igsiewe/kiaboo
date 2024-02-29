@@ -79,9 +79,10 @@ class TransactionExport implements FromCollection, WithHeadings, WithEvents, Wit
             AfterSheet::class    => function(AfterSheet $event) {
                 $event->sheet->getDelegate()->getStyle('A1:N1')
                     ->getFill()
-                    ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_NONE)
+                    ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
                     ->getStartColor()
-                    ->setARGB('FF0000');
+                    ->setARGB('FF0000')->setRGB('FFFFFF');
+
 
             },
         ];
