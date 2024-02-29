@@ -92,8 +92,8 @@ class TransactionExport implements FromCollection, WithHeadings, WithEvents, Wit
           $row->reference,
           $row->reference_partenaire,
           $row->date_transaction,
-          $row->name_partenaire,
-          $row->name_service,
+          $row->service->partenaire->name_partenaire,
+          $row->service->name_service,
           $row->debit,
           $row->credit,
           $row->balance_before,
@@ -101,8 +101,8 @@ class TransactionExport implements FromCollection, WithHeadings, WithEvents, Wit
           $row->customer_phone,
           $row->commission_agent,
           $row->commission_distributeur,
-          $row->status,
-          $row->telephone,
+          $row->description,
+          $row->auteur->telephone,
         ];
     }
 }
