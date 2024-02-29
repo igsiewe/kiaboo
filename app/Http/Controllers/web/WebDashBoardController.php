@@ -86,7 +86,7 @@ class WebDashBoardController extends Controller
 
             $envoi = collect();
             $retrait = collect();
-
+            $j= count($resultGraphe);
             for($i = 1;$i <= 12; $i++)
             {
                 $data  = collect($resultGraphe)->where('mois', $i)->all();
@@ -98,13 +98,9 @@ class WebDashBoardController extends Controller
                 }
                 else
                 {
-
-                    $l=0;
-                    foreach ($data as $agent) {
-
-                        $envoi->add($agent[$l]->envoi);
-                        $retrait->add($agent[$l]->retrait);
-                        $l++;
+                    for ($l = 0; $l <= $j-1; $l++) {
+                        $envoi->add($data[$j]->envoi);
+                        $retrait->add($data[$j]->retrait);
                     }
 
                 }
