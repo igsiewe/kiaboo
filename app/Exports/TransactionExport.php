@@ -107,7 +107,7 @@ class TransactionExport implements FromCollection, WithHeadings, WithEvents, Wit
           $row->commission_agent,
           $row->commission_distributeur,
           $row->status,
-          $row->type_user_id==5 ? $row->login : $row->telephone,
+          $row->type_user_id==5 ? $row->login : $row->login,
         ];
     }
 }
