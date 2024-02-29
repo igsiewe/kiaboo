@@ -27,7 +27,7 @@ class TransactionExport implements FromCollection, WithHeadings, WithEvents, Wit
             ->join('services', 'transactions.service_id', '=', 'services.id')
             ->join('partenaires', 'services.partenaire_id', '=', 'partenaires.id')
             ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
-            ->select('transactions.reference','transactions.reference_partenaire','transactions.date_transaction','partenaires.name_partenaire','services.name_service','transactions.debit','transactions.credit' ,'transactions.balance_before','transactions.balance_after','transactions.customer_phone','transactions.commission_agent','transactions.commission_distributeur','transactions.description as status',"IF(users.type_user_id=5, users.login,users.telephone) as agent")
+            ->select('transactions.reference','transactions.reference_partenaire','transactions.date_transaction','partenaires.name_partenaire','services.name_service','transactions.debit','transactions.credit' ,'transactions.balance_before','transactions.balance_after','transactions.customer_phone','transactions.commission_agent','transactions.commission_distributeur','transactions.description as status',"(users.type_user_id=5, users.login,users.telephone) as agent")
 
             ->where("transactions.fichier","agent")
             ->where("users.distributeur_id",Auth::user()->distributeur_id)
