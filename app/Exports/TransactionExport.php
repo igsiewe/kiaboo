@@ -40,7 +40,7 @@ class TransactionExport implements FromQuery, WithHeadings, WithEvents, WithStri
             ->where("services.type_service_id",TypeServiceEnum::ENVOI->value)
             ->orwhere("services.type_service_id",TypeServiceEnum::RETRAIT->value)
             ->orwhere("services.type_service_id",TypeServiceEnum::FACTURE->value)
-            ->orderByDesc('transactions.date_transaction')->get();
+            ->orderByDesc('transactions.date_transaction')->query();
 
          return $transactions;
     }
