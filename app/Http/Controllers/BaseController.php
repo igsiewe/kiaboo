@@ -13,25 +13,6 @@ use Maatwebsite\Excel\Events\AfterSheet;
 class BaseController extends Controller
 {
 
-    protected $data;
-
-    /**
-     * @return mixed
-     */
-    public function getData(): mixed
-    {
-        return $this->data;
-    }
-
-    /**
-     * @param mixed $data
-     */
-    public function setData($data): mixed
-    {
-        return $this->data = $data;
-    }
-
-
 
        /**
      * success response method.
