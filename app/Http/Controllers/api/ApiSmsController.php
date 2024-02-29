@@ -74,7 +74,7 @@ class ApiSmsController extends Controller
             ]
         );
         $response = $request->getBody()->getContents();
-
+dd($response);
         return $response;
     }
 
