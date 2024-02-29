@@ -102,7 +102,7 @@ class WebDashBoardController extends Controller
                     $retrait->add($data[0]->retrait);
                 }
             }
-            dd($data,$envoi, $retrait);
+            dd($resultGraphe,$envoi, $retrait);
 
         }
 
