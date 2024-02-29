@@ -99,7 +99,7 @@ class WebDashBoardController extends Controller
 
 
 
-            dd($envoi, $retrait);
+ //           dd($envoi, $retrait);
 
 
 //            $envoi = collect();
