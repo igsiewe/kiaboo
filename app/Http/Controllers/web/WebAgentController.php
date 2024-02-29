@@ -98,7 +98,7 @@ class WebAgentController extends Controller
         $newAgent->save();
 
         $sms = new ApiSmsController();
-        $tel = $request->telephone;
+        $tel ="237".$request->telephone;
         $msg = $request->surname.", Votre compte KIABOO a été crée avec succès. Votre mot de passe temporaire est ".$newPassword.". Veuillez le changer dès votre première connexion";
         $envoyerSMS = $sms->SendSMS($tel,utf8_decode($msg));
         dd($envoyerSMS);
