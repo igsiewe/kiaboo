@@ -45,15 +45,16 @@ Route::middleware(['auth','checkStatus'])->group(function (){
             Route::get('/distributeur/edit/{edit}', 'getDetailDistributeurTopUpd')->name("getDetailDistributeurTopUpd");
             Route::get('/distributeur/list', 'getListDistributeur')->name("listDistributeur");
             Route::get('/distributeur/list/filtre', 'getListFiltreDistributeur')->name("getListFiltreDistributeur");
-
-            Route::any('distributeur/bloque/{id}', 'bloqueDistributeur')->name('bloqueDistributeur');
-            Route::any('distributeur/debloque/{id}', 'debloqueDistributeur')->name('debloqueDistributeur');
-            Route::any('distributeur/edit/donnees/{edit}', 'showDistributeur')->name("showDistributeur");
-            Route::any('distributeur/create', 'setNewDistributeur')->name('setNewDistributeur');
-            Route::any('distributeur/update/{id}', 'setUpdateDistributeur')->name('setUpdateDistributeur');
-            Route::any('distributeur/delete/{id}', 'deleteDistributeur')->name('deleteDistributeur');
             Route::any('distributeur/agent/list/{id}', 'agentDistributeur')->name('agentDistributeur');
-        });
+            Route::middleware(['routeadministrateur'])->group(function () {
+                Route::any('distributeur/bloque/{id}', 'bloqueDistributeur')->name('bloqueDistributeur');
+                Route::any('distributeur/debloque/{id}', 'debloqueDistributeur')->name('debloqueDistributeur');
+                Route::any('distributeur/edit/donnees/{edit}', 'showDistributeur')->name("showDistributeur");
+                Route::any('distributeur/create', 'setNewDistributeur')->name('setNewDistributeur');
+                Route::any('distributeur/update/{id}', 'setUpdateDistributeur')->name('setUpdateDistributeur');
+                Route::any('distributeur/delete/{id}', 'deleteDistributeur')->name('deleteDistributeur');
+            });
+            });
         Route::controller(WebApproDistributeurController::class)->group(function () {
             Route::any('/distributor/list', 'getApproDistributor')->name("getApproDistributor");
             Route::any('/approvisionnement/search', 'listApprovisionnementFiltre')->name('listApprovisionnement.filtre');

@@ -144,7 +144,7 @@
                             <div role="group" class="btn-group-sm btn-group-lg">
                                 <form action="#" method="POST" name="exportform" enctype="multipart/form-data" method="post">
                                     @csrf
-                                    @if(\Illuminate\Support\Facades\Auth::user()->type_user_id==\App\Http\Enums\UserRolesEnum::BACKOFFICE->value || \Illuminate\Support\Facades\Auth::user()->type_user_id==\App\Http\Enums\UserRolesEnum::SUPADMIN->value)
+                                    @if(\Illuminate\Support\Facades\Auth::user()->type_user_id==\App\Http\Enums\UserRolesEnum::FRONTOFFICE->value || \Illuminate\Support\Facades\Auth::user()->type_user_id==\App\Http\Enums\UserRolesEnum::SUPADMIN->value)
                                         <button type="button" class="btn btn-kiaboo" data-bs-toggle="modal" data-bs-target="#staticBackdropAppro">
                                             <i class="fa fa-plus"></i>  Nouvel approvisionnement
                                         </button>
