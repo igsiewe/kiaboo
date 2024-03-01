@@ -11,10 +11,10 @@ use Illuminate\Queue\SerializesModels;
 
 class UserNotificationMail extends Mailable
 {
-    Protected $data;
+
 
     use Queueable, SerializesModels;
-
+    public $data;
     /**
      * Create a new message instance.
      */
@@ -40,6 +40,11 @@ class UserNotificationMail extends Mailable
     {
         return new Content(
             view: 'mail.userNotificationMailDetail',
+            with: [
+                'name'=>$this->data['name'],
+                'login'=>$this->data['login'],
+                'password'=>$this->data['password']
+            ]
         );
     }
 
