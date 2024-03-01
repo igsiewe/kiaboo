@@ -13,6 +13,6 @@ Mot de passe :  {{ $data['password'] }} <br/><p><p/>
 <br>Merci de le changer dès votre première connexion</br>
 <br>Cordialement
 PS : Ceci est un mail automatique, merci de ne pas y répondre
-<img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('logo.png'))) }}" class="logo" alt="{{ $slot }}">
+<img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('/assets/images/logo.png'))) }}" class="logo" alt="{{ $slot }}">
 </body>
 </html>
