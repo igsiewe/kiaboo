@@ -4,6 +4,7 @@ namespace App\Http\Controllers\web;
 
 use App\Http\Controllers\Controller;
 use App\Http\Enums\UserRolesEnum;
+use App\Mail\UserNotificationMail;
 use App\Models\Distributeur;
 use App\Models\TypeUser;
 use App\Models\User;
@@ -11,6 +12,7 @@ use App\Models\Ville;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class WebUtilisateurController extends Controller
@@ -104,6 +106,16 @@ class WebUtilisateurController extends Controller
         $newUtilisateur->moncodeparrainage = "KIAB".$this->genererChaineAleatoire(8);
         $newUtilisateur->status_delete =0;
         $newUtilisateur->save();
+
+        $data=[
+            'name'=>$request->surname." ".mb_strtoupper($request->name),
+            'login'=>$request->email,
+            'password'=>$newPassword,
+        ];
+        //Envoi du mail
+        Mail::to($request->email)
+            ->send(new UserNotificationMail($data));
+        //
         return redirect()->back()->with('success', 'Agent created successfully');
     }
 
