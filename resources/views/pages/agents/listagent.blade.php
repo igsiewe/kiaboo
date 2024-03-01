@@ -56,13 +56,14 @@
                         <div class="card-group">
                             <div class="btn-actions-pane-right">
                                 <div role="group" class="btn-group-sm btn-group-lg">
+                                    @if(Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::SUPADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::ADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::DISTRIBUTEUR->value)
                                     <form action="#" method="POST" name="exportform" enctype="multipart/form-data">
                                         @csrf
                                         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                             <i class="fa fa-plus"></i>  Ajouter un agent
                                         </button>
                                     </form>
-
+                                    @endif
                                 </div>
                             </div>
                         </div>
