@@ -58,6 +58,7 @@ class Transaction extends Model
         'transaction_cancel_id',
         'description_cancel',
         'callback_response',
+        'terminaison',
 
     ];
 

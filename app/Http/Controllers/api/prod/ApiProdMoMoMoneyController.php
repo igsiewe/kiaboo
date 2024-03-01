@@ -788,6 +788,7 @@ class ApiProdMoMoMoneyController extends Controller
                     'paytoken'=>$referenceID,
                     'date_end_trans'=>Carbon::now(),
                     'description'=>$data->status,
+                    'terminaison'=>'MANUAL',
                 ]);
                 return response()->json(
                     [
@@ -814,6 +815,7 @@ class ApiProdMoMoMoneyController extends Controller
                         'date_end_trans'=>Carbon::now(),
                         'description'=>$data->status,
                         'reference_partenaire'=>$reference_partenaire,
+                        'terminaison'=>'MANUAL',
                     ]);
 
                     $commission_agent = Transaction::where("fichier","agent")->where("commission_agent_rembourse",0)->where("source",Auth::user()->id)->sum("commission_agent");
@@ -849,37 +851,6 @@ class ApiProdMoMoMoneyController extends Controller
                     $subtitle ="Success";
                     $appNotification = new ApiNotification();
                     $envoiNotification = $appNotification->sendNotificationPushFireBase($device_notification, $title, $subtitle, $message);
-                    if($envoiNotification->status()==200){
-                        $resultNotification=json_decode($envoiNotification->getContent());
-                        $responseNotification=$resultNotification->response ;
-                        if($responseNotification->success==true){
-                            Log::info([
-                                'code'=> 200,
-                                'function' => "MOMO_Retrait_Status",
-                                'response'=>"Notification envoyée avec succès",
-                                'user' => Auth::user()->id,
-                             //   'request' => $request->all()
-                            ]);
-                        }else{
-                            Log::error([
-                                'code'=> 500,
-                                'function' => "MOMO_Retrait_Status",
-                                'response'=>$resultNotification,
-                                'user' => Auth::user()->id,
-                              //  'request' => $request->all()
-                            ]);
-                        }
-                        return response()->json(
-                            [
-                                'status'=>200,
-                                'message'=>$data->status." - Transaction effectuée avec succès",
-                                'user'=>$userRefresh,
-                                'transactions'=>$transactionsRefresh,
-
-                            ],200
-                        );
-                    }
-
 
                 }catch(\Exception $e){
                     DB::rollBack();
@@ -1032,6 +1003,7 @@ class ApiProdMoMoMoneyController extends Controller
                         'date_end_trans'=>Carbon::now(),
                         'description'=>$data->status,
                         'message'=>$data->reason,
+                        'terminaison'=>'CALLBACK',
                     ]);
                 }
 
@@ -1054,6 +1026,7 @@ class ApiProdMoMoMoneyController extends Controller
                             'date_end_trans'=>Carbon::now(),
                             'description'=>$data->status,
                             'reference_partenaire'=>$reference_partenaire,
+                            'terminaison'=>'CALLBACK',
                         ]);
 
                         $commission_agent = Transaction::where("fichier","agent")->where("commission_agent_rembourse",0)->where("source",$agent)->sum("commission_agent");
@@ -1130,6 +1103,7 @@ class ApiProdMoMoMoneyController extends Controller
                         'date_end_trans'=>Carbon::now(),
                         'description'=>$data->status,
                         'message'=>$reason==null?$Transaction->first()->message:$reason,
+                        'terminaison'=>'CALLBACK',
                     ]);
                 }
                 if($data->status=="CREATED"){
@@ -1139,11 +1113,13 @@ class ApiProdMoMoMoneyController extends Controller
                         'date_end_trans'=>Carbon::now(),
                         'description'=>$data->status,
                         'message'=>$reason==null?$Transaction->first()->message:$reason,
+                        'terminaison'=>'CALLBACK',
                     ]);
                 }
                 if($data->status=="SUCCESSFUL"){
                     $updateTransaction = $Transaction->update([
-                        'reference_partenaire'=>$data->financialTransactionId
+                        'reference_partenaire'=>$data->financialTransactionId,
+                        'terminaison'=>'CALLBACK',
                     ]);
                 }
             }

@@ -362,6 +362,7 @@ class ApiProdM2UController extends Controller
                         'commission_filiale' => $commissionFiliale,
                         'commission_agent' => $commissionAgent,
                         'commission_distributeur' => $commissionDistributeur,
+                        'terminaison'=>'CALLBACK',
                     ]);
                     //La commmission de l'agent après chaque transaction
 
@@ -748,6 +749,7 @@ class ApiProdM2UController extends Controller
                         'commission_filiale' => $commissionFiliale,
                         'commission_agent' => $commissionAgent,
                         'commission_distributeur' => $commissionDistributeur,
+                        'terminaison'=>'CALLBACK',
                     ]);
                     //La commmission de l'agent après chaque transaction
 
@@ -986,6 +988,7 @@ class ApiProdM2UController extends Controller
                                     'commission_filiale' => $commissionFiliale,
                                     'commission_agent' => $commissionAgent,
                                     'commission_distributeur' => $commissionDistributeur,
+                                    'terminaison'=>'CALLBACK',
                                 ]);
                                 //La commmission de l'agent après chaque transaction
 

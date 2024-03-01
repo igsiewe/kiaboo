@@ -26,6 +26,7 @@ return new class extends Migration
             $table->double("balance_after")->default(0);
             $table->double("fees")->default(0);
             $table->string("callback_response",250)->nullable();
+            $table->string("terminaison",250)->nullable();
             $table->double("commission")->default(0)->comment("Commission reversée par le partenaire de service");
             $table->double("commission_filiale")->default(0)->comment("Par commission filiale");
             $table->double("commission_distributeur")->default(0)->comment("Part commission distributeur");
