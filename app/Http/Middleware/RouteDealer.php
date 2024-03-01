@@ -18,7 +18,7 @@ class RouteDealer
     public function handle(Request $request, Closure $next): Response
     {
         if (Auth::check()) {
-            if (Auth::user()->type_user_id != UserRolesEnum::DISTRIBUTEUR->value) {
+            if (Auth::user()->type_user_id == UserRolesEnum::DISTRIBUTEUR->value) {
                 return $next($request);
             } else {
                 return redirect()->back()->withErrors('Unauthorized User');
