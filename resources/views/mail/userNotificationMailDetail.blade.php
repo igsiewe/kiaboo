@@ -6,13 +6,12 @@
 <body>
 <h1>{{ config('app.name')  }}</h1>
 
-<p>Bonjour M./Mme {{ $data['name'] }}, </p>
-<p>Veuillez trouver ci-dessous vos paramètres de connexion au back-office de Kiaboo. </p>
-Nom d'utilisateur : {{ $data['login'] }} </p>
-Mot de passe :  {{ $data['password'] }} </p>
-<p>Merci de le changer dès votre première connexion</p>
-Cordialement</p>
-
+<br>Bonjour M./Mme {{ $data['name'] }}, </br>
+<br>Veuillez trouver ci-dessous vos paramètres de connexion au back-office de Kiaboo. </br><p><p/>
+Nom d'utilisateur : {{ $data['login'] }} <br/>
+Mot de passe :  {{ $data['password'] }} <br/><p><p/>
+<br>Merci de le changer dès votre première connexion</br>
+<br>Cordialement
 PS : Ceci est un mail automatique, merci de ne pas y répondre
 
 </body>
