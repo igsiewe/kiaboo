@@ -4,7 +4,7 @@
     <title>{{ config('app.name') }}</title>
 </head>
 <body>
-<h1>{{ $data['title'] }}</h1>
+<h1>{{ config('app.name')  }}</h1>
 
 <p>Bonjour M./Mme {{ $data['name'] }}, </p>
 <p>Veuillez trouver ci-dessous vos paramètres de connexion au back-office de Kiaboo. </p>
