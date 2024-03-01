@@ -36,7 +36,9 @@ Route::middleware(['auth','checkStatus'])->group(function (){
 
     Route::group(['prefix' => 'approvisionnement'], function () {
         Route::controller(WebApproAgentController::class)->group(function () {
-            Route::any('/agent/new', 'setTopUpAgent')->name("setTopUpAgent");
+            Route::middleware(['routedealer'])->group(function () {
+                Route::any('/agent/new', 'setTopUpAgent')->name("setTopUpAgent");
+            });
             Route::get('/agent/edit/{edit}', 'getDetailAgentTopUpd')->name("getDetailAgentTopUpd");
         });
         Route::controller(WebDistributeurController::class)->group(function () {
@@ -55,10 +57,12 @@ Route::middleware(['auth','checkStatus'])->group(function (){
         Route::controller(WebApproDistributeurController::class)->group(function () {
             Route::any('/distributor/list', 'getApproDistributor')->name("getApproDistributor");
             Route::any('/approvisionnement/search', 'listApprovisionnementFiltre')->name('listApprovisionnement.filtre');
-            Route::any('/approvisionnement/cancel/{id}', 'CancelTopUpDistributeur')->name("CancelTopUpDistributeur");
-            Route::any('/approvisionnement/validate/{id}', 'validateTopUpDistributeur')->name("validateTopUpDistributeur");
             Route::any('/approvisionnement/distributeur/init/', 'initApproDistributeur')->name("approDistributeurInit");
             Route::any('/distributeur/topup/{id}/{action}', 'getTopUpDetailDistributeur')->name('topupDistributeur.detail');
+            Route::middleware(['routebackoffice'])->group(function () {
+                Route::any('/approvisionnement/cancel/{id}', 'CancelTopUpDistributeur')->name("CancelTopUpDistributeur");
+                Route::any('/approvisionnement/validate/{id}', 'validateTopUpDistributeur')->name("validateTopUpDistributeur");
+            });
 
         });
     });

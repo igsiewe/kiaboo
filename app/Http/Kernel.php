@@ -69,5 +69,6 @@ class Kernel extends HttpKernel
         'checkStatus' => \App\Http\Middleware\CheckStatus::class, //verifier si l'utilisateur est actif
         'notauthorizefordealer' => \App\Http\Middleware\NotAuthorizeForDealer::class, //verifier si la route empruntee est bonne
         'routedealer' => \App\Http\Middleware\RouteDealer::class, //verifier si la route empruntee est bonne
+        'routebackoffice' => \App\Http\Middleware\RouteBackOffice::class, //verifier si la route empruntee est bonne
     ];
 }
