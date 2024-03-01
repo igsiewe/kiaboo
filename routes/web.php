@@ -125,12 +125,15 @@ Route::middleware(['auth','checkStatus'])->group(function (){
     Route::controller(WebAgentController::class)->group(function(){
         Route::get('agent/list', 'listAgent')->name('listAgent');
         Route::get('agent/edit/{id}', 'getUpdateUser')->name('getUpdateUser');
-        Route::any('agent/update/{id}', 'setUpdateAgent')->name('setUpdateAgent');
-        Route::any('agent/create', 'setNewAgent')->name('setNewAgent');
+        Route::middleware(['routedealer'])->group(function () {
+            Route::any('agent/update/{id}', 'setUpdateAgent')->name('setUpdateAgent');
+            Route::any('agent/create', 'setNewAgent')->name('setNewAgent');
+            Route::any('agent/debloque/{id}', 'debloqueAgent')->name('debloqueAgent');
+            Route::any('agent/delete/{id}', 'deleteAgent')->name('deleteAgent');
+        });
         Route::any('agent/bloque/{id}', 'bloqueAgent')->name('bloqueAgent');
-        Route::any('agent/debloque/{id}', 'debloqueAgent')->name('debloqueAgent');
         Route::get('/agent/distributeur/{idDistributeur}', 'getMesAgents')->name('getMesAgents');
-        Route::any('agent/delete/{id}', 'deleteAgent')->name('deleteAgent');
+
     });
 
 
