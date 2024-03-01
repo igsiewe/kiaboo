@@ -48,6 +48,7 @@ class TransactionExport implements FromCollection, WithHeadings, WithEvents, Wit
             'REFERENCE',
             'REFERENCE PARTENAIRE',
             'DATE TRANSACTION',
+            'DATE_FIN_TRANSACTION',
             'PARTENAIRE',
             'SERVICE',
             'DEBIT',
@@ -77,7 +78,7 @@ class TransactionExport implements FromCollection, WithHeadings, WithEvents, Wit
         return [
 
             AfterSheet::class    => function(AfterSheet $event) {
-                $event->sheet->getDelegate()->getStyle('A1:N1')
+                $event->sheet->getDelegate()->getStyle('A1:O1')
                     ->getFill()
                     ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
                     ->getStartColor()->setRGB('FFFFFF')
@@ -94,6 +95,7 @@ class TransactionExport implements FromCollection, WithHeadings, WithEvents, Wit
           $row->reference,
           $row->reference_partenaire,
           $row->date_transaction,
+          $row->date_end_trans,
           $row->service->partenaire->name_partenaire,
           $row->service->name_service,
           $row->debit,
