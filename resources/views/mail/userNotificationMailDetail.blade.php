@@ -11,8 +11,8 @@
 Nom d'utilisateur : {{ $data['login'] }} <br/>
 Mot de passe :  {{ $data['password'] }} <br/><p><p/>
 <br>Merci de le changer dès votre première connexion</br>
-<br>Cordialement
-PS : Ceci est un mail automatique, merci de ne pas y répondre
-<img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('/assets/images/logo.png'))) }}" class="logo" alt="kiaboo">
+Cordialement<br/>
+PS : Ceci est un mail automatique, merci de ne pas y répondre<br/><br/>
+<img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('/assets/images/logoMail.png'))) }}" class="logo" alt="kiaboo">
 </body>
 </html>
