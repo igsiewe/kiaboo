@@ -102,13 +102,15 @@ Route::middleware(['auth','checkStatus'])->group(function (){
         });
     });
     Route::group(['prefix' => 'utilisateur'], function () {
-        Route::controller(WebUtilisateurController::class)->group(function () {
+        Route::middleware(['notauthorizefordealer'])->group(function () {
+            Route::controller(WebUtilisateurController::class)->group(function () {
                 Route::any('/list', 'listUtilisateurs')->name("listUtilisateurs");
                 Route::any('/create', 'setNewUtilisateur')->name('setNewUtilisateur');
                 Route::any('/bloque/{id}', 'bloqueUtilisateur')->name('bloqueUtilisateur');
                 Route::any('/debloque/{id}', 'debloqueUtilisateur')->name('debloqueUtilisateur');
                 Route::any('/delete/{id}', 'deleteUtilisateur')->name('deleteUtilisateur');
                 Route::any('/edit/{id}', 'getUpdateUtilisateur')->name('getUpdateUtilisateur');
+            });
         });
     });
     Route::controller(WebServiceController::class)->group(function(){
