@@ -85,7 +85,9 @@
                                             <th scope="col">Date de mise à jour</th>
                                             <th scope="col">Dernière connexion</th>
                                             <th scope="col">Statut</th>
+                                            @if(Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::SUPADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::ADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::DISTRIBUTEUR->value)
                                             <th scope="col"></th>
+                                            @endif
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -117,7 +119,7 @@
                                                                 </form>
                                                             </td>
                                                         @endif
-
+                                                        @if(Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::SUPADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::ADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::DISTRIBUTEUR->value)
                                                         <td align="center" nowrap>
                                                             <a type="button" class="btn" style="border: none; color: red" data-bs-toggle="modal" data-bs-target="#staticBackdropEdit" title="Editer l'utilisateur" onclick="getUpdateUser({{$c->id}})" >
                                                                 <i class="fa fa-pen"></i>
@@ -126,6 +128,7 @@
                                                                 <i class="fa fa-trash"></i>
                                                             </a>
                                                         </td>
+                                                        @endif
                                                     </tr>
                                                 @endforeach
                                             @endif

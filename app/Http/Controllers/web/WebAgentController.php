@@ -67,7 +67,9 @@ class WebAgentController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator->errors()->first());
         }
-
+        if(Auth::user()->type_user_id != UserRolesEnum::SUPADMIN->value && Auth::user()->type_user_id == UserRolesEnum::ADMIN->value && Auth::user()->type_user_id == UserRolesEnum::DISTRIBUTEUR->value){
+            return redirect()->back()->withErrors('You cannot authorize to perform this operation');
+        }
         $datecni = $request->datecni;
         $now = Carbon::now();
         $checkDateCni = $now->gt($datecni);
@@ -120,7 +122,9 @@ class WebAgentController extends Controller
         if(Auth::user()->status == 0){
             return redirect()->back()->withErrors('You cannot authorize to perform this operation');
         }
-
+        if(Auth::user()->type_user_id != UserRolesEnum::SUPADMIN->value && Auth::user()->type_user_id == UserRolesEnum::ADMIN->value && Auth::user()->type_user_id == UserRolesEnum::DISTRIBUTEUR->value){
+            return redirect()->back()->withErrors('You cannot authorize to perform this operation');
+        }
         $updateAgent = User::find($id);
 
         if(Auth::user()->type_user_id == UserRolesEnum::DISTRIBUTEUR->value){
@@ -204,6 +208,10 @@ class WebAgentController extends Controller
     }
 
     public function bloqueAgent($id){
+
+        if(Auth::user()->type_user_id != UserRolesEnum::SUPADMIN->value && Auth::user()->type_user_id == UserRolesEnum::ADMIN->value && Auth::user()->type_user_id == UserRolesEnum::DISTRIBUTEUR->value){
+            return redirect()->back()->withErrors('You cannot authorize to perform this operation');
+        }
         $agent = User::find($id);
         $agent->status = 0;
         $agent->updated_at = now();
@@ -213,6 +221,10 @@ class WebAgentController extends Controller
     }
 
     public function deleteAgent($id){
+
+        if(Auth::user()->type_user_id != UserRolesEnum::SUPADMIN->value && Auth::user()->type_user_id == UserRolesEnum::ADMIN->value && Auth::user()->type_user_id == UserRolesEnum::DISTRIBUTEUR->value){
+            return redirect()->back()->withErrors('You cannot authorize to perform this operation');
+        }
         $agent = User::find($id);
 
         //On vérifie si son solde est à 0
