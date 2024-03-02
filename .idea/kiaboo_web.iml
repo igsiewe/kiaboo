@@ -141,6 +141,8 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/rap2hpoutre/fast-excel" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/intervention/image" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/mews/captcha" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/opcodesio/log-viewer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/opcodesio/mail-parser" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
