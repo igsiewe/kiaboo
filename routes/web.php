@@ -28,7 +28,11 @@ use Illuminate\Support\Facades\Log;
 |
 */
 
-Route::get('/', function () {return view('index');});
+Route::get('/', function () {
+    Log::channel('single');
+    return view('index');
+
+});
 Route::any('/', [WebAuthController::class, 'login'])->name('login');
 Route::get('/reload-captcha', [WebAuthController::class, 'reloadCaptcha']);
 Route::middleware(['auth','checkStatus'])->group(function (){
