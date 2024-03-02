@@ -152,6 +152,20 @@
 
             <li><a href="{{route("listUtilisateurs")}}"><i data-feather="users"></i>Utilisateurs</a></li>
             @endif
+            @if(Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::SUPADMIN->value)
+
+            <li class="sidebar-title">
+                Contrôle
+            </li>
+
+            <li>
+                <a href="index.html"><i data-feather="smile"></i>Journal <i class="fa fa-chevron-right dropdown-icon"></i></a>
+                <ul class="">
+                    <li><a href="{{route("log-view")}}"><i class="fa fa-handshake"></i>Log</a></li>
+                    <li><a href=""><i class="fa fa-user-cog"></i>Activités</a></li>
+                </ul>
+            </li>
+            @endif
         </ul>
     </div>
     @yield('content')
