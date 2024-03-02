@@ -18,7 +18,7 @@ class WebAuthController extends BaseController
         $request->validate([
             'login' => 'required|email|min:8|max:255',
             'password' => 'required|string|min:6|max:25',
-          //  'g-recaptcha-response' => 'required|captcha',
+            'captcha' => 'required|captcha'
         ]);
 
         $credentials = $request->only('login', 'password');
@@ -39,6 +39,11 @@ class WebAuthController extends BaseController
         }
 
         return redirect()->back()->withErrors('Login ou mot de passe incorrect.');
+    }
+
+    public function reloadCaptcha()
+    {
+        return response()->json(['captcha'=> captcha_img()]);
     }
 
     public function logout(Request $request)

@@ -29,6 +29,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {return view('index');});
 Route::any('/', [WebAuthController::class, 'login'])->name('login');
+Route::get('/reload-captcha', [WebAuthController::class, 'reloadCaptcha']);
 Route::middleware(['auth','checkStatus'])->group(function (){
 
     Route::any('/dashboard', [WebDashBoardController::class,'dashboard'])->name("dashboard");

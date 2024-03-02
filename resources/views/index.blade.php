@@ -93,15 +93,14 @@
                             </div>
 
                         @endif
-
-{{--                        <div class="col-md-12">--}}
-{{--                            <div class="position-relative form-group">--}}
-{{--                                <div class="input-group">--}}
-{{--                                    {!! NoCaptcha::renderJs("fr", false, 'onloadCallback') !!}--}}
-{{--                                    {!! NoCaptcha::display() !!}--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
+                        <div class="form-group mt-4 mb-4">
+                            <div class="captcha">
+                                <span>{!! captcha_img() !!}</span>
+                                <button type="button" class="btn btn-danger" class="reload" id="reload">
+                                    &#x21bb;
+                                </button>
+                            </div>
+                        </div>
                         <div class="d-grid">
                             <button type="submit" class="btn btn-danger m-b-xs">Se connecter</button>
                         </div>
@@ -126,11 +125,18 @@
 <script src="{{asset("assets/plugins/perfectscroll/perfect-scrollbar.min.js")}}"></script>
 <script src="{{asset("assets/js/main.min.js")}}"></script>
 
-{{--<script type="text/javascript">--}}
-{{--    var onloadCallback = function() {--}}
-{{--        alert("grecaptcha is ready!");--}}
-{{--    };--}}
-{{--</script>--}}
+<script type="text/javascript">
+    $('#reload').click(function () {
+        $.ajax({
+            type: 'GET',
+            url: 'reload-captcha',
+            success: function (data) {
+                $(".captcha span").html(data.captcha);
+            }
+        });
+    });
+</script>
+
 </body>
 
 </html>
