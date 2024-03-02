@@ -159,10 +159,10 @@
             </li>
 
             <li>
-                <a href="index.html"><i data-feather="smile"></i>Journal <i class="fa fa-chevron-right dropdown-icon"></i></a>
+                <a href="index.html"><i data-feather="globe"></i>Journal <i class="fa fa-chevron-right dropdown-icon"></i></a>
                 <ul class="">
-                    <li><a href="{{route("log-viewer.index")}}"><i class="fa fa-handshake"></i>Log</a></li>
-                    <li><a href=""><i class="fa fa-user-cog"></i>Activités</a></li>
+                    <li><a href="{{route("log-viewer.index")}}"><i class="fa fa-folder"></i>Log</a></li>
+                    <li><a href=""><i class="fa fa-calendar"></i>Activités</a></li>
                 </ul>
             </li>
             @endif
