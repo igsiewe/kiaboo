@@ -45,20 +45,9 @@ class ApiNotification extends Controller
             curl_close($curl);
 
             if ($httpcode != 200) {
-                Log::error([
-                    "success"=>false,
-                    "fonction"=>"sendNotificationPushFireBaseS",
-                    "response"=>$response->body(),
-                    "httpcode"=>$httpcode]);
-
                 return response()->json([
                     "response"=>$response],400);
             }
-
-             Log::alert([
-            "success"=>true,"fonction"=>"sendNotificationPushFireBaseS",
-            "response"=>$response->body(),
-            "httpcode"=>$httpcode]);
             return response()->json([
                 "response"=>$response],200);
     }
@@ -83,19 +72,10 @@ class ApiNotification extends Controller
         if($response->status()==200){
             $data = json_decode($response->body());
             if($data->success==1){
-                Log::alert([
-                    "success"=>true,
-                    "fonction"=>"sendNotificationPushFireBase",
-                    "response"=>$response->body(),]);
                 return response()->json([
                     "success"=>true,
                     "response"=>$data],200);
             }else{
-                Log::error([
-                    "success"=>false,
-                    "fonction"=>"sendNotificationPushFireBase",
-                    "response"=>$response->body(),]);
-
                 return response()->json([
                     "success"=>false,
                     "response"=>$data],400);
@@ -106,7 +86,6 @@ class ApiNotification extends Controller
                 "success"=>false,
                 "fonction"=>"sendNotificationPushFireBase",
                 "response"=>$response->body(),]);
-
             return response()->json([
                 "success"=>false,
                 "response"=>$response->body()],400);
