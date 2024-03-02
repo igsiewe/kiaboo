@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class ApiAuthController extends BaseController
@@ -104,10 +105,17 @@ class ApiAuthController extends BaseController
 
             $user->last_connexion = Carbon::now();
             $user->save();
-
+            Log::info([
+                'user_id'=>Auth::user()->id,
+                'name'=>Auth::user()->name." ".Auth::user()->surname,
+                'Desciption'=>'Connexion'
+            ]);
             return $this->respondWithToken($access_token, $user, $partenaires, $transactions);
         }
-
+        Log::alert([
+            'Login'=>$request->login,
+            'Desciption'=>'Connexion->echec'
+        ]);
         return response()->json([
             'message' => 'Invalid login details',
         ], 401);

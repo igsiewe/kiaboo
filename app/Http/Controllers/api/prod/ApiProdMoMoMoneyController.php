@@ -114,10 +114,10 @@ class ApiProdMoMoMoneyController extends Controller
         }else{
             Log::error([
                 'code'=> $response->status(),
-                'function' => "MOMO_CustomerName",
                 'response'=>$response->body(),
                 'user' => Auth::user()->id,
-                'phone' => $customerPhone,
+                'customerPhone' => $customerPhone,
+                'function' => "MOMO_CustomerName",
             ]);
 
             return response()->json(
@@ -244,7 +244,19 @@ class ApiProdMoMoMoneyController extends Controller
             ]);
 
         Log::info([
-            "responseMoMoDepot"=>json_decode($response->status()),
+            "Service"=>ServiceEnum::DEPOT_MOMO->name,
+            "requete"=>[
+                "amount" => $montant,
+                "currency" => "XAF",
+                "externalId" => $idTransaction,
+                "payee" => [
+                    "partyIdType" => "MSISDN",
+                    "partyId" => $customerPhone,
+                ],
+                "payerMessage" => "Agent :".Auth::user()->telephone,
+                "payeeNote" => "Agent : ".Auth::user()->telephone
+            ],
+            "reponse"=>json_decode($response->status()),
         ]);
         if($response->status()==202){
 
@@ -672,9 +684,23 @@ class ApiProdMoMoMoneyController extends Controller
                 "payerMessage" => "Transaction initiée par lagent N".Auth::user()->id." le ".Carbon::now()." vers le client ".$request->customerPhone,
             ]);
 
-        Log::info([
-            "responseMoMoRetrait"=>$response->status(),
-        ]);
+
+            Log::info([
+                "Service"=>ServiceEnum::RETRAIT_MOMO->name,
+                "requete"=>[
+                    "payeeNote" => "Transaction initiée par lagent N".Auth::user()->id." le ".Carbon::now()." vers le client ".$request->customerPhone,
+                    "externalId" => $idTransaction,
+                    "amount" => $request->amount,
+                    "currency" => "XAF",
+                    "payer" => [
+                        "partyIdType" => "MSISDN",
+                        "partyId" => $customerPhone
+                    ],
+                    "payerMessage" => "Transaction initiée par lagent N".Auth::user()->id." le ".Carbon::now()." vers le client ".$request->customerPhone,
+                ],
+                "reponse"=>json_decode($response->status()),
+            ]);
+
 
         if($response->status()==202){
             //Le client a été notifié. Donc on reste en attente de sa confirmation (Saisie de son code secret)
