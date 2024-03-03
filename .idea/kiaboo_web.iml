@@ -143,9 +143,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/mews/captcha" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/opcodesio/log-viewer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/opcodesio/mail-parser" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/pragmarx/google2fa" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/pragmarx/google2fa-laravel" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/pragmarx/google2fa-qrcode" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
