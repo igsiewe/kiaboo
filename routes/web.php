@@ -37,7 +37,7 @@ Auth::routes();
 
 
 
-Route::any('/login', [WebAuthController::class, 'login'])->name('login');
+Route::any('/login', [WebAuthController::class, 'login']);
 Route::get('/reload-captcha', [WebAuthController::class, 'reloadCaptcha']);
 
 Route::middleware(['2fa'])->group(function(){
