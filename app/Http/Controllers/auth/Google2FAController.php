@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\auth;
 
 use App\Http\Controllers\Controller;
-use App\User;
+use App\Models\User;
 use Google2FA;
 use Illuminate\Foundation\Auth\RedirectsUsers;
 use Illuminate\Http\Request;
