@@ -49,7 +49,7 @@ Route::middleware(['2fa'])->group(function(){
 Route::middleware(['auth','checkStatus'])->group(function (){
 
     Route::any('/dashboard', [WebDashBoardController::class,'dashboard'])->name("dashboard");
-    Route::any('/logout', [WebAuthController::class, 'logout'])->name('logout');
+    Route::any('/logout', [WebAuthController::class, 'logout'])->name('fermer');
 
     Route::group(['prefix' => 'approvisionnement'], function () {
         Route::controller(WebApproAgentController::class)->group(function () {
