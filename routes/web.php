@@ -32,10 +32,6 @@ Route::get('/', function () {
     return view('index');
 });
 
-Auth::routes();
-
-
-
 
 Route::any('/home', [WebAuthController::class, 'home'])->name('home');
 Route::get('/reload-captcha', [WebAuthController::class, 'reloadCaptcha']);
