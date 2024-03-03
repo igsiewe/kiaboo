@@ -23,10 +23,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Schema::defaultStringLength(191);
-        LogViewer::auth(function ($request){
-            return $request->user() && in_array($request->user()->type_user_id, [
-                UserRolesEnum::SUPADMIN->value, UserRolesEnum::ADMIN->value
-                ]);
-        });
+//        LogViewer::auth(function ($request){
+//            return $request->user() && in_array($request->user()->type_user_id, [
+//                UserRolesEnum::SUPADMIN->value, UserRolesEnum::ADMIN->value
+//                ]);
+//        });
     }
 }
