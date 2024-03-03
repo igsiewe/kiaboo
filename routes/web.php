@@ -32,14 +32,15 @@ Route::get('/', function () {
     return view('index');
 });
 
+Auth::routes();
 
-Route::any('/home', [WebAuthController::class, 'home'])->name('home');
+Route::any('/home', [WebAuthController::class, 'home'])->name('welcome');
 Route::get('/reload-captcha', [WebAuthController::class, 'reloadCaptcha']);
 
 Route::middleware(['2fa'])->group(function(){
-    Route::any('/home', [WebAuthController::class, 'login'])->name('home');
+    Route::any('/home', [WebAuthController::class, 'login'])->name('welcome');
     Route::post('/2fa', function(){
-        return redirect (route('home'));
+        return redirect (route('welcome'));
     })->name('2fa');
 });
 Route::middleware(['auth','checkStatus'])->group(function (){
