@@ -245,6 +245,7 @@ class ApiProdMoMoMoneyController extends Controller
 
         Log::info([
             "Service"=>ServiceEnum::DEPOT_MOMO->name,
+            "url"=>"https://proxy.momoapi.mtn.com/disbursement/v1_0/transfer",
             "requete"=>[
                 "amount" => $montant,
                 "currency" => "XAF",
@@ -687,6 +688,7 @@ class ApiProdMoMoMoneyController extends Controller
 
             Log::info([
                 "Service"=>ServiceEnum::RETRAIT_MOMO->name,
+                "url"=>"https://proxy.momoapi.mtn.com/collection/v1_0/requesttowithdraw",
                 "requete"=>[
                     "payeeNote" => "Transaction initiée par lagent N".Auth::user()->id." le ".Carbon::now()." vers le client ".$request->customerPhone,
                     "externalId" => $idTransaction,
