@@ -79,6 +79,8 @@ class WebDashBoardController extends Controller
                     ->orderBy('volume', 'desc')
                     ->limit(5)
                     ->get();
+
+                dd($transAgent->get());
                 $revenue = $transAgent->get()->sum("commission_distributeur");
             }
 
