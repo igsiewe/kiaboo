@@ -71,8 +71,7 @@ class WebDashBoardController extends Controller
               //  $revenue = $query->get()->sum("commission_distributeur");
             }
 
-            $bestAgents =$transAgent->selectRaw('kb_users.id, kb_users.login, kb_users.name, kb_users.surname, kb_distributeurs.name_distributeur, sum(kb_transactions.debit+kb_transactions.credit) as volume, sum(kb_transactions.commission_agent) as commission')
-
+            $bestAgents =$transAgent->selectRaw('kb_users.id, kb_users.login, kb_users.name, kb_users.surname, kb_distributeurs.name_distributeur, sum(kb_transactions.debit+kb_transactions.credit) as volume, sum(kb_transactions.commission) as commission')
                 ->groupBy('users.name', 'users.surname','users.login','users.id')
                 ->orderBy('volume', 'desc')
                 ->limit(5)
