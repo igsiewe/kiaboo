@@ -25,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
         LogViewer::auth(function ($request){
             return $request->user() && in_array($request->user()->type_user_id, [
-                UserRolesEnum::SUPADMIN->value, UserRolesEnum::ADMIN->value, UserRolesEnum::DISTRIBUTEUR->value
+                UserRolesEnum::SUPADMIN->value, UserRolesEnum::ADMIN->value
                 ]);
         });
     }
