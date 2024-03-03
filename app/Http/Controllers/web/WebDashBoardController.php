@@ -80,8 +80,9 @@ class WebDashBoardController extends Controller
                     ->limit(5)
                     ->get();
 
-                dd($transAgent->get());
-                $revenue = $transAgent->get()->sum("commission_distributeur");
+
+                $revenue = $transAgent->sum("commission_distributeur");
+                dd($transAgent->get(), $revenue);
             }
 
 
