@@ -37,13 +37,13 @@ Auth::routes();
 
 
 
-Route::any('/login', [WebAuthController::class, 'login']);
+Route::any('/home', [WebAuthController::class, 'home'])->name('home');
 Route::get('/reload-captcha', [WebAuthController::class, 'reloadCaptcha']);
 
 Route::middleware(['2fa'])->group(function(){
-    Route::any('/login', [WebAuthController::class, 'login'])->name('login');
+    Route::any('/home', [WebAuthController::class, 'login'])->name('home');
     Route::post('/2fa', function(){
-        return redirect (route('login'));
+        return redirect (route('home'));
     })->name('2fa');
 });
 Route::middleware(['auth','checkStatus'])->group(function (){
