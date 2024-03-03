@@ -161,3 +161,7 @@ Route::middleware(['auth','checkStatus'])->group(function (){
 
 
 }); //middleware for auth and checkStatus
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
