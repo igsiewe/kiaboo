@@ -29,14 +29,23 @@ use Illuminate\Support\Facades\Log;
 */
 
 Route::get('/', function () {
-    Log::channel('single');
     return view('index');
-
 });
 
+Auth::routes();
 
-Route::any('/', [WebAuthController::class, 'login'])->name('login');
+
+
+
+Route::any('/login', [WebAuthController::class, 'login'])->name('login');
 Route::get('/reload-captcha', [WebAuthController::class, 'reloadCaptcha']);
+
+Route::middleware(['2fa'])->group(function(){
+    Route::any('/login', [WebAuthController::class, 'login'])->name('login');
+    Route::post('/2fa', function(){
+        return redirect (route('login'));
+    })->name('2fa');
+});
 Route::middleware(['auth','checkStatus'])->group(function (){
 
     Route::any('/dashboard', [WebDashBoardController::class,'dashboard'])->name("dashboard");

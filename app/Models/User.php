@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -25,6 +26,7 @@ class User extends Authenticatable
         'email',
         'login',
         'password',
+        'google2fa_secret',
         'codepin',
         'type_user_id',
         'countrie_id',
@@ -34,7 +36,6 @@ class User extends Authenticatable
         'last_amount',
         'last_transaction_id',
         'date_last_transaction',
-    //    'sous_distributeur_id',
         'distributeur_id',
         'optin',
         'codeparrainage',
@@ -93,6 +94,14 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    protected function google2faSecret():Attribute
+    {
+       return new Attribute(
+           get: fn ($value) => decrypt($value),
+           set: fn ($value) => encrypt($value),
+       );
+    }
 
     public function tokenExpired()
     {
