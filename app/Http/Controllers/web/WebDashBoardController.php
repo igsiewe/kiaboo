@@ -53,7 +53,7 @@ class WebDashBoardController extends Controller
 
             $volumeofTransaction = $query->sum("debit")+$query->sum("credit");
 
-            $revenue = $query->get()->sum("commission_distributeur");
+            $revenue = $query->get()->sum("commission");
             $lastTransactions = $query->orderBy('transactions.date_transaction', 'desc')->limit(5)->get();
 
             $transAgent = DB::table("transactions")
@@ -67,6 +67,7 @@ class WebDashBoardController extends Controller
 
             if(Auth::user()->type_user_id==UserRolesEnum::DISTRIBUTEUR->value){
                 $transAgent = $transAgent ->where("users.distributeur_id", Auth::user()->distributeur_id);
+                $revenue = $query->get()->sum("commission_distributeur");
             }
 
             $bestAgents =$transAgent->selectRaw('kb_users.id, kb_users.login, kb_users.name, kb_users.surname, kb_distributeurs.name_distributeur, sum(kb_transactions.debit+kb_transactions.credit) as volume, sum(kb_transactions.commission_agent) as commission')
@@ -98,32 +99,6 @@ class WebDashBoardController extends Controller
 
             }
 
-
-
- //           dd($envoi, $retrait);
-
-
-//            $envoi = collect();
-//            $retrait = collect();
-//            $j= count($resultGraphe);
-//            for($i = 1;$i <= 12; $i++)
-//            {
-//                $data  = collect($resultGraphe)->where('mois', $i)->all();
-//                $sumretrait=0;
-//                $sumenvoi=0;
-//                if ($data == null || $data==[])
-//                {
-//                    $envoi->add(0);
-//                    $retrait->add(0);
-//                }
-//                else
-//                {
-//                   $envoi->add($data[0]->envoi);
-//                   $retrait->add($data[0]->retrait);
-//
-//                }
-//
-//            }
         }
 
         return view('pages.dashboard.dashboard', compact('volumeofTransaction','currentBalance','revenue','agent','money','lastTransactions','bestAgents','envoi','retrait'));
