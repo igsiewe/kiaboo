@@ -50,7 +50,8 @@
 
                     </div>
 
-                    <form method="post" action="{{route('login')}}" id="formConnexion" name="formConnexion">
+
+                    <form method="POST" action="{{ route('2fa.verify') }}">
                         @csrf
                         <div class="mb-3">
                             <div class="form-floating">
@@ -94,26 +95,15 @@
                             </div>
 
                         @endif
-                        <div class="form-group mt-4 mb-4">
-                            <div class="captcha">
-                                <span>{!! captcha_img() !!}</span>
-                                <button type="button" class="btn btn-danger" class="reload" id="reload">
-                                    &#x21bb;
-                                </button>
-                            </div>
-                        </div>
-                        <div class="form-group mb-4">
-                            <input id="captcha" type="text" class="form-control" placeholder="Enter Captcha" name="captcha">
-                        </div>
+
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-danger m-b-xs">Se connecter</button>
+
+                            <button type="submit" class="btn btn-danger m-b-xs">
+                                {{ __('Verify') }}
+                            </button>
                         </div>
                     </form>
-                    <div class="authent-reg">
-                        <a href="register.html">Mot de passe oublié ?</a></p>
-                    </div>
-                    <hr/>
-                    <div class="text-center opacity-8 mt-3">Copyright © Kiaboo 2023</div>
+
                 </div>
             </div>
         </div>
