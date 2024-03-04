@@ -37,8 +37,19 @@ class WebAuthController extends BaseController
 
             return redirect()->route('2fa')->with('one_time_password', $one_time_password);
         }
-        $register = new RegisterController();
-        return $register->register($request->all());
+        $google2fa = app('pragmarx.google2fa');
+        $registration_data = $request->all();
+
+        $registration_data["google2fa_secret"] = $google2fa->generateSecretKey();
+        $request->session()->put('secret', $registration_data["google2fa_secret"]);
+
+        $QR_Image = $google2fa->getQRCodeInline(
+            config('app.name'),
+            $registration_data['email'],
+            $registration_data['google2fa_secret']
+        );
+
+        return view('google2fa.register', ['QR_Image' => $QR_Image, 'secret' => $registration_data["google2fa_secret"]]);
       //  return redirect()->intended($this->redirectPath());
     }
 
