@@ -41,6 +41,7 @@ class WebAuthController extends BaseController
 
     public function redirectPath()
     {
+        dd(property_exists($this, 'redirectPath'));
         if (property_exists($this, 'redirectPath'))
         {
             dd("aaaaaaa");
