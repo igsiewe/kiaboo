@@ -38,7 +38,7 @@
 </div>
 <div class="container">
     <div class="row justify-content-md-center">
-        <div class="col-md-12 col-lg-6">
+        <div class="col-md-12 col-lg-12">
             <div class="card login-box-container">
                 <div class="card-body">
                     <div class="authent-logo">
@@ -47,7 +47,7 @@
                     <div class="authent-text">
 
                         <p><div class="card-header">{{ __('Two Factor Authentication') }}</div></p>
-
+                       <p>Saisissez le code généré par votre application Authenticator.</p>
                     </div>
 
 
@@ -55,8 +55,8 @@
                         @csrf
                         <div class="mb-3">
                             <div class="form-floating">
-                                <input id="one_time_password" type="text" placeholder="Code OTP" class="form-control @error('one_time_password') is-invalid @enderror" name="one_time_password" required autofocus>
-                                <label for="floatingPassword">Entrez le code OTP généré par votre Google Authenticator</label>
+                                <input id="one_time_password" type="text" class="form-control @error('one_time_password') is-invalid @enderror" name="one_time_password" required autofocus>
+                                <label for="floatingPassword">Code OTP</label>
                             </div>
                         </div>
 
