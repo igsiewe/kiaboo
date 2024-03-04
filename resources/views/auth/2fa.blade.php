@@ -65,18 +65,17 @@
 
                                                 <div class="col-md-6">
                                                     <input id="one_time_password" type="text" class="form-control @error('one_time_password') is-invalid @enderror" name="one_time_password" required autofocus>
-
                                                     @error('one_time_password')
                                                     <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
                                                     @enderror
                                                 </div>
                                             </div>
 
                                             <div class="form-group row mb-0">
-                                                <div class="col-md-8 offset-md-4">
-                                                    <button type="submit" class="btn btn-primary">
+                                                <div class="d-grid">
+                                                    <button type="submit" class="btn btn-danger m-b-xs">
                                                         {{ __('Verify') }}
                                                     </button>
                                                 </div>
@@ -88,8 +87,6 @@
                         </div>
                     </div>
 
-                    <hr/>
-                    <div class="text-center opacity-8 mt-3">Copyright © Kiaboo 2023</div>
                 </div>
             </div>
         </div>
