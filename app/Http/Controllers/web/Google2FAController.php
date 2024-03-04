@@ -77,6 +77,7 @@ class Google2FAController extends Controller
         $user->google2fa_secret = $secret;
         $user->save();
         return view('auth.google2fa.activate');
+       // return view('index');
     }
 
     /**
