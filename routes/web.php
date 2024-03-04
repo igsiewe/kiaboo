@@ -34,7 +34,7 @@ Route::get('/', function () {
     return view('index');
 });
 //Auth::routes();
-Route::any('/login', [WebAuthController::class, 'login'])->name('login');
+//Route::any('/login', [WebAuthController::class, 'login'])->name('login');
 Route::get('/reload-captcha', [WebAuthController::class, 'reloadCaptcha']);
 
 
@@ -56,7 +56,7 @@ Route::middleware(['auth','checkStatus'])->group(function (){
     })->name('home');
 
     Route::any('/dashboard', [WebDashBoardController::class,'dashboard'])->name("dashboard");
-    Route::any('/logout', [WebAuthController::class, 'logout'])->name('fermer');
+  //  Route::any('/logout', [WebAuthController::class, 'logout'])->name('fermer');
 
     Route::group(['prefix' => 'approvisionnement'], function () {
         Route::controller(WebApproAgentController::class)->group(function () {
