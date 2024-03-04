@@ -43,13 +43,13 @@ Route::middleware(['2fa'])->group(function(){
 });
 Route::get('/reload-captcha', [WebAuthController::class, 'reloadCaptcha']);
 Route::get('/complete-registration',[RegisterController::class, 'complete.Registration'])->name('complete.registration');
-
+Route::post('/regsiters', function(){
+    return view("google2fa.registers");
+})->name('registers');
 Route::middleware(['auth','checkStatus'])->group(function (){
    // Route::any('/register', [WebAuthController::class, 'registers'])->name('registers');
 
-    Route::post('/regsiters', function(){
-        return view("google2fa.registers");
-    })->name('registers');
+
 
     Route::any('/dashboard', [WebDashBoardController::class,'dashboard'])->name("dashboard");
     Route::any('/logout', [WebAuthController::class, 'logout'])->name('fermer');
