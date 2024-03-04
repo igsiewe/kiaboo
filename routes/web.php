@@ -33,10 +33,10 @@ use Illuminate\Support\Facades\Log;
 Route::get('/', function () {
     return view('index');
 });
-Auth::routes();
+//Auth::routes();
 Route::get('/login', [WebAuthController::class, 'login'])->name('login');
 Route::middleware(['2fa'])->group(function(){
-    Route::get('/login', [WebAuthController::class, 'login'])->name('login');
+   // Route::get('/login', [WebAuthController::class, 'login'])->name('login');
     Route::post('/2fa', function(){
         return redirect (route('login'));
     })->name('2fa');
