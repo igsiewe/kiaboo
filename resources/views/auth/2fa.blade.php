@@ -105,16 +105,6 @@
 <script src="{{asset("assets/plugins/perfectscroll/perfect-scrollbar.min.js")}}"></script>
 <script src="{{asset("assets/js/main.min.js")}}"></script>
 
-<script type="text/javascript">
-    $('#reload').click(function () {
-        $.ajax({
-            type: 'GET',
-            url: 'reload-captcha',
-            success: function (data) {
-                $(".captcha span").html(data.captcha);
-            }
-        });
-    });
 </script>
 
 </body>
