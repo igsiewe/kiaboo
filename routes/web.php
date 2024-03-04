@@ -28,7 +28,7 @@ use Illuminate\Support\Facades\Log;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-Auth::routes();
+//Auth::routes();
 
 Route::get('/', function () {
     return view('index');
