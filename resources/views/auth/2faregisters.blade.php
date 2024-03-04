@@ -45,9 +45,8 @@
                         <img src="{{asset("assets/images/logo%402x.png")}}" alt="">
                     </div>
 
-                    <div class="container">
                         <div class="row">
-                            <div class="col-md-12 mt-4">
+                            <div class="mb-3">
                                 <div class="card card-default">
                                     <h4 class="card-header text-center mt-4">Set up Google Authenticator</h4>
                                     <div class="card-body" style="text-align: center;">
@@ -63,7 +62,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
 
                 </div>
             </div>
