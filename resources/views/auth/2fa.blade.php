@@ -40,18 +40,11 @@
     <div class="row justify-content-md-center">
         <div class="col-md-12 col-lg-6">
             <div class="card login-box-container">
-                <div class="card-body">
-                    <div class="authent-logo">
-                        <img src="{{asset("assets/images/logo%402x.png")}}" alt="">
-                    </div>
-                    <div class="authent-text">
-                        <p>KIABOO</p>
 
-                    </div>
                     <div class="card-body">
                         <div class="row justify-content-center">
                             <div class="col-md-12">
-                                <div class="container">
+                                <div class="card">
                                     <div class="card-header">{{ __('Two Factor Authentication') }}</div>
 
                                     <div class="card-body">
@@ -86,7 +79,6 @@
                         </div>
                     </div>
 
-                </div>
             </div>
         </div>
     </div>
