@@ -13,7 +13,7 @@ class TwoFactorController extends Controller
 {
     public function show(Request $request)
     {
-        return view('google2fa.registers');
+        return view('auth.2fa');
     }
 
     public function verify(Request $request)
