@@ -52,7 +52,7 @@ class WebAuthController extends BaseController
 
     protected function authenticated(Request $request, $user)
     {
-        if (Google2FA::isActivated()) {
+        if ((new \PragmaRX\Google2FALaravel\Google2FA)->isActivated()) {
             Auth::logout();
 
             $request->session()->put('user_id', $user->id);
