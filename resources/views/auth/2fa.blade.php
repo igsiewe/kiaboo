@@ -53,7 +53,12 @@
 
                     <form method="POST" action="{{ route('2fa.verify') }}">
                         @csrf
-
+                        <div class="mb-3">
+                            <div class="form-floating">
+                                <input id="one_time_password" type="text" placeholder="Code OTP" class="form-control @error('one_time_password') is-invalid @enderror" name="one_time_password" required autofocus>
+                                <label for="floatingPassword">Entrez le code OTP généré par votre Google Authenticator</label>
+                            </div>
+                        </div>
 
                         @error('login')
                         <div class="col-md-12">
@@ -64,12 +69,7 @@
                             </div>
                         </div>
                         @enderror
-                        <div class="mb-3">
-                            <div class="form-floating">
-                                <input id="one_time_password" type="text" placeholder="Code OTP" class="form-control @error('one_time_password') is-invalid @enderror" name="one_time_password" required autofocus>
-                                <label for="floatingPassword">Password</label>
-                            </div>
-                        </div>
+
                         @error('one_time_password')
                         <div class="col-md-12">
                             <div class="position-relative">
