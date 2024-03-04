@@ -13,10 +13,8 @@ use App\Http\Controllers\web\WebReconciliationController;
 use App\Http\Controllers\web\WebServiceController;
 use App\Http\Controllers\web\WebTransactionsController;
 use App\Http\Controllers\web\WebUtilisateurController;
-use App\Http\Enums\UserRolesEnum;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Log;
 
 /*
 |--------------------------------------------------------------------------
