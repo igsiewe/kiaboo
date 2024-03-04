@@ -33,17 +33,29 @@ Route::get('/', function () {
 });
 //Auth::routes();
 Route::any('/login', [WebAuthController::class, 'login'])->name('login');
-Route::middleware(['2fa'])->group(function(){
-    Route::any('/login', [WebAuthController::class, 'login'])->name('login');
-    Route::post('/2fa', function(){
-        return redirect (route('login'));
-    })->name('2fa');
-});
+//Route::middleware(['2fa'])->group(function(){
+//    Route::any('/login', [WebAuthController::class, 'login'])->name('login');
+//    Route::post('/2fa', function(){
+//        return redirect (route('login'));
+//    })->name('2fa');
+//});
 Route::get('/reload-captcha', [WebAuthController::class, 'reloadCaptcha']);
 Route::get('/complete-registration',[RegisterController::class, 'complete.Registration'])->name('complete.registration');
 
 Route::middleware(['auth','checkStatus'])->group(function (){
 
+
+    Route::middleware(['2fa'])->group(function(){
+
+        Route::post('/google2fa', function(){
+            return view("google2fa.register");
+        })->name('registers');
+
+        Route::any('/login', [WebAuthController::class, 'login'])->name('login');
+        Route::post('/2fa', function(){
+            return redirect (route('login'));
+        })->name('2fa');
+    });
     Route::any('/dashboard', [WebDashBoardController::class,'dashboard'])->name("dashboard");
     Route::any('/logout', [WebAuthController::class, 'logout'])->name('fermer');
 
