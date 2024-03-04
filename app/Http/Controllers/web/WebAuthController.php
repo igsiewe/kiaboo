@@ -13,9 +13,7 @@ use PragmaRX\Google2FA\Google2FA;
 
 class WebAuthController extends BaseController
 {
-    public function registers(){
-        return view("google2fa.registers");
-    }
+
     public function authenticated(Request $request, $user)
     {
        // dd($user->uses_two_factor_auth);
@@ -35,9 +33,7 @@ class WebAuthController extends BaseController
 
             return redirect()->route('2fa')->with('one_time_password', $one_time_password);
         }
-        return redirect()->intended('register');
-
-      //  return view("google2fa.registers");
+        return redirect()->route('register');
      //   return redirect()->intended($this->redirectPath());
     }
 
