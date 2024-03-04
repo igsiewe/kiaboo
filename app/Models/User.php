@@ -95,13 +95,23 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    protected function google2faSecret():Attribute
+    public function setGoogle2faSecretAttribute($value)
     {
-       return new Attribute(
-           get: fn ($value) => decrypt($value),
-           set: fn ($value) => encrypt($value),
-       );
+        return ecrypt($value);
     }
+
+    public function getGoogle2faSecretAttribute($value)
+    {
+        return decrypt($value);
+    }
+
+//    protected function google2faSecret():Attribute
+//    {
+//       return new Attribute(
+//           get: fn ($value) => decrypt($value),
+//           set: fn ($value) => encrypt($value),
+//       );
+//    }
 
     public function tokenExpired()
     {
