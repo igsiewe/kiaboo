@@ -58,7 +58,7 @@
                             <label for="one_time_password" class="col-md-4 col-form-label text-md-right">{{ __('One Time Password') }}</label>
 
                             <div class="col-md-6">
-                                <input id="one_time_password" type="text" class="form-control @error('one_time_password') is-invalid @enderror" name="one_time_password" required autofocus>
+                                <input id="one_time_password" type="text" placeholder="Code OTP" class="form-control @error('one_time_password') is-invalid @enderror" name="one_time_password" required autofocus>
 
                                 @error('one_time_password')
                                 <span class="invalid-feedback" role="alert">
@@ -68,12 +68,6 @@
                             </div>
                         </div>
 
-                        <div class="mb-3">
-                            <div class="form-floating">
-                                <input type="email" class="form-control" id="login" name="login" placeholder="name@example.com" required value="{{ (Cookie::get('email') !== null) ? Cookie::get('login') : old('login') }}" autofocus>
-                                <label for="floatingInput">Email address</label>
-                            </div>
-                        </div>
                         @error('login')
                         <div class="col-md-12">
                             <div class="position-relative">
