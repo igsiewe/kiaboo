@@ -20,7 +20,7 @@ class WebAuthController extends BaseController
 
     public function authenticated(Request $request, $user)
     {
-        dd($request->all());
+
         if ($user->uses_two_factor_auth) {
             $google2fa = new Google2FA();
 
@@ -38,7 +38,7 @@ class WebAuthController extends BaseController
             return redirect()->route('2fa')->with('one_time_password', $one_time_password);
         }
         $register = new RegisterController();
-        return $register->register($request);
+        return $register->register($request->all());
       //  return redirect()->intended($this->redirectPath());
     }
 
