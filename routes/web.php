@@ -1,8 +1,6 @@
 <?php
 
 use App\Http\Controllers\Auth\Google2FAController;
-use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\Auth\TwoFactorController;
 use App\Http\Controllers\web\WebAgentController;
 use App\Http\Controllers\web\WebApproAgentController;
 use App\Http\Controllers\web\WebApproDistributeurController;
