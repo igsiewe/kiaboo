@@ -32,7 +32,7 @@ Route::get('/', function () {
     return view('index');
 });
 //Auth::routes();
-Route::get('/login', [WebAuthController::class, 'login'])->name('login');
+Route::any('/login', [WebAuthController::class, 'login'])->name('login');
 //Route::middleware(['2fa'])->group(function(){
 //  //  Route::get('/login', [WebAuthController::class, 'login'])->name('login');
 //    Route::post('/2fa', function(){
