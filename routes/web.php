@@ -34,7 +34,7 @@ Route::get('/', function () {
     return view('index');
 });
 
-Route::any('/login', [WebAuthController::class, 'login'])->name('login');
+Route::any('/login', [WebAuthController::class, 'login'])->name('logins');
 //Route::middleware(['2fa'])->group(function(){
 //    Route::any('/login', [WebAuthController::class, 'login'])->name('logins');
 //    Route::post('/2fa', function(){
