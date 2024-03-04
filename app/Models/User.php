@@ -27,6 +27,7 @@ class User extends Authenticatable
         'login',
         'password',
         'google2fa_secret',
+        'uses_two_factor_auth',
         'codepin',
         'type_user_id',
         'countrie_id',
