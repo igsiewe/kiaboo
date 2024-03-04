@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\TwoFactorController;
 use App\Http\Controllers\web\WebAgentController;
 use App\Http\Controllers\web\WebApproAgentController;
 use App\Http\Controllers\web\WebApproDistributeurController;
@@ -41,8 +42,8 @@ Route::get('/reload-captcha', [WebAuthController::class, 'reloadCaptcha']);
 
 Route::middleware(['auth','checkStatus'])->group(function (){
 
-    Route::get('/2fa', 'Auth\TwoFactorController@show')->name('2fa');
-    Route::post('/2fa', 'Auth\TwoFactorController@verify')->name('2fa.verify');
+    Route::get('/2fa', [TwoFactorController::class,'show'])->name('2fa');
+    Route::post('/2fa', [TwoFactorController::class,'verify'])->name('2fa.verify');
 
     Route::any('/dashboard', [WebDashBoardController::class,'dashboard'])->name("dashboard");
     Route::any('/logout', [WebAuthController::class, 'logout'])->name('fermer');
