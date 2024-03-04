@@ -3,7 +3,8 @@
 namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
-use PragmaRX\Google2FALaravel\Google2FA;
+use PragmaRX\Google2FA\Google2FA;
+
 
 class Kernel extends HttpKernel
 {
