@@ -35,7 +35,7 @@ class WebAuthController extends BaseController
 
             return redirect()->route('2fa')->with('one_time_password', $one_time_password);
         }
-dd("jjjjjjjjjjj");
+
         return redirect()->intended($this->redirectPath());
     }
 
@@ -43,9 +43,10 @@ dd("jjjjjjjjjjj");
     {
         if (property_exists($this, 'redirectPath'))
         {
+            dd("aaaaaaa");
             return $this->redirectPath;
         }
-
+        dd("bbbbbbb");
         return property_exists($this, 'redirectTo') ? $this->redirectTo : '/home';
     }
 
