@@ -30,7 +30,7 @@ class WebAuthController extends BaseController
             $otp_secret = $user->google2fa_secret;
             $one_time_password = $google2fa->getCurrentOtp($otp_secret);
 
-            return redirect()->route('2fa')->with('one_time_password', $one_time_password);
+            return redirect()->route('2fa.login')->with('one_time_password', $one_time_password);
         }
         $google2fa = app('pragmarx.google2fa');
         $registration_data = $request->all();
