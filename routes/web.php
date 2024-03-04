@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\web\WebAgentController;
 use App\Http\Controllers\web\WebApproAgentController;
 use App\Http\Controllers\web\WebApproDistributeurController;
@@ -34,7 +35,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::any('/home', [WebAuthController::class, 'home'])->name('welcome');
+Route::any('/home', [WebAuthController::class, 'login'])->name('welcome');
 Route::get('/reload-captcha', [WebAuthController::class, 'reloadCaptcha']);
 
 Route::middleware(['2fa'])->group(function(){
@@ -43,6 +44,9 @@ Route::middleware(['2fa'])->group(function(){
         return redirect (route('welcome'));
     })->name('2fa');
 });
+
+Route::get('/complete-registration',[RegisterController::class, 'complete.Registration'])->name('complete.registration');
+
 Route::middleware(['auth','checkStatus'])->group(function (){
 
     Route::any('/dashboard', [WebDashBoardController::class,'dashboard'])->name("dashboard");
