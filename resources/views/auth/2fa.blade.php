@@ -24,6 +24,10 @@
     <!-- Theme Styles -->
     <link href="{{asset("assets/css/main.min.css")}}" rel="stylesheet">
     <link href="{{asset("assets/css/custom.css")}}" rel="stylesheet">
+
+    {{--    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>--}}
+    {{--    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>--}}
+
     <![endif]-->
 </head>
 <body class="login-page">
@@ -40,7 +44,10 @@
                     <div class="authent-logo">
                         <img src="{{asset("assets/images/logo%402x.png")}}" alt="">
                     </div>
+                    <div class="authent-text">
+                        <p>KIABOO</p>
 
+                    </div>
                     <div class="container">
                         <div class="row justify-content-center">
                             <div class="col-md-8">
@@ -98,6 +105,17 @@
 <script src="{{asset("assets/plugins/perfectscroll/perfect-scrollbar.min.js")}}"></script>
 <script src="{{asset("assets/js/main.min.js")}}"></script>
 
+<script type="text/javascript">
+    $('#reload').click(function () {
+        $.ajax({
+            type: 'GET',
+            url: 'reload-captcha',
+            success: function (data) {
+                $(".captcha span").html(data.captcha);
+            }
+        });
+    });
+</script>
 
 </body>
 
