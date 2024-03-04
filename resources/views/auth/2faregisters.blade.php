@@ -51,19 +51,21 @@
                     </div>
 
                     <div class="mb-3">
-
+                        <form method="POST" action="{{route("2fa.assign")}}">
                         <div class="form-floating">
                             <div class="card-body" style="text-align: center;">
                                 <p>Set up your two factor authenticator by scanning the barcode below. Alternatively, you can use the code <strong>{{$secret}}</strong> </p>
                                 <div>
                                     {!! $QR_Image !!}
+                                    <input id="one_time_password" type="hidden" value="{{$secret}}">
                                 </div>
-                                <p>You must set up your Google Authenticator app before continuin. You will be unable to login otherwise</p>
+                                <p>You must set up your Google Authenticator app before continuing. You will be unable to login otherwise</p>
                                 <div>
-                                    <a href="{{route('complete-registration')}}" class="btn btn-danger m-b-xs">Complete Registration</a>
+                                    <button type="submit" class="btn btn-danger m-b-xs">{{ __('Submit') }}</button>
                                 </div>
                             </div>
                         </div>
+                        </form>
                     </div>
                 </div>
             </div>
