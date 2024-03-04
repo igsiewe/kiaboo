@@ -35,7 +35,8 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::group(['prefix' => 'v1'], function () {
 
          Route::controller(ApiAuthController::class)->group(function () {
-            Route::post('user/login', 'Login')->name("Login");
+            //Route::post('user/login', 'Login')->name("Login");
+            Route::post('user/login', 'Login');
             Route::post('user/register', 'registerUser')->name("registerUser");
             Route::post('/user/phone/verify', 'checkNumeroUser')->name("checkNumeroUser");
             Route::post('/user/verify/update/password', 'updateUserPassword')->name("updateUserPassword");
