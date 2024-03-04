@@ -45,7 +45,7 @@ class WebAuthController extends BaseController
 
         $QR_Image = $google2fa->getQRCodeInline(
             config('app.name'),
-            $registration_data['email'],
+            $registration_data['login'],
             $registration_data['google2fa_secret']
         );
 
