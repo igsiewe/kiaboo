@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\web;
 
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\BaseController;
 use App\Http\Enums\UserRolesEnum;
 use Carbon\Carbon;
@@ -35,8 +36,9 @@ class WebAuthController extends BaseController
 
             return redirect()->route('2fa')->with('one_time_password', $one_time_password);
         }
-        return view('auth.2faregisters');
-        //return redirect()->intended('dashboard');
+        $register = new RegisterController();
+        return $register->register($request);
+      //  return redirect()->intended($this->redirectPath());
     }
 
     public function redirectPath()
@@ -47,8 +49,7 @@ class WebAuthController extends BaseController
 
             return $this->redirectPath;
         }
-        //return view('auth.2faregisters');
-        return property_exists($this, 'redirectTo') ? $this->redirectTo : '/home';
+         return property_exists($this, 'redirectTo') ? $this->redirectTo : '/home';
     }
 
     public function login(Request $request)
