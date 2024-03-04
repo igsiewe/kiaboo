@@ -31,14 +31,14 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('index');
 });
-//Auth::routes();
-Route::any('/', [WebAuthController::class, 'login'])->name('login');
-//Route::middleware(['2fa'])->group(function(){
-//  //  Route::get('/login', [WebAuthController::class, 'login'])->name('login');
-//    Route::post('/2fa', function(){
-//        return redirect (route('login'));
-//    })->name('2fa');
-//});
+Auth::routes();
+Route::get('/login', [WebAuthController::class, 'login'])->name('login');
+Route::middleware(['2fa'])->group(function(){
+    Route::get('/login', [WebAuthController::class, 'login'])->name('login');
+    Route::post('/2fa', function(){
+        return redirect (route('login'));
+    })->name('2fa');
+});
 Route::get('/reload-captcha', [WebAuthController::class, 'reloadCaptcha']);
 Route::get('/complete-registration',[RegisterController::class, 'complete.Registration'])->name('complete.registration');
 
@@ -157,7 +157,3 @@ Route::middleware(['auth','checkStatus'])->group(function (){
 
 
 }); //middleware for auth and checkStatus
-
-//Auth::routes();
-//
-//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
