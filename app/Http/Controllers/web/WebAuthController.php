@@ -12,10 +12,7 @@ use PragmaRX\Google2FALaravel\Google2FA;
 
 class WebAuthController extends BaseController
 {
-    public function __construct()
-    {
-        $this->middleware('guest')->except('logout');
-    }
+
     public function authenticated(Request $request, $user)
     {
 
