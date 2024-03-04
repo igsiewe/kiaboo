@@ -47,7 +47,7 @@
                     <div class="authent-text">
 
                          <p><div class="card-header">{{ __('Authentification à Double Facteur') }}</div></p><br/>
-                         <p>Saisissez le code généré par votre application Authenticator.</p><br/>
+                         <p>Saisissez le code généré par votre application Authenticator.</p>
                     </div>
 
 
