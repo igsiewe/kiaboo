@@ -53,6 +53,21 @@
 
                     <form method="POST" action="{{ route('2fa.verify') }}">
                         @csrf
+
+                        <div class="form-group row">
+                            <label for="one_time_password" class="col-md-4 col-form-label text-md-right">{{ __('One Time Password') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="one_time_password" type="text" class="form-control @error('one_time_password') is-invalid @enderror" name="one_time_password" required autofocus>
+
+                                @error('one_time_password')
+                                <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                @enderror
+                            </div>
+                        </div>
+
                         <div class="mb-3">
                             <div class="form-floating">
                                 <input type="email" class="form-control" id="login" name="login" placeholder="name@example.com" required value="{{ (Cookie::get('email') !== null) ? Cookie::get('login') : old('login') }}" autofocus>
