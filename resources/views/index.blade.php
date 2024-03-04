@@ -49,7 +49,7 @@
 
                     </div>
 
-                    <form method="post" action="{{route('logins')}}" id="formConnexion" name="formConnexion">
+                    <form method="post" action="{{route('login')}}" id="formConnexion" name="formConnexion">
                         @csrf
                         <div class="mb-3">
                             <div class="form-floating">
