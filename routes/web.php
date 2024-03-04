@@ -34,11 +34,11 @@ Route::get('/', function () {
     return view('index');
 });
 
-Route::any('/login', [WebAuthController::class, 'login'])->name('login');
+Route::any('/login', [WebAuthController::class, 'login'])->name('logins');
 Route::middleware(['2fa'])->group(function(){
-    Route::any('/home', [WebAuthController::class, 'login'])->name('login');
+    Route::any('/home', [WebAuthController::class, 'login'])->name('logins');
     Route::post('/2fa', function(){
-        return redirect (route('login'));
+        return redirect (route('logins'));
     })->name('2fa');
 });
 Route::get('/reload-captcha', [WebAuthController::class, 'reloadCaptcha']);
