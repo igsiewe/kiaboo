@@ -53,7 +53,7 @@
                         @csrf
                         <div class="mb-3">
                             <div class="form-floating">
-                                <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required value="{{ (Cookie::get('email') !== null) ? Cookie::get('login') : old('login') }}" autofocus>
+                                <input type="email" class="form-control" id="login" name="login" placeholder="name@example.com" required value="{{ (Cookie::get('email') !== null) ? Cookie::get('login') : old('login') }}" autofocus>
                                 <label for="floatingInput">Email address</label>
                             </div>
                         </div>
