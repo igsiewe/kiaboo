@@ -64,6 +64,36 @@ class WebAuthController extends BaseController
          return property_exists($this, 'redirectTo') ? $this->redirectTo : '/home';
     }
 
+    public function assign2FA(Request $request)
+    {
+        $verificationCode = $request->get('one_time_password');
+        $secret = $request->session()->get('google2fa_secret');
+        if (!$secret || !Google2FA::verifyGoogle2FA($secret, $verificationCode)) {
+            // store secret in the session only for the next request
+            $request->session()->reflash();
+
+            throw ValidationException::withMessages([
+                'one_time_password' => [trans('auth.2fa.failed')],
+            ]);
+        }
+
+        $user = $request->user();
+        $user->google2fa_secret = $secret;
+        $user->save();
+        return view('auth.google2fa.activate');
+    }
+
+    public function deactivate2FA(Request $request)
+    {
+        $user = $request->user();
+
+        //make secret column blank
+        $user->google2fa_secret = null;
+        $user->save();
+
+        return view('auth.google2fa.deactivate');
+    }
+
     public function login(Request $request)
     {
 

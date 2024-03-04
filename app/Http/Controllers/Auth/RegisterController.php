@@ -100,4 +100,6 @@ class RegisterController extends Controller
         $request->merge(session('registration_data'));
         return $this->registration($request);
     }
+
+
 }
