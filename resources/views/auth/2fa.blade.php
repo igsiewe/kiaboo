@@ -48,7 +48,7 @@
                         <p>KIABOO</p>
 
                     </div>
-                    <div class="container">
+                    <div class="card-body">
                         <div class="row justify-content-center">
                             <div class="col-md-8">
                                 <div class="card">
