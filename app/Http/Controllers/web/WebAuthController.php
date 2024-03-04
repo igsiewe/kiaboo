@@ -28,6 +28,11 @@ class WebAuthController extends BaseController
             if (Auth::user()->status == 1 && (Auth::user()->type_user_id != UserRolesEnum::AGENT->value)) {
                 $updateConnexion = DB::table('users')->where('id', Auth::user()->id)->update(['last_connexion' => Carbon::now()]);
                 if($updateConnexion){
+                    //Vérifie si l'utilisateur a déjà la double authentification activié
+                    if(Auth::user()->google2fa_secret == null){
+                        return redirect()->route('2fa');
+
+                    }
                     return redirect()->intended('dashboard');
                 }else{
                     return redirect()->back()->withErrors('Erreur de connexion');
