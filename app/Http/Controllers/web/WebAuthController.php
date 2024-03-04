@@ -20,7 +20,7 @@ class WebAuthController extends BaseController
             'password' => 'required|string|min:6|max:25',
             'captcha' => 'required|captcha'
         ]);
-
+        dd($request->all());
         $credentials = $request->only('login', 'password');
 
         if (Auth::attempt($credentials)) {
