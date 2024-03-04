@@ -43,7 +43,7 @@ Route::middleware(['auth','checkStatus'])->group(function (){
     Route::get('/register', [RegisterController::class,'register'])->name('register');
 
     Route::get('/2fa/activate', [Google2FAController::class, 'activate2FA'])->name('2fa.activate');
-    Route::get('/2fa/assign', [Google2FAController::class, 'assign2FA'])->name('2fa.assign');
+    Route::post('/2fa/assign', [Google2FAController::class, 'assign2FA'])->name('2fa.assign');
     Route::post('/2fa/activate', [Google2FAController::class, 'assign2FA']);
     Route::get('/2fa/deactivate', [Google2FAController::class, 'deactivate2FA'])->name('2fa.deactivate');
     Route::get('/2fa/login', [Google2FAController::class, 'login2FA'])->name('2fa.login');
