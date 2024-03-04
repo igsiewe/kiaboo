@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Auth\Google2FAController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\TwoFactorController;
 use App\Http\Controllers\web\WebAgentController;
 use App\Http\Controllers\web\WebApproAgentController;
 use App\Http\Controllers\web\WebApproDistributeurController;
@@ -36,16 +38,11 @@ Route::any('/login', [WebAuthController::class, 'login'])->name('login');
 Route::get('/reload-captcha', [WebAuthController::class, 'reloadCaptcha']);
 Route::middleware(['auth','checkStatus'])->group(function (){
 
-//    Route::get('/2fa', [TwoFactorController::class,'show'])->name('2fa');
-//    Route::post('/2fa', [TwoFactorController::class,'verify'])->name('2fa.verify');
-//    Route::get('/register', [RegisterController::class,'register'])->name('register');
-//    Route::get('/registration', [RegisterController::class,'completeRegistration'])->name('complete-registration');
+    Route::get('/2fa', [TwoFactorController::class,'show'])->name('2fa');
+    Route::post('/2fa', [TwoFactorController::class,'verify'])->name('2fa.verify');
+    Route::get('/register', [RegisterController::class,'register'])->name('register');
+    Route::get('/registration', [RegisterController::class,'completeRegistration'])->name('complete-registration');
 
-    Route::get('/2fa/activate', [Google2FAController::class, 'activate2FA'])->name('2fa.activate');
-    Route::post('/2fa/activate', [Google2FAController::class, 'assign2FA']);
-    Route::get('/2fa/deactivate', [Google2FAController::class, 'deactivate2FA'])->name('2fa.deactivate');
-    Route::get('/2fa/login', [Google2FAController::class, 'login2FA'])->name('2fa.login');
-    Route::post('/2fa/login', [Google2FAController::class, 'verify2FA']);
 
     Route::get('/home', function () {
         return view('index');
