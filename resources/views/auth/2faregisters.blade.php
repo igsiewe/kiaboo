@@ -44,24 +44,27 @@
                     <div class="authent-logo">
                         <img src="{{asset("assets/images/logo%402x.png")}}" alt="">
                     </div>
+                    <div class="authent-text">
 
-                        <div class="row">
-                            <div class="mb-3">
-                                <div class="card card-default">
-                                    <h4 class="card-header text-center mt-4">Set up Google Authenticator</h4>
-                                    <div class="card-body" style="text-align: center;">
-                                        <p>Set up your two factor authenticator by scanning the barcode below. Alternatively, you can use the code <strong>{{$secret}}</strong> </p>
-                                        <div>
-                                            {!! $QR_Image !!}
-                                        </div>
-                                        <p>You must set up your Google Authenticator app before continuin. You will be unable to login otherwise</p>
-                                        <div>
-                                            <a href="{{route('complete-registration')}}" class="btn btn-primary">Complete Registration</a>
-                                        </div>
-                                    </div>
+                        <p><div class="card-header text-center mt-4">{{ __('Set up Google Authenticator') }}</div></p><br/>
+                        <p>Saisissez le code généré par votre application Authenticator.</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-floating">
+                            <div class="card-body" style="text-align: center;">
+                                <p>Set up your two factor authenticator by scanning the barcode below. Alternatively, you can use the code <strong>{{$secret}}</strong> </p>
+                                <div>
+                                    {!! $QR_Image !!}
+                                </div>
+                                <p>You must set up your Google Authenticator app before continuin. You will be unable to login otherwise</p>
+                                <div>
+                                    <a href="{{route('complete-registration')}}" class="btn btn-primary">Complete Registration</a>
                                 </div>
                             </div>
                         </div>
+                    </div>
+
 
                 </div>
             </div>
