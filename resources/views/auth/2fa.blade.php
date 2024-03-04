@@ -41,38 +41,49 @@
         <div class="col-md-12 col-lg-6">
             <div class="card login-box-container">
                 <div class="card-body">
-                    <div class="card-body">
-                        <div class="row justify-content-center">
-                            <div class="col-md-12">
-                                <div class="card">
-                                    <div class="card-header">{{ __('Two Factor Authentication') }}</div>
-                                    <div class="card-body">
-                                        <p>{{ __('Please enter your one-time password to complete your login.') }}</p>
-                                        <form method="POST" action="{{ route('2fa.verify') }}">
-                                            @csrf
+                    <div class="authent-logo">
+                        <img src="{{asset("assets/images/logo%402x.png")}}" alt="">
+                    </div>
+                    <div class="authent-text">
 
-                                                <label for="one_time_password" class="col-md-4 col-form-label text-md-right">{{ __('One Time Password') }}</label>
+                        <p><div class="card-header">{{ __('Two Factor Authentication') }}</div></p>
 
-                                                <div class="col-md-6">
-                                                    <input id="one_time_password" type="text" class="form-control @error('one_time_password') is-invalid @enderror" name="one_time_password" required autofocus>
-                                                    @error('one_time_password')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                    @enderror
-                                                </div>
-                                                <div class="d-grid">
-                                                    <button type="submit" class="btn btn-danger m-b-xs">
-                                                        {{ __('Verify') }}
-                                                    </button>
-                                                </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
+                    <div class="card-body">
+                        <p>{{ __('Please enter your one-time password to complete your login.') }}</p>
+
+                        <form method="POST" action="{{ route('2fa.verify') }}">
+                            @csrf
+
+                            <div class="form-group row">
+                                <label for="one_time_password" class="col-md-4 col-form-label text-md-right">{{ __('One Time Password') }}</label>
+
+                                <div class="col-md-6">
+                                    <input id="one_time_password" type="text" class="form-control @error('one_time_password') is-invalid @enderror" name="one_time_password" required autofocus>
+
+                                    @error('one_time_password')
+                                    <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="form-group row mb-0">
+                                <div class="col-md-8 offset-md-4">
+                                    <button type="submit" class="btn btn-primary">
+                                        {{ __('Verify') }}
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="authent-reg">
+                        <a href="register.html">Mot de passe oublié ?</a></p>
+                    </div>
+                    <hr/>
+                    <div class="text-center opacity-8 mt-3">Copyright © Kiaboo 2023</div>
                 </div>
             </div>
         </div>
@@ -87,6 +98,7 @@
 <script src="https://unpkg.com/feather-icons"></script>
 <script src="{{asset("assets/plugins/perfectscroll/perfect-scrollbar.min.js")}}"></script>
 <script src="{{asset("assets/js/main.min.js")}}"></script>
+</script>
 
 </body>
 
