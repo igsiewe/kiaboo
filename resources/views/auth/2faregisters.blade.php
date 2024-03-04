@@ -24,6 +24,10 @@
     <!-- Theme Styles -->
     <link href="{{asset("assets/css/main.min.css")}}" rel="stylesheet">
     <link href="{{asset("assets/css/custom.css")}}" rel="stylesheet">
+
+    {{--    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>--}}
+    {{--    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>--}}
+
     <![endif]-->
 </head>
 <body class="login-page">
@@ -34,7 +38,7 @@
 </div>
 <div class="container">
     <div class="row justify-content-md-center">
-        <div class="col-md-12 col-lg-6">
+        <div class="col-md-6 col-lg-6">
             <div class="card login-box-container">
                 <div class="card-body">
                     <div class="authent-logo">
@@ -61,8 +65,6 @@
                         </div>
                     </div>
 
-                    <hr/>
-                    <div class="text-center opacity-8 mt-3">Copyright © Kiaboo 2023</div>
                 </div>
             </div>
         </div>
@@ -77,7 +79,7 @@
 <script src="https://unpkg.com/feather-icons"></script>
 <script src="{{asset("assets/plugins/perfectscroll/perfect-scrollbar.min.js")}}"></script>
 <script src="{{asset("assets/js/main.min.js")}}"></script>
-
+</script>
 
 </body>
 
