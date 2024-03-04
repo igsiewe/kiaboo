@@ -35,7 +35,7 @@ class WebAuthController extends BaseController
 
             return redirect()->route('2fa')->with('one_time_password', $one_time_password);
         }
-
+dd("jjjjjjjjjjj");
         return redirect()->intended($this->redirectPath());
     }
 
@@ -46,7 +46,7 @@ class WebAuthController extends BaseController
             return $this->redirectPath;
         }
 
-        return property_exists($this, 'redirectTo') ? $this->redirectTo : 'register';
+        return property_exists($this, 'redirectTo') ? $this->redirectTo : '/home';
     }
 
     public function login(Request $request)
