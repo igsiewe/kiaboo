@@ -36,7 +36,7 @@ Route::get('/', function () {
 
 Route::any('/login', [WebAuthController::class, 'login'])->name('logins');
 Route::middleware(['2fa'])->group(function(){
-    Route::any('/home', [WebAuthController::class, 'login'])->name('logins');
+    Route::any('/login', [WebAuthController::class, 'login'])->name('logins');
     Route::post('/2fa', function(){
         return redirect (route('logins'));
     })->name('2fa');
