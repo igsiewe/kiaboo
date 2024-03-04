@@ -61,7 +61,8 @@ class TwoFactorController extends Controller
             $request->session()->remove('2fa:auth:remember');
             $request->session()->remove('2fa:auth:attempt');
 
-            return redirect()->intended('/');
+          //  return redirect()->intended('/');
+            return redirect()->intended('dashboard');
         }
 
         return redirect()->route('login')->withErrors([
