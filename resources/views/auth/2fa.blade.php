@@ -51,7 +51,7 @@
                     <div class="card-body">
                         <div class="row justify-content-center">
                             <div class="col-md-12">
-                                <div class="card">
+                                <div class="container">
                                     <div class="card-header">{{ __('Two Factor Authentication') }}</div>
 
                                     <div class="card-body">
@@ -59,7 +59,6 @@
 
                                         <form method="POST" action="{{ route('2fa.verify') }}">
                                             @csrf
-
 
                                                 <label for="one_time_password" class="col-md-4 col-form-label text-md-right">{{ __('One Time Password') }}</label>
 
