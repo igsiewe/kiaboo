@@ -11,12 +11,14 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use PragmaRX\Google2FA\Google2FA;
 
+
 class WebAuthController extends BaseController
 {
 
+
+
     public function authenticated(Request $request, $user)
     {
-       // dd($user->uses_two_factor_auth);
         if ($user->uses_two_factor_auth) {
             $google2fa = new Google2FA();
 
@@ -33,8 +35,8 @@ class WebAuthController extends BaseController
 
             return redirect()->route('2fa')->with('one_time_password', $one_time_password);
         }
-        return redirect()->route('register');
-     //   return redirect()->intended($this->redirectPath());
+
+        return redirect()->intended($this->redirectPath());
     }
 
     public function login(Request $request)

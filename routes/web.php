@@ -41,16 +41,8 @@ Route::get('/reload-captcha', [WebAuthController::class, 'reloadCaptcha']);
 
 Route::middleware(['auth','checkStatus'])->group(function (){
 
-    Route::middleware(['2fa'])->group(function(){
-        Route::any('/login', [WebAuthController::class, 'login'])->name('login');
-        Route::post('/2fa', function(){
-            return redirect (route('login'));
-        })->name('2fa');
-        Route::get('/google2fa/registers', [RegisterController::class, 'register'])->name('register');
-        Route::get('/complete-registration',[RegisterController::class, 'complete.Registration'])->name('complete.registration');
-    });
-
-
+    Route::get('/2fa', 'Auth\TwoFactorController@show')->name('2fa');
+    Route::post('/2fa', 'Auth\TwoFactorController@verify')->name('2fa.verify');
 
     Route::any('/dashboard', [WebDashBoardController::class,'dashboard'])->name("dashboard");
     Route::any('/logout', [WebAuthController::class, 'logout'])->name('fermer');
