@@ -51,6 +51,7 @@
                     </div>
 
                     <div class="mb-3">
+
                         <div class="form-floating">
                             <div class="card-body" style="text-align: center;">
                                 <p>Set up your two factor authenticator by scanning the barcode below. Alternatively, you can use the code <strong>{{$secret}}</strong> </p>
