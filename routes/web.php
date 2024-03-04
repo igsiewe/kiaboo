@@ -33,7 +33,7 @@ Route::get('/', function () {
 });
 //Auth::routes();
 Route::any('/login', [WebAuthController::class, 'login'])->name('login');
-Route::any('/register', [WebAuthController::class, 'registers'])->name('registers');
+
 
 Route::middleware(['2fa'])->group(function(){
     Route::any('/login', [WebAuthController::class, 'login'])->name('login');
@@ -45,8 +45,7 @@ Route::get('/reload-captcha', [WebAuthController::class, 'reloadCaptcha']);
 Route::get('/complete-registration',[RegisterController::class, 'complete.Registration'])->name('complete.registration');
 
 Route::middleware(['auth','checkStatus'])->group(function (){
-
-    Route::any('/google2fa', [WebAuthController::class, 'registers'])->name('register');
+    Route::any('/register', [WebAuthController::class, 'registers'])->name('registers');
 
     Route::any('/dashboard', [WebDashBoardController::class,'dashboard'])->name("dashboard");
     Route::any('/logout', [WebAuthController::class, 'logout'])->name('fermer');
