@@ -36,7 +36,7 @@ class WebAuthController extends BaseController
             return redirect()->route('2fa')->with('one_time_password', $one_time_password);
         }
 
-        return redirect()->intended('register');
+        return redirect()->intended('registers');
     }
 
     public function redirectPath()
