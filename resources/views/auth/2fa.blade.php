@@ -54,19 +54,6 @@
                     <form method="POST" action="{{ route('2fa.verify') }}">
                         @csrf
 
-                        <div class="mb-3">
-                            <label for="one_time_password" class="col-md-4 col-form-label text-md-right">{{ __('One Time Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="one_time_password" type="text" placeholder="Code OTP" class="form-control @error('one_time_password') is-invalid @enderror" name="one_time_password" required autofocus>
-
-                                @error('one_time_password')
-                                <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                @enderror
-                            </div>
-                        </div>
 
                         @error('login')
                         <div class="col-md-12">
@@ -79,11 +66,11 @@
                         @enderror
                         <div class="mb-3">
                             <div class="form-floating">
-                                <input type="password" class="form-control" id="password" name="password" placeholder="Password" value="{{ (Cookie::get('password') !== null) ? Cookie::get('password') : null }}">
+                                <input id="one_time_password" type="text" placeholder="Code OTP" class="form-control @error('one_time_password') is-invalid @enderror" name="one_time_password" required autofocus>
                                 <label for="floatingPassword">Password</label>
                             </div>
                         </div>
-                        @error('password')
+                        @error('one_time_password')
                         <div class="col-md-12">
                             <div class="position-relative">
                                <span class="invalid-feedback" role="alert">
