@@ -19,7 +19,7 @@ class WebAuthController extends BaseController
        // dd($user->uses_two_factor_auth);
         if ($user->uses_two_factor_auth) {
             $google2fa = new Google2FA();
-            dd("aaaaaa");
+
             if ($request->session()->has('2fa_passed')) {
                 $request->session()->forget('2fa_passed');
             }
@@ -33,6 +33,7 @@ class WebAuthController extends BaseController
 
             return redirect()->route('2fa')->with('one_time_password', $one_time_password);
         }
+
         return redirect()->intended('registers');
        // return redirect()->intended($this->redirectPath());
     }

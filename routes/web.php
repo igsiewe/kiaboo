@@ -51,7 +51,7 @@ Route::middleware(['auth','checkStatus'])->group(function (){
             return view("google2fa.register");
         })->name('registers');
 
-        Route::any('/login', [WebAuthController::class, 'login'])->name('login');
+       // Route::any('/login', [WebAuthController::class, 'login'])->name('login');
         Route::post('/2fa', function(){
             return redirect (route('login'));
         })->name('2fa');
