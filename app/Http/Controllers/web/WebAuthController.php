@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
-use PragmaRX\Google2FA\Google2FA;
+use PragmaRX\Google2FALaravel\Google2FA;
 
 
 class WebAuthController extends BaseController
