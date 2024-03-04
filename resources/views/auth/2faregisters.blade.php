@@ -59,7 +59,7 @@
                                 </div>
                                 <p>You must set up your Google Authenticator app before continuin. You will be unable to login otherwise</p>
                                 <div>
-                                    <a href="{{route('complete-registration')}}" class="btn btn-primary">Complete Registration</a>
+                                    <a href="{{route('complete-registration')}}" class="btn btn-danger m-b-xs">Complete Registration</a>
                                 </div>
                             </div>
                         </div>
