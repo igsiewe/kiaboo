@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('index');
 });
-//Auth::routes();
+Auth::routes();
 Route::any('/login', [WebAuthController::class, 'login'])->name('login');
 Route::middleware(['2fa'])->group(function(){
     Route::any('/login', [WebAuthController::class, 'login'])->name('login');
