@@ -93,7 +93,7 @@ class RegisterController extends Controller
             $registration_data['google2fa_secret']
         );
 
-        return view('google2fa.register', ['QR_Image' => $QR_Image, 'secret' => $registration_data["google2fa_secret"]]);
+        return view('auth.registers', ['QR_Image' => $QR_Image, 'secret' => $registration_data["google2fa_secret"]]);
     }
 
     public function completeRegistration(Request $request){
