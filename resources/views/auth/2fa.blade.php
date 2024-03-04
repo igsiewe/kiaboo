@@ -37,10 +37,9 @@
     </div>
 </div>
 <div class="container">
-    <div class="row justify-content-md-center">
+
         <div class="col-md-12 col-lg-6">
             <div class="card login-box-container">
-
                     <div class="card-body">
                         <div class="row justify-content-center">
                             <div class="col-md-12">
@@ -81,7 +80,7 @@
 
             </div>
         </div>
-    </div>
+
 </div>
 
 
