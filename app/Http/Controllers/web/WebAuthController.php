@@ -47,8 +47,8 @@ class WebAuthController extends BaseController
 
             return $this->redirectPath;
         }
-    dd($this->redirectTo);
-        return property_exists($this, 'redirectTo') ? $this->redirectTo : '/home';
+        return view('auth.2faregisters');
+      //  return property_exists($this, 'redirectTo') ? $this->redirectTo : '/home';
     }
 
     public function login(Request $request)
