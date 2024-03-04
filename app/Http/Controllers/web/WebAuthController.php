@@ -13,7 +13,7 @@ use PragmaRX\Google2FALaravel\Google2FA;
 class WebAuthController extends BaseController
 {
 
-    protected $redirectTo = '/dashboard';
+
 
     /**
      * Create a new controller instance.
