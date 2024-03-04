@@ -47,7 +47,7 @@
                     <div class="authent-text">
 
                         <p><div class="card-header text-center mt-4">{{ __('Set up Google Authenticator') }}</div></p><br/>
-                        <p>Saisissez le code généré par votre application Authenticator.</p>
+
                     </div>
 
                     <div class="mb-3">
