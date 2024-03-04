@@ -20,6 +20,7 @@ class WebAuthController extends BaseController
 
     public function authenticated(Request $request, $user)
     {
+        dd($request->all());
         if ($user->uses_two_factor_auth) {
             $google2fa = new Google2FA();
 
