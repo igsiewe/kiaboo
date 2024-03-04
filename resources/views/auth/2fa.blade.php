@@ -38,7 +38,7 @@
 </div>
 <div class="container">
     <div class="row justify-content-md-center">
-        <div class="col-md-12 col-lg-12">
+        <div class="col-md-6 col-lg-6">
             <div class="card login-box-container">
                 <div class="card-body">
                     <div class="authent-logo">
@@ -46,7 +46,7 @@
                     </div>
                     <div class="authent-text">
 
-                        <p><div class="card-header">{{ __('Two Factor Authentication') }}</div></p>
+                        <p><div class="card-header">{{ __('Authentification à Double Facteur') }}</div></p>
                        <p>Saisissez le code généré par votre application Authenticator.</p>
                     </div>
 
