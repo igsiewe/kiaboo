@@ -46,10 +46,11 @@ class WebAuthController extends BaseController
             'password' => 'required|string|min:6|max:25',
             'captcha' => 'required|captcha'
         ]);
-        dd($request->all());
+
         $credentials = $request->only('login', 'password');
 
         if (Auth::attempt($credentials)) {
+            dd($request->all());
             $request->session()->regenerate();
             if (Auth::user()->status == 1 && (Auth::user()->type_user_id != UserRolesEnum::AGENT->value)) {
                 $updateConnexion = DB::table('users')->where('id', Auth::user()->id)->update(['last_connexion' => Carbon::now()]);
