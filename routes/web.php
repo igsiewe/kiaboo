@@ -33,12 +33,12 @@ Route::get('/', function () {
 });
 Auth::routes();
 Route::get('/login', [WebAuthController::class, 'login'])->name('login');
-Route::middleware(['2fa'])->group(function(){
-    Route::get('/login', [WebAuthController::class, 'login'])->name('login');
-    Route::post('/2fa', function(){
-        return redirect (route('login'));
-    })->name('2fa');
-});
+//Route::middleware(['2fa'])->group(function(){
+//    Route::get('/login', [WebAuthController::class, 'login'])->name('login');
+//    Route::post('/2fa', function(){
+//        return redirect (route('login'));
+//    })->name('2fa');
+//});
 Route::get('/reload-captcha', [WebAuthController::class, 'reloadCaptcha']);
 Route::get('/complete-registration',[RegisterController::class, 'complete.Registration'])->name('complete.registration');
 
