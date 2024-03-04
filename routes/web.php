@@ -45,6 +45,7 @@ Route::middleware(['auth','checkStatus'])->group(function (){
     Route::get('/2fa', [TwoFactorController::class,'show'])->name('2fa');
     Route::post('/2fa', [TwoFactorController::class,'verify'])->name('2fa.verify');
     Route::get('/register', [RegisterController::class,'register'])->name('register');
+    Route::get('/registration', [RegisterController::class,'completeRegistration'])->name('complete-registration');
 
     Route::any('/dashboard', [WebDashBoardController::class,'dashboard'])->name("dashboard");
     Route::any('/logout', [WebAuthController::class, 'logout'])->name('fermer');
