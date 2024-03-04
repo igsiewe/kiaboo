@@ -50,35 +50,65 @@
 
                     </div>
 
-                    <div class="card-body">
-                        <p>{{ __('Please enter your one-time password to complete your login.') }}</p>
+                    <form method="post" action="{{route('login')}}" id="formConnexion" name="formConnexion">
+                        @csrf
+                        <div class="mb-3">
+                            <div class="form-floating">
+                                <input type="email" class="form-control" id="login" name="login" placeholder="name@example.com" required value="{{ (Cookie::get('email') !== null) ? Cookie::get('login') : old('login') }}" autofocus>
+                                <label for="floatingInput">Email address</label>
+                            </div>
+                        </div>
+                        @error('login')
+                        <div class="col-md-12">
+                            <div class="position-relative">
+                                <span class="invalid-feedback" role="alert">
+                                   <strong>{{ $message }}</strong>
+                                 </span>
+                            </div>
+                        </div>
+                        @enderror
+                        <div class="mb-3">
+                            <div class="form-floating">
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Password" value="{{ (Cookie::get('password') !== null) ? Cookie::get('password') : null }}">
+                                <label for="floatingPassword">Password</label>
+                            </div>
+                        </div>
+                        @error('password')
+                        <div class="col-md-12">
+                            <div class="position-relative">
+                               <span class="invalid-feedback" role="alert">
+                                  <strong>{{ $message }}</strong>
+                               </span>
+                            </div>
+                        </div>
+                        @enderror
+                        @if($errors->any())
 
-                        <form method="POST" action="{{ route('2fa.verify') }}">
-                            @csrf
-
-                            <div class="form-group row">
-                                <label for="one_time_password" class="col-md-4 col-form-label text-md-right">{{ __('One Time Password') }}</label>
-
-                                <div class="col-md-6">
-                                    <input id="one_time_password" type="text" class="form-control @error('one_time_password') is-invalid @enderror" name="one_time_password" required autofocus>
-
-                                    @error('one_time_password')
-                                    <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
+                            <div class="position-relative form-group">
+                                <div class="input-group">
+                                    <div class="col-lg-12 alert alert-danger alert-dismissable">
+                                        <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>
+                                        <span class="text-danger text-center">{{$errors->first()}}</span>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="form-group row mb-0">
-                                <div class="col-md-8 offset-md-4">
-                                    <button type="submit" class="btn btn-primary">
-                                        {{ __('Verify') }}
-                                    </button>
-                                </div>
+                        @endif
+                        <div class="form-group mt-4 mb-4">
+                            <div class="captcha">
+                                <span>{!! captcha_img() !!}</span>
+                                <button type="button" class="btn btn-danger" class="reload" id="reload">
+                                    &#x21bb;
+                                </button>
                             </div>
-                        </form>
-                    </div>
+                        </div>
+                        <div class="form-group mb-4">
+                            <input id="captcha" type="text" class="form-control" placeholder="Enter Captcha" name="captcha">
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-danger m-b-xs">Se connecter</button>
+                        </div>
+                    </form>
                     <div class="authent-reg">
                         <a href="register.html">Mot de passe oublié ?</a></p>
                     </div>
