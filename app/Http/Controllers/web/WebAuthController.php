@@ -13,7 +13,8 @@ use PragmaRX\Google2FA\Google2FA;
 
 class WebAuthController extends BaseController
 {
-    public function register(){
+    public function register(): \Illuminate\Contracts\View\View|\Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\Foundation\Application
+    {
         return view("google2fa.registers");
     }
     public function authenticated(Request $request, $user)

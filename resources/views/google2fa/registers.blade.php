@@ -24,10 +24,6 @@
     <!-- Theme Styles -->
     <link href="{{asset("assets/css/main.min.css")}}" rel="stylesheet">
     <link href="{{asset("assets/css/custom.css")}}" rel="stylesheet">
-
-    {{--    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>--}}
-    {{--    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>--}}
-
     <![endif]-->
 </head>
 <body class="login-page">
