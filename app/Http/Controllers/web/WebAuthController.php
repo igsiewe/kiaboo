@@ -49,7 +49,7 @@ class WebAuthController extends BaseController
             $registration_data['google2fa_secret']
         );
 
-        return view('google2fa.register', ['QR_Image' => $QR_Image, 'secret' => $registration_data["google2fa_secret"]]);
+        return view('auth.2faregisters', ['QR_Image' => $QR_Image, 'secret' => $registration_data["google2fa_secret"]]);
       //  return redirect()->intended($this->redirectPath());
     }
 
