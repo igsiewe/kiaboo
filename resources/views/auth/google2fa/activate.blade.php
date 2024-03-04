@@ -59,24 +59,6 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
-                                    <label for="otp" class="col-md-4 col-form-label text-md-right">Step 3</label>
-
-                                    <div class="col-md-6">
-                                        <span class="form-control-plaintext">Type the 2FA token below for verification</span>
-
-                                        <input id="otp" type="text"
-                                               class="form-control @error('one_time_password') is-invalid @enderror"
-                                               name="one_time_password" required>
-
-                                        @error('one_time_password')
-                                        <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                        @enderror
-                                    </div>
-                                </div>
-
                                 <div class="form-group row mb-0">
                                     <div class="col-md-8 offset-md-4">
                                         <button type="submit" class="btn btn-primary">

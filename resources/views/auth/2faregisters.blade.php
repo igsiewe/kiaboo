@@ -59,10 +59,31 @@
                                     {!! $QR_Image !!}
                                 </div>
                                 <p>You must set up your Google Authenticator app before continuin. You will be unable to login otherwise</p>
-                                <div>
-                                    <a href="{{route('complete-registration')}}" class="btn btn-danger m-b-xs">Complete Registration</a>
-                                </div>
+
                             </div>
+                        </div>
+
+                        <div class="form-floating">
+                            <label for="otp" class="col-md-4 col-form-label text-md-right">Step 3</label>
+
+                            <div class="col-md-6">
+                                <span class="form-control-plaintext">Type the 2FA token below for verification</span>
+
+                                <input id="otp" type="text"
+                                       class="form-control @error('one_time_password') is-invalid @enderror"
+                                       name="one_time_password" required>
+
+                                @error('one_time_password')
+                                <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-floating">
+                        <div>
+                            <button type="button" class="btn btn-danger m-b-xs">{{ __('Submit') }}</button>
+                        </div>
                         </div>
                     </div>
 
