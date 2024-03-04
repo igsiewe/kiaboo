@@ -54,7 +54,7 @@
                     <form method="POST" action="{{ route('2fa.verify') }}">
                         @csrf
 
-                        <div class="form-group row">
+                        <div class="mb-3">
                             <label for="one_time_password" class="col-md-4 col-form-label text-md-right">{{ __('One Time Password') }}</label>
 
                             <div class="col-md-6">
