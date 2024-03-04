@@ -105,8 +105,6 @@
 <script src="{{asset("assets/plugins/perfectscroll/perfect-scrollbar.min.js")}}"></script>
 <script src="{{asset("assets/js/main.min.js")}}"></script>
 
-</script>
-
 </body>
 
 </html>
