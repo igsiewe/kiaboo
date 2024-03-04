@@ -56,8 +56,8 @@ class WebAuthController extends BaseController
             if (Auth::user()->status == 1 && (Auth::user()->type_user_id != UserRolesEnum::AGENT->value)) {
                 $updateConnexion = DB::table('users')->where('id', Auth::user()->id)->update(['last_connexion' => Carbon::now()]);
                 if($updateConnexion){
-                   //  $this->authenticated($request, Auth::user());
-                    return redirect()->intended('dashboard');
+                     $this->authenticated($request, Auth::user());
+                   // return redirect()->intended('dashboard');
                 }else{
                     return redirect()->back()->withErrors('Erreur de connexion');
                 }
