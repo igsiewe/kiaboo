@@ -33,8 +33,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('index');
 });
-Auth::routes();
-//Route::any('/login', [WebAuthController::class, 'login'])->name('login');
+//Auth::routes();
+Route::any('/login', [WebAuthController::class, 'login'])->name('login');
 Route::get('/reload-captcha', [WebAuthController::class, 'reloadCaptcha']);
 Route::middleware(['auth','checkStatus'])->group(function (){
 
