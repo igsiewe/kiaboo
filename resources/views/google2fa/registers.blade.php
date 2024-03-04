@@ -47,7 +47,7 @@
                                 <div class="card card-default">
                                     <h4 class="card-header text-center mt-4">Set up Google Authenticator</h4>
                                     <div class="card-body" style="text-align: center;">
-                                        <p>Set up your two factor authenticator by scanning the barcode below. Alternatively, you can use the code </strong> </p>
+                                        <p>Set up your two factor authenticator by scanning the barcode below. Alternatively, you can use the code <strong>{{$secret}}</strong> </p>
                                         <div>
                                             {!! $QR_Image !!}
                                         </div>
