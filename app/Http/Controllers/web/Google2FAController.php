@@ -42,7 +42,7 @@ class Google2FAController extends Controller
         // generate image for QR barcode
         $qrCode = Google2FA::getQRCodeInline(
             config('app.name'),
-            $request->user()->email,
+            $request->user()->login,
             $secret,
             200
         );
