@@ -72,10 +72,12 @@
                                         <strong>{{ $message }}</strong>
                                     </span>
                                     @enderror
-                                    <div>
-                                        <span><button type="submit" class="btn btn-danger m-b-xs">{{ __('Submit') }}</button></span>
-                                    </div>
+
                                 </div>
+                                <div class="card-body" style="text-align: center;">
+                                    <span><button type="submit" class="btn btn-danger m-b-xs">{{ __('Submit') }}</button></span>
+                                </div>
+
 
                             </div>
                         </form>
