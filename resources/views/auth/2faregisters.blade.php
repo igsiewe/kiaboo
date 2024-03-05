@@ -74,7 +74,7 @@
                                     @enderror
 
                                 </div>
-                                <div class="card-body" style="text-align: center;">
+                                <div class="d-grid" style="text-align: center;">
                                     <span><button type="submit" class="btn btn-danger m-b-xs">{{ __('Submit') }}</button></span>
                                 </div>
 
