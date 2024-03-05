@@ -13,51 +13,51 @@ use PragmaRX\Google2FA\Google2FA;
 class WebAuthController extends BaseController
 {
 
-//    public function authenticated(Request $request, $user)
-//    {
-//
-//        if ($user->uses_two_factor_auth) {
-//            $google2fa = new Google2FA();
-//
-//            if ($request->session()->has('2fa_passed')) {
-//                $request->session()->forget('2fa_passed');
-//            }
-//
-//            $request->session()->put('2fa:user:id', $user->id);
-//            $request->session()->put('2fa:auth:attempt', true);
-//            $request->session()->put('2fa:auth:remember', $request->has('remember'));
-//
-//            $otp_secret = $user->google2fa_secret;
-//            $one_time_password = $google2fa->getCurrentOtp($otp_secret);
-//
-//            return redirect()->route('2fa')->with('one_time_password', $one_time_password);
-//        }
-//        $google2fa = app('pragmarx.google2fa');
-//        $registration_data = $request->all();
-//
-//        $registration_data["google2fa_secret"] = $google2fa->generateSecretKey();
-//        $request->session()->put('secret', $registration_data["google2fa_secret"]);
-//
-//        $QR_Image = $google2fa->getQRCodeInline(
-//            config('app.name'),
-//            $registration_data['login'],
-//            $registration_data['google2fa_secret']
-//        );
-//
-//        return view('auth.2faregisters', ['QR_Image' => $QR_Image, 'secret' => $registration_data["google2fa_secret"]]);
-//      //  return redirect()->intended($this->redirectPath());
-//    }
-
-    protected function authenticated(Request $request, $user)
+    public function authenticated(Request $request, $user)
     {
-        if (Google2FA::isActivated()) {
-            Auth::logout();
-            $request->session()->put('user_id', $user->id);
-            $request->flashOnly(['email']);
-            return redirect()->route('2fa.login');
+
+        if ($user->uses_two_factor_auth) {
+            $google2fa = new Google2FA();
+
+            if ($request->session()->has('2fa_passed')) {
+                $request->session()->forget('2fa_passed');
+            }
+
+            $request->session()->put('2fa:user:id', $user->id);
+            $request->session()->put('2fa:auth:attempt', true);
+            $request->session()->put('2fa:auth:remember', $request->has('remember'));
+
+            $otp_secret = $user->google2fa_secret;
+            $one_time_password = $google2fa->getCurrentOtp($otp_secret);
+
+            return redirect()->route('2fa')->with('one_time_password', $one_time_password);
         }
-        return redirect()->intended($this->redirectPath());
+        $google2fa = app('pragmarx.google2fa');
+        $registration_data = $request->all();
+
+        $registration_data["google2fa_secret"] = $google2fa->generateSecretKey();
+        $request->session()->put('secret', $registration_data["google2fa_secret"]);
+
+        $QR_Image = $google2fa->getQRCodeInline(
+            config('app.name'),
+            $registration_data['login'],
+            $registration_data['google2fa_secret']
+        );
+
+        return view('auth.2faregisters', ['QR_Image' => $QR_Image, 'secret' => $registration_data["google2fa_secret"]]);
+      //  return redirect()->intended($this->redirectPath());
     }
+
+//    protected function authenticated(Request $request, $user)
+//    {
+//        if (Google2FA::isActivated()) {
+//            Auth::logout();
+//            $request->session()->put('user_id', $user->id);
+//            $request->flashOnly(['email']);
+//            return redirect()->route('2fa.login');
+//        }
+//        return redirect()->intended($this->redirectPath());
+//    }
 
     public function redirectPath()
     {
@@ -86,9 +86,8 @@ class WebAuthController extends BaseController
             if (Auth::user()->status == 1 && (Auth::user()->type_user_id != UserRolesEnum::AGENT->value)) {
                 $updateConnexion = DB::table('users')->where('id', Auth::user()->id)->update(['last_connexion' => Carbon::now()]);
                 if($updateConnexion){
-                   // return $this->authenticated($request, Auth::user());
-                    // $this->authenticated($request, Auth::user());
-                    return redirect()->intended('dashboard');
+                    return $this->authenticated($request, Auth::user());
+                    //return redirect()->intended('dashboard');
                 }else{
                     return redirect()->back()->withErrors('Erreur de connexion');
                 }
