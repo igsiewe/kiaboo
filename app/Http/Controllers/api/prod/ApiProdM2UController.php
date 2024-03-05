@@ -331,7 +331,27 @@ class ApiProdM2UController extends Controller
                     "UseDefaultWallet" => "No",
                     "OTP" => "SibSnfeSdksSji2023_@" //Le password du Teller
                 ]  );
-            //dd( json_decode($response->body()) );
+            Log::info([
+                "Service"=>ServiceEnum::DEPOT_M2U->name,
+                "url"=>"https://apps.m2u.money/CPAddMoney",
+                "requete"=>[
+                    "Amount" => $montant,
+                    "TargetType" => "50",
+                    "TargetCurrency" => "XAF",
+                    "SourceWallet" => "xxxxxxxx",
+                    "TargetWallet" => $accountNumber,
+                    "FirstName" => $firstName,
+                    "LastName" => $lastName,
+                    "PhoneNumber" => $customerNumber,
+                    "PartnerTellerID"=>Auth::user()->id,
+                    "UseDefaultWallet" => "No",
+                    "OTP" => "xxxxxxx"],
+                "reponse"=>[
+                    "status"=>json_decode($response->status()),
+                    "body"=>json_decode($response->body()),
+                    ]
+
+            ]);
             if($response->status()==200) {
 
                 $json = json_decode($response, false);
@@ -960,6 +980,21 @@ class ApiProdM2UController extends Controller
                     "PIN"=>"SibSnfeSdksSji2023_@",
                     "PartnerTellerID"=>Auth::user()->id,
                 ]  );
+
+            Log::info([
+                "Service"=>ServiceEnum::RETRAIT_M2U_CB->name,
+                "url"=>"https://apps.m2u.money/ExecuteCashBack",
+                "requete"=>[
+                    "TransactionNumber"=> $request->TransactionNumber,
+                    "WalletNumber"=>"XXXXXX",
+                    "OTP"=>$request->OTP,
+                    "PIN"=>"XXXXXXX",
+                    "PartnerTellerID"=>Auth::user()->id,],
+                    "reponse"=>[
+                        "status"=>json_decode($response->status()),
+                        "body"=>json_decode($response->body()),
+                    ]
+            ]);
 
             $json = json_decode($response, false);
             $dataResultat = collect($json)->first();
