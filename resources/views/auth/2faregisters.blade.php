@@ -62,7 +62,7 @@
                                     <p>You must set up your Google Authenticator app before continuing. You will be unable to login otherwise</p>
                                 </div>
                                 <div class="card-body" style="text-align: center;">
-                                    <span class="form-control-plaintext"><p>Type the 2FA token below for verification</p></span>
+                                    <p>Type the 2FA token below for verification</p>
                                     <input id="otp" type="text"
                                            class="form-control @error('one_time_password') is-invalid @enderror"
                                            name="one_time_password" required>
@@ -73,7 +73,7 @@
                                     </span>
                                     @enderror
                                     <div>
-                                        <button type="submit" class="btn btn-danger m-b-xs">{{ __('Submit') }}</button>
+                                        <span><button type="submit" class="btn btn-danger m-b-xs">{{ __('Submit') }}</button></span>
                                     </div>
                                 </div>
 
