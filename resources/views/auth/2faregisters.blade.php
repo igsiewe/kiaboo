@@ -52,21 +52,38 @@
 
                     <div class="mb-3">
                         <form method="POST" action="{{route("2fa.assign")}}">
-                        <div class="form-floating">
-                            <div class="card-body" style="text-align: center;">
-                                <p>Set up your two factor authenticator by scanning the barcode below. Alternatively, you can use the code <strong>{{$secret}}</strong> </p>
-                                <div>
-                                    {!! $QR_Image !!}
-                                    <input id="one_time_password" type="hidden" value="{{$secret}}">
+                            <div class="form-floating">
+                                <div class="card-body" style="text-align: center;">
+                                    <p>Set up your two factor authenticator by scanning the barcode below. Alternatively, you can use the code <strong>{{$secret}}</strong> </p>
+                                    <div>
+                                        {!! $QR_Image !!}
+                                        <input id="one_time_password" type="hidden" value="{{$secret}}">
+                                    </div>
+                                    <p>You must set up your Google Authenticator app before continuing. You will be unable to login otherwise</p>
+                                    <div>
+                                        <button type="submit" class="btn btn-danger m-b-xs">{{ __('Submit') }}</button>
+                                    </div>
                                 </div>
-                                <p>You must set up your Google Authenticator app before continuing. You will be unable to login otherwise</p>
-                                <div>
-                                    <button type="submit" class="btn btn-danger m-b-xs">{{ __('Submit') }}</button>
+
+
+                                <div class="card-body" style="text-align: center;">
+                                    <span class="form-control-plaintext">Type the 2FA token below for verification</span>
+
+                                    <input id="otp" type="text"
+                                           class="form-control @error('one_time_password') is-invalid @enderror"
+                                           name="one_time_password" required>
+
+                                    @error('one_time_password')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
                                 </div>
                             </div>
-                        </div>
                         </form>
                     </div>
+
+
                 </div>
             </div>
         </div>
