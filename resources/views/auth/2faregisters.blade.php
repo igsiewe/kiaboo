@@ -60,13 +60,9 @@
                                         <input id="one_time_password" type="hidden" value="{{$secret}}">
                                     </div>
                                     <p>You must set up your Google Authenticator app before continuing. You will be unable to login otherwise</p>
-
                                 </div>
-
-
                                 <div class="card-body" style="text-align: center;">
-                                    <span class="form-control-plaintext">Type the 2FA token below for verification</span>
-
+                                    <span class="form-control-plaintext"><p>Type the 2FA token below for verification</p></span>
                                     <input id="otp" type="text"
                                            class="form-control @error('one_time_password') is-invalid @enderror"
                                            name="one_time_password" required>
