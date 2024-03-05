@@ -44,6 +44,17 @@ class ApiProdM2UController extends Controller
                 "PhoneNumber"=>'237'.$customerNumber,
             ]  );
 
+        Log::info([
+            "Service"=>"M2U_NameCustomer",
+            "url"=>"https://apps.m2u.money/LocateUser",
+            "requete"=>[
+                "PhoneNumber" => '237'.$customerNumber,
+            ],
+            "reponse"=>[
+                "status"=>json_decode($response->status()),
+                "response"=>json_decode($response->body()),
+                ]
+        ]);
         if($response->status()==401){
             return response()->json([
                 'status' => 'echec',
