@@ -26,8 +26,6 @@ class User extends Authenticatable
         'email',
         'login',
         'password',
-        'google2fa_secret',
-        'uses_two_factor_auth',
         'codepin',
         'type_user_id',
         'countrie_id',
@@ -96,13 +94,6 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-//    protected function google2faSecret():Attribute
-//    {
-//       return new Attribute(
-//           get: fn ($value) => decrypt($value),
-//           set: fn ($value) => encrypt($value),
-//       );
-//    }
 
     public function tokenExpired()
     {
