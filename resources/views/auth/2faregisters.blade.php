@@ -51,36 +51,44 @@
                     </div>
 
                     <div class="mb-3">
-                        <form method="POST" action="{{route("2fa.assign")}}">
-                            <div class="form-floating">
-                                <div class="card-body" style="text-align: center;">
-                                    <p>Set up your two factor authenticator by scanning the barcode below. Alternatively, you can use the code <strong>{{$secret}}</strong> </p>
-                                    <div>
-                                        {!! $QR_Image !!}
-                                        <input id="one_time_password" type="hidden" value="{{$secret}}">
+                        @if(Google2FA::isActivated())
+                            <div>2FA is activated!</div>
+                            <span>To deactivate 2FA, click:</span>
+                            <a href="{{ route('2fa.deactivate') }}">
+                                {{ __('deactivate 2FA') }}
+                            </a>
+                        @else
+                            <form method="POST" action="{{route("2fa.assign")}}">
+                                <div class="form-floating">
+                                    <div class="card-body" style="text-align: center;">
+                                        <p>Set up your two factor authenticator by scanning the barcode below. Alternatively, you can use the code <strong>{{$secret}}</strong> </p>
+                                        <div>
+                                            {!! $QR_Image !!}
+                                            <input id="one_time_password" type="hidden" value="{{$secret}}">
+                                        </div>
+                                        <p>You must set up your Google Authenticator app before continuing. You will be unable to login otherwise</p>
                                     </div>
-                                    <p>You must set up your Google Authenticator app before continuing. You will be unable to login otherwise</p>
+                                    <div class="card-body" style="text-align: center;">
+                                        <p>Type the 2FA token below for verification</p>
+                                        <input id="otp" type="text"
+                                               class="form-control @error('one_time_password') is-invalid @enderror"
+                                               name="one_time_password" required>
+
+                                        @error('one_time_password')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+
+                                    </div>
+                                    <div class="d-grid" style="text-align: center;">
+                                        <span><button type="submit" class="btn btn-danger m-b-xs">{{ __('Submit') }}</button></span>
+                                    </div>
+
+
                                 </div>
-                                <div class="card-body" style="text-align: center;">
-                                    <p>Type the 2FA token below for verification</p>
-                                    <input id="otp" type="text"
-                                           class="form-control @error('one_time_password') is-invalid @enderror"
-                                           name="one_time_password" required>
-
-                                    @error('one_time_password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-
-                                </div>
-                                <div class="d-grid" style="text-align: center;">
-                                    <span><button type="submit" class="btn btn-danger m-b-xs">{{ __('Submit') }}</button></span>
-                                </div>
-
-
-                            </div>
-                        </form>
+                            </form>
+                            @endif
                     </div>
 
 
