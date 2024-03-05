@@ -46,7 +46,7 @@
                     </div>
                     <div class="authent-text">
 
-                        <p><div class="card-header text-center mt-4">{{ __('Set up Google Authenticator') }}</div></p><br/>
+                        <p><div class="card-header text-center mt-4">{{ __('Set up Google Authenticator') }}</div></p>
 
                     </div>
 
@@ -60,9 +60,7 @@
                                         <input id="one_time_password" type="hidden" value="{{$secret}}">
                                     </div>
                                     <p>You must set up your Google Authenticator app before continuing. You will be unable to login otherwise</p>
-                                    <div>
-                                        <button type="submit" class="btn btn-danger m-b-xs">{{ __('Submit') }}</button>
-                                    </div>
+
                                 </div>
 
 
@@ -78,7 +76,11 @@
                                         <strong>{{ $message }}</strong>
                                     </span>
                                     @enderror
+                                    <div>
+                                        <button type="submit" class="btn btn-danger m-b-xs">{{ __('Submit') }}</button>
+                                    </div>
                                 </div>
+
                             </div>
                         </form>
                     </div>
