@@ -58,7 +58,7 @@
                         <a class="nav-link" id="sidebar-toggle" href="#"><i data-feather="arrow-left"></i></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="https://www.kiaboo.net">Home</a>
+                        <a class="nav-link" href="{{route("siteweb")}}">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Settings</a>
@@ -69,7 +69,7 @@
                 </ul>
             </div>
             <div class="logo">
-                <a class="navbar-brand" href="index.html"></a>
+                <a class="navbar-brand" href="#"></a>
             </div>
             <div class="" id="headerNav">
                 <ul class="navbar-nav">
@@ -78,7 +78,7 @@
                         <div class="dropdown-menu dropdown-menu-end profile-drop-menu" aria-labelledby="profileDropDown">
                             <a class="dropdown-item" href="#"><i data-feather="key"></i>Password</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="{{ route('fermer') }}"><i data-feather="log-out"></i>Logout</a>
+                            <a class="dropdown-item" href="{{ route('logout') }}"><i data-feather="log-out"></i>Logout</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">

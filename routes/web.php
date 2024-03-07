@@ -16,6 +16,7 @@ use App\Http\Controllers\web\WebServiceController;
 use App\Http\Controllers\web\WebTransactionsController;
 use App\Http\Controllers\web\WebUtilisateurController;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -39,7 +40,12 @@ Route::get('/reload-captcha', [WebAuthController::class, 'reloadCaptcha']);
 Route::middleware(['auth','checkStatus'])->group(function (){
 
     Route::any('/dashboard', [WebDashBoardController::class,'dashboard'])->name("dashboard");
-    Route::any('/logout', [WebAuthController::class, 'logout'])->name('fermer');
+    Route::any('/logout', [WebAuthController::class, 'logout'])->name('logout');
+    Route::get('/', function () {
+        Auth::logout();
+        $url = "https://kiaboo.net";
+        return Redirect::to($url);
+    })->name("Siteweb");
 
     Route::group(['prefix' => 'approvisionnement'], function () {
         Route::controller(WebApproAgentController::class)->group(function () {
