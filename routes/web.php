@@ -42,12 +42,12 @@ Route::middleware(['auth','checkStatus'])->group(function (){
 
     Route::any('/dashboard', [WebDashBoardController::class,'dashboard'])->name("dashboard");
     Route::any('/logout', [WebAuthController::class, 'logout'])->name('fermer');
-    Route::get('/', function () {
-        Session::flush();
-        Auth::logout();
-        $url = "https://kiaboo.net";
-        return Redirect::to($url);
-    })->name("siteweb");
+//    Route::get('/', function () {
+//        Session::flush();
+//        Auth::logout();
+//        $url = "https://kiaboo.net";
+//        return Redirect::to($url);
+//    })->name("siteweb");
 
     Route::group(['prefix' => 'approvisionnement'], function () {
         Route::controller(WebApproAgentController::class)->group(function () {
