@@ -112,7 +112,7 @@
                         <a href="register.html">Mot de passe oublié ?</a></p>
                     </div>
                     <hr/>
-                    <div class="text-center opacity-8 mt-3">Copyright © Kiaboo 2023</div>
+                    <div class="text-center opacity-8 mt-3">Copyright © Kiaboo 2024</div>
                 </div>
             </div>
         </div>
