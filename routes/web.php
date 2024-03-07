@@ -18,6 +18,7 @@ use App\Http\Controllers\web\WebUtilisateurController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,13 +36,14 @@ Route::get('/', function () {
     return view('index');
 });
 //Auth::routes();
-Route::any('/login', [WebAuthController::class, 'login'])->name('login');
+Route::any('/', [WebAuthController::class, 'login'])->name('login');
 Route::get('/reload-captcha', [WebAuthController::class, 'reloadCaptcha']);
 Route::middleware(['auth','checkStatus'])->group(function (){
 
     Route::any('/dashboard', [WebDashBoardController::class,'dashboard'])->name("dashboard");
-    Route::any('/logout', [WebAuthController::class, 'logout'])->name('logout');
+    Route::any('/logout', [WebAuthController::class, 'logout'])->name('fermer');
     Route::get('/', function () {
+        Session::flush();
         Auth::logout();
         $url = "https://kiaboo.net";
         return Redirect::to($url);

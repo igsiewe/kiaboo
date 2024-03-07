@@ -78,7 +78,7 @@
                         <div class="dropdown-menu dropdown-menu-end profile-drop-menu" aria-labelledby="profileDropDown">
                             <a class="dropdown-item" href="#"><i data-feather="key"></i>Password</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="{{ route('logout') }}"><i data-feather="log-out"></i>Logout</a>
+                            <a class="dropdown-item" href="{{ route('fermer') }}"><i data-feather="log-out"></i>Logout</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">
