@@ -58,7 +58,7 @@
                         <a class="nav-link" id="sidebar-toggle" href="#"><i data-feather="arrow-left"></i></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Home</a>
+                        <a class="nav-link" href="{{route("siteweb")}}">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Settings</a>
