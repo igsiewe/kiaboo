@@ -45,7 +45,7 @@ Route::middleware(['auth','checkStatus'])->group(function (){
         Auth::logout();
         $url = "https://kiaboo.net";
         return Redirect::to($url);
-    })->name("Siteweb");
+    })->name("siteweb");
 
     Route::group(['prefix' => 'approvisionnement'], function () {
         Route::controller(WebApproAgentController::class)->group(function () {
