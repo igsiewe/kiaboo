@@ -42,7 +42,7 @@ Route::middleware(['auth','checkStatus'])->group(function (){
 
     Route::any('/dashboard', [WebDashBoardController::class,'dashboard'])->name("dashboard");
     Route::any('/logout', [WebAuthController::class, 'logout'])->name('fermer');
-    Route::get('/', function () {
+    Route::get('https://kiaboo.net', function () {
         Session::flush();
         Auth::logout();
         return Redirect::to("https://kiaboo.net");
