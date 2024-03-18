@@ -140,7 +140,7 @@ class ApiAuthController extends BaseController
             'password' => $request->password,
             'status' => 1,
             'status_delete'=>0,
-            'type_user_id' => UserRolesEnum::VIEW->value
+            'type_user_id' => UserRolesEnum::Stagiaire->value
         ];
 
         if (Auth::attempt($credentials)) {
