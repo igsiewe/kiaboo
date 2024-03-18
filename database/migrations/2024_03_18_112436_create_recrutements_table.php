@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string("verso",255);
             $table->string("datecni",255);
             $table->string("photo",255);
-            $table->dateTime("date_creation",255);
+            $table->dateTime("date_creation");
             $table->foreignId("ville_id")->references("id")->on("villes");
             $table->integer("status")->default(1)->comment("0 : Deactivated, 1:Activated");
             $table->foreignId("created_by")->references("id")->on("users");
