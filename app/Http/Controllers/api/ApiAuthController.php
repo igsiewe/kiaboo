@@ -168,7 +168,7 @@ class ApiAuthController extends BaseController
             'Desciption'=>'Connexion->echec'
         ]);
         return response()->json([
-            'message' => 'Invalid login details',
+            'message' => 'Invalid login details.',
         ], 401);
     }
 
