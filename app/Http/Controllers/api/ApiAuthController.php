@@ -525,6 +525,27 @@ class ApiAuthController extends BaseController
         }
     }
 
+    public function checkNumeroAgent(Request $request){
+        $validator = Validator::make($request->all(), [
+            'numero' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 401);
+        }
+        $user = recrutement::where('telephone', $request->numero)->first();
+        if ($user) {
+            return response()->json(['success' => false, 'message' => 'Un agent a déjà été enregistré avec numéro'], 404);
+        } else {
+            $otpcode = rand(100000, 999999);
+            $numero = str_replace("+","",$request->numero);
+            $send = new ApiSmsController();
+            $message = "Le code de réinitialisation du mot de passe de votre compte KIABOO est ".$otpcode;
+            $envoyersMS = $send->SendSMS($numero,utf8_decode($message));
+            return response()->json(['success' => true, 'message' => "Un OTP a été envoyé par SMS",'otpcode'=>$otpcode], 200);
+        }
+    }
+
     public function updateUserPassword(Request $request)
     {
         # Validation
