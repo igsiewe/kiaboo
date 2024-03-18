@@ -8,8 +8,10 @@ use App\Http\Enums\TypeServiceEnum;
 use App\Http\Enums\UserRolesEnum;
 use App\Models\Parrainage;
 use App\Models\Partenaire;
+use App\Models\recrutement;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Models\Ville;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -77,7 +79,7 @@ class ApiAuthController extends BaseController
             'password' => $request->password,
             'status' => 1,
             'status_delete'=>0,
-           // 'type_user_id' => UserRolesEnum::AGENT->value
+            'type_user_id' => UserRolesEnum::AGENT->value
         ];
 
         if (Auth::attempt($credentials)) {
@@ -111,6 +113,55 @@ class ApiAuthController extends BaseController
                 'Desciption'=>'Connexion'
             ]);
             return $this->respondWithToken($access_token, $user, $partenaires, $transactions);
+        }
+        Log::alert([
+            'Login'=>$request->login,
+            'Desciption'=>'Connexion->echec'
+        ]);
+        return response()->json([
+            'message' => 'Invalid login details',
+        ], 401);
+    }
+
+    public function loginRecrutement(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'login' => 'required|min:3|string|max:255',
+            'password' => 'required|string|min:6',
+        ]);
+
+        if ($validator->fails()) {
+            return response(['errors' => $validator->errors()->all()], 422);
+        }
+
+        // Here, we get the user credentials from the request
+        $credentials = [
+            'login' => $request->login,
+            'password' => $request->password,
+            'status' => 1,
+            'status_delete'=>0,
+            'type_user_id' => UserRolesEnum::VIEW->value
+        ];
+
+        if (Auth::attempt($credentials)) {
+            $users = Auth::user();
+            //$user = User::where('id', $users->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before as balanceBefore', 'balance_after as balanceAfter', 'last_amount as lastAmount','sous_distributeur_id as sousDistributeur','date_last_transaction as dateLastTransaction','last_service_id as lastService', 'type_user_id as typeuser','countrie_id as country','reference_last_transaction as referenceLastTransaction', 'status')->first();
+            $user = User::where('id', $users->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before', 'balance_after','total_commission', 'last_amount','sous_distributeur_id','date_last_transaction','moncodeparrainage')->first();
+
+            DB::table('oauth_access_tokens')->where('user_id', $user->id)->delete();
+            $token = $user->createToken('kiaboo');
+            $access_token = $token->accessToken;
+
+            $user->last_connexion = Carbon::now();
+            $user->save();
+            Log::info([
+                'user_id'=>Auth::user()->id,
+                'name'=>Auth::user()->name." ".Auth::user()->surname,
+                'Desciption'=>'Connexion'
+            ]);
+            $agents = recrutement::where("created_by", Auth::user()->id)->where("status",1)->orderBy("name")->orderBy("surname")->get();
+            $villes = Ville::where("status",1)->get();
+            return $this->respondWithToken($access_token, $user, $agents, $villes);
         }
         Log::alert([
             'Login'=>$request->login,
