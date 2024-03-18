@@ -28,9 +28,9 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => ['cors', 'json.response']], function () {
     // public routes
     //CallBack
-    Route::controller(ApiProdMoMoMoneyController::class)->group(function (){
-        Route::post('momo/callback','MomoCallBack')->name("MoMoCallback");
-    });
+//    Route::controller(ApiProdMoMoMoneyController::class)->group(function (){
+//        Route::post('momo/callback','MomoCallBack')->name("MoMoCallback");
+//    });
 
     Route::group(['prefix' => 'v1'], function () {
 
