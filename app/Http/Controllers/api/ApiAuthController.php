@@ -159,7 +159,7 @@ class ApiAuthController extends BaseController
                 'name'=>Auth::user()->name." ".Auth::user()->surname,
                 'Desciption'=>'Connexion'
             ]);
-            $agents = recrutement::where("created_by", Auth::user()->id)->where("status",1)->orderBy("name")->orderBy("surname")->get();
+            $agents = recrutement::where("created_by", Auth::user()->id)->where("status",1)->orderBy("name")->with("ville")->orderBy("surname")->get();
             $villes = Ville::where("status",1)->get();
             return $this->respondWithTokenRecrutement($access_token, $user, $agents, $villes);
         }
