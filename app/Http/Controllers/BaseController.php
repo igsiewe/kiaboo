@@ -111,15 +111,18 @@ class BaseController extends Controller
         ], 200);
     }
 
-    public function respondWithToken($token, $user = null, $partenaires = null, $transactions = null)
+
+    public function respondWithTokenRecrutement($token, $user = null, $agents = null, $villes = null)
     {
         return response()->json([
             'token_type' => 'bearer',
             'scope'=> "am_application_scope default",
             'access_token' => $token,
             'user' => $user,
-            'transactions'=> $transactions,
-            'partenaires'=> $partenaires,
+            'agents'=> $agents,
+            'villes'=> $villes,
+
         ], 200);
     }
+
 }
