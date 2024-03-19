@@ -554,8 +554,6 @@ class ApiAuthController extends BaseController
             'password' => 'required|string|min:8|max:20',
            // 'password_confirmation' => 'required|string|min:8|max:20|confirmed',
         ]);
-
-
         #Find user
 
         $user = User::where('login',$request->userphone)->where('type_user_id',UserRolesEnum::AGENT->value)->where('status',1);
@@ -574,7 +572,50 @@ class ApiAuthController extends BaseController
                 'message' => 'User not found'
             ], 404);
         }
-
-
     }
+
+    public function recrutement(Request $request)
+    {
+        # Validation
+        $request->validate([
+            'name'=>'required|string|min:2|max:255',
+            'surname' => 'required|string|min:2|max:255',
+            'email' => 'required|email',
+            'telephone' => 'required|string|min:8|max:20',
+            'ville_id' => 'required|integer',
+            'datecni' => 'required|date',
+            'numcni' => 'required|string|min:8|max:20',
+          //  'photo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+         //   'recto' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+          //  'verso' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+        #Find user
+        $insert = recrutement::create([
+            'name'=>$request->name,
+            'surname' => $request->surname,
+            'email' => $request->email,
+            'telephone' => $request->telephone,
+            'ville_id' => $request->ville_id,
+            'quartier'=> $request->quartier,
+            'datecni' => $request->datecni ,
+            'numcni' => $request->numcni,
+            'created_by'=>Auth::user()->id,
+            'updated_by'=>Auth::user()->id,
+            'status'=>1,
+        ]);
+        if($insert){
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Partenaire enregistré avec succès!'
+            ], 200);
+
+        }else{
+            return response()->json([
+                'status' => 'echec',
+                'message' => 'Une erreur innatendue est survenue'
+            ], 404);
+        }
+    }
+
+
 }

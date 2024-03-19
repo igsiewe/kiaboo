@@ -37,11 +37,12 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
          Route::controller(ApiAuthController::class)->group(function () {
             //Route::post('user/login', 'Login')->name("Login");
             Route::post('user/login', 'login');
-             Route::post('user/login/recrutement', 'loginRecrutement');
+            Route::post('user/login/recrutement', 'loginRecrutement');
             Route::post('user/register', 'registerUser')->name("registerUser");
             Route::post('/user/phone/verify', 'checkNumeroUser')->name("checkNumeroUser");
-             Route::post('/agent/phone/verify', 'checkNumeroAgent')->name("checkNumeroAgent");
+            Route::post('/agent/phone/verify', 'checkNumeroAgent')->name("checkNumeroAgent");
             Route::post('/user/verify/update/password', 'updateUserPassword')->name("updateUserPassword");
+            Route::post('/agent/recrutement', 'recrutement')->name("recrutement");
         });
 
         Route::controller(ApiSmsController::class)->group(function () {
