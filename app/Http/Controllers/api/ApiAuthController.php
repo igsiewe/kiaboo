@@ -590,6 +590,7 @@ class ApiAuthController extends BaseController
           //  'verso' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
         #Find user
+        $id = Auth::user()->id;
         $insert = recrutement::create([
             'name'=>$request->name,
             'surname' => $request->surname,
@@ -599,8 +600,8 @@ class ApiAuthController extends BaseController
             'quartier'=> $request->quartier,
             'datecni' =>Carbon::createFromFormat('d/m/Y', $request->datecni)->format('Y-m-d'),
             'numcni' => $request->numcni,
-            'created_by'=>auth()->user()->id,
-            'updated_by'=>auth()->user()->id,
+            'created_by'=>$id,
+            'updated_by'=>$id,
             'status'=>1,
         ]);
         if($insert){
