@@ -599,8 +599,8 @@ class ApiAuthController extends BaseController
             'quartier'=> $request->quartier,
             'datecni' =>Carbon::createFromFormat('d/m/Y', $request->datecni)->format('Y-m-d'),
             'numcni' => $request->numcni,
-            'created_by'=>Auth::user()->id,
-            'updated_by'=>Auth::user()->id,
+            'created_by'=>auth()->user()->id,
+            'updated_by'=>auth()->user()->id,
             'status'=>1,
         ]);
         if($insert){
