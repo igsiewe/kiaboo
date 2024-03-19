@@ -580,8 +580,8 @@ class ApiAuthController extends BaseController
         $request->validate([
             'name'=>'required|string|min:2|max:255',
             'surname' => 'required|string|min:2|max:255',
-            'email' => 'required|email',
-            'telephone' => 'required|string|min:8|max:20',
+            'email' => 'required|email|unique:recrutements',
+            'telephone' => 'required|string|min:8|max:20|unique:recrutements',
             'ville_id' => 'required|integer',
             'datecni' => 'required|date',
             'numcni' => 'required|string|min:8|max:20',
