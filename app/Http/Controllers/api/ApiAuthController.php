@@ -593,6 +593,7 @@ class ApiAuthController extends BaseController
             'telephone' => $request->telephone,
             'ville_id' => $request->ville_id,
             'quartier'=> $request->quartier,
+            'adresse'=>$request->adresse,
             'date_creation'=>Carbon::now(),
             'datecni' =>Carbon::createFromFormat('d/m/Y', $request->datecni)->format('Y-m-d'),
             'numcni' => $request->numcni,
