@@ -42,7 +42,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
             Route::post('/user/phone/verify', 'checkNumeroUser')->name("checkNumeroUser");
             Route::post('/agent/phone/verify', 'checkNumeroAgent')->name("checkNumeroAgent");
             Route::post('/user/verify/update/password', 'updateUserPassword')->name("updateUserPassword");
-            Route::post('/agent/recrutement', 'recrutement')->name("recrutement");
+
         });
 
         Route::controller(ApiSmsController::class)->group(function () {
@@ -71,6 +71,7 @@ Route::middleware('auth:api')->group(function () {
             Route::get('user/data', 'getUserData')->name("getUserData");
             Route::post('user/update/', 'updateUser')->name("updateUser");
             Route::post('user/update/password', 'updatePassword')->name("updatePassword");
+            Route::post('/agent/recrutement', 'recrutement')->name("recrutement");
         });
 
         Route::controller(ApiApproDistributeurController::class)->group(function () {

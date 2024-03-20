@@ -580,14 +580,10 @@ class ApiAuthController extends BaseController
             'email' => 'required|email|unique:recrutements',
             'telephone' => 'required|string|min:8|max:20|unique:recrutements',
             'ville_id' => 'required|integer',
-          //  'datecni' => 'required|date',
             'numcni' => 'required|string|min:8|max:20',
-          //  'photo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-         //   'recto' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-          //  'verso' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
         #Find user
-        dd(Auth::user());
+
         $id = Auth::user()->id;
         $insert = recrutement::create([
             'name'=>$request->name,
