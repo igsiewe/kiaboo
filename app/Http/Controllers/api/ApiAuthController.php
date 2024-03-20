@@ -601,9 +601,13 @@ class ApiAuthController extends BaseController
             'status'=>1,
         ]);
         if($insert){
+            $agents = recrutement::where("created_by", Auth::user()->id)->where("status",1)->orderBy("name")->orderBy("surname")->get();
+            $villes = Ville::where("status",1)->get();
             return response()->json([
                 'status' => 'success',
-                'message' => 'Partenaire enregistré avec succès!'
+                'message' => 'Partenaire enregistré avec succès!',
+                'agents' => $agents,
+                'villes'=>$villes
             ], 200);
 
         }else{
