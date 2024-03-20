@@ -587,7 +587,7 @@ class ApiAuthController extends BaseController
 
         $id = Auth::user()->id;
         $insert = recrutement::create([
-            'name'=>$request->name,
+            'name'=> strtoupper($request->name),
             'surname' => $request->surname,
             'email' => $request->email,
             'telephone' => $request->telephone,
