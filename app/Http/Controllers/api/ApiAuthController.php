@@ -3,13 +3,10 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\BaseController;
-use App\Http\Enums\StatusTransEnum;
-use App\Http\Enums\TypeServiceEnum;
+
 use App\Http\Enums\UserRolesEnum;
-use App\Models\Parrainage;
 use App\Models\Partenaire;
 use App\Models\recrutement;
-use App\Models\Transaction;
 use App\Models\User;
 use App\Models\Ville;
 use Carbon\Carbon;
