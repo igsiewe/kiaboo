@@ -580,6 +580,7 @@ class ApiAuthController extends BaseController
             'email' => 'required|email|unique:recrutements',
             'telephone' => 'required|string|min:8|max:20|unique:recrutements',
             'ville_id' => 'required|integer',
+            'quartier'=>'required|string',
             'numcni' => 'required|string|min:8|max:20',
         ]);
         #Find user
