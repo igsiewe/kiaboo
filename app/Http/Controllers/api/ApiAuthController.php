@@ -587,6 +587,7 @@ class ApiAuthController extends BaseController
           //  'verso' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
         #Find user
+        dd(Auth::user());
         $id = Auth::user()->id;
         $insert = recrutement::create([
             'name'=>$request->name,
