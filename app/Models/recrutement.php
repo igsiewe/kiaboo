@@ -15,6 +15,7 @@ class recrutement extends Model
         'telephone',
         'ville_id',
         'quartier',
+        'adresse',
         'datecni',
         'numcni',
         'photo',
