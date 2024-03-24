@@ -884,7 +884,7 @@ class ApiProdMoMoMoneyController extends Controller
                         'function' => "MOMO_Retrait_CheckStatus",
                         'response'=>$e->getMessage(),
                         'user' => Auth::user()->id,
-                        'referenceID' => $$referenceID,
+                        'referenceID' => $referenceID,
                     ]);
                     return response()->json(
                         [
@@ -900,7 +900,7 @@ class ApiProdMoMoMoneyController extends Controller
                 'function' => "MOMO_Retrait_Status",
                 'response'=>$response->body(),
                 'user' => Auth::user()->id,
-                'referenceID' => $$referenceID,
+                'referenceID' => $referenceID,
             ]);
             return response()->json(
                 [
