@@ -806,7 +806,7 @@ class ApiProdMoMoMoneyController extends Controller
                     [
                         'status'=>202,
                         'message'=>"PENDING - Transaction en attente de confirmation par le client",
-
+                        'data'=>$data,
                     ],202
                 );
             }
