@@ -877,6 +877,14 @@ class ApiProdMoMoMoneyController extends Controller
                     $subtitle ="Success";
                     $appNotification = new ApiNotification();
                     $envoiNotification = $appNotification->sendNotificationPushFireBase($device_notification, $title, $subtitle, $message);
+                    Log::info([
+                        'Service'=> ServiceEnum::RETRAIT_MOMO->name,
+                        'url' => $http,
+                        'function'=> "MOMO_Retrait_Status",
+                        'response'=>$response->body(),
+                        'user' => Auth::user()->id,
+                        'referenceID' => $referenceID,
+                    ]);
                     return response()->json(
                         [
                             'status'=>200,
