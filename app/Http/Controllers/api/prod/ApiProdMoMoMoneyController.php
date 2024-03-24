@@ -734,7 +734,7 @@ class ApiProdMoMoMoneyController extends Controller
                 [
                     'status'=>200,
                     'message'=>"Transaction initiée avec succès. Le client doit confirmer le retrait avec son code secret",
-
+                    'paytoken'=>$referenceID,
                 ],200
             );
 
