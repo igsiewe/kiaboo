@@ -797,7 +797,7 @@ class ApiProdMoMoMoneyController extends Controller
             ])->Get($http);
 
         $data = json_decode($response->body());
-        dd($data);
+       // dd($data);
         if($response->status()==200){
 
             if($data->status=="PENDING"){
