@@ -797,7 +797,7 @@ class ApiProdMoMoMoneyController extends Controller
             ])->Get($http);
 
         $data = json_decode($response->body());
-
+        dd($data);
         if($response->status()==200){
 
             if($data->status=="PENDING"){
@@ -876,7 +876,7 @@ class ApiProdMoMoMoneyController extends Controller
                     $message = "Le retrait MOMO de " . $montant . " F CFA a été effectué avec succès au ".$customer_phone;
                     $subtitle ="Success";
                     $appNotification = new ApiNotification();
-                    $envoiNotification = $appNotification->sendNotificationPushFireBase($device_notification, $title, $subtitle, $message);
+                 //   $envoiNotification = $appNotification->sendNotificationPushFireBase($device_notification, $title, $subtitle, $message);
                 }catch(\Exception $e){
                     DB::rollBack();
                     Log::error([
