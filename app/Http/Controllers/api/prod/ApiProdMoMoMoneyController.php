@@ -872,14 +872,11 @@ class ApiProdMoMoMoneyController extends Controller
                         ->get();
 
                     DB::commit();
-
-
                     $title = "Kiaboo";
                     $message = "Le retrait MOMO de " . $montant . " F CFA a été effectué avec succès au ".$customer_phone;
                     $subtitle ="Success";
                     $appNotification = new ApiNotification();
                     $envoiNotification = $appNotification->sendNotificationPushFireBase($device_notification, $title, $subtitle, $message);
-
                 }catch(\Exception $e){
                     DB::rollBack();
                     Log::error([
@@ -1010,14 +1007,10 @@ class ApiProdMoMoMoneyController extends Controller
         $externalId = $data->externalId;
         //On se rassure que la transaction est bien en status en attente
         $Transaction = Transaction::where('id',$externalId);
-
         if($Transaction->count()>0){
             $status = $Transaction->first()->status;
-
             if($Transaction->first()->service_id ==ServiceEnum::RETRAIT_MOMO->value && $status==2){
-
                 $financialTransactionId = $Transaction->first()->paytoken;
-
                 if(Arr::has($element, "financialTransactionId")) {
                     $financialTransactionId = $data->financialTransactionId;
                 }
@@ -1031,7 +1024,6 @@ class ApiProdMoMoMoneyController extends Controller
                         'terminaison'=>'CALLBACK',
                     ]);
                 }
-
                 if($data->status=="SUCCESSFUL"){
                     $montant = $data->amount;
                     $user = User::where('id', $Transaction->first()->created_by);
@@ -1055,7 +1047,6 @@ class ApiProdMoMoMoneyController extends Controller
                         ]);
 
                         $commission_agent = Transaction::where("fichier","agent")->where("commission_agent_rembourse",0)->where("source",$agent)->sum("commission_agent");
-
                         $debitAgent = DB::table("users")->where("id", $agent)->update([
                             'balance_after'=>$balanceAfterAgent,
                             'balance_before'=>$balanceBeforeAgent,
@@ -1067,10 +1058,7 @@ class ApiProdMoMoMoneyController extends Controller
                             'remember_token'=>$reference,
                             'total_commission'=>$commission_agent,
                         ]);
-
-
                         DB::commit();
-
                         $title = "Kiaboo";
                         $message = "Le retrait MOMO de " . $montant . " F CFA a été effectué avec succès au ".$phoneCustomer;
                         $subtitle ="Success";
@@ -1101,7 +1089,6 @@ class ApiProdMoMoMoneyController extends Controller
                     $reason = $data->reason;
                 }
                 if($data->status=="FAILED"){
-
                     $updateTransaction=$Transaction->update([
                         'status'=>3, // Le dépôt n'a pas abouti
                         'reference_partenaire'=>$financialTransactionId,
