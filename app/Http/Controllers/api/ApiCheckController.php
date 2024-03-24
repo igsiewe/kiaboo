@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Enums\ServiceEnum;
 use App\Http\Enums\UserRolesEnum;
+use App\Models\Service;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -219,6 +220,15 @@ class ApiCheckController extends Controller
 
     function rang(){
         $rang =str_replace(str_replace(str_replace(Carbon::now(),"-","")," ",""),"/","");
+    }
+
+    function checkStatusService($idService)
+    {
+        $service = Service::where("id", $idService)->first();
+        if ($service->status ==0) {
+            return false;
+        }
+        return true;
     }
 
 }

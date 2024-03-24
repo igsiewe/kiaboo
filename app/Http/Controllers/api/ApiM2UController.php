@@ -183,6 +183,14 @@ class ApiM2UController extends Controller
          $code = strtoupper($code);
          $service = ServiceEnum::DEPOT_M2U->value;
 
+        // Vérifie si le service est actif
+        if($apiCheck->checkStatusService($service)==false){
+            return response()->json([
+                'status'=>'error',
+                'message'=>"Ce service n'est pas actif",
+            ],401);
+        }
+
          // Vérifie si l'utilisateur est autorisé à faire cette opération
          if($apiCheck->checkUserValidity()==false){
              return response()->json([
