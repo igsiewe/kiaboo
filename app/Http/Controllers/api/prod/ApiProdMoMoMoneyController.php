@@ -978,15 +978,12 @@ class ApiProdMoMoMoneyController extends Controller
                     ],402
                 );
             }
-
             if($data->status=="SUCCESSFUL"){
-
                         return response()->json(
                             [
                                 'status'=>200,
                                 'message'=>$data->status." - Transaction en succès",
                                 'response'=>$data
-
                             ],200
                         );
                     }
