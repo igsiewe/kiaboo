@@ -8,6 +8,7 @@ use App\Http\Controllers\api\ApiNotification;
 use App\Http\Controllers\Controller;
 use App\Http\Enums\ServiceEnum;
 use App\Http\Enums\TypeServiceEnum;
+use App\Models\Service;
 use App\Models\Transaction;
 use App\Models\User;
 use Carbon\Carbon;
@@ -354,7 +355,7 @@ class ApiProdMoMoMoneyController extends Controller
                 $appNotification = new ApiNotification();
 
                 $envoiNotification = $appNotification->sendNotificationPushFireBase($idDevice, $title, $subtitle, $message); //Push notification sur le telephone de l'agent
-
+                $services = Service::all()->sortBy("name_service")->get();
                 return response()->json([
                     'success' => true,
                     'message' => "SUCCESSFULL", // $resultat->message,
@@ -363,6 +364,7 @@ class ApiProdMoMoMoneyController extends Controller
                     'data' => [],// $resultat,
                     'user'=>$userRefresh,
                     'transactions'=>$transactionsRefresh,
+                    'services'=>$services,
                 ], 200);
 
             }catch (\Exception $e) {

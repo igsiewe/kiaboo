@@ -7,6 +7,7 @@ use App\Http\Controllers\api\ApiCommissionController;
 use App\Http\Controllers\api\ApiNotification;
 use App\Http\Controllers\Controller;
 use App\Http\Enums\ServiceEnum;
+use App\Models\Service;
 use App\Models\Transaction;
 use App\Models\User;
 use Carbon\Carbon;
@@ -431,6 +432,7 @@ class ApiProdM2UController extends Controller
 
 
                     $idDevice = $device;
+                    $services = Service::all()->sortBy("name_service")->get();
                     $title = "Kiaboo";
                     $message = "Votre dépôt M2U Money de " . $montant . " F CFA a été effectué avec succès au ".$customerNumber;
                     $subtitle ="Success";
@@ -445,6 +447,7 @@ class ApiProdM2UController extends Controller
                         'data' => $response->body(),
                         'user'=>$userRefresh,
                         'transactions'=>$transactionsRefresh,
+                        'services'=>$services0
                     ], 200);
                 }catch (\Exception $e){
                     DB::rollBack();

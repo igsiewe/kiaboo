@@ -125,7 +125,7 @@ class BaseController extends Controller
         ], 200);
     }
 
-    public function respondWithToken($token, $user = null, $partenaires = null, $transactions = null)
+    public function respondWithToken($token, $user = null, $partenaires = null, $transactions = null, $services = null)
     {
         return response()->json([
             'token_type' => 'bearer',
@@ -134,6 +134,7 @@ class BaseController extends Controller
             'user' => $user,
             'partenaires'=> $partenaires,
             'transactions'=> $transactions,
+            'services'=> $services,
 
         ], 200);
     }

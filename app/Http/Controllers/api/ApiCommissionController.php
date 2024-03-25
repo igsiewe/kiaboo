@@ -6,6 +6,7 @@ use App\Http\Controllers\BaseController;
 use App\Http\Enums\ServiceEnum;
 use App\Http\Enums\TypeServiceEnum;
 use App\Models\Commission;
+use App\Models\Service;
 use App\Models\Transaction;
 use App\Models\User;
 use Carbon\Carbon;
@@ -276,6 +277,8 @@ class ApiCommissionController extends BaseController
                     ->limit(5)
                     ->get();
 
+                   $services = Service::all()->sortBy("name_service")->get();
+
                     DB::commit();
 
                     return response()->json([
@@ -285,6 +288,7 @@ class ApiCommissionController extends BaseController
                         "commissions"=>$commissions,
                         "user"=>$user,
                         "transactions"=>$transactions,
+                        "services"=>$services
                     ],200);
 
             }catch (\Exception $e) {

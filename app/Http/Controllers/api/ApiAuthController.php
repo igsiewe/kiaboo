@@ -7,6 +7,7 @@ use App\Http\Controllers\BaseController;
 use App\Http\Enums\UserRolesEnum;
 use App\Models\Partenaire;
 use App\Models\recrutement;
+use App\Models\Service;
 use App\Models\User;
 use App\Models\Ville;
 use Carbon\Carbon;
@@ -96,7 +97,7 @@ class ApiAuthController extends BaseController
                 ->limit(5)
                 ->get();
 
-
+            $services = Service::all()->get();
 
             DB::table('oauth_access_tokens')->where('user_id', $user->id)->delete();
             $token = $user->createToken('kiaboo');
@@ -109,7 +110,7 @@ class ApiAuthController extends BaseController
                 'name'=>Auth::user()->name." ".Auth::user()->surname,
                 'Desciption'=>'Connexion'
             ]);
-            return $this->respondWithToken($access_token, $user, $partenaires, $transactions);
+            return $this->respondWithToken($access_token, $user, $partenaires, $transactions, $services);
         }
         Log::alert([
             'Login'=>$request->login,
