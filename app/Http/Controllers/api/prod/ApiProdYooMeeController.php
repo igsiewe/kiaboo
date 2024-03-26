@@ -13,7 +13,7 @@ class ApiProdYooMeeController extends Controller
 {
     public function YooMee_getUserInfo($customerPhone){
 
-dd("fffffff");
+
         if ($customerPhone==null || $customerPhone=="") {
             return response()->json([
                 'success' => false,
