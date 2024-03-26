@@ -11,19 +11,16 @@ use Illuminate\Support\Facades\Http;
 
 class ApiProdYooMeeController extends Controller
 {
-    public function YooMee_getUserInfo(Request $request){
-        $validator = Validator::make($request->all(), [
-            'customerPhone' => 'required|numeric|digits:9',
-        ]);
+    public function YooMee_getUserInfo($customerPhone){
 
-        if ($validator->fails()) {
+
+        if ($customerPhone==null || $customerPhone=="") {
             return response()->json([
                 'success' => false,
-                'message' => $validator->errors()->first(),
+                'message' => "Please provide a customer phone number",
             ], 400);
         }
 
-        $customerPhone = $request->customerPhone;
         $url = "http://quality-env.yoomeemoney.cm:8080/api/users?keywords=$customerPhone&roles=member&statuses=active";
         $response = Http::withOptions(['verify' => false,])->withBasicAuth('kiaboo2024', 'ki@boo2024')
             ->Get($url);
@@ -46,7 +43,7 @@ class ApiProdYooMeeController extends Controller
                 'status' => 'success',
                 'customerName' => $customerName,
                 'customerPhone' => $customerPhone,
-                'accountNumber' => $accountNumber,
+                'accountAccount' => $accountNumber,
                 'message'=>'Client trouvé',
             ],200);
         }else{
