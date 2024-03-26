@@ -1,0 +1,67 @@
+<?php
+
+namespace App\Http\Controllers\api\prod;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Http;
+
+class ApiProdYooMeeController extends Controller
+{
+    public function YooMee_getUserInfo(Request $request){
+        $validator = Validator::make($request->all(), [
+            'customerPhone' => 'required|numeric|digits:9',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first(),
+            ], 400);
+        }
+
+        $customerPhone = $request->customerPhone;
+        $url = "http://quality-env.yoomeemoney.cm:8080/api/users?keywords=$customerPhone&roles=member&statuses=active";
+        $response = Http::withOptions(['verify' => false,])->withBasicAuth('kiaboo2024', 'ki@boo2024')
+            ->Get($url);
+        if($response->status()==200){
+            $json = json_decode($response, false);
+            $data=collect($json)->first();
+            $customerName = $data->name;
+            $customerPhone = $data->phone;
+            $accountNumber = $data->accountNumber; //accountNumber;
+            if($customerName==null && $accountNumber==null){
+                return response()->json([
+                    'status' => 'echec',
+                    'customerName' => $customerName,
+                    'customerPhone' => $customerPhone,
+                    'message'=>'Ce numéro de client n\'existe pas',
+                ],404);
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'customerName' => $customerName,
+                'customerPhone' => $customerPhone,
+                'accountNumber' => $accountNumber,
+                'message'=>'Client trouvé',
+            ],200);
+        }else{
+            Log::error([
+                'code'=> $response->status(),
+                'function' => "YooMee_getUserInfo",
+                'response'=>$response->body(),
+                'user' => Auth::user()->id,
+            ]);
+            return response()->json(
+                [
+                    'status'=>$response->status(),
+                    'message'=>$response->body(),
+                ],$response->status()
+            );
+        }
+    }
+}

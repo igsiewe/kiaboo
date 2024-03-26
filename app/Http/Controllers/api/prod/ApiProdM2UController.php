@@ -447,7 +447,7 @@ class ApiProdM2UController extends Controller
                         'data' => $response->body(),
                         'user'=>$userRefresh,
                         'transactions'=>$transactionsRefresh,
-                        'services'=>$services0
+                        'services'=>$services
                     ], 200);
                 }catch (\Exception $e){
                     DB::rollBack();

@@ -11,6 +11,7 @@ use App\Http\Controllers\api\ApiUserController;
 use App\Http\Controllers\api\prod\ApiProdMoMoMoneyController;
 use App\Http\Controllers\api\prod\ApiProdM2UController;
 use App\Http\Controllers\api\prod\ApiProduction_MoMo;
+use App\Http\Controllers\api\prod\ApiProdYooMeeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -136,6 +137,17 @@ Route::middleware('auth:api')->group(function () {
                     Route::post('retrait/ExecuteCashBack', 'M2U_ExecuteCashBack')->name("M2U_PROD_ExecuteCashBack");
                 });
             });
+
+            //YOOMEE
+            Route::group(['prefix' => 'yoomee'], function () {
+                Route::controller(ApiProdYooMeeController::class)->group(function () {
+                    Route::get('custumer/name/{CustomerNumber}', 'YooMee_getUserInfo')->name("YooMee_getUserInfo");
+                    Route::post('depot', 'YooMee_depot')->name("YooMee_depot");
+                    Route::post('retrait', 'YooMee_retrait')->name("YooMee_retrait");
+                    Route::post('retrait/status', 'YooMee_getRetraitStatus')->name("YooMee_retraitStatus");
+                });
+            });
+
         });
       });
     });

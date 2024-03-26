@@ -593,12 +593,7 @@ class ApiProdMoMoMoneyController extends Controller
                 ],$response->status()
             );
 
-        }
-    }
-    
-    public function MOMO_Retrait(Request $request){
-
-        $validator = Validator::make($request->all(), [
+        } $validator = Validator::make($request->all(), [
             'customerPhone' => 'required|numeric|digits:9',
             'amount' => 'required|numeric|min:50|max:500000',
         ]);
@@ -609,6 +604,11 @@ class ApiProdMoMoMoneyController extends Controller
                 'message' => $validator->errors()->first(),
             ], 400);
         }
+    }
+    
+    public function MOMO_Retrait(Request $request){
+
+
 
         $apiCheck = new ApiCheckController();
 
