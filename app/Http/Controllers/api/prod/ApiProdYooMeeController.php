@@ -24,6 +24,7 @@ class ApiProdYooMeeController extends Controller
         $url = "http://quality-env.yoomeemoney.cm:8080/api/users?keywords=$customerPhone&roles=member&statuses=active";
         $response = Http::withOptions(['verify' => false,])->withBasicAuth("kiaboo2024", "ki@boo2024")
             ->Get($url);
+        dd(json_decode($response));
         if($response->status()==200){
             $json = json_decode($response, false);
             $data=collect($json)->first();
