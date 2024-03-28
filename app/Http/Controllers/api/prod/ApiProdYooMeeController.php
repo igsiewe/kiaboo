@@ -38,6 +38,7 @@ class ApiProdYooMeeController extends Controller
                     'customerName' => $customerName,
                     'customerPhone' => $customerPhone,
                     'message'=>'Ce numéro de client n\'existe pas',
+                    'response'=>$response,
                 ],404);
             }
             if(!Arr::has($element, "name")){ //On teste si l'utilisateur existe
@@ -46,6 +47,7 @@ class ApiProdYooMeeController extends Controller
                     'customerName' => $customerName,
                     'customerPhone' => $customerPhone,
                     'message'=>'Ce numéro de client n\'existe pas',
+                    'response'=>$response,
                 ],404);
             }
             $json = json_decode($response, false);
