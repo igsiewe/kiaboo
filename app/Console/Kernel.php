@@ -13,6 +13,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
+        //copier le fichier laravel.log tous les jours à minuit
+        $schedule->exec('cp /var/www/html/kiaboo/storage/logs/laravel.log /var/www/html/kiaboo/storage/logs/laravel_$(date +\%Y\%m\%d).log')->everyMinute();
+
     }
 
     /**
