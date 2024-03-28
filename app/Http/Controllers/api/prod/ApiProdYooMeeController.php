@@ -220,7 +220,7 @@ class ApiProdYooMeeController extends Controller
             ],
             "reponse"=>json_decode($response->status()),
         ]);
-        dd($response);
+        dd($response->body());
         if($response->status()==201){
 
             try {
