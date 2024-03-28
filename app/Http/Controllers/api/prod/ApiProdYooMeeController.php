@@ -32,24 +32,24 @@ class ApiProdYooMeeController extends Controller
         if($response->status()==200){
             $element = json_decode($response, associative: true);
 
-            if($element==null){ //On teste si l'utilisateur existe
-                return response()->json([
-                    'status' => 'echec',
-                    'customerName' => $customerName,
-                    'customerPhone' => $customerPhone,
-                    'message'=>'Ce numéro de client n\'existe pas',
-                    'response'=>$response,
-                ],404);
-            }
-            if(!Arr::has($element, "name")){ //On teste si l'utilisateur existe
-                return response()->json([
-                    'status' => 'echec',
-                    'customerName' => $customerName,
-                    'customerPhone' => $customerPhone,
-                    'message'=>'Ce numéro de client n\'existe pas',
-                    'response'=>$response,
-                ],404);
-            }
+//            if($element==null){ //On teste si l'utilisateur existe
+//                return response()->json([
+//                    'status' => 'echec',
+//                    'customerName' => $customerName,
+//                    'customerPhone' => $customerPhone,
+//                    'message'=>'Ce numéro de client n\'existe pas',
+//                    'response'=>$response,
+//                ],404);
+//            }
+//            if(!Arr::has($element, "name")){ //On teste si l'utilisateur existe
+//                return response()->json([
+//                    'status' => 'echec',
+//                    'customerName' => $customerName,
+//                    'customerPhone' => $customerPhone,
+//                    'message'=>'Ce numéro de client n\'existe pas',
+//                    'response'=>$response,
+//                ],404);
+//            }
             $json = json_decode($response, false);
             $data=collect($json)->first();
             $customerName = $data->name;
