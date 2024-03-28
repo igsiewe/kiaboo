@@ -2,10 +2,19 @@
 
 namespace App\Http\Controllers\api\prod;
 
+use App\Http\Controllers\api\ApiCheckController;
+use App\Http\Controllers\api\ApiCommissionController;
+use App\Http\Controllers\api\ApiNotification;
 use App\Http\Controllers\Controller;
+use App\Http\Enums\ServiceEnum;
+use App\Models\Service;
+use App\Models\Transaction;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Http;
@@ -92,4 +101,238 @@ class ApiProdYooMeeController extends Controller
             );
         }
     }
+
+    public function YooMee_depot(Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'phone' => 'required|numeric|digits:9',
+            'amount' => 'required|numeric|min:50|max:500000',
+            'customerId' => 'required|string', //customerId
+            'deviceId' => 'required|string',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first(),
+            ], 400);
+        }
+
+        $customerNumber = $request->phone;
+        $montant = $request->amount;
+
+        $apiCheck = new ApiCheckController();
+
+        $service = ServiceEnum::DEPOT_YOOMEE->value;
+        // Vérifie si le service est actif
+        if($apiCheck->checkStatusService($service)==false){
+            return response()->json([
+                'status'=>'error',
+                'message'=>"Ce service n'est pas actif",
+            ],401);
+        }
+        // Vérifie si l'utilisateur est autorisé à faire cette opération
+        if(!$apiCheck->checkUserValidity()){
+            return response()->json([
+                'status'=>'error',
+                'message'=>'Votre compte est désactivé. Veuillez contacter votre distributeur',
+            ],401);
+        }
+
+        // Vérifie si le solde de l'utilisateur lui permet d'effectuer cette opération
+        if(!$apiCheck->checkUserBalance($montant)){
+            return response()->json([
+                'status'=>'error',
+                'message'=>'Votre solde est insuffisant pour effectuer cette opération',
+            ],401);
+        }
+
+        //Vérifie si l'utilisateur n'a pas initié une operation similaire dans les 5 dernières minutes
+
+        if($apiCheck->checkFiveLastTransaction($customerNumber, $montant, $service)){
+            return response()->json([
+                'status'=>'error',
+                'message'=>'Une transaction similaire a été faite il y\'a moins de 5 minutes',
+            ],401);
+        }
+
+        // On vérifie si les commissions sont paramétrées
+        $functionCommission = new ApiCommissionController();
+        $lacommission =$functionCommission->getCommissionByService($service,$montant);
+        if($lacommission->getStatusCode()!=200){
+            return response()->json([
+                'success' => false,
+                'message' => "Impossible de calculer la commission",
+            ], 400);
+        }
+
+        //Initie la transaction
+        $device = $request->deviceId;
+        $init_transaction = $apiCheck->init_Depot($montant, $customerNumber, $service, "",$device);
+        $dataInit = json_decode($init_transaction->getContent());
+
+        if($init_transaction->getStatusCode() !=200){
+            return response()->json([
+                'status'=>'error',
+                'message'=>$dataInit->message,
+            ],$init_transaction->getStatusCode());
+        }
+
+        $idTransaction = $dataInit->transId; //Id de la transaction initiée
+        $reference = $dataInit->reference; //Référence de la transaction initiée
+
+        //On génère le token de la transation
+
+        $customerPhone = "237".$customerNumber;
+        $customerId = $request->customerId;
+        $customerAmount ="350";
+        $url = "http://quality-env.yoomeemoney.cm:8080/api/self/payments";
+        $description = "descrifjljljljdf";
+
+        $response = Http::withOptions(['verify' => false,])->withHeaders(
+            [
+                'accept: application/json',
+                'confirmationPassword: 1235',
+                'Content-Type: application/json',
+            ])
+            ->Post($url, [
+                "amount"=> $customerAmount,
+                "description"=> $description,
+                "currency"=> "unit",
+                "type"=> "CashpointAccount.Memberemoneypurchase",
+                "subject"=>$customerId,
+                "firstInstallmentIsImmediate"=> true,
+                "installmentsCount"=> 0,
+                "scheduling"=>"direct"
+            ]);
+
+        Log::info([
+            "Service"=>ServiceEnum::DEPOT_YOOMEE->name,
+            "url"=>$url,
+            "requete"=>[
+                "amount"=> $customerAmount,
+                "description"=> $description,
+                "currency"=> "unit",
+                "type"=> "CashpointAccount.Memberemoneypurchase",
+                "subject"=>$customerNumber,
+                "firstInstallmentIsImmediate"=> true,
+                "installmentsCount"=> 0,
+                "scheduling"=>"direct"
+            ],
+            "reponse"=>json_decode($response->status()),
+        ]);
+        dd($response);
+        if($response->status()==201){
+
+            try {
+                DB::beginTransaction();
+                //On Calcule la commission
+                $commission=json_decode($lacommission->getContent());
+                $commissionFiliale = doubleval($commission->commission_kiaboo);
+                $commissionDistributeur=doubleval($commission->commission_distributeur);
+                $commissionAgent=doubleval($commission->commission_agent);
+
+                $user = User::where('id', Auth::user()->id);
+                $balanceBeforeAgent = $user->get()->first()->balance_after;
+                $balanceAfterAgent = floatval($balanceBeforeAgent) - floatval($montant);
+                //on met à jour la table transaction
+                $referenceID = $response->body()->data->data->transactionNumber;
+                $Transaction = Transaction::where('id',$idTransaction)->where('service_id',$service)->update([
+                    'reference_partenaire'=>$referenceID, //$financialTransactionId,
+                    'balance_before'=>$balanceBeforeAgent,
+                    'balance_after'=>$balanceAfterAgent,
+                    'debit'=>$montant,
+                    'credit'=>0,
+                    'status'=>1, //End successfully
+                    'paytoken'=>$referenceID,
+                    'date_end_trans'=>Carbon::now(),
+                    'description'=>$datacheckStatus->description,
+                    'message'=>'Le dépôt a été effectué avec succès',
+                    'commission'=>$commission->commission_globale,
+                    'commission_filiale'=>$commissionFiliale,
+                    'commission_agent'=>$commissionAgent,
+                    'commission_distributeur'=>$commissionDistributeur,
+                ]);
+
+                //on met à jour le solde de l'utilisateur
+
+                //La commmission de l'agent après chaque transaction
+
+                $commission_agent = Transaction::where("fichier","agent")->where("commission_agent_rembourse",0)->where("source",Auth::user()->id)->sum("commission_agent");
+
+                $debitAgent = DB::table("users")->where("id", Auth::user()->id)->update([
+                    'balance_after'=>$balanceAfterAgent,
+                    'balance_before'=>$balanceBeforeAgent,
+                    'last_amount'=>$montant,
+                    'date_last_transaction'=>Carbon::now(),
+                    'user_last_transaction_id'=>Auth::user()->id,
+                    'last_service_id'=>ServiceEnum::DEPOT_OM->value,
+                    'reference_last_transaction'=>$reference,
+                    'remember_token'=>$referenceID,
+                    'total_commission'=>$commission_agent,
+                ]);
+
+                DB::commit();
+
+                $userRefresh = User::where('id', Auth::user()->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before', 'balance_after','total_commission', 'last_amount','sous_distributeur_id','date_last_transaction')->first();
+                $transactionsRefresh = DB::table('transactions')
+                    ->join('services', 'transactions.service_id', '=', 'services.id')
+                    ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
+                    ->select('transactions.id','transactions.reference as reference','transactions.reference_partenaire','transactions.date_transaction','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.commission_agent as commission','transactions.balance_before','transactions.balance_after' ,'transactions.status','transactions.service_id','services.name_service','services.logo_service','type_services.name_type_service','type_services.id as type_service_id','transactions.date_operation', 'transactions.heure_operation','transactions.commission_agent_rembourse as commission_agent')
+                    ->where("fichier","agent")
+                    ->where("source",Auth::user()->id)
+                    ->where('transactions.status',1)
+                    ->orderBy('transactions.date_transaction', 'desc')
+                    ->limit(5)
+                    ->get();
+
+                $idDevice = $device;
+                $title = "Kiaboo";
+                $message = "Le dépôt MOMO de " . $montant . " F CFA a été effectué avec succès au ".$customerNumber;
+                $subtitle ="Success";
+                $appNotification = new ApiNotification();
+
+                $envoiNotification = $appNotification->sendNotificationPushFireBase($idDevice, $title, $subtitle, $message); //Push notification sur le telephone de l'agent
+                $services = Service::all()->sortBy("name_service")->get();
+                return response()->json([
+                    'success' => true,
+                    'message' => "SUCCESSFULL", // $resultat->message,
+                    'textmessage' =>"Le dépôt a été effectué avec succès", // $resultat->message,
+                    'reference' => $reference,// $resultat->data->data->txnid,
+                    'data' => [],// $resultat,
+                    'user'=>$userRefresh,
+                    'transactions'=>$transactionsRefresh,
+                    'services'=>$services,
+                ], 200);
+
+            }catch (\Exception $e) {
+                DB::rollback();
+                Log::error([
+                    'code'=> $response->status(),
+                    'function' => "YOOMEE_Depot",
+                    'response'=>$e->getMessage(),
+                    'user' => Auth::user()->id,
+                ]);
+                return response()->json([
+                    'success' => false,
+                    'message' => "Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste", //'Une erreur innatendue s\est produite. Si le problème persiste, veuillez contacter votre support.',
+                ], 400);
+            }
+
+        }else{
+            Log::error([
+                'code'=> $response->status(),
+                'function' => "YOOMEE_Depot",
+                'response'=>$response->body(),
+                'user' => Auth::user()->id,
+            ]);
+            return response()->json(
+                [
+                    'status'=>$response->status(),
+                    'error'=>$response->body(),
+                    'message'=>$response->body(),
+                ],$response->status()
+            );
+        }
+    }
+
 }
