@@ -186,9 +186,8 @@ class ApiProdYooMeeController extends Controller
 
         //On génère le token de la transation
 
-        $customerPhone = "237".$customerNumber;
         $customerId = $request->customerId;
-        $customerAmount ="350";
+        $customerAmount =$montant;
         $url = "http://quality-env.yoomeemoney.cm:8080/api/self/payments";
         $description = "test kiaboo";
         $codePin="1235";
@@ -339,5 +338,158 @@ class ApiProdYooMeeController extends Controller
             );
         }
     }
+
+    public function YooMee_Retrait(Request $request){
+        $validator = Validator::make($request->all(), [
+            'phone' => 'required|numeric|digits:9',
+            'amount' => 'required|numeric|min:50|max:500000',
+            'customerId' => 'required|string', //customerId
+            'deviceId' => 'required|string',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first(),
+            ], 400);
+        }
+        $apiCheck = new ApiCheckController();
+
+        $service = ServiceEnum::RETRAIT_YOOMEE->value;
+
+        // Vérifie si l'utilisateur est autorisé à faire cette opération
+        if(!$apiCheck->checkUserValidity()){
+            return response()->json([
+                'status'=>'error',
+                'message'=>'Votre compte est désactivé. Veuillez contacter votre distributeur',
+            ],401);
+        }
+
+        // On vérifie si les commissions sont paramétrées
+        $functionCommission = new ApiCommissionController();
+        $lacommission =$functionCommission->getCommissionByService($service,$request->amount);
+        if($lacommission->getStatusCode()!=200){
+            return response()->json([
+                'success' => false,
+                'message' => "Impossible de calculer la commission",
+            ], 400);
+        }
+        $commission=json_decode($lacommission->getContent());
+
+        $commissionFiliale = doubleval($commission->commission_kiaboo);
+        $commissionDistributeur=doubleval($commission->commission_distributeur);
+        $commissionAgent=doubleval($commission->commission_agent);
+
+        //Initie la transaction
+        $device = $request->deviceId;
+        $montant=$request->amount;
+        $customerPhone = $request->phone;
+
+        $init_transaction = $apiCheck->init_Retrait($montant, $request->customerPhone, $service,"", $device);
+
+        $dataTransactionInit = json_decode($init_transaction->getContent());
+
+        if($init_transaction->getStatusCode() !=200){
+            return response()->json([
+                'status'=>'error',
+                'message'=>$dataTransactionInit->message,
+            ],$init_transaction->getStatusCode());
+        }
+        $idTransaction = $dataTransactionInit->transId; //Id de la transaction initiée
+        $reference = $dataTransactionInit->reference; //Référence de la transaction initiée
+
+        $customerId = $request->customerId;
+
+        $url = "http://quality-env.yoomeemoney.cm:8080/api/self/payment-requests";
+        $description = "test kiaboo";
+
+        $response = Http::withOptions(['verify' => false,])->withBasicAuth("kiaboo2024", "Ki@boo2024")->withHeaders(
+            [
+                'accept'=>  'application/json',
+                'Content-Type'=> 'application/json'
+            ])
+            ->Post($url, [
+                "amount"=> $montant,
+                "description"=> $description,
+                "currency"=> "unit",
+                "type"=> "MemberAccount.Memberemoneysale",
+                "subject"=> $customerId,
+                "expirationDate"=> Carbon::now()->addMinutes(2),
+                "firstInstallmentIsImmediate"=> true,
+                "installmentsCount"=> 1,
+                "scheduling"=> "direct"
+            ]);
+
+
+        Log::info([
+            "Service"=>ServiceEnum::RETRAIT_YOOMEE->name,
+            "url"=>$url,
+            "requete"=>[
+                "amount"=> $montant,
+                "description"=> $description,
+                "currency"=> "unit",
+                "type"=> "MemberAccount.Memberemoneysale",
+                "subject"=> $customerId,
+                "expirationDate"=> Carbon::now()->addMinutes(2),
+                "firstInstallmentIsImmediate"=> true,
+                "installmentsCount"=> 1,
+                "scheduling"=> "direct"
+            ],
+            "reponseStatus"=>json_decode($response->status()),
+            "reponseBody"=>json_decode($response->body()),
+        ]);
+
+
+        if($response->status()==201){
+            //Le client a été notifié. Donc on reste en attente de sa confirmation (Saisie de son code secret)
+
+            //On change le statut de la transaction dans la base de donnée
+            $data = json_decode($response->body());
+            $referenceID=$data->transactionNumber;
+            $Transaction = Transaction::where('id',$idTransaction)->where('service_id',$service)->update([
+                'reference_partenaire'=>$referenceID,
+                'balance_before'=>0,
+                'balance_after'=>0,
+                'debit'=>0,
+                'credit'=>$montant,
+                'status'=>2, // Pending
+                'paytoken'=>$referenceID,
+                'date_end_trans'=>Carbon::now(),
+                'description'=>'PENDING',
+                'message'=>"Transaction initiée par l'agent N°".Auth::user()->id." le ".Carbon::now()." vers le client ".$customerPhone." En attente confirmation du client",
+                'commission'=>$commission->commission_globale,
+                'commission_filiale'=>$commissionFiliale,
+                'commission_agent'=>$commissionAgent,
+                'commission_distributeur'=>$commissionDistributeur,
+            ]);
+
+            //Le solde du compte de l'agent ne sera mis à jour qu'après confirmation de l'agent : Opération traitée dans le callback
+
+            //On recupère toutes les transactions en attente
+
+            return response()->json(
+                [
+                    'status'=>200,
+                    'message'=>"Transaction initiée avec succès. Le client doit confirmer le retrait avec son code secret",
+                    'paytoken'=>$referenceID,
+                ],200
+            );
+
+        }else{
+            Log::error([
+                'code'=> $response->status(),
+                'function' => "YOOMEE_Retrait",
+                'response'=>$response->body(),
+                'user' => Auth::user()->id,
+                'request' => $request->all()
+            ]);
+            return response()->json(
+                [
+                    'status'=>$response->status(),
+                    'message'=>$response->body(),
+                ],$response->status()
+            );
+        }
+    }
+
 
 }
