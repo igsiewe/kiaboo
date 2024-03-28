@@ -626,7 +626,7 @@ class ApiProdYooMeeController extends Controller
                     return response()->json(
                         [
                             'status'=>200,
-                            'message'=>$data->status." - Transaction en succès",
+                            'message'=>$data->paymentRequestStatus." - Transaction en succès",
                             'user'=>$userRefresh,
                             'transactions'=>$transactionsRefresh,
                             'response'=>$data
