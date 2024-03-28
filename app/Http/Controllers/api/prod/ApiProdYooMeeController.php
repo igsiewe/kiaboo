@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api\prod;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -25,7 +26,19 @@ class ApiProdYooMeeController extends Controller
         $response = Http::withOptions(['verify' => false,])->withBasicAuth("kiaboo2024", "Ki@boo2024")
             ->Get($url);
 
+        $customerPhone="";
+        $customerName="";
+
         if($response->status()==200){
+            $element = json_decode($response, associative: true);
+            if(!Arr::has($element[0], "name")){ //On teste si l'utilisateur existe
+                return response()->json([
+                    'status' => 'echec',
+                    'customerName' => $customerName,
+                    'customerPhone' => $customerPhone,
+                    'message'=>'Ce numéro de client n\'existe pas',
+                ],404);
+            }
             $json = json_decode($response, false);
             $data=collect($json)->first();
             $customerName = $data->name;
