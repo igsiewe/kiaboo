@@ -384,7 +384,7 @@ class ApiProdYooMeeController extends Controller
         $montant=$request->amount;
         $customerPhone = $request->phone;
 
-        $init_transaction = $apiCheck->init_Retrait($montant, $request->customerPhone, $service,"", $device);
+        $init_transaction = $apiCheck->init_Retrait($montant, $customerPhone, $service,"", $device);
 
         $dataTransactionInit = json_decode($init_transaction->getContent());
 
