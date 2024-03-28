@@ -413,7 +413,7 @@ class ApiProdYooMeeController extends Controller
                 "currency"=> "unit",
                 "type"=> "MemberAccount.Memberemoneysale",
                 "subject"=> $customerId,
-                "expirationDate"=> Carbon::now()->addMinutes(2),
+                "expirationDate"=> Carbon::now(),
                 "firstInstallmentIsImmediate"=> true,
                 "installmentsCount"=> 1,
                 "scheduling"=> "direct"
@@ -429,7 +429,7 @@ class ApiProdYooMeeController extends Controller
                 "currency"=> "unit",
                 "type"=> "MemberAccount.Memberemoneysale",
                 "subject"=> $customerId,
-                "expirationDate"=> Carbon::now()->addMinutes(2),
+                "expirationDate"=> Carbon::now(),
                 "firstInstallmentIsImmediate"=> true,
                 "installmentsCount"=> 1,
                 "scheduling"=> "direct"
