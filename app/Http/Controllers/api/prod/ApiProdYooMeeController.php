@@ -187,11 +187,10 @@ class ApiProdYooMeeController extends Controller
         $customerAmount ="350";
         $url = "http://quality-env.yoomeemoney.cm:8080/api/self/payments";
         $description = "descrifjljljljdf";
-        $codePin="1235";
         $response = Http::withOptions(['verify' => false,])->withHeaders(
             [
                 'accept: application/json',
-                'confirmationPassword: '.$codePin,
+                'confirmationPassword: 1235',
                 'Content-Type: application/json',
             ])->withBasicAuth("kiaboo2024", "Ki@boo2024")
             ->Post($url, [
