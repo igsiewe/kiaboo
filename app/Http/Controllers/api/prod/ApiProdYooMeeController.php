@@ -37,7 +37,7 @@ class ApiProdYooMeeController extends Controller
 
         $customerPhone="";
         $customerName="";
-        $accountNumber="";
+        $customerAccount="";
         $customerId="";
         if($response->body()==null || $response->body()=="[]"){ //On teste si l'utilisateur existe
             return response()->json([
@@ -45,6 +45,7 @@ class ApiProdYooMeeController extends Controller
                 'customerId'=>$customerId,
                 'customerName' => $customerName,
                 'customerPhone' => $customerPhone,
+                'customerAccount' => $customerAccount,
                 'message'=>'Ce numéro de client n\'existe pas. Veuillez vérifier le numéro de téléphone',
                 'response'=>$response,
             ],404);
@@ -59,6 +60,7 @@ class ApiProdYooMeeController extends Controller
                     'customerId'=>$customerId,
                     'customerName' => $customerName,
                     'customerPhone' => $customerPhone,
+                    'customerAccount' => $customerAccount,
                     'message'=>'Ce numéro de client n\'existe pas',
                     'response'=>$response,
                 ],404);
@@ -72,8 +74,10 @@ class ApiProdYooMeeController extends Controller
             if($customerName==null && $accountNumber==null){
                 return response()->json([
                     'status' => 'echec',
+                    'customerId'=>$customerId,
                     'customerName' => $customerName,
                     'customerPhone' => $customerPhone,
+                    'customerAccount' => $customerAccount,
                     'message'=>'Ce numéro de client n\'existe pas',
                 ],404);
             }
@@ -83,7 +87,7 @@ class ApiProdYooMeeController extends Controller
                 'customerId'=>$customerId,
                 'customerName' => $customerName,
                 'customerPhone' => $customerPhone,
-                'accountAccount' => $accountNumber,
+                'customerAccount' => $customerAccount,
                 'message'=>'Client trouvé',
             ],200);
         }else{
