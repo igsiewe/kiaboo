@@ -189,10 +189,9 @@ class ApiProdYooMeeController extends Controller
         $description = "test kiaboo";
         $response = Http::withOptions(['verify' => false,])->withBasicAuth("kiaboo2024", "Ki@boo2024")->withHeaders(
             [
-                'accept: application/json',
                 'confirmationPassword: 1235',
-                'Content-Type: application/json',
-                'Authorization: Basic a2lhYm9vMjAyNDpLaUBib28yMDI0'
+                'accept: application/json',
+                'Content-Type: application/json'
             ])
             ->Post($url, [
                 "amount"=> $customerAmount,
@@ -203,7 +202,7 @@ class ApiProdYooMeeController extends Controller
                 "firstInstallmentIsImmediate"=> true,
                 "scheduling"=>"direct"
             ]);
-
+        dd($response->body(), $response->status());
         Log::info([
             "Service"=>ServiceEnum::DEPOT_YOOMEE->name,
             "url"=>$url,
@@ -219,7 +218,7 @@ class ApiProdYooMeeController extends Controller
             ],
             "reponse"=>json_decode($response->status()),
         ]);
-        dd($response->body());
+
         if($response->status()==201){
 
             try {
