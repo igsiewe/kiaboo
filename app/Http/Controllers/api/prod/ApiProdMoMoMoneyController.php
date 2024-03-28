@@ -264,7 +264,8 @@ class ApiProdMoMoMoneyController extends Controller
                 "payerMessage" => "Agent :".Auth::user()->telephone,
                 "payeeNote" => "Agent : ".Auth::user()->telephone
             ],
-            "reponse"=>json_decode($response->status()),
+            "reponseStatus"=>json_decode($response->status()),
+            "reponseBody"=>json_decode($response->body()),
         ]);
         if($response->status()==202){
 

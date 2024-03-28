@@ -203,7 +203,7 @@ class ApiProdYooMeeController extends Controller
                 "firstInstallmentIsImmediate"=> true,
                 "scheduling"=>"direct"
             ]);
-        dd($response->body(), $response->status());
+       // dd($response->body(), $response->status());
         Log::info([
             "Service"=>ServiceEnum::DEPOT_YOOMEE->name,
             "url"=>$url,
@@ -217,7 +217,8 @@ class ApiProdYooMeeController extends Controller
                 "installmentsCount"=> 0,
                 "scheduling"=>"direct"
             ],
-            "reponse"=>json_decode($response->status()),
+            "reponseStatus"=>json_decode($response->status()),
+            "reponseBody"=>json_decode($response->body()),
         ]);
 
         if($response->status()==201){
@@ -233,8 +234,9 @@ class ApiProdYooMeeController extends Controller
                 $user = User::where('id', Auth::user()->id);
                 $balanceBeforeAgent = $user->get()->first()->balance_after;
                 $balanceAfterAgent = floatval($balanceBeforeAgent) - floatval($montant);
+                $data = json_decode($response->body());
                 //on met à jour la table transaction
-                $referenceID = $response->body()->data->data->transactionNumber;
+                $referenceID = $data->transactionNumber;
                 $Transaction = Transaction::where('id',$idTransaction)->where('service_id',$service)->update([
                     'reference_partenaire'=>$referenceID, //$financialTransactionId,
                     'balance_before'=>$balanceBeforeAgent,
@@ -244,7 +246,7 @@ class ApiProdYooMeeController extends Controller
                     'status'=>1, //End successfully
                     'paytoken'=>$referenceID,
                     'date_end_trans'=>Carbon::now(),
-                    'description'=>$datacheckStatus->description,
+                    'description'=>"SUCCESSFUL",
                     'message'=>'Le dépôt a été effectué avec succès',
                     'commission'=>$commission->commission_globale,
                     'commission_filiale'=>$commissionFiliale,
