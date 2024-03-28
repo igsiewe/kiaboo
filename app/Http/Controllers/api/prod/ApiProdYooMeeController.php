@@ -491,5 +491,194 @@ class ApiProdYooMeeController extends Controller
         }
     }
 
+    public function YooMee_getRetraitStatus($referenceID){
+
+        //On se rassure que la transaction est bien en status en attente
+        $Transaction = Transaction::where('paytoken',$referenceID)->where('service_id',ServiceEnum::RETRAIT_YOOMEE->value)->where('status',2);
+
+        if($Transaction->count()==0){
+            return response()->json(
+                [
+                    'status'=>404,
+                    'message'=>"Aucune transaction en attente",
+
+                ],404
+            );
+        }
+        $reference = $Transaction->first()->reference;
+        $device_notification = $Transaction->first()->device_notification;
+        $customer_phone = $Transaction->first()->customer_phone;
+        //On génère le token de la transation
+
+
+        $http = "http://quality-env.yoomeemoney.cm:8080/api/transactions/".$referenceID;
+
+        $response = Http::withOptions(['verify' => false,])->withBasicAuth("kiaboo2024", "Ki@boo2024")->withHeaders(
+            [
+                'accept'=>  'application/json',
+                'Content-Type'=> 'application/json'
+            ])->get($http);
+
+        $data = json_decode($response->body());
+
+        if($response->status()==200){
+
+            if($data->paymentRequestStatus== "processed"){
+                // $reason = json_decode($data->reason);
+                return response()->json(
+                    [
+                        'status'=>202,
+                        'message'=>$data->paymentRequestStatus." - Transaction en attente de confirmation par le client",
+                        'data'=>$data,
+                    ],202
+                );
+            }
+            if($data->paymentRequestStatus== "denied"){
+                $updateTransaction=$Transaction->update([
+                    'status'=>3, // Le client n'a pas validé dans les délais et l'opérateur l'a annule
+                    'paytoken'=>$referenceID,
+                    'date_end_trans'=>Carbon::now(),
+                    'description'=>$data->paymentRequestStatus,
+                    'terminaison'=>'MANUAL',
+                ]);
+                return response()->json(
+                    [
+                        'status'=>402,
+                        'message'=>$data->paymentRequestStatus." - Le client a rejeté la transaction",
+
+                    ],402
+                );
+            }
+            if($data->paymentRequestStatus== "expired"){
+                $updateTransaction=$Transaction->update([
+                    'status'=>3, // Le client n'a pas validé dans les délais et l'opérateur l'a annule
+                    'paytoken'=>$referenceID,
+                    'date_end_trans'=>Carbon::now(),
+                    'description'=>$data->paymentRequestStatus,
+                    'terminaison'=>'MANUAL',
+                ]);
+                return response()->json(
+                    [
+                        'status'=>402,
+                        'message'=>$data->paymentRequestStatus." - Le client n'a pas validé la transaction dans les délais et l'opérateur l'a annulé",
+
+                    ],402
+                );
+            }
+            if($data->paymentRequestStatus== "open"){
+                $montant = $data->amount;
+                $user = User::where('id', Auth::user()->id);
+                $balanceBeforeAgent = $user->get()->first()->balance_after;
+                $balanceAfterAgent = floatval($balanceBeforeAgent) + floatval($montant);
+                $reference_partenaire=$data->transactionNumber;
+                try{
+                    DB::beginTransaction();
+                    $updateTransaction=$Transaction->update([
+                        'balance_before'=>$balanceBeforeAgent,
+                        'balance_after'=>$balanceAfterAgent,
+                        'status'=>1, // Successful
+                        'paytoken'=>$referenceID,
+                        'date_end_trans'=>Carbon::now(),
+                        'description'=>$data->status,
+                        'reference_partenaire'=>$reference_partenaire,
+                        'terminaison'=>'MANUAL',
+                    ]);
+
+                    $commission_agent = Transaction::where("fichier","agent")->where("commission_agent_rembourse",0)->where("source",Auth::user()->id)->sum("commission_agent");
+
+                    $debitAgent = DB::table("users")->where("id", Auth::user()->id)->update([
+                        'balance_after'=>$balanceAfterAgent,
+                        'balance_before'=>$balanceBeforeAgent,
+                        'last_amount'=>$montant,
+                        'date_last_transaction'=>Carbon::now(),
+                        'user_last_transaction_id'=>Auth::user()->id,
+                        'last_service_id'=>ServiceEnum::RETRAIT_YOOMEE->value,
+                        'reference_last_transaction'=>$reference,
+                        'remember_token'=>$referenceID,
+                        'total_commission'=>$commission_agent,
+                    ]);
+                    $userRefresh = User::where('id', Auth::user()->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before', 'balance_after','total_commission', 'last_amount','sous_distributeur_id','date_last_transaction')->first();
+                    $transactionsRefresh = DB::table('transactions')
+                        ->join('services', 'transactions.service_id', '=', 'services.id')
+                        ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
+                        ->select('transactions.id','transactions.reference as reference','transactions.reference_partenaire','transactions.date_transaction','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.commission_agent as commission','transactions.balance_before','transactions.balance_after' ,'transactions.status','transactions.service_id','services.name_service','services.logo_service','type_services.name_type_service','type_services.id as type_service_id','transactions.date_operation', 'transactions.heure_operation','transactions.commission_agent_rembourse as commission_agent')
+                        ->where("fichier","agent")
+                        ->where("source",Auth::user()->id)
+                        ->where('transactions.status',1)
+                        ->orderBy('transactions.date_transaction', 'desc')
+                        ->limit(5)
+                        ->get();
+
+                    DB::commit();
+                    $title = "Kiaboo";
+                    $message = "Le retrait YOOMEE de " . $montant . " F CFA a été effectué avec succès au ".$customer_phone;
+                    $subtitle ="Success";
+                    $appNotification = new ApiNotification();
+                    $envoiNotification = $appNotification->sendNotificationPushFireBase($device_notification, $title, $subtitle, $message);
+                    Log::info([
+                        'Service'=> ServiceEnum::RETRAIT_YOOMEE->name,
+                        'url' => $http,
+                        'function'=> "YooMee_getRetraitStatus",
+                        'response'=>$response->body(),
+                        'user' => Auth::user()->id,
+                        'referenceID' => $referenceID,
+                    ]);
+                    return response()->json(
+                        [
+                            'status'=>200,
+                            'message'=>$data->status." - Transaction en succès",
+                            'user'=>$userRefresh,
+                            'transactions'=>$transactionsRefresh,
+                            'response'=>$data
+                        ],200
+                    );
+                }catch(\Exception $e){
+                    DB::rollBack();
+                    Log::error([
+                        'code'=> $e->getCode(),
+                        'function' => "YooMee_getRetraitStatus",
+                        'response'=>$e->getMessage(),
+                        'user' => Auth::user()->id,
+                        'referenceID' => $referenceID,
+                    ]);
+                    return response()->json(
+                        [
+                            'status'=>500,
+                            'message'=>"Une erreur est survenue lors de la mise à jour de la transaction",
+                        ],500
+                    );
+                }
+
+            }
+            Log::error([
+                'code'=> $response->status(),
+                'function' => "YooMee_getRetraitStatus",
+                'response'=>$response->body(),
+                'user' => Auth::user()->id,
+                'referenceID' => $referenceID,
+            ]);
+            return response()->json(
+                [
+                    'status'=>404,
+                    'message'=>$response->body(),
+                ],404
+            );
+        }else{
+            Log::error([
+                'code'=> $response->status(),
+                'function' => "YooMee_getRetraitStatus",
+                'response'=>$response->body(),
+                'user' => Auth::user()->id,
+
+            ]);
+            return response()->json(
+                [
+                    'error'=>false,
+                    'status'=>$response->status(),
+                    'message'=>'Ressource introuvable',
+                ],$response->status()
+            );
+        }
+    }
 
 }
