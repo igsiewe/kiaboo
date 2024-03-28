@@ -528,7 +528,7 @@ class ApiProdYooMeeController extends Controller
                 return response()->json(
                     [
                         'status'=>202,
-                        'message'=>$data->paymentRequestStatus." - Transaction en attente de confirmation par le client",
+                        'message'=>strtoupper($data->paymentRequestStatus)." - Transaction en attente de confirmation par le client",
                         'data'=>$data,
                     ],202
                 );
@@ -538,13 +538,13 @@ class ApiProdYooMeeController extends Controller
                     'status'=>3, // Le client n'a pas validé dans les délais et l'opérateur l'a annule
                     'paytoken'=>$referenceID,
                     'date_end_trans'=>Carbon::now(),
-                    'description'=>$data->paymentRequestStatus,
+                    'description'=>strtoupper($data->paymentRequestStatus),
                     'terminaison'=>'MANUAL',
                 ]);
                 return response()->json(
                     [
                         'status'=>402,
-                        'message'=>$data->paymentRequestStatus." - Le client a rejeté la transaction",
+                        'message'=>strtoupper($data->paymentRequestStatus)." - Le client a rejeté la transaction",
 
                     ],402
                 );
@@ -554,13 +554,13 @@ class ApiProdYooMeeController extends Controller
                     'status'=>3, // Le client n'a pas validé dans les délais et l'opérateur l'a annule
                     'paytoken'=>$referenceID,
                     'date_end_trans'=>Carbon::now(),
-                    'description'=>$data->paymentRequestStatus,
+                    'description'=>strtoupper($data->paymentRequestStatus),
                     'terminaison'=>'MANUAL',
                 ]);
                 return response()->json(
                     [
                         'status'=>402,
-                        'message'=>$data->paymentRequestStatus." - Le client n'a pas validé la transaction dans les délais et l'opérateur l'a annulé",
+                        'message'=>strtoupper($data->paymentRequestStatus)." - Le client n'a pas validé la transaction dans les délais et l'opérateur l'a annulé",
 
                     ],402
                 );
@@ -579,7 +579,7 @@ class ApiProdYooMeeController extends Controller
                         'status'=>1, // Successful
                         'paytoken'=>$referenceID,
                         'date_end_trans'=>Carbon::now(),
-                        'description'=>$data->paymentRequestStatus,
+                        'description'=>strtoupper($data->paymentRequestStatus),
                         'reference_partenaire'=>$reference_partenaire,
                         'terminaison'=>'MANUAL',
                     ]);
