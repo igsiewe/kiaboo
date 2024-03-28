@@ -69,9 +69,9 @@ class ApiProdYooMeeController extends Controller
             $data=collect($json)->first();
             $customerName = $data->name;
             $customerPhone = $data->phone;
-            $accountNumber = $data->accountNumber; //accountNumber;
+            $customerAccount = $data->accountNumber; //accountNumber;
             $customerId = $data->id;
-            if($customerName==null && $accountNumber==null){
+            if($customerName==null && $customerAccount==null){
                 return response()->json([
                     'status' => 'echec',
                     'customerId'=>$customerId,
