@@ -293,7 +293,7 @@ class ApiProdYooMeeController extends Controller
                 $appNotification = new ApiNotification();
 
                 $envoiNotification = $appNotification->sendNotificationPushFireBase($idDevice, $title, $subtitle, $message); //Push notification sur le telephone de l'agent
-                $services = Service::all()->sortBy("name_service")->get();
+                $services = Service::all();
                 return response()->json([
                     'success' => true,
                     'message' => "SUCCESSFULL", // $resultat->message,
