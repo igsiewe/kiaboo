@@ -28,8 +28,7 @@ class ApiProdYooMeeController extends Controller
 
         $customerPhone="";
         $customerName="";
-        dd($response->body());
-        if($response->body()==null || $response->body()==[]){ //On teste si l'utilisateur existe
+        if($response->body()==null || $response->body()=="[]"){ //On teste si l'utilisateur existe
             return response()->json([
                 'status' => 'echec',
                 'customerName' => $customerName,
