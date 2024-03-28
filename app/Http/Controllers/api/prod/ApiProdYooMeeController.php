@@ -579,7 +579,7 @@ class ApiProdYooMeeController extends Controller
                         'status'=>1, // Successful
                         'paytoken'=>$referenceID,
                         'date_end_trans'=>Carbon::now(),
-                        'description'=>$data->status,
+                        'description'=>$data->paymentRequestStatus,
                         'reference_partenaire'=>$reference_partenaire,
                         'terminaison'=>'MANUAL',
                     ]);
