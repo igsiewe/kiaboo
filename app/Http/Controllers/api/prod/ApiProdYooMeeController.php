@@ -28,9 +28,26 @@ class ApiProdYooMeeController extends Controller
 
         $customerPhone="";
         $customerName="";
-
+        if($response==null){ //On teste si l'utilisateur existe
+            return response()->json([
+                'status' => 'echec',
+                'customerName' => $customerName,
+                'customerPhone' => $customerPhone,
+                'message'=>'Ce numéro de client n\'existe pas. Veuillez vérifier le numéro de téléphone',
+                'response'=>$response,
+            ],404);
+        }
         if($response->status()==200){
-            $element = json_decode($response, associative: true);
+           if($response==null){ //On teste si l'utilisateur existe
+                return response()->json([
+                    'status' => 'echec',
+                    'customerName' => $customerName,
+                    'customerPhone' => $customerPhone,
+                    'message'=>'Ce numéro de client n\'existe pas',
+                    'response'=>$response,
+                ],404);
+            }
+//            $element = json_decode($response, associative: true);
 
 //            if($element==null){ //On teste si l'utilisateur existe
 //                return response()->json([
