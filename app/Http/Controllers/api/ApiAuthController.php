@@ -97,7 +97,7 @@ class ApiAuthController extends BaseController
                 ->limit(5)
                 ->get();
 
-            $services = Service::all();
+            $services = Service::all()->get();
 
             DB::table('oauth_access_tokens')->where('user_id', $user->id)->delete();
             $token = $user->createToken('kiaboo');

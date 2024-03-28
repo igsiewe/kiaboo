@@ -432,7 +432,7 @@ class ApiProdM2UController extends Controller
 
 
                     $idDevice = $device;
-                    $services = Service::all()->sortBy("name_service")->get();
+                    $services = Service::all()->get();
                     $title = "Kiaboo";
                     $message = "Votre dépôt M2U Money de " . $montant . " F CFA a été effectué avec succès au ".$customerNumber;
                     $subtitle ="Success";
