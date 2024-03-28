@@ -277,7 +277,7 @@ class ApiCommissionController extends BaseController
                     ->limit(5)
                     ->get();
 
-                   $services = Service::all()->get();
+                   $services = Service::all();
 
                     DB::commit();
 
