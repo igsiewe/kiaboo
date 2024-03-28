@@ -28,9 +28,12 @@ class ApiProdYooMeeController extends Controller
 
         $customerPhone="";
         $customerName="";
+        $accountNumber="";
+        $customerId="";
         if($response->body()==null || $response->body()=="[]"){ //On teste si l'utilisateur existe
             return response()->json([
                 'status' => 'echec',
+                'customerId'=>$customerId,
                 'customerName' => $customerName,
                 'customerPhone' => $customerPhone,
                 'message'=>'Ce numéro de client n\'existe pas. Veuillez vérifier le numéro de téléphone',
@@ -44,6 +47,7 @@ class ApiProdYooMeeController extends Controller
             if(!Arr::has($element[0], "name")){ //On teste si l'utilisateur existe
                 return response()->json([
                     'status' => 'echec',
+                    'customerId'=>$customerId,
                     'customerName' => $customerName,
                     'customerPhone' => $customerPhone,
                     'message'=>'Ce numéro de client n\'existe pas',
@@ -55,6 +59,7 @@ class ApiProdYooMeeController extends Controller
             $customerName = $data->name;
             $customerPhone = $data->phone;
             $accountNumber = $data->accountNumber; //accountNumber;
+            $customerId = $data->id;
             if($customerName==null && $accountNumber==null){
                 return response()->json([
                     'status' => 'echec',
@@ -66,6 +71,7 @@ class ApiProdYooMeeController extends Controller
 
             return response()->json([
                 'status' => 'success',
+                'customerId'=>$customerId,
                 'customerName' => $customerName,
                 'customerPhone' => $customerPhone,
                 'accountAccount' => $accountNumber,
