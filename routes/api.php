@@ -144,7 +144,7 @@ Route::middleware('auth:api')->group(function () {
                     Route::get('custumer/name/{customerPhone}', 'YooMee_getUserInfo')->name("YooMee_getUserInfo");
                     Route::post('depot', 'YooMee_depot')->name("YooMee_depot");
                     Route::post('retrait', 'YooMee_retrait')->name("YooMee_retrait");
-                    Route::post('retrait/status/{referenceID}', 'YooMee_getRetraitStatus')->name("YooMee_retraitStatus");
+                    Route::get('retrait/status/{referenceID}', 'YooMee_getRetraitStatus')->name("YooMee_retraitStatus");
                 });
             });
 
