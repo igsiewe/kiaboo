@@ -14,7 +14,9 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         //copier le fichier laravel.log tous les jours à minuit
-       // $schedule->exec('cp /var/www/html/kiaboo/storage/logs/laravel.log /var/www/html/kiaboo/storage/logs/laravel_$(date +\%Y\%m\%d).log')->everyMinute();
+        $schedule->exec('cp ./../../storage/logs/laravel.log ./../../storage/logs/laravel_$(date +\%Y\%m\%d\%H%M%S).log')->everyMinute();
+        $schedule->exec('rm -rf ./../../storage/logs/laravel.log')->everyMinute();
+        $schedule->exec('touch ./../../storage/logs/laravel.log')->everyMinute();
 
     }
 
