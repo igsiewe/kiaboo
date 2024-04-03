@@ -825,27 +825,6 @@ class ApiProdM2UController extends Controller
                     $subtitle ="Success";
                     $appNotification = new ApiNotification();
                     $envoiNotification = $appNotification->sendNotificationPushFireBase($idDevice, $title, $subtitle, $message);
-                    if($envoiNotification->status()==200){
-                        $resultNotification=json_decode($envoiNotification->getContent());
-                        $responseNotification=$resultNotification->response ;
-                        if($responseNotification->success==true){
-                            Log::info([
-                                'code'=> 200,
-                                'function' => "M2U_RetraitCPPayCash",
-                                'response'=>"Notification envoyée avec succès",
-                                'user' => Auth::user()->id,
-                                'request' => $request->all()
-                            ]);
-                        }else{
-                            Log::error([
-                                'code'=> 500,
-                                'function' => "M2U_RetraitCPPayCash",
-                                'response'=>$resultNotification,
-                                'user' => Auth::user()->id,
-                                'request' => $request->all()
-                            ]);
-                        }
-                    }
 
                     return response()->json([
                         'success' => true,
