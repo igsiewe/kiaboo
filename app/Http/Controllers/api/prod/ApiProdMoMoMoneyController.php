@@ -1141,12 +1141,12 @@ class ApiProdMoMoMoneyController extends Controller
                     ]);
                 }
                 if($data->status=="SUCCESSFUL"){
-                    $updateTransaction = $Transaction->update([
-                        'reference_partenaire'=>$data->financialTransactionId,
-                        'terminaison'=>'CALLBACK',
-                    ]);
+//                    $updateTransaction = $Transaction->update([
+//                        'reference_partenaire'=>$data->financialTransactionId,
+//                        'terminaison'=>'CALLBACK',
+//                    ]);
 
-                    DB::beginTransaction();
+                //    DB::beginTransaction();
                     $idTransaction = $Transaction->first()->id;
                     $service = $Transaction->first()->service_id;
                     // On vérifie si les commissions sont paramétrées
