@@ -1149,6 +1149,7 @@ class ApiProdMoMoMoneyController extends Controller
                 //    DB::beginTransaction();
                     $idTransaction = $Transaction->first()->id;
                     $service = $Transaction->first()->service_id;
+                    $montant = $Transaction->first()->debit;
                     // On vérifie si les commissions sont paramétrées
                     $functionCommission = new ApiCommissionController();
                     $lacommission =$functionCommission->getCommissionByService($service,$montant);
