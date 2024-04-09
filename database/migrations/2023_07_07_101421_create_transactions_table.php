@@ -65,6 +65,10 @@ return new class extends Migration
             $table->foreignId("cancel_by")->references("id")->on("users");
             $table->foreignId("transaction_cancel_id")->references("id")->on("transactions");
             $table->string("description_cancel",255)->nullable();
+            $table->string("latitude",255)->nullable();
+            $table->string("longitude",255)->nullable();
+            $table->text("place")->nullable();
+
             $table->timestamps();
         });
     }

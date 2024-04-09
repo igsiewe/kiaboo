@@ -171,7 +171,10 @@ class ApiProdYooMeeController extends Controller
 
         //Initie la transaction
         $device = $request->deviceId;
-        $init_transaction = $apiCheck->init_Depot($montant, $customerNumber, $service, "",$device);
+        $latitude = $request->latitude;
+        $longitude = $request->longitude;
+        $place = $request->place;
+        $init_transaction = $apiCheck->init_Depot($montant, $customerNumber, $service, "",$device,$latitude,$longitude,$place);
         $dataInit = json_decode($init_transaction->getContent());
 
         if($init_transaction->getStatusCode() !=200){
@@ -383,8 +386,10 @@ class ApiProdYooMeeController extends Controller
         $device = $request->deviceId;
         $montant=$request->amount;
         $customerPhone = $request->phone;
-
-        $init_transaction = $apiCheck->init_Retrait($montant, $customerPhone, $service,"", $device);
+        $latitude = $request->latitude;
+        $longitude = $request->longitude;
+        $place = $request->place;
+        $init_transaction = $apiCheck->init_Retrait($montant, $customerPhone, $service,"", $device, $latitude, $longitude, $place);
 
         $dataTransactionInit = json_decode($init_transaction->getContent());
 

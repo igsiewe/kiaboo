@@ -99,7 +99,7 @@ class ApiCheckController extends Controller
         return false;
     }
 
-    function init_Depot($montant, $beneficiaire, $service, $payToken="", $device){
+    function init_Depot($montant, $beneficiaire, $service, $payToken="", $device,$latitude, $longitude, $place){
 
         $reference = "DP".Carbon::now()->format('ymd').".".Carbon::now()->format('His').".".$this->genererChaineAleatoire(1)."".$this->GenereRang();
 
@@ -126,6 +126,9 @@ class ApiCheckController extends Controller
                 'date_operation'=>date('Y-m-d'),
                 'heure_operation'=>date('H:i:s'),
                 'device_notification'=>$device,
+                'latitude'=>$latitude,
+                "longitude"=>$longitude,
+                "place"=>$place
             ]);
 
             if($Transaction) {
@@ -158,7 +161,7 @@ class ApiCheckController extends Controller
 
 
     }
-    function init_Retrait($montant, $beneficiaire, $service, $payToken="", $device){
+    function init_Retrait($montant, $beneficiaire, $service, $payToken="", $device,$latitude, $longitude, $place){
 
         $reference = "RT".Carbon::now()->format('ymd').".".Carbon::now()->format('His').".".$this->genererChaineAleatoire(1)."".$this->GenereRang();
 
@@ -185,6 +188,9 @@ class ApiCheckController extends Controller
                 'date_operation'=>date('Y-m-d'),
                 'heure_operation'=>date('H:i:s'),
                 'device_notification'=>$device,
+                'latitude'=>$latitude,
+                'longitude'=>$longitude,
+                'place'=>$place
             ]);
 
             if($Transaction) {

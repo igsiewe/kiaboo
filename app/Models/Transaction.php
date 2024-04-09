@@ -59,6 +59,9 @@ class Transaction extends Model
         'description_cancel',
         'callback_response',
         'terminaison',
+        'latitude',
+        'longitude',
+        'place',
 
     ];
 

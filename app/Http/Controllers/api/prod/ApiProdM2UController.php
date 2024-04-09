@@ -255,7 +255,10 @@ class ApiProdM2UController extends Controller
 
         //Initie la transaction
         $device = $request->deviceId;
-        $init_transaction = $apiCheck->init_Depot($montant, $customerNumber, $service,"", $device);
+        $latitude = $request->latitude;
+        $longitude = $request->longitude;
+        $place = $request->place;
+        $init_transaction = $apiCheck->init_Depot($montant, $customerNumber, $service,"", $device, $latitude, $longitude, $place);
         $dataInit = json_decode($init_transaction->getContent());
 
         if($init_transaction->getStatusCode() !=200){
@@ -693,7 +696,10 @@ class ApiProdM2UController extends Controller
                 $telephone = substr($telephone,-9);
             }
         }
-        $init_transaction = $apiCheck->init_Retrait($request->Amount, $telephone, $service,"", $device);
+        $latitude = $request->latitude;
+        $longitude = $request->longitude;
+        $place = $request->place;
+        $init_transaction = $apiCheck->init_Retrait($request->Amount, $telephone, $service,"", $device, $latitude, $longitude, $place);
         $dataInit = json_decode($init_transaction->getContent());
 
         if($init_transaction->getStatusCode() !=200){
@@ -933,7 +939,10 @@ class ApiProdM2UController extends Controller
                 $telephone = substr($telephone,-9);
             }
         }
-        $init_transaction = $apiCheck->init_Retrait($request->Amount, $telephone, $service,"", $device);
+        $latitude = $request->latitude;
+        $longitude = $request->longitude;
+        $place = $request->place;
+        $init_transaction = $apiCheck->init_Retrait($request->Amount, $telephone, $service,"", $device, $latitude, $longitude, $place);
         $dataInit = json_decode($init_transaction->getContent());
 
         if($init_transaction->getStatusCode() !=200){
