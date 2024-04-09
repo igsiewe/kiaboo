@@ -519,20 +519,20 @@ class ApiProdMoMoMoneyController extends Controller
             ->Get($http);
 
         $data = json_decode($response->body());
-
+        $element = json_decode($response, associative: true);
+        $externalId = $data->externalId;
+        //On se rassure que la transaction est bien en status en attente
+        $Transaction = Transaction::where('id',$externalId);
+        $financialTransactionId = $Transaction->first()->paytoken;
+        if(Arr::has($element, "financialTransactionId")) {
+            $financialTransactionId = $data->financialTransactionId;
+        }
+        $reason=null;
+        if(Arr::has($element, "reason")) {
+            $reason = $data->reason;
+        }
         if($response->status()==200){
-            $element = json_decode($response, associative: true);
-            $externalId = $data->externalId;
-            //On se rassure que la transaction est bien en status en attente
-            $Transaction = Transaction::where('id',$externalId);
-            $financialTransactionId = $Transaction->first()->paytoken;
-            if(Arr::has($element, "financialTransactionId")) {
-                $financialTransactionId = $data->financialTransactionId;
-            }
-            $reason=null;
-            if(Arr::has($element, "reason")) {
-                $reason = $data->reason;
-            }
+
             if($data->status=="FAILED"){
                 $updateTransaction=$Transaction->update([
                     'status'=>3, // Le dépôt n'a pas abouti
