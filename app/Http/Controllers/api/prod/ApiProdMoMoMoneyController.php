@@ -463,6 +463,18 @@ class ApiProdMoMoMoneyController extends Controller
                         }
                     }
             }
+
+            if($data->status=="PENDING"){
+                return response()->json(
+                    [
+                        'status'=>201,
+                        'amount'=>$data->amount,
+                        'externalId'=>$data->externalId,
+                        'message'=>"La transaction est en statut en attente. Veuillez vérifier son statut dans la liste des transactions en attente.",
+                        'description'=>$data->status,
+                    ],201
+                );
+            }
             return response()->json(
                 [
                     'status'=>404,
