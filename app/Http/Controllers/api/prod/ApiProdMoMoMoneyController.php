@@ -1149,7 +1149,13 @@ class ApiProdMoMoMoneyController extends Controller
                 //    DB::beginTransaction();
                     $idTransaction = $Transaction->first()->id;
                     $service = $Transaction->first()->service_id;
-                    $montant = $Transaction->first()->debit;
+                    $montant = $data->amount;
+                    $user = User::where('id', $Transaction->first()->created_by);
+
+                    $agent = $user->first()->id;
+                    $reference = $Transaction->first()->reference;
+
+
                     // On vérifie si les commissions sont paramétrées
                     $functionCommission = new ApiCommissionController();
                     $lacommission =$functionCommission->getCommissionByService($service,$montant);
@@ -1165,7 +1171,7 @@ class ApiProdMoMoMoneyController extends Controller
                     $commissionDistributeur=doubleval($commission->commission_distributeur);
                     $commissionAgent=doubleval($commission->commission_agent);
 
-                    $user = User::where('id', Auth::user()->id);
+                    $user = User::where('id', $agent);
                     $balanceBeforeAgent = $user->get()->first()->balance_after;
                     $balanceAfterAgent = floatval($balanceBeforeAgent) - floatval($montant);
                     //on met à jour la table transaction
@@ -1185,23 +1191,25 @@ class ApiProdMoMoMoneyController extends Controller
                         'commission_filiale'=>$commissionFiliale,
                         'commission_agent'=>$commissionAgent,
                         'commission_distributeur'=>$commissionDistributeur,
+                        'reference_partenaire'=>$data->financialTransactionId,
+                        'terminaison'=>'CALLBACK',
                     ]);
 
                     //on met à jour le solde de l'utilisateur
 
                     //La commmission de l'agent après chaque transaction
 
-                    $commission_agent = Transaction::where("fichier","agent")->where("commission_agent_rembourse",0)->where("source",Auth::user()->id)->sum("commission_agent");
+                    $commission_agent = Transaction::where("fichier","agent")->where("commission_agent_rembourse",0)->where("source",$agent)->sum("commission_agent");
 
-                    $debitAgent = DB::table("users")->where("id", Auth::user()->id)->update([
+                    $debitAgent = DB::table("users")->where("id", $agent)->update([
                         'balance_after'=>$balanceAfterAgent,
                         'balance_before'=>$balanceBeforeAgent,
                         'last_amount'=>$montant,
                         'date_last_transaction'=>Carbon::now(),
-                        'user_last_transaction_id'=>Auth::user()->id,
+                        'user_last_transaction_id'=>$agent,
                         'last_service_id'=>ServiceEnum::DEPOT_OM->value,
                         'reference_last_transaction'=>$reference,
-                        'remember_token'=>$referenceID,
+                        'remember_token'=>$reference,
                         'total_commission'=>$commission_agent,
                     ]);
 
