@@ -559,17 +559,21 @@ class ApiProdMoMoMoneyController extends Controller
                     ],201
                 );
             }
-            if($data->reason=="NOT_ENOUGH_FUNDS"){
-                return response()->json(
-                    [
-                        'status'=>404,
-                        'amount'=>$data->amount,
-                        'externalId'=>$data->externalId,
-                        'message'=>"Le solde du compte chez le partenaire est insuffisant",
-                        'description'=>$data->status,
-                    ],404
-                );
+            if(Arr::has($element, "reason")) {
+                $reason = $data->reason;
+                if($reason=="NOT_ENOUGH_FUNDS"){
+                    return response()->json(
+                        [
+                            'status'=>404,
+                            'amount'=>$data->amount,
+                            'externalId'=>$data->externalId,
+                            'message'=>"Le solde du compte chez le partenaire est insuffisant",
+                            'description'=>$data->status,
+                        ],404
+                    );
+                }
             }
+
             if($data->status=="SUCCESSFUL"){
                     $Transaction = Transaction::where('paytoken',$referenceId)->where('service_id',ServiceEnum::DEPOT_MOMO->value)->where('status',2);
                     $idTransaction = $Transaction->first()->id;
