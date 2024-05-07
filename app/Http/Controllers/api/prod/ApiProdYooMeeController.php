@@ -107,7 +107,8 @@ class ApiProdYooMeeController extends Controller
             return response()->json(
                 [
                     'status'=>$response->status(),
-                    'message'=>$response->body(),
+                   // 'message'=>$response->body(),
+                    'message'=>"Ressource non trouvée",
                 ],$response->status()
             );
         }
