@@ -13,7 +13,7 @@ class ApiProdFactureEneoController extends Controller
 {
     public function eneo_CheckFactureStatus($numFacture){ //GetCashTransferStatus
 
-        if (strlen($numFacture) !=12){
+        if (strlen($numFacture) !=9){
             return response()->json([
                 'status'=>'error',
                 'message'=>'Le numéro de la facture est incorrect'
