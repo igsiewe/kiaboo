@@ -23,6 +23,7 @@ class ApiProdFactureEneoController extends Controller
         return response()->json([
             'success' => true,
             'message' => "Facture valide",
+            'amount'=>rand(5000,200000),
             'numContrat'=> rand(2000000,9999999),
             'numFacture'=> $numFacture,
             'ownerName'=> strtoupper(fake()->name()),
