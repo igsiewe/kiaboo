@@ -228,7 +228,7 @@ class ApiTransactionsController extends BaseController
         if($transactionsEnAttente->count()==0 || $transactionsEnAttente->isEmpty()){
             return response()->json([
                 'status' => 'false',
-                'message' => 'Aucune transaction trouvée.'
+                'message' => 'You have no transactions in progress'
             ], 404);
         }else{
             return response()->json([
