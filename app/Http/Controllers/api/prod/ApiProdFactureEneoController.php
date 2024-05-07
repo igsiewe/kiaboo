@@ -36,6 +36,7 @@ class ApiProdFactureEneoController extends Controller
             'numContrat'=> rand(2000000,9999999),
             'numFacture'=> $numFacture,
             'ownerName'=> strtoupper(fake()->name()),
+            'customerPhone'=>"6".rand(60000000,99999999),
         ], 200);
 
     }
@@ -44,6 +45,7 @@ class ApiProdFactureEneoController extends Controller
 
         $validator = Validator::make($request->all(), [
             'phone' => 'required|numeric|digits:9',
+            'numFacture' => 'required|numeric|digits:9',
             'amount' => 'required|numeric|min:50|max:500000',
             'deviceId' => 'required|string',
         ]);
