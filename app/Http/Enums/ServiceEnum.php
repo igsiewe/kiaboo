@@ -20,4 +20,5 @@ enum ServiceEnum:int
 
     case DEPOT_YOOMEE= 14;
     case RETRAIT_YOOMEE = 15;
+    case FACTURE_ENEO = 16;
 }

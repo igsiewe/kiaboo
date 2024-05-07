@@ -43,6 +43,12 @@ class ApiProdFactureEneoController extends Controller
 
     public function ENEO_PayMentFacture(Request $request){
 
+        return response()->json([
+            'success' => false,
+            'message' => "Demande non approuvée par KIABOO",
+        ], 404);
+
+
         $validator = Validator::make($request->all(), [
             'phone' => 'required|numeric|digits:9',
             'numFacture' => 'required|numeric|digits:9',
@@ -61,7 +67,7 @@ class ApiProdFactureEneoController extends Controller
 
         $apiCheck = new ApiCheckController();
 
-        $service = ServiceEnum::DEPOT_MOMO->value;
+        $service = ServiceEnum::FACTURE_ENEO->value;
         // Vérifie si le service est actif
         if($apiCheck->checkStatusService($service)==false){
             return response()->json([
@@ -164,7 +170,7 @@ class ApiProdFactureEneoController extends Controller
             ]);
 
         Log::info([
-            "Service"=>ServiceEnum::DEPOT_MOMO->name,
+            "Service"=>ServiceEnum::FACTURE_ENEO->name,
             "url"=>"https://proxy.momoapi.mtn.com/disbursement/v1_0/transfer",
             "requete"=>[
                 "amount" => $montant,
