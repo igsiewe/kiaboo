@@ -153,7 +153,8 @@ Route::middleware('auth:api')->group(function () {
             //ENEO
             Route::group(['prefix' => 'eneo'], function () {
                 Route::controller(ApiProdFactureEneoController::class)->group(function () {
-                    Route::get('facture/status/{numFacture}', 'eneo_CheckFactureStatus')->name("eneo_CheckFactureStatus");
+                    Route::get('facture/status/{numFacture}', 'ENEO_CheckFactureStatus')->name("ENEO_CheckFactureStatus");
+                    Route::post('payment/facture', 'ENEO_PayMentFacture')->name("ENEO_PayMentFacture");
                 });
             });
         });
