@@ -4,6 +4,7 @@ use App\Http\Controllers\api\ApiApproDistributeurController;
 use App\Http\Controllers\api\ApiAuthController;
 use App\Http\Controllers\api\ApiCommissionController;
 use App\Http\Controllers\api\ApiOMController;
+use App\Http\Controllers\api\ApiOperationAgent;
 use App\Http\Controllers\api\ApiParrainageController;
 use App\Http\Controllers\api\ApiSmsController;
 use App\Http\Controllers\api\ApiTransactionsController;
@@ -110,6 +111,12 @@ Route::middleware('auth:api')->group(function () {
         //Production
 
         Route::group(['prefix' => 'prod'], function () {
+            //ORANGE
+            Route::group(['prefix' => 'om'], function () {
+                Route::controller(ApiOperationAgent::class)->group(function () {
+                   Route::post('retrait', 'setTransactionRetraitOM')->name("OM_retrait");
+                });
+            });
             //MTN Mobile Money
             Route::group(['prefix' => 'momo'], function () {
                 Route::controller(ApiProdMoMoMoneyController::class)->group(function () {
