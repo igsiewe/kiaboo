@@ -8,6 +8,7 @@ use App\Http\Controllers\api\ApiParrainageController;
 use App\Http\Controllers\api\ApiSmsController;
 use App\Http\Controllers\api\ApiTransactionsController;
 use App\Http\Controllers\api\ApiUserController;
+use App\Http\Controllers\api\prod\ApiProdFactureEneoController;
 use App\Http\Controllers\api\prod\ApiProdMoMoMoneyController;
 use App\Http\Controllers\api\prod\ApiProdM2UController;
 use App\Http\Controllers\api\prod\ApiProduction_MoMo;
@@ -149,6 +150,12 @@ Route::middleware('auth:api')->group(function () {
                 });
             });
 
+            //ENEO
+            Route::group(['prefix' => 'eneo'], function () {
+                Route::controller(ApiProdFactureEneoController::class)->group(function () {
+                    Route::get('facture/status/{numFacture}', 'eneo_CheckFactureStatus')->name("eneo_CheckFactureStatus");
+                });
+            });
         });
       });
     });
