@@ -35,6 +35,13 @@ class ApiProdYooMeeController extends Controller
         $response = Http::withOptions(['verify' => false,])->withBasicAuth("kiaboo2024", "Ki@boo2024")
             ->Get($url);
 
+        Log::info([
+            "Service"=>"YOOMEE_USERINFO",
+            "url"=>$url,
+            "reponseStatus"=>json_decode($response->status()),
+            "reponseBody"=>json_decode($response->body()),
+        ]);
+
         $customerPhone="";
         $customerName="";
         $customerAccount="";
