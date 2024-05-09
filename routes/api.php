@@ -94,6 +94,7 @@ Route::middleware('auth:api')->group(function () {
         //Commission
         Route::controller(ApiCommissionController::class)->group(function () {
             Route::get('commission/remboursement/agent', 'commissionAgentRembourse')->name("commissionAgentRembourse");
+            Route::post('commission/remboursement/agent/filtre', 'commissionAgentRembourseFiltre')->name("commissionAgentRembourseFiltre");
             Route::post('/commission/remboursement/execute', 'setRemboursementCommission')->name("setRemboursementCommission");
         });
 

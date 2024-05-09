@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use PhpParser\Node\Expr\Cast\Double;
 use phpseclib3\Math\PrimeField\Integer;
 
@@ -148,6 +149,49 @@ class ApiCommissionController extends BaseController
             ->select(DB::raw('ref_remb_com_agent as reference, DATE_FORMAT(commission_agent_rembourse_date,"%Y-%m-%d")  as date_remboursement, sum(commission_agent) as commission'))
             ->where('transactions.source', Auth::user()->id)
             ->where("transactions.commission_agent_rembourse",1)
+            ->whereNotIn("type_services.id", [TypeServiceEnum::APPROVISIONNEMENT->value,TypeServiceEnum::REMBOURSEMENT])
+            ->where("transactions.fichier","agent")->where('transactions.status',1)
+            ->groupBy('transactions.ref_remb_com_agent','date_remboursement')
+            ->get();
+
+        if($commission->count() > 0) {
+            return response()->json([
+                "status" => true,
+                "total" => $commission->sum("commission"),
+                "message"=>$commission->count()." trouvée(s)",
+                "commissions" => $commission
+            ],200);
+        }else{
+            return response()->json([
+                "status" => false,
+                "total"=>0,
+                "message" => "Aucune commission trouvée",
+                "commissio,s"=>[]
+            ],404);
+        }
+
+    }
+
+    public function commissionAgentRembourseFiltre(Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'startDate' => 'required|string',
+            'endDate' => 'required|string',
+        ]);
+
+        $startDate = Carbon::createFromFormat('d/m/Y', $request->startDate)->format('Y-m-d');
+        $endDate = Carbon::createFromFormat('d/m/Y', $request->endDate)->format('Y-m-d');
+
+        //Grouper le remboursement des commissions agent par ref_remb_com_agent
+        $commission = DB::table('transactions')
+            ->join("services","services.id","transactions.service_id")
+            ->join("type_services", "type_services.id","services.type_service_id")
+            ->where('transactions.source', Auth::user()->id)
+            ->where("transactions.commission_agent_rembourse",1)
+            ->where("transactions.date_transaction",">=",$startDate.' 00:00:00')
+            ->where("transactions.date_transaction","<=",$endDate.' 23:59:59')
+            ->select(DB::raw('ref_remb_com_agent as reference, DATE_FORMAT(commission_agent_rembourse_date,"%Y-%m-%d")  as date_remboursement, sum(commission_agent) as commission'))
+
             ->whereNotIn("type_services.id", [TypeServiceEnum::APPROVISIONNEMENT->value,TypeServiceEnum::REMBOURSEMENT])
             ->where("transactions.fichier","agent")->where('transactions.status',1)
             ->groupBy('transactions.ref_remb_com_agent','date_remboursement')
