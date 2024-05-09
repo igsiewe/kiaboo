@@ -407,7 +407,7 @@ class ApiProdM2UController extends Controller
                     ]);
                     //La commmission de l'agent après chaque transaction
 
-                    $commission_agent = Transaction::where("fichier", "agent")->where("commission_agent_rembourse", 0)->where("source", Auth::user()->id)->sum("commission_agent");
+                    $commission_agent = Transaction::where("status",1)->where("fichier", "agent")->where("commission_agent_rembourse", 0)->where("source", Auth::user()->id)->sum("commission_agent");
 
                     $debitAgent = DB::table("users")->where("id", Auth::user()->id)->update([
                         'balance_after' => $balanceAfterAgent,
@@ -799,7 +799,7 @@ class ApiProdM2UController extends Controller
                     ]);
                     //La commmission de l'agent après chaque transaction
 
-                    $commission_agent = Transaction::where("fichier", "agent")->where("commission_agent_rembourse", 0)->where("source", Auth::user()->id)->sum("commission_agent");
+                    $commission_agent = Transaction::where("status",1)->where("fichier", "agent")->where("commission_agent_rembourse", 0)->where("source", Auth::user()->id)->sum("commission_agent");
 
                     $debitAgent = DB::table("users")->where("id", Auth::user()->id)->update([
                         'balance_after' => $balanceAfterAgent,
@@ -1035,7 +1035,7 @@ class ApiProdM2UController extends Controller
                                 ]);
                                 //La commmission de l'agent après chaque transaction
 
-                                $commission_agent = Transaction::where("fichier", "agent")->where("commission_agent_rembourse", 0)->where("source", Auth::user()->id)->sum("commission_agent");
+                                $commission_agent = Transaction::where("status",1)->where("fichier", "agent")->where("commission_agent_rembourse", 0)->where("source", Auth::user()->id)->sum("commission_agent");
 
                                 $debitAgent = DB::table("users")->where("id", Auth::user()->id)->update([
                                     'balance_after' => $balanceAfterAgent,
