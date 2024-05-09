@@ -639,7 +639,7 @@ class ApiProdMoMoMoneyController extends Controller
                     //on met à jour le solde de l'utilisateur
                     //La commmission de l'agent après chaque transaction
 
-                    $commission_agent = Transaction::where("fichier","agent")->where("commission_agent_rembourse",0)->where("source",$agent)->sum("commission_agent");
+                    $commission_agent = Transaction::where("status",1)->where("fichier","agent")->where("commission_agent_rembourse",0)->where("source",$agent)->sum("commission_agent");
 
                     $debitAgent = DB::table("users")->where("id", $agent)->update([
                         'balance_after'=>$balanceAfterAgent,
@@ -1203,7 +1203,7 @@ class ApiProdMoMoMoneyController extends Controller
                             'terminaison'=>'CALLBACK',
                         ]);
 
-                        $commission_agent = Transaction::where("fichier","agent")->where("commission_agent_rembourse",0)->where("source",$agent)->sum("commission_agent");
+                        $commission_agent = Transaction::where("status",1)->where("fichier","agent")->where("commission_agent_rembourse",0)->where("source",$agent)->sum("commission_agent");
                         $debitAgent = DB::table("users")->where("id", $agent)->update([
                             'balance_after'=>$balanceAfterAgent,
                             'balance_before'=>$balanceBeforeAgent,
@@ -1321,7 +1321,7 @@ class ApiProdMoMoMoneyController extends Controller
 
                     //La commmission de l'agent après chaque transaction
 
-                    $commission_agent = Transaction::where("fichier","agent")->where("commission_agent_rembourse",0)->where("source",$agent)->sum("commission_agent");
+                    $commission_agent = Transaction::where("status",1)->where("fichier","agent")->where("commission_agent_rembourse",0)->where("source",$agent)->sum("commission_agent");
 
                     $debitAgent = DB::table("users")->where("id", $agent)->update([
                         'balance_after'=>$balanceAfterAgent,
