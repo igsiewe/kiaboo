@@ -30,14 +30,14 @@ class ApiProdYooMeeController extends Controller
                 'message' => "Please provide a customer phone number",
             ], 400);
         }
-
-        $url = "http://quality-env.yoomeemoney.cm:8080/api/users?keywords=$customerPhone&roles=member&statuses=active";
-        $response = Http::withOptions(['verify' => false,])->withBasicAuth("kiaboo2024", "Ki@boo2024")
-            ->Get($url);
+        $url="https://yoomeemoney.cm/api/";
+        $endpoint = $url."users?keywords=$customerPhone&roles=member&statuses=active";
+        $response = Http::withOptions(['verify' => false,])->withBasicAuth("kiabooProd2024", "Ki@@boo#@2024")
+            ->Get($endpoint);
 
         Log::info([
             "Service"=>"YOOMEE_USERINFO",
-            "url"=>$url,
+            "url"=>$endpoint,
             "reponseStatus"=>json_decode($response->status()),
             "reponseBody"=>json_decode($response->body()),
         ]);
@@ -199,16 +199,17 @@ class ApiProdYooMeeController extends Controller
 
         $customerId = $request->customerId;
         $customerAmount =$montant;
-        $url = "http://quality-env.yoomeemoney.cm:8080/api/self/payments";
+        $url="https://yoomeemoney.cm/api/";
+        $endpoint = $url."self/payments";
         $description = "test kiaboo";
         $codePin="1235";
-        $response = Http::withOptions(['verify' => false,])->withBasicAuth("kiaboo2024", "Ki@boo2024")->withHeaders(
+        $response = Http::withOptions(['verify' => false,])->withBasicAuth("kiabooProd2024", "Ki@@boo#@2024")->withHeaders(
             [
                 'confirmationPassword'=> $codePin,
                 'accept'=>  'application/json',
                 'Content-Type'=> 'application/json'
             ])
-            ->Post($url, [
+            ->Post($endpoint, [
                 "amount"=> $customerAmount,
                 "description"=> $description,
                 "currency"=> "unit",
@@ -220,7 +221,7 @@ class ApiProdYooMeeController extends Controller
        // dd($response->body(), $response->status());
         Log::info([
             "Service"=>ServiceEnum::DEPOT_YOOMEE->name,
-            "url"=>$url,
+            "url"=>$endpoint,
             "requete"=>[
                 "amount"=> $customerAmount,
                 "description"=> $description,
@@ -411,16 +412,16 @@ class ApiProdYooMeeController extends Controller
         $reference = $dataTransactionInit->reference; //Référence de la transaction initiée
 
         $customerId = $request->customerId;
-
-        $url = "http://quality-env.yoomeemoney.cm:8080/api/self/payment-requests";
+        $url="https://yoomeemoney.cm/api/";
+        $endpoint = $url."self/payment-requests";
         $description = "test kiaboo";
 
-        $response = Http::withOptions(['verify' => false,])->withBasicAuth("kiaboo2024", "Ki@boo2024")->withHeaders(
+        $response = Http::withOptions(['verify' => false,])->withBasicAuth("kiabooProd2024", "Ki@@boo#@2024")->withHeaders(
             [
                 'accept'=>  'application/json',
                 'Content-Type'=> 'application/json'
             ])
-            ->Post($url, [
+            ->Post($endpoint, [
                 "amount"=> $montant,
                 "description"=> $description,
                 "currency"=> "unit",
@@ -435,7 +436,7 @@ class ApiProdYooMeeController extends Controller
 
         Log::info([
             "Service"=>ServiceEnum::RETRAIT_YOOMEE->name,
-            "url"=>$url,
+            "url"=>$endpoint,
             "requete"=>[
                 "amount"=> $montant,
                 "description"=> $description,
@@ -523,10 +524,10 @@ class ApiProdYooMeeController extends Controller
         $customer_phone = $Transaction->first()->customer_phone;
         //On génère le token de la transation
 
+        $url="https://yoomeemoney.cm/api/";
+        $http = $url."transactions/".$referenceID;
 
-        $http = "http://quality-env.yoomeemoney.cm:8080/api/transactions/".$referenceID;
-
-        $response = Http::withOptions(['verify' => false,])->withBasicAuth("kiaboo2024", "Ki@boo2024")->withHeaders(
+        $response = Http::withOptions(['verify' => false,])->withBasicAuth("kiabooProd2024", "Ki@@boo#@2024")->withHeaders(
             [
                 'accept'=>  'application/json',
                 'Content-Type'=> 'application/json'
