@@ -708,7 +708,7 @@ class ApiProdYooMeeController extends Controller
         }
     }
 
-    public function YooMeeCallback(){
+    public function YooMeeCallback(Request $request){
 
     }
 
