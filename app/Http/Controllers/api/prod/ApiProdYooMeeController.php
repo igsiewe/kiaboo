@@ -708,4 +708,8 @@ class ApiProdYooMeeController extends Controller
         }
     }
 
+    public function YooMeeCallback(){
+
+    }
+
 }

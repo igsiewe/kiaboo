@@ -35,6 +35,10 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::post('momo/callback','MomoCallBack')->name("MoMoCallback");
     });
 
+    Route::controller(ApiProdYooMeeController::class)->group(function (){
+        Route::post('yoomee/callback','YooMeeCallback')->name("YooMeeCallback");
+    });
+
     Route::group(['prefix' => 'v1'], function () {
 
          Route::controller(ApiAuthController::class)->group(function () {
