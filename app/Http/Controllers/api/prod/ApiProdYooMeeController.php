@@ -214,7 +214,7 @@ class ApiProdYooMeeController extends Controller
         $url="https://yoomeemoney.cm/api/";
         $endpoint = $url."self/payments";
         $description = "test kiaboo";
-        $codePin="1235";
+        $codePin="7424";
         $response = Http::withOptions(['verify' => false,])->withBasicAuth("kiabooProd2024", "Ki@@boo#@2024")->withHeaders(
             [
                 'confirmationPassword'=> $codePin,
@@ -350,7 +350,7 @@ class ApiProdYooMeeController extends Controller
             Log::error([
                 'code'=> $response->status(),
                 'function' => "YOOMEE_Depot",
-                'response'=>$response->body(),
+                'response'=>$response,
                 'user' => Auth::user()->id,
             ]);
             return response()->json(
