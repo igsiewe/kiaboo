@@ -350,14 +350,15 @@ class ApiProdYooMeeController extends Controller
             Log::error([
                 'code'=> $response->status(),
                 'function' => "YOOMEE_Depot",
-                'response'=>$response,
+                'response'=>$response->body(),
                 'user' => Auth::user()->id,
             ]);
+            $data = json_decode($response);
             return response()->json(
                 [
                     'status'=>$response->status(),
                     'error'=>$response->body(),
-                    'message'=>$response->body(),
+                    'message'=>$data->code,
                 ],$response->status()
             );
         }
