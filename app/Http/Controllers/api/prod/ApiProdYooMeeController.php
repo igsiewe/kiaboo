@@ -46,6 +46,18 @@ class ApiProdYooMeeController extends Controller
         $customerName="";
         $customerAccount="";
         $customerId="";
+        if($response->status()==401){
+            $response = json_decode($response);
+            return response()->json([
+                'status' => 'echec',
+                'customerId'=>$customerId,
+                'customerName' => $customerName,
+                'customerPhone' => $customerPhone,
+                'customerAccount' => $customerAccount,
+                'message'=>$response->code,
+                'response'=>$response,
+            ],401);
+        }
         if($response->body()==null || $response->body()=="[]"){ //On teste si l'utilisateur existe
             return response()->json([
                 'status' => 'echec',
