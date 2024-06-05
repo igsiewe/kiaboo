@@ -12,8 +12,6 @@ use Maatwebsite\Excel\Events\AfterSheet;
 
 class BaseController extends Controller
 {
-
-
        /**
      * success response method.
      *
