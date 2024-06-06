@@ -70,7 +70,7 @@ Route::middleware('auth:api')->group(function () {
 
         //Swagger
         Route::controller(ApiProdAuthController::class)->group(function (){
-           // Route::post('/authenticate/changepassword','changePasswordSwagger')->name("changePasswordSwagger");
+           Route::post('/authenticate/changepassword','changePasswordSwagger')->name("changePasswordSwagger");
         });
 
         Route::get('/sms/' ,[ApiSmsController::class,'index']) ;
@@ -87,8 +87,6 @@ Route::middleware('auth:api')->group(function () {
             Route::post('user/update/', 'updateUser')->name("updateUser");
             Route::post('user/update/password', 'updatePassword')->name("updatePassword");
             Route::post('/agent/recrutement', 'recrutement')->name("recrutement");
-
-            Route::post('/authenticate/changepassword','changePasswordSwagger')->name("changePasswordSwagger");
         });
 
         Route::controller(ApiApproDistributeurController::class)->group(function () {
