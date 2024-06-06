@@ -25,10 +25,11 @@ use OpenApi\Annotations as OA;
  *     description="API Server"
  * )
  * @OA\SecurityScheme(
- *     type="http",
- *     scheme="bearer",
- *     securityScheme="bearer_token"
- * )
+ *    securityScheme="token",
+ *    type="apiKey",
+ *    name="Authorization",
+ *    in="header"
+ *  )
  *
  * @OA\PathItem(
  *     path="/api/v1/user/login",
