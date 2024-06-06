@@ -27,7 +27,7 @@ use OpenApi\Annotations as OA;
  * @OA\SecurityScheme(
  *     type="http",
  *     scheme="bearer",
- *     securityScheme="bearerAuth"
+ *     securityScheme="bearerAuth",
  *     bearerFormat: "JWT"
  * )
  *
