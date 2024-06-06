@@ -24,6 +24,11 @@ use OpenApi\Annotations as OA;
  *     url=L5_SWAGGER_CONST_HOST,
  *     description="API Server"
  * )
+ * @OA\SecurityScheme(
+ *     type="http",
+ *     scheme="bearer",
+ *     securityScheme="bearer_token"
+ * )
  *
  * @OA\PathItem(
  *     path="/api/v1/user/login",

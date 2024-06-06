@@ -112,6 +112,7 @@ class ApiProdAuthController extends BaseController
 
                 $user->last_connexion = Carbon::now();
                 $user->save();
+                dd(\auth()->user());
                 Log::info([
                     'user_id'=>Auth::user()->id,
                     'name'=>Auth::user()->name." ".Auth::user()->surname,
@@ -142,6 +143,7 @@ class ApiProdAuthController extends BaseController
      * path="/api/v1/authenticate/changepassword",
      * summary="Change password user",
      * description="Change password user",
+     * security={{"bearer_token":{}}},
      * tags={"Auth"},
      * @OA\RequestBody(
      *    required=true,
