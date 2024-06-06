@@ -26,8 +26,8 @@ class ApiProdAuthController extends Controller
      *    description="user informations",
      *    @OA\JsonContent(
      *       required={"login","password"},
-     *       @OA\Property(property="password", type="string", format="password", example="password123"),
      *       @OA\Property(property="login", type="integer",format="number", example="659657424"),
+     *       @OA\Property(property="password", type="string", format="password", example="password123"),
      *    ),
      * ),
      * @OA\Response(
