@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api\prod;
 
+use App\Http\Controllers\BaseController;
 use App\Http\Controllers\Controller;
 use App\Http\Enums\UserRolesEnum;
 use App\Models\User;
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
-class ApiProdAuthController extends Controller
+class ApiProdAuthController extends BaseController
 {
 
     /**
@@ -26,7 +27,7 @@ class ApiProdAuthController extends Controller
      *    description="user informations",
      *    @OA\JsonContent(
      *       required={"login","password"},
-     *       @OA\Property(property="login", type="string",format="text", example="659657424"),
+     *       @OA\Property(property="login", type="string",format="text", example="699972941"),
      *       @OA\Property(property="password", type="string", format="password", example="password123"),
      *    ),
      * ),
@@ -104,7 +105,7 @@ class ApiProdAuthController extends Controller
 
         // Here, we get the user credentials from the request
         $credentials = [
-            'login' => $request->login,
+            'login' => "+237".$request->login,
             'password' => $request->password,
             'status' => 1,
             'status_delete'=>0,
@@ -137,4 +138,6 @@ class ApiProdAuthController extends Controller
             'message' => 'Invalid login details',
         ], 401);
     }
+
+
 }
