@@ -26,8 +26,8 @@ class ApiProdAuthController extends BaseController
      *    required=true,
      *    description="user informations",
      *    @OA\JsonContent(
-     *       required={"email","password"},
-     *       @OA\Property(property="email", type="email",format="email", example="alain.kamdem@gmail.com"),
+     *       required={"login","password"},
+     *       @OA\Property(property="login", type="email",format="email", example="alain.kamdem@gmail.com"),
      *       @OA\Property(property="password", type="string", format="password", example="password"),
      *    ),
      * ),
@@ -79,8 +79,8 @@ class ApiProdAuthController extends BaseController
     public function loginSwagger(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'login' => 'required|min:3|string|max:255',
-            'password' => 'required|string|min:6',
+            'login' => 'required|min:12|email|max:255',
+            'password' => 'required|string|min:6|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -100,7 +100,7 @@ class ApiProdAuthController extends BaseController
             'password' => $request->password,
             'status' => 1,
             'status_delete'=>0,
-            'type_user_id' => UserRolesEnum::AGENT->value
+            'type_user_id' => UserRolesEnum::DISTRIBUTEUR->value
         ];
         try {
             if (Auth::attempt($credentials)) {
