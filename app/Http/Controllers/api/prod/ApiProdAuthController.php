@@ -148,8 +148,9 @@ class ApiProdAuthController extends BaseController
      *    description="change password user connected",
      *    @OA\JsonContent(
      *       required={"old_password","new_password","confirm_password"},
-     *       @OA\Property(property="success", type="string", example="true"),
-     *       @OA\Property(property="message", type="string", example="password changed successfully"),
+     *       @OA\Property(property="old_password", type="string", example="pasKio@_#85l24"),
+     *       @OA\Property(property="new_password", type="string", example="NFt@_#85lop24"),
+     *       @OA\Property(property="confirm_password", type="string", example="NFt@_#85lop24"),
      *    ),
      * ),
      * @OA\Response(
@@ -177,8 +178,8 @@ class ApiProdAuthController extends BaseController
      *       @OA\Property(property="success", type="boolean", example="true"),
      *       @OA\Property(property="statusCode", type="string", example="PASSWORD-CHANGED-SUCCESSFULLY"),
      *       @OA\Property(property="message", type="string", example="password changed successfully"),
+     *    ),
      * ),
-     *     ),
      * @OA\Response(
      *    response=500,
      *    description="an error occurred",
