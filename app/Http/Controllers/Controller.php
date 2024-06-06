@@ -24,10 +24,11 @@ use OpenApi\Annotations as OA;
  *     url=L5_SWAGGER_CONST_HOST,
  *     description="API Server"
  * )
- * @OA\Get(
- *     path="/",
- *     description="Home page",
- *     @OA\Response(response="200", description="Welcome page")
+ * @OA\SecurityScheme(
+ *     type="http",
+ *     scheme="bearer",
+ *     bearerFormat="JWT",
+ *     securityScheme="bearerAuth"
  * )
  *
  * @OA\PathItem(
