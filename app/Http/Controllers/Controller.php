@@ -24,10 +24,12 @@ use OpenApi\Annotations as OA;
  *     url=L5_SWAGGER_CONST_HOST,
  *     description="API Server"
  * )
- * @OA\Tag(
- *     name="Auth",
- *     description="Everything about your Auth"
+ * @OA\Get(
+ *     path="/",
+ *     description="Home page",
+ *     @OA\Response(response="200", description="Welcome page")
  * )
+ *
  * @OA\PathItem(
  *     path="/api/v1/user/login",
  *     )
