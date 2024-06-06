@@ -623,5 +623,57 @@ class ApiAuthController extends BaseController
         }
     }
 
+    public function changePasswordSwagger(Request $request)
+    {
+        dd("hi");
+        $validator = Validator::make($request->all(), [
+            'old_password' => 'required|string|min:6|max:255',
+            'new_password' => 'required|string|min:6|max:255',
+            'confirm_password' => 'required|string|min:6|max:255|same:new_password',
+        ]);
 
+        if ($validator->fails()) {
+
+            return response(
+                [
+                    'success' => false,
+                    'statusCode' => 'ERR-ATTRIBUTES-INVALID',
+                    'message' => $validator->errors()->all()
+
+                ], 422);
+        }
+        try {
+            $user = Auth::user();
+            if (!password_verify($request->old_password, $user->password)) {
+                return response()->json([
+                    'success' => false,
+                    'statusCode' => 'ERR-OLD_PASSWORD-INVALID', // 'ERR-CREDENTIALS-INVALID
+                    'message' => 'old password is invalid',
+                ], 400);
+            }
+
+            $user->password = bcrypt($request->new_password);
+            $user->save();
+            return response()->json(
+                [
+                    'success' => true,
+                    'statusCode' => 'PASSWORD-CHANGED-SUCCESSFULLY',
+                    'message' => 'password changed successfully',
+                ],
+                500
+            );
+
+        } catch (\Exception $err) {
+            Log::error($err);
+            return response()->json(
+                [
+                    'success' => false,
+                    'statusCode' => 'ERR-UNAVAILABLE',
+                    'message' => $err->getMessage(),
+                ],
+                500
+            );
+        }
+
+    }
 }
