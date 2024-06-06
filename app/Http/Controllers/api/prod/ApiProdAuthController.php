@@ -58,11 +58,6 @@ class ApiProdAuthController extends BaseController
      *                  @OA\Property(property="name", type="string", example="houvre"),
      *                  @OA\Property(property="surname", type="string", example="autre"),
      *                ),
-     *             @OA\Property(
-     *               property="roles",
-     *               type="array",
-     *               @OA\Items()
-     *            ),
      *           ),
      *         description="data array"
      *    )
