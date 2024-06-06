@@ -173,7 +173,7 @@ class ApiProdAuthController extends BaseController
      *  ),
      * @OA\Response(
      *    response=200,
-     *    description="successful login user",
+     *    description="password changed successfully",
      *    @OA\JsonContent(
      *       @OA\Property(property="success", type="boolean", example="true"),
      *       @OA\Property(property="statusCode", type="string", example="PASSWORD-CHANGED-SUCCESSFULLY"),
