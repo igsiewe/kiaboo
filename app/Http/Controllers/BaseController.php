@@ -140,7 +140,7 @@ class BaseController extends Controller
     {
         return response()->json([
             'success' => 'true',
-            'statusCode'=> "am_application_scope default",
+            'statusCode'=> "LOGIN-SUCCESS",
             'message'=> "successful login user",
             'access_token' => $token,
                 'user'=>[
