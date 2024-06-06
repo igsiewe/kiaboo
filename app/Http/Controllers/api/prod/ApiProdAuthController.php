@@ -19,8 +19,8 @@ class ApiProdAuthController extends BaseController
     /**
      * @OA\Post(
      * path="/api/v1/authenticate/auth",
-     * summary="login  user",
-     * description="login user",
+     * summary="Login  user",
+     * description="Login user",
      * tags={"Auth"},
      * @OA\RequestBody(
      *    required=true,
@@ -141,4 +141,107 @@ class ApiProdAuthController extends BaseController
     }
 
 
+    /**
+     * @OA\Post(
+     * path="/api/v1/authenticate/changepassword",
+     * summary="Change password user",
+     * description="Change password user",
+     * tags={"Auth"},
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="change password user connected",
+     *    @OA\JsonContent(
+     *       required={"old_password","new_password","confirm_password"
+     *       @OA\Property(property="success", type="string", example="true"),
+     *       @OA\Property(property="message", type="string", example="password changed successfully"),
+     *    ),
+     * ),
+     * @OA\Response(
+     *    response=400,
+     *    description="old password are invalid",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="false"),
+     *       @OA\Property(property="statusCode", type="string", example="ERR-OLD_PASSWORD-INVALID"),
+     *       @OA\Property(property="message", type="string", example="old password are invalid"),
+     *    )
+     * ),
+     * @OA\Response(
+     *     response=422,
+     *     description="attribute invalid",
+     *     @OA\JsonContent(
+     *        @OA\Property(property="success", type="boolean", example="false"),
+     *        @OA\Property(property="statusCode", type="string", example="ERR-ATTRIBUTES-INVALID"),
+     *        @OA\Property(property="message", type="string", example="attribute not valid"),
+     *     )
+     *  ),
+     * @OA\Response(
+     *    response=200,
+     *    description="successful login user",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="true"),
+     *       @OA\Property(property="statusCode", type="string", example="PASSWORD-CHANGED-SUCCESSFULLY"),
+     *       @OA\Property(property="message", type="string", example="password changed successfully"),
+     * ),
+     * @OA\Response(
+     *    response=500,
+     *    description="an error occurred",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="false"),
+     *       @OA\Property(property="statusCode", type="string", example="ERR-UNAVAILABLE"),
+     *       @OA\Property(property="message", type="string", example="an error occurred"),
+     *    )
+     *  )
+     * )
+     */
+    public function changePasswordSwagger(Request $request){
+        $validator = Validator::make($request->all(), [
+            'old_password' => 'required|string|min:6|max:255',
+            'new_password' => 'required|string|min:6|max:255',
+            'confirm_password' => 'required|string|min:6|max:255|same:new_password'
+        ]);
+
+        if ($validator->fails()) {
+
+            return response(
+                [
+                    'success'=>false,
+                    'statusCode' => 'ERR-ATTRIBUTES-INVALID',
+                    'message' => $validator->errors()->all()
+
+                ], 422);
+        }
+        try {
+            $user = Auth::user();
+            if (!password_verify($request->old_password, $user->password)) {
+                return response()->json([
+                    'success'=>false,
+                    'statusCode' => 'ERR-OLD_PASSWORD-INVALID', // 'ERR-CREDENTIALS-INVALID
+                    'message' => 'old password is invalid',
+                ], 400);
+            }
+
+            $user->password = bcrypt($request->new_password);
+            $user->save();
+            return  response()->json(
+                [
+                    'success'=>true,
+                    'statusCode' => 'PASSWORD-CHANGED-SUCCESSFULLY',
+                    'message' => 'password changed successfully',
+                ],
+                500
+            );
+
+        }  catch (\Exception $err) {
+            Log::error($err);
+            return  response()->json(
+                [
+                'success'=>false,
+                'statusCode' => 'ERR-UNAVAILABLE',
+                'message' => 'an error occurred',
+                ],
+            500
+            );
+        }
+
+    }
 }
