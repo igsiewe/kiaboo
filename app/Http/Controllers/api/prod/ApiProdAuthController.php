@@ -115,7 +115,7 @@ class ApiProdAuthController extends BaseController
                 Log::info([
                     'user_id'=>Auth::user()->id,
                     'name'=>Auth::user()->name." ".Auth::user()->surname,
-                    'Desciption'=>'Connexion'
+                    'Description'=>'Connexion'
                 ]);
                 return $this->respondWithTokenSwagger($access_token, $user);
             }
@@ -142,7 +142,6 @@ class ApiProdAuthController extends BaseController
      * path="/api/v1/authenticate/changepassword",
      * summary="Change password user",
      * description="Change password user",
-     * security={{"bearer_token":{}}},
      * tags={"Auth"},
      * @OA\RequestBody(
      *    required=true,
