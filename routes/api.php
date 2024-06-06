@@ -9,6 +9,7 @@ use App\Http\Controllers\api\ApiParrainageController;
 use App\Http\Controllers\api\ApiSmsController;
 use App\Http\Controllers\api\ApiTransactionsController;
 use App\Http\Controllers\api\ApiUserController;
+use App\Http\Controllers\api\prod\ApiProdAuthController;
 use App\Http\Controllers\api\prod\ApiProdFactureEneoController;
 use App\Http\Controllers\api\prod\ApiProdMoMoMoneyController;
 use App\Http\Controllers\api\prod\ApiProdM2UController;
@@ -54,6 +55,11 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 
         Route::controller(ApiSmsController::class)->group(function () {
             //Route::get('sms/{tel}/{msg}', 'SendSMS')->name("SendSMS");
+        });
+
+        //Swagger
+        Route::controller(ApiProdAuthController::class)->group(function (){
+            Route::post('authenticate/auth','loginSwagger')->name("loginSwagger");
         });
 
 
