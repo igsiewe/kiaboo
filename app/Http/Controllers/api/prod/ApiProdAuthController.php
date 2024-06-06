@@ -20,7 +20,7 @@ class ApiProdAuthController extends Controller
      * path="/api/v1/authenticate/auth",
      * summary="login  user",
      * description="login user",
-     * tags={"Users"},
+     * tags={"Auth"},
      * @OA\RequestBody(
      *    required=true,
      *    description="user informations",

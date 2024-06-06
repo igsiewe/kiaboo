@@ -29,10 +29,6 @@ use OpenApi\Annotations as OA;
  *     scheme="bearer",
  *     securityScheme="bearer_token"
  * )
- * @OA\Tag(
- *     name="User",
- *     description="Operations about user"
- * )
  *
  * @OA\PathItem(
  *     path="/api/v1/user/login",
