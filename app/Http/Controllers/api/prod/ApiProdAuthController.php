@@ -191,9 +191,10 @@ class ApiProdAuthController extends BaseController
      *       @OA\Property(property="message", type="string", example="an error occurred"),
      *    )
      *  )
-     * )
+
      */
-    public function changePasswordSwagger(Request $request){
+    public function changePasswordSwagger(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'old_password' => 'required|string|min:6|max:255',
             'new_password' => 'required|string|min:6|max:255',
@@ -204,7 +205,7 @@ class ApiProdAuthController extends BaseController
 
             return response(
                 [
-                    'success'=>false,
+                    'success' => false,
                     'statusCode' => 'ERR-ATTRIBUTES-INVALID',
                     'message' => $validator->errors()->all()
 
@@ -214,7 +215,7 @@ class ApiProdAuthController extends BaseController
             $user = Auth::user();
             if (!password_verify($request->old_password, $user->password)) {
                 return response()->json([
-                    'success'=>false,
+                    'success' => false,
                     'statusCode' => 'ERR-OLD_PASSWORD-INVALID', // 'ERR-CREDENTIALS-INVALID
                     'message' => 'old password is invalid',
                 ], 400);
@@ -222,24 +223,24 @@ class ApiProdAuthController extends BaseController
 
             $user->password = bcrypt($request->new_password);
             $user->save();
-            return  response()->json(
+            return response()->json(
                 [
-                    'success'=>true,
+                    'success' => true,
                     'statusCode' => 'PASSWORD-CHANGED-SUCCESSFULLY',
                     'message' => 'password changed successfully',
                 ],
                 500
             );
 
-        }  catch (\Exception $err) {
+        } catch (\Exception $err) {
             Log::error($err);
-            return  response()->json(
+            return response()->json(
                 [
-                'success'=>false,
-                'statusCode' => 'ERR-UNAVAILABLE',
-                'message' => 'an error occurred',
+                    'success' => false,
+                    'statusCode' => 'ERR-UNAVAILABLE',
+                    'message' => 'an error occurred',
                 ],
-            500
+                500
             );
         }
 
