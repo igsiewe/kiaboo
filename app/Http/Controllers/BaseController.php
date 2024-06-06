@@ -136,4 +136,17 @@ class BaseController extends Controller
 
         ], 200);
     }
+    public function respondWithTokenSwagger($token, $user = null)
+    {
+        return response()->json([
+            'success' => 'true',
+            'statusCode'=> "am_application_scope default",
+            'message'=> "successful login user",
+            'access_token' => $token,
+            'data'=>[
+                'user' => $user,
+                ]
+
+        ], 200);
+    }
 }

@@ -47,7 +47,7 @@ class ApiProdAuthController extends BaseController
      *       @OA\Property(property="success", type="boolean", example="true"),
      *       @OA\Property(property="statusCode", type="string", example="LOGIN-SUCCESS"),
      *       @OA\Property(property="message", type="string", example="successful login user"),
-     *       @OA\Property(property="token", type="string", example="xxxxxxxxxxxxxxxxxxxx"),
+     *       @OA\Property(property="access_token", type="string", example="xxxxxxxxxxxxxxxxxxxx"),
      *       @OA\Property(
      *          type="array",
      *          property="data",
@@ -55,21 +55,8 @@ class ApiProdAuthController extends BaseController
      *              @OA\Property(
      *                  property="user",
      *                  type="object",
-     *                  @OA\Property(property="first_name", type="string", example="houvre"),
-     *                  @OA\Property(property="last_name", type="string", example="autre"),
-     *                  @OA\Property(property="date_of_birth", type="string", example="12/02/1884"),
-     *                  @OA\Property(property="phone", type="string", example="+1325487568"),
-     *                  @OA\Property(property="matricule", type="string", example="xx458547854"),
-     *                  @OA\Property(property="email", type="string", format="email", example="user1@mail.com"),
-     *                  @OA\Property(property="status", type="string", example="active"),
-     *                  @OA\Property(property="gender", type="string", example="female"),
-     *                  @OA\Property(property="account_verified_at", type="string", example="null"),
-     *                  @OA\Property(property="profile_image", type="string", example="xxxx/oplo.jpeg"),
-     *                  @OA\Property(property="station", type="string", example="TOTAL Bijou"),
-     *                  @OA\Property(property="role", type="string", example="User"),
-     *                  @OA\Property(property="poste", type="string", example="User"),
-     *                  @OA\Property(property="quarts", type="array", @OA\Items()),
-     *                  @OA\Property(property="actions", type="array",@OA\Items()),
+     *                  @OA\Property(property="name", type="string", example="houvre"),
+     *                  @OA\Property(property="surname", type="string", example="autre"),
      *                ),
      *             @OA\Property(
      *               property="roles",
@@ -114,7 +101,7 @@ class ApiProdAuthController extends BaseController
 
         if (Auth::attempt($credentials)) {
             $users = Auth::user();
-            $user = User::where('id', $users->id)->select('id', 'name', 'surname')->first();
+            $user = User::where('id', $users->id)->select('name', 'surname')->first();
 
 
             DB::table('oauth_access_tokens')->where('user_id', $user->id)->delete();
@@ -128,7 +115,7 @@ class ApiProdAuthController extends BaseController
                 'name'=>Auth::user()->name." ".Auth::user()->surname,
                 'Desciption'=>'Connexion'
             ]);
-            return $this->respondWithToken($access_token, $user);
+            return $this->respondWithTokenSwagger($access_token, $user);
         }
         Log::alert([
             'Login'=>$request->login,
