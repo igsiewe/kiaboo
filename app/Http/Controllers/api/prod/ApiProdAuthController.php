@@ -178,6 +178,7 @@ class ApiProdAuthController extends BaseController
      *       @OA\Property(property="statusCode", type="string", example="PASSWORD-CHANGED-SUCCESSFULLY"),
      *       @OA\Property(property="message", type="string", example="password changed successfully"),
      * ),
+     *     ),
      * @OA\Response(
      *    response=500,
      *    description="an error occurred",
@@ -194,7 +195,7 @@ class ApiProdAuthController extends BaseController
         $validator = Validator::make($request->all(), [
             'old_password' => 'required|string|min:6|max:255',
             'new_password' => 'required|string|min:6|max:255',
-            'confirm_password' => 'required|string|min:6|max:255|same:new_password'
+            'confirm_password' => 'required|string|min:6|max:255|same:new_password',
         ]);
 
         if ($validator->fails()) {
