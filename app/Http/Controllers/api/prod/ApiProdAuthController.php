@@ -112,7 +112,7 @@ class ApiProdAuthController extends BaseController
 
                 $user->last_connexion = Carbon::now();
                 $user->save();
-                dd(\auth()->user());
+                //dd(\auth()->user());
                 Log::info([
                     'user_id'=>Auth::user()->id,
                     'name'=>Auth::user()->name." ".Auth::user()->surname,
@@ -195,6 +195,7 @@ class ApiProdAuthController extends BaseController
      */
     public function changePasswordSwagger(Request $request)
     {
+        dd("hi");
         $validator = Validator::make($request->all(), [
             'old_password' => 'required|string|min:6|max:255',
             'new_password' => 'required|string|min:6|max:255',
