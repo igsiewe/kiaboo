@@ -49,7 +49,7 @@ class ApiProdAuthController extends BaseController
      *       @OA\Property(property="message", type="string", example="successful login user"),
      *       @OA\Property(property="access_token", type="string", example="xxxxxxxxxxxxxxxxxxxx"),
      *       @OA\Property(
-     *          type="array",
+     *          type="json",
      *          property="data",
      *          @OA\Items(
      *              @OA\Property(
