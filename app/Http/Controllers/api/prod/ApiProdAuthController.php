@@ -237,7 +237,7 @@ class ApiProdAuthController extends BaseController
                 [
                     'success' => false,
                     'statusCode' => 'ERR-UNAVAILABLE',
-                    'message' => 'an error occurred',
+                    'message' => $err->getMessage(),
                 ],
                 500
             );
