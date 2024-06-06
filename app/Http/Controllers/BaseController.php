@@ -139,7 +139,7 @@ class BaseController extends Controller
     public function respondWithTokenSwagger($token, $user = null)
     {
         return response()->json([
-            'success' => 'true',
+            'success' => true,
             'statusCode'=> "LOGIN-SUCCESS",
             'message'=> "successful login user",
             'access_token' => $token,
