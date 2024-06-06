@@ -26,8 +26,8 @@ class ApiProdAuthController extends BaseController
      *    required=true,
      *    description="user informations",
      *    @OA\JsonContent(
-     *       required={"login","password"},
-     *       @OA\Property(property="login", type="string",format="text", example="699972941"),
+     *       required={"email","password"},
+     *       @OA\Property(property="email", type="email",format="email", example="contact@kiaboo.net"),
      *       @OA\Property(property="password", type="string", format="password", example="password123"),
      *    ),
      * ),
@@ -40,6 +40,15 @@ class ApiProdAuthController extends BaseController
      *       @OA\Property(property="message", type="string", example="login credentials are invalid"),
      *    )
      * ),
+     * @OA\Response(
+     *     response=422,
+     *     description="attribute invalid",
+     *     @OA\JsonContent(
+     *        @OA\Property(property="success", type="boolean", example="false"),
+     *        @OA\Property(property="statusCode", type="string", example="ERR-ATTRIBUTES-INVALID"),
+     *        @OA\Property(property="message", type="string", example="attribute not valid"),
+     *     )
+     *  ),
      * @OA\Response(
      *    response=200,
      *    description="successful login user",
@@ -75,7 +84,14 @@ class ApiProdAuthController extends BaseController
         ]);
 
         if ($validator->fails()) {
-            return response(['errors' => $validator->errors()->all()], 422);
+
+            return response(
+                [
+                    'success'=>false,
+                    'statusCode' => 'ERR-ATTRIBUTES-INVALID',
+                    'message' => $validator->errors()->all()
+
+                ], 422);
         }
 
         // Here, we get the user credentials from the request
@@ -86,32 +102,42 @@ class ApiProdAuthController extends BaseController
             'status_delete'=>0,
             'type_user_id' => UserRolesEnum::AGENT->value
         ];
+        try {
+            if (Auth::attempt($credentials)) {
+                $users = Auth::user();
+                $user = User::where('id', $users->id)->select('name', 'surname')->first();
+                DB::table('oauth_access_tokens')->where('user_id', $user->id)->delete();
+                $token = $user->createToken('kiaboo');
+                $access_token = $token->accessToken;
 
-        if (Auth::attempt($credentials)) {
-            $users = Auth::user();
-            $user = User::where('id', $users->id)->select('name', 'surname')->first();
-
-
-            DB::table('oauth_access_tokens')->where('user_id', $user->id)->delete();
-            $token = $user->createToken('kiaboo');
-            $access_token = $token->accessToken;
-
-            $user->last_connexion = Carbon::now();
-            $user->save();
-            Log::info([
-                'user_id'=>Auth::user()->id,
-                'name'=>Auth::user()->name." ".Auth::user()->surname,
-                'Desciption'=>'Connexion'
-            ]);
-            return $this->respondWithTokenSwagger($access_token, $user);
+                $user->last_connexion = Carbon::now();
+                $user->save();
+                Log::info([
+                    'user_id'=>Auth::user()->id,
+                    'name'=>Auth::user()->name." ".Auth::user()->surname,
+                    'Desciption'=>'Connexion'
+                ]);
+                return $this->respondWithTokenSwagger($access_token, $user);
+            }
+            return response()->json([
+                'success'=>false,
+                'statusCode' => 'ERR-CREDENTIALS-INVALID', // 'ERR-CREDENTIALS-INVALID
+                'message' => 'login credentials are invalid',
+            ], 400);
+        } catch (\Exception $err) {
+            Log::error($err);
+            return  response()->json(
+                [
+                    'success'=>false,
+                    'statusCode' => 'ERR-UNAVAILABLE',
+                    'message' => 'an error occurred',
+                ],
+                500
+            );
         }
-        Log::alert([
-            'Login'=>$request->login,
-            'Desciption'=>'Connexion->echec'
-        ]);
-        return response()->json([
-            'message' => 'Invalid login details',
-        ], 401);
+
+
+
     }
 
 
