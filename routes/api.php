@@ -70,7 +70,7 @@ Route::middleware('auth:api')->group(function () {
 
         //Swagger
         Route::controller(ApiProdAuthController::class)->group(function (){
-           Route::post('/authenticate/changepassword','changePasswordSwagger')->name("changePasswordSwagger");
+           Route::post('authenticate/changepassword','changePasswordSwagger')->name("changePasswordSwagger");
         });
 
         Route::get('/sms/' ,[ApiSmsController::class,'index']) ;
