@@ -25,7 +25,7 @@ use OpenApi\Annotations as OA;
  *     description="API Server"
  * )
  * @OA\SecurityScheme(
- *     type="https",
+ *     type="http",
  *     scheme="bearer",
  *     securityScheme="bearerAuth"
  * )
