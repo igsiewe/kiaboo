@@ -96,7 +96,7 @@ class ApiProdAuthController extends BaseController
 
         // Here, we get the user credentials from the request
         $credentials = [
-            'login' => "+237".$request->login,
+            'login' => $request->login,
             'password' => $request->password,
             'status' => 1,
             'status_delete'=>0,
