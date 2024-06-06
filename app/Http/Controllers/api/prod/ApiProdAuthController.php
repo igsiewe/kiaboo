@@ -151,7 +151,7 @@ class ApiProdAuthController extends BaseController
      *    required=true,
      *    description="change password user connected",
      *    @OA\JsonContent(
-     *       required={"old_password","new_password","confirm_password"
+     *       required={"old_password","new_password","confirm_password"},
      *       @OA\Property(property="success", type="string", example="true"),
      *       @OA\Property(property="message", type="string", example="password changed successfully"),
      *    ),
