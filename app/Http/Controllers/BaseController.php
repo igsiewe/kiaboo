@@ -143,9 +143,9 @@ class BaseController extends Controller
             'statusCode'=> "am_application_scope default",
             'message'=> "successful login user",
             'access_token' => $token,
-            'data'=>[
-                'user' => $user,
-                ]
+            'data'=>array(
+                'user' => $user,)
+
 
         ], 200);
     }
