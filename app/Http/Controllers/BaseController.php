@@ -144,7 +144,10 @@ class BaseController extends Controller
             'message'=> "successful login user",
             'access_token' => $token,
             'data'=>array([
-                'user'=>$user
+                'user'=>[
+                    'name'=>$user->name,
+                    'surname'=>$user->surname,
+                ],
             ])
 
 
