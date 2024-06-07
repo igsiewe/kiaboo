@@ -737,66 +737,6 @@ class ApiAuthController extends BaseController
      *  )
      * )
      */
-    public function loginSwaggers(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'login' => 'required|min:12|string|max:255',
-            'password' => 'required|string|min:6|max:255',
-        ]);
-
-        if ($validator->fails()) {
-
-            return response(
-                [
-                    'success'=>false,
-                    'statusCode' => 'ERR-ATTRIBUTES-INVALID',
-                    'message' => $validator->errors()->all()
-
-                ], 422);
-        }
-
-        // Here, we get the user credentials from the request
-        $credentials = [
-            'login' => $request->login,
-            'password' => $request->password,
-            'status' => 1,
-            'status_delete'=>0,
-            //   'type_user_id' => UserRolesEnum::DISTRIBUTEUR->value
-        ];
-        try {
-            if (Auth::attempt($credentials)) {
-                $users = Auth::user();
-                $user = User::where('id', $users->id)->select('name', 'surname')->first();
-                DB::table('oauth_access_tokens')->where('user_id', $user->id)->delete();
-                $token = $user->createToken('kiaboo');
-                $access_token = $token->accessToken;
-                $user->last_connexion = Carbon::now();
-                $user->save();
-                //dd(\auth()->user());
-                Log::info([
-                    'user_id'=>Auth::user()->id,
-                    'name'=>Auth::user()->name." ".Auth::user()->surname,
-                    'Description'=>'Connexion'
-                ]);
-                return $this->respondWithTokenSwagger($access_token, $user);
-            }
-            return response()->json([
-                'success'=>false,
-                'statusCode' => 'ERR-CREDENTIALS-INVALID', // 'ERR-CREDENTIALS-INVALID
-                'message' => 'login credentials are invalid',
-            ], 400);
-        } catch (\Exception $err) {
-            Log::error($err);
-            return  response()->json(
-                [
-                    'success'=>false,
-                    'statusCode' => 'ERR-UNAVAILABLE',
-                    'message' => 'an error occurred',
-                ],
-                500
-            );
-        }
-    }
 
     public function loginSwagger(Request $request)
     {
@@ -827,8 +767,6 @@ class ApiAuthController extends BaseController
         if (Auth::attempt($credentials)) {
             $users = Auth::user();
             $user = User::where('id', $users->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before', 'balance_after','total_commission', 'last_amount','sous_distributeur_id','date_last_transaction','moncodeparrainage')->first();
-
-
             DB::table('oauth_access_tokens')->where('user_id', $user->id)->delete();
             $token = $user->createToken('kiaboo');
             $access_token = $token->accessToken;
