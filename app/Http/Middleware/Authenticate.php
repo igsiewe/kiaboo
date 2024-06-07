@@ -14,4 +14,13 @@ class Authenticate extends Middleware
     {
         return $request->expectsJson() ? null : route('login');
     }
+
+    protected function unauthenticated($request, array $guards)
+    {
+        abort(response()->json(
+            [
+                'api_status' => '401',
+                'message' => 'UnAuthenticated',
+            ], 401));
+    }
 }
