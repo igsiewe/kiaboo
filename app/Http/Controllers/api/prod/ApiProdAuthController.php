@@ -5,6 +5,8 @@ namespace App\Http\Controllers\api\prod;
 use App\Http\Controllers\BaseController;
 use App\Http\Controllers\Controller;
 use App\Http\Enums\UserRolesEnum;
+use App\Models\Partenaire;
+use App\Models\Service;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -100,25 +102,25 @@ class ApiProdAuthController extends BaseController
             'password' => $request->password,
             'status' => 1,
             'status_delete'=>0,
-            'type_user_id' => UserRolesEnum::DISTRIBUTEUR->value
+         //   'type_user_id' => UserRolesEnum::DISTRIBUTEUR->value
         ];
         try {
             if (Auth::attempt($credentials)) {
                 $users = Auth::user();
-                $user = User::where('id', $users->id)->select('name', 'surname')->first();
-              //  DB::table('oauth_access_tokens')->where('user_id', $user->id)->delete();
+                //$user = User::where('id', $users->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before as balanceBefore', 'balance_after as balanceAfter', 'last_amount as lastAmount','sous_distributeur_id as sousDistributeur','date_last_transaction as dateLastTransaction','last_service_id as lastService', 'type_user_id as typeuser','countrie_id as country','reference_last_transaction as referenceLastTransaction', 'status')->first();
+                $user = User::where('id', $users->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before', 'balance_after','total_commission', 'last_amount','sous_distributeur_id','date_last_transaction','moncodeparrainage')->first();
+
+                DB::table('oauth_access_tokens')->where('user_id', $user->id)->delete();
                 $token = $user->createToken('kiaboo');
                 $access_token = $token->accessToken;
 
                 $user->last_connexion = Carbon::now();
                 $user->save();
-                //dd(\auth()->user());
                 Log::info([
                     'user_id'=>Auth::user()->id,
                     'name'=>Auth::user()->name." ".Auth::user()->surname,
-                    'Description'=>'Connexion'
+                    'Desciption'=>'Connexion'
                 ]);
-                return $this->respondWithTokenSwagger($access_token, $user);
             }
             return response()->json([
                 'success'=>false,
