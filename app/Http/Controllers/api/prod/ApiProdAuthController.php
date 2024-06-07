@@ -246,4 +246,89 @@ class ApiProdAuthController extends BaseController
         }
 
     }
+
+    public function CreatedNewAgentSwagger(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|min:3|string|max:255',
+            'surname' => 'required|string|max:255',
+            'telephone' => 'required|string|unique:users',
+            'email' => 'required|string|email|unique:users',
+        ]);
+
+        if(Auth::user()->status == 0){
+            return response()->json([
+                'success'=>false,
+                'statusCode' => 'ERR-USE-NOT-AUTHORIZE', // 'ERR-CREDENTIALS-INVALID
+                'message' => 'You cannot authorize to perform this operation',
+            ], 400);
+        }
+
+        if ($validator->fails()) {
+            return response(
+                [
+                    'success' => false,
+                    'statusCode' => 'ERR-ATTRIBUTES-INVALID',
+                    'message' => $validator->errors()->first()
+                ], 422);
+        }
+
+        if (Auth::user()->type_user_id != UserRolesEnum::DISTRIBUTEUR->value) {
+            return response()->json([
+                'success'=>false,
+                'statusCode' => 'ERR-PROFIL-NOT-AUTHORIZE', // 'ERR-CREDENTIALS-INVALID
+                'message' => 'Your profil don\'t allow to perfom this operation.',
+            ], 400);
+        }
+
+        try {
+            DB::beginTransaction();
+            $user = new User();
+            $newPassword = $this->genererChaineAleatoire(8);
+            $user->name = $request->name;
+            $user->surname = strtoupper($request->surname);
+            $user->email = $request->email;
+            $user->telephone = $request->telephone;
+            $user->login ="+237".$request->telephone;
+            $user->status = 1;
+            $user->countrie_id = Auth::user()->countrie_id;
+            $user->type_user_id = UserRolesEnum::AGENT->value;
+            $user->password = bcrypt($newPassword);
+            $user->email_verified_at = Carbon::now();
+            $user->created_by = Auth::user()->id;
+            $user->distributeur_id = $request->distributeur;
+
+            $result = $user->save();
+            if ($result) {
+                DB::commit();
+                return response()->json(
+                    [
+                        'success' => true,
+                        'statusCode' => 'USER-CREATED-SUCCESSFULLY',
+                        'message' => 'user created successfully',
+                    ],
+                    500
+                );
+            } else {
+                DB::rollBack();
+                return response()->json([
+                    'success'=>false,
+                    'statusCode' => 'ERR-UNKNOW', // 'ERR-CREDENTIALS-INVALID
+                    'message' => 'User don\t added',
+                ], 400);
+            }
+        } catch (\Exception $err) {
+            DB::rollBack();
+            Log::error($err);
+            return response()->json(
+                [
+                    'success' => false,
+                    'statusCode' => 'ERR-UNAVAILABLE',
+                    'message' => $err->getMessage(),
+                ],
+                500
+            );
+        }
+
+    }
 }
