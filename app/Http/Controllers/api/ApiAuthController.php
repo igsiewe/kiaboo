@@ -737,7 +737,7 @@ class ApiAuthController extends BaseController
      *  )
      * )
      */
-    public function loginSwagger(Request $request)
+    public function loginSwaggers(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'login' => 'required|min:12|string|max:255',
@@ -796,5 +796,74 @@ class ApiAuthController extends BaseController
                 500
             );
         }
+    }
+
+    public function loginSwagger(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'login' => 'required|min:3|string|max:255',
+            'password' => 'required|string|min:6',
+        ]);
+
+        if ($validator->fails()) {
+            return response(
+                [
+                    'success'=>false,
+                    'statusCode' => 'ERR-ATTRIBUTES-INVALID',
+                    'message' => $validator->errors()->first()
+
+                ], 422);
+        }
+
+        // Here, we get the user credentials from the request
+        $credentials = [
+            'login' => $request->login,
+            'password' => $request->password,
+            'status' => 1,
+            'status_delete'=>0,
+            //  'type_user_id' => UserRolesEnum::AGENT->value
+        ];
+
+        if (Auth::attempt($credentials)) {
+            $users = Auth::user();
+            //$user = User::where('id', $users->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before as balanceBefore', 'balance_after as balanceAfter', 'last_amount as lastAmount','sous_distributeur_id as sousDistributeur','date_last_transaction as dateLastTransaction','last_service_id as lastService', 'type_user_id as typeuser','countrie_id as country','reference_last_transaction as referenceLastTransaction', 'status')->first();
+            $user = User::where('id', $users->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before', 'balance_after','total_commission', 'last_amount','sous_distributeur_id','date_last_transaction','moncodeparrainage')->first();
+            $partenaires = Partenaire::where("countrie_id",Auth::user()->countrie_id)->select("id","name_partenaire as nomPartenaire","logo_partenaire as logoPartenaire")->orderBy('name_partenaire', 'asc')->get();
+
+            $transactions = DB::table('transactions')
+                ->join('services', 'transactions.service_id', '=', 'services.id')
+                ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
+                ->select('transactions.id','transactions.reference as reference','transactions.reference_partenaire','transactions.date_transaction','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.commission_agent as commission','transactions.balance_before','transactions.balance_after' ,'transactions.status','transactions.service_id','services.name_service','services.logo_service','type_services.name_type_service','type_services.id as type_service_id','transactions.date_operation', 'transactions.heure_operation','transactions.commission_agent_rembourse as commission_agent')
+                ->where("fichier","agent")
+                ->where("source",Auth::user()->id)
+                ->where('transactions.status',1)
+                ->orderBy('transactions.date_transaction', 'desc')
+                ->limit(5)
+                ->get();
+
+            $services = Service::all();
+
+            DB::table('oauth_access_tokens')->where('user_id', $user->id)->delete();
+            $token = $user->createToken('kiaboo');
+            $access_token = $token->accessToken;
+
+            $user->last_connexion = Carbon::now();
+            $user->save();
+            Log::info([
+                'user_id'=>Auth::user()->id,
+                'name'=>Auth::user()->name." ".Auth::user()->surname,
+                'Desciption'=>'Connexion'
+            ]);
+            return $this->respondWithToken($access_token, $user, $partenaires, $transactions, $services);
+        }
+        Log::alert([
+            'Login'=>$request->login,
+            'Desciption'=>'ERR-CREDENTIALS-INVALID'
+        ]);
+        return response()->json([
+            'success'=>false,
+            'statusCode' => 'ERR-CREDENTIALS-INVALID', // 'ERR-CREDENTIALS-INVALID
+            'message' => 'login credentials are invalid',
+        ], 400);
     }
 }
