@@ -68,7 +68,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 Route::middleware('auth:api')->group(function () {
     Route::group(['prefix' => 'v1'], function () {
 
-        //Swagger
+
         Route::controller(ApiProdAuthController::class)->group(function (){
             Route::post('authenticate/changepassword','changePasswordSwagger')->name("changePasswordSwagger");
             Route::post('agent/add','CreatedNewAgentSwagger')->name("CreatedNewAgentSwagger");
