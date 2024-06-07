@@ -325,10 +325,12 @@ class ApiProdAuthController extends BaseController
 
         try {
             DB::beginTransaction();
+
             $user = new User();
 
             $file = new ApiAuthController();
             $newPassword = $file->genererChaineAleatoire(8);
+            $codeParrainage ="KI".$this->genererChaineAleatoire(12);
             $user->name = $request->name;
             $user->surname = strtoupper($request->surname);
             $user->email = $request->email;
@@ -341,6 +343,12 @@ class ApiProdAuthController extends BaseController
             $user->email_verified_at = Carbon::now();
             $user->created_by = Auth::user()->id;
             $user->distributeur_id =Auth::user()->distributeur_id;// $request->distributeur;
+            $user->codeparrainage = $codeParrainage;
+            $user->moncodeparrainage = $codeParrainage;
+            $user->quartier= Auth::user()->quartier;
+            $user->ville_id= Auth::user()->ville_id;
+            $user->adresse= Auth::user()->adresse;
+
 
             $result = $user->save();
             if ($result) {
