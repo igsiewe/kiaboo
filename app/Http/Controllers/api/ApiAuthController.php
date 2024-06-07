@@ -840,7 +840,7 @@ class ApiAuthController extends BaseController
                 'name'=>Auth::user()->name." ".Auth::user()->surname,
                 'Desciption'=>'Connexion'
             ]);
-            return $this->respondWithToken($access_token, $user);
+            return $this->respondWithTokenSwagger($access_token, $user);
         }
         Log::alert([
             'Login'=>$request->login,
