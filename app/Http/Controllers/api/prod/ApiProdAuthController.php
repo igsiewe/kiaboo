@@ -230,7 +230,7 @@ class ApiProdAuthController extends BaseController
                     'statusCode' => 'PASSWORD-CHANGED-SUCCESSFULLY',
                     'message' => 'password changed successfully',
                 ],
-                500
+                200
             );
 
         } catch (\Exception $err) {
@@ -307,7 +307,7 @@ class ApiProdAuthController extends BaseController
                         'statusCode' => 'USER-CREATED-SUCCESSFULLY',
                         'message' => 'user created successfully',
                     ],
-                    500
+                    200
                 );
             } else {
                 DB::rollBack();
