@@ -102,7 +102,7 @@ class ApiProdAuthController extends BaseController
             'password' => $request->password,
             'status' => 1,
             'status_delete'=>0,
-         //   'type_user_id' => UserRolesEnum::DISTRIBUTEUR->value
+            'type_user_id' => UserRolesEnum::DISTRIBUTEUR->value
         ];
         try {
             if (Auth::attempt($credentials)) {
