@@ -428,8 +428,8 @@ class ApiProdAuthController extends BaseController
         try{
             $listAgent = User::where("type_user_id", UserRolesEnum::AGENT->value)->where("distributeur_id", Auth::user()->distributeur_id)
             ->select('id', 'name', 'surname', 'telephone', 'email', 'created_at', 'status')
-                ->orderBy("name", "DESC")
-                ->orderBy("surname", "DESC")
+                ->orderBy("name", "ASC")
+                ->orderBy("surname", "ASC")
                 ->get();
             if($listAgent->count() == 0){
                 return response()->json([
