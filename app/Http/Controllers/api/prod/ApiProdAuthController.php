@@ -425,7 +425,10 @@ class ApiProdAuthController extends BaseController
     public function listAgentSwagger(){
         try{
             $listAgent = User::where("type_user_id", UserRolesEnum::AGENT->value)->where("distributeur_id", Auth::user()->distributeur_id)
-            ->select('id', 'name', 'surname', 'telephone', 'email', 'created_at', 'status')->get();
+            ->select('id', 'name', 'surname', 'telephone', 'email', 'created_at', 'status')
+                ->orderBy("name", "DESC")
+                ->orderBy("surname", "DESC")
+                ->get();
             if($listAgent->count() == 0){
                 return response()->json([
                     'success'=>false,
@@ -437,6 +440,7 @@ class ApiProdAuthController extends BaseController
                 'success'=>true,
                 'statusCode' => 'SUCCESS-LIST-AGENT', // 'ERR-CREDENTIALS-INVALID
                 'message' => 'Agent list successful',
+                'number'=>$listAgent->count(),
                 'data'=>$listAgent
             ], 200);
         }catch(\Exception $err){
