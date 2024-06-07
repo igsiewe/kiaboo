@@ -390,7 +390,7 @@ class ApiProdAuthController extends BaseController
      * summary="list of all agents",
      * description="list of all agents",
      * tags={"Agent"},
-     * security={{"bearer_token":{}}},
+     * security={{"bearerAuth":{}}},
      * @OA\Response(
      *    response=200,
      *    description="agent list successful",
