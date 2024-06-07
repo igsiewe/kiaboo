@@ -391,15 +391,6 @@ class ApiProdAuthController extends BaseController
      * description="list of all agents",
      * tags={"Agent"},
      * security={{"bearer_token":{}}},
-     * @OA\Parameter(
-     *     name="role",
-     *     description="role",
-     *     required=true,
-     *     in="path",
-     *     @OA\Schema(
-     *        type="string"
-     *     )
-     * ),
      * @OA\Response(
      *    response=200,
      *    description="agent list successful",
