@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api\prod;
 
+use App\Http\Controllers\api\ApiAuthController;
 use App\Http\Controllers\BaseController;
 use App\Http\Controllers\Controller;
 use App\Http\Enums\UserRolesEnum;
@@ -240,6 +241,54 @@ class ApiProdAuthController extends BaseController
 
     }
 
+    /**
+     * @OA\Post(
+     * path="/api/v1/agent/add",
+     * summary="Add new agent",
+     * description="Create a new agent to carry out the transaction",
+     * security={{"bearerAuth":{}}},
+     * tags={"Agent"},
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="Data of new agent",
+     *    @OA\JsonContent(
+     *       required={"name","surname","telephone","email"},
+     *       @OA\Property(property="name", type="string", example="DUPONT"),
+     *       @OA\Property(property="surname", type="string", example="Henry"),
+     *       @OA\Property(property="telephone", type="string", example="659657424"),
+     *       @OA\Property(property="email", type="email", example="devops@kiaboo.net"),
+     *    ),
+     * ),
+     *
+     * @OA\Response(
+     *     response=422,
+     *     description="attribute invalid or mistyped",
+     *     @OA\JsonContent(
+     *        @OA\Property(property="success", type="boolean", example="false"),
+     *        @OA\Property(property="statusCode", type="string", example="ERR-ATTRIBUTES-INVALID"),
+     *        @OA\Property(property="message", type="string", example="attribute not valid"),
+     *     )
+     *  ),
+     * @OA\Response(
+     *    response=200,
+     *    description="Agent created successfully",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="true"),
+     *       @OA\Property(property="statusCode", type="string", example="AGENT-CREATED-SUCCESSFULLY"),
+     *       @OA\Property(property="message", type="string", example="Agent created successfully"),
+     *    ),
+     * ),
+     * @OA\Response(
+     *    response=500,
+     *    description="an error occurred",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="false"),
+     *       @OA\Property(property="statusCode", type="string", example="ERR-UNAVAILABLE"),
+     *       @OA\Property(property="message", type="string", example="an error occurred"),
+     *    )
+     *  )
+     * )
+     */
     public function CreatedNewAgentSwagger(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -277,7 +326,9 @@ class ApiProdAuthController extends BaseController
         try {
             DB::beginTransaction();
             $user = new User();
-            $newPassword = $this->genererChaineAleatoire(8);
+
+            $file = new ApiAuthController();
+            $newPassword = $file->genererChaineAleatoire(8);
             $user->name = $request->name;
             $user->surname = strtoupper($request->surname);
             $user->email = $request->email;
@@ -289,7 +340,7 @@ class ApiProdAuthController extends BaseController
             $user->password = bcrypt($newPassword);
             $user->email_verified_at = Carbon::now();
             $user->created_by = Auth::user()->id;
-            $user->distributeur_id = $request->distributeur;
+            $user->distributeur_id =Auth::user()->distributeur_id;// $request->distributeur;
 
             $result = $user->save();
             if ($result) {
