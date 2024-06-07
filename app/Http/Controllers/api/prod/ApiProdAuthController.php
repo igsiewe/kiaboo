@@ -21,28 +21,26 @@ class ApiProdAuthController extends BaseController
 
     /**
      * @OA\Post(
-     * path="/api/v1/authenticate/changepassword",
-     * summary="Change password user",
-     * description="Change password user",
-     * security={{"bearerAuth":{}}},
+     * path="/api/v1/authenticate/auth",
+     * summary="Login  user",
+     * description="Login user",
      * tags={"Auth"},
      * @OA\RequestBody(
      *    required=true,
-     *    description="change password user connected",
+     *    description="user informations",
      *    @OA\JsonContent(
-     *       required={"old_password","new_password","confirm_password"},
-     *       @OA\Property(property="old_password", type="string", example="pasKio@_#85l24"),
-     *       @OA\Property(property="new_password", type="string", example="NFt@_#85lop24"),
-     *       @OA\Property(property="confirm_password", type="string", example="NFt@_#85lop24"),
+     *       required={"login","password"},
+     *       @OA\Property(property="login", type="email",format="email", example="alain.kamdem@gmail.com"),
+     *       @OA\Property(property="password", type="string", format="password", example="password"),
      *    ),
      * ),
      * @OA\Response(
      *    response=400,
-     *    description="old password are invalid",
+     *    description="login credentials are invalid",
      *    @OA\JsonContent(
      *       @OA\Property(property="success", type="boolean", example="false"),
-     *       @OA\Property(property="statusCode", type="string", example="ERR-OLD_PASSWORD-INVALID"),
-     *       @OA\Property(property="message", type="string", example="old password are invalid"),
+     *       @OA\Property(property="statusCode", type="string", example="ERR-CREDENTIALS-INVALID"),
+     *       @OA\Property(property="message", type="string", example="login credentials are invalid"),
      *    )
      * ),
      * @OA\Response(
@@ -56,12 +54,19 @@ class ApiProdAuthController extends BaseController
      *  ),
      * @OA\Response(
      *    response=200,
-     *    description="password changed successfully",
+     *    description="successful login user",
      *    @OA\JsonContent(
      *       @OA\Property(property="success", type="boolean", example="true"),
-     *       @OA\Property(property="statusCode", type="string", example="PASSWORD-CHANGED-SUCCESSFULLY"),
-     *       @OA\Property(property="message", type="string", example="password changed successfully"),
-     *    ),
+     *       @OA\Property(property="statusCode", type="string", example="LOGIN-SUCCESS"),
+     *       @OA\Property(property="message", type="string", example="successful login user"),
+     *       @OA\Property(property="access_token", type="string", example="xxxxxxxxxxxxxxxxxxxx"),
+     *       @OA\Property(
+     *                  property="user",
+     *                  type="object",
+     *                  @OA\Property(property="name", type="string", example="houvre"),
+     *                  @OA\Property(property="surname", type="string", example="autre"),
+     *                ),
+     *      ),
      * ),
      * @OA\Response(
      *    response=500,
@@ -74,6 +79,59 @@ class ApiProdAuthController extends BaseController
      *  )
      * )
      */
+
+    public function loginSwagger(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'login' => 'required|min:3|string|max:255',
+            'password' => 'required|string|min:6',
+        ]);
+
+        if ($validator->fails()) {
+            return response(
+                [
+                    'success'=>false,
+                    'statusCode' => 'ERR-ATTRIBUTES-INVALID',
+                    'message' => $validator->errors()->first()
+
+                ], 422);
+        }
+
+        // Here, we get the user credentials from the request
+        $credentials = [
+            'login' => $request->login,
+            'password' => $request->password,
+            'status' => 1,
+            'status_delete'=>0,
+            //  'type_user_id' => UserRolesEnum::AGENT->value
+        ];
+
+        if (Auth::attempt($credentials)) {
+            $users = Auth::user();
+            $user = User::where('id', $users->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before', 'balance_after','total_commission', 'last_amount','sous_distributeur_id','date_last_transaction','moncodeparrainage')->first();
+            DB::table('oauth_access_tokens')->where('user_id', $user->id)->delete();
+            $token = $user->createToken('kiaboo');
+            $access_token = $token->accessToken;
+
+            $user->last_connexion = Carbon::now();
+            $user->save();
+            Log::info([
+                'user_id'=>Auth::user()->id,
+                'name'=>Auth::user()->name." ".Auth::user()->surname,
+                'Desciption'=>'Connexion'
+            ]);
+            return $this->respondWithTokenSwagger($access_token, $user);
+        }
+        Log::alert([
+            'Login'=>$request->login,
+            'Desciption'=>'ERR-CREDENTIALS-INVALID'
+        ]);
+        return response()->json([
+            'success'=>false,
+            'statusCode' => 'ERR-CREDENTIALS-INVALID', // 'ERR-CREDENTIALS-INVALID
+            'message' => 'login credentials are invalid',
+        ], 400);
+    }
     public function changePasswordSwagger(Request $request)
     {
 

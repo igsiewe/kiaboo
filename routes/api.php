@@ -50,7 +50,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
             Route::post('/user/phone/verify', 'checkNumeroUser')->name("checkNumeroUser");
             Route::post('/agent/phone/verify', 'checkNumeroAgent')->name("checkNumeroAgent");
             Route::post('/user/verify/update/password', 'updateUserPassword')->name("updateUserPassword");
-             Route::post('authenticate/auth','loginSwagger')->name("loginSwagger");
+           // Route::post('authenticate/auth','loginSwagger')->name("loginSwagger");
         });
 
         Route::controller(ApiSmsController::class)->group(function () {
@@ -59,7 +59,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 
         //Swagger
         Route::controller(ApiProdAuthController::class)->group(function (){
-           // Route::post('authenticate/auth','loginSwagger')->name("loginSwagger");
+            Route::post('authenticate/auth','loginSwagger')->name("loginSwagger");
         });
 
 
