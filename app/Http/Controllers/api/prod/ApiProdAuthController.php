@@ -387,8 +387,8 @@ class ApiProdAuthController extends BaseController
     /**
      * @OA\Get(
      * path="/api/agent/list",
-     * summary="list all agent",
-     * description="list all agent ",
+     * summary="list of all agents",
+     * description="list of all agents",
      * tags={"Agent"},
      * security={{"bearer_token":{}}},
      * @OA\Parameter(
