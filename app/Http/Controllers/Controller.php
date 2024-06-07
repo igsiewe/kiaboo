@@ -10,8 +10,8 @@ use OpenApi\Annotations as OA;
 /**
  * @OA\Info(
  *      version="1.0.0",
- *      title="API Documentation",
- *      description="API Documentation",
+ *      title="KIABOO API Documentation",
+ *      description="KIABOO API Documentation for partners",
  *      @OA\Contact(
  *          email="devops@kiaboo.net"
  *     ),
