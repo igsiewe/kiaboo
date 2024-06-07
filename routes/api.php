@@ -71,7 +71,7 @@ Route::middleware('auth:api')->group(function () {
         Route::controller(ApiProdAuthController::class)->group(function (){
             Route::post('authenticate/changepassword','changePasswordSwagger')->name("changePasswordSwagger");
             Route::post('agent/add','CreatedNewAgentSwagger')->name("CreatedNewAgentSwagger");
-            Route::post('agent/list','listAgentSwagger')->name("listAgentSwagger");
+            Route::get('agent/list','listAgentSwagger')->name("listAgentSwagger");
             Route::post('agent/block/{id}','blockAgentSwagger')->name("blockAgentSwagger");
             Route::post('agent/unblock/{id}','unblockAgentSwagger')->name("unblockAgentSwagger");
         });
