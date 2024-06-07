@@ -16,66 +16,66 @@ use Illuminate\Support\Facades\Validator;
 class ApiProdAuthController extends BaseController
 {
 
-    /**
-     * @OA\Post(
-     * path="/api/v1/authenticate/auth",
-     * summary="Login  user",
-     * description="Login user",
-     * tags={"Auth"},
-     * @OA\RequestBody(
-     *    required=true,
-     *    description="user informations",
-     *    @OA\JsonContent(
-     *       required={"login","password"},
-     *       @OA\Property(property="login", type="email",format="email", example="alain.kamdem@gmail.com"),
-     *       @OA\Property(property="password", type="string", format="password", example="password"),
-     *    ),
-     * ),
-     * @OA\Response(
-     *    response=400,
-     *    description="login credentials are invalid",
-     *    @OA\JsonContent(
-     *       @OA\Property(property="success", type="boolean", example="false"),
-     *       @OA\Property(property="statusCode", type="string", example="ERR-CREDENTIALS-INVALID"),
-     *       @OA\Property(property="message", type="string", example="login credentials are invalid"),
-     *    )
-     * ),
-     * @OA\Response(
-     *     response=422,
-     *     description="attribute invalid",
-     *     @OA\JsonContent(
-     *        @OA\Property(property="success", type="boolean", example="false"),
-     *        @OA\Property(property="statusCode", type="string", example="ERR-ATTRIBUTES-INVALID"),
-     *        @OA\Property(property="message", type="string", example="attribute not valid"),
-     *     )
-     *  ),
-     * @OA\Response(
-     *    response=200,
-     *    description="successful login user",
-     *    @OA\JsonContent(
-     *       @OA\Property(property="success", type="boolean", example="true"),
-     *       @OA\Property(property="statusCode", type="string", example="LOGIN-SUCCESS"),
-     *       @OA\Property(property="message", type="string", example="successful login user"),
-     *       @OA\Property(property="access_token", type="string", example="xxxxxxxxxxxxxxxxxxxx"),
-     *       @OA\Property(
-     *                  property="user",
-     *                  type="object",
-     *                  @OA\Property(property="name", type="string", example="houvre"),
-     *                  @OA\Property(property="surname", type="string", example="autre"),
-     *                ),
-     *      ),
-     * ),
-     * @OA\Response(
-     *    response=500,
-     *    description="an error occurred",
-     *    @OA\JsonContent(
-     *       @OA\Property(property="success", type="boolean", example="false"),
-     *       @OA\Property(property="statusCode", type="string", example="ERR-UNAVAILABLE"),
-     *       @OA\Property(property="message", type="string", example="an error occurred"),
-     *    )
-     *  )
-     * )
-     */
+//    /**
+//     * @OA\Post(
+//     * path="/api/v1/authenticate/auth",
+//     * summary="Login  user",
+//     * description="Login user",
+//     * tags={"Auth"},
+//     * @OA\RequestBody(
+//     *    required=true,
+//     *    description="user informations",
+//     *    @OA\JsonContent(
+//     *       required={"login","password"},
+//     *       @OA\Property(property="login", type="email",format="email", example="alain.kamdem@gmail.com"),
+//     *       @OA\Property(property="password", type="string", format="password", example="password"),
+//     *    ),
+//     * ),
+//     * @OA\Response(
+//     *    response=400,
+//     *    description="login credentials are invalid",
+//     *    @OA\JsonContent(
+//     *       @OA\Property(property="success", type="boolean", example="false"),
+//     *       @OA\Property(property="statusCode", type="string", example="ERR-CREDENTIALS-INVALID"),
+//     *       @OA\Property(property="message", type="string", example="login credentials are invalid"),
+//     *    )
+//     * ),
+//     * @OA\Response(
+//     *     response=422,
+//     *     description="attribute invalid",
+//     *     @OA\JsonContent(
+//     *        @OA\Property(property="success", type="boolean", example="false"),
+//     *        @OA\Property(property="statusCode", type="string", example="ERR-ATTRIBUTES-INVALID"),
+//     *        @OA\Property(property="message", type="string", example="attribute not valid"),
+//     *     )
+//     *  ),
+//     * @OA\Response(
+//     *    response=200,
+//     *    description="successful login user",
+//     *    @OA\JsonContent(
+//     *       @OA\Property(property="success", type="boolean", example="true"),
+//     *       @OA\Property(property="statusCode", type="string", example="LOGIN-SUCCESS"),
+//     *       @OA\Property(property="message", type="string", example="successful login user"),
+//     *       @OA\Property(property="access_token", type="string", example="xxxxxxxxxxxxxxxxxxxx"),
+//     *       @OA\Property(
+//     *                  property="user",
+//     *                  type="object",
+//     *                  @OA\Property(property="name", type="string", example="houvre"),
+//     *                  @OA\Property(property="surname", type="string", example="autre"),
+//     *                ),
+//     *      ),
+//     * ),
+//     * @OA\Response(
+//     *    response=500,
+//     *    description="an error occurred",
+//     *    @OA\JsonContent(
+//     *       @OA\Property(property="success", type="boolean", example="false"),
+//     *       @OA\Property(property="statusCode", type="string", example="ERR-UNAVAILABLE"),
+//     *       @OA\Property(property="message", type="string", example="an error occurred"),
+//     *    )
+//     *  )
+//     * )
+//     */
     public function loginSwagger(Request $request)
     {
         $validator = Validator::make($request->all(), [
