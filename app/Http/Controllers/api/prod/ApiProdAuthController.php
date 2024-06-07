@@ -383,4 +383,79 @@ class ApiProdAuthController extends BaseController
         }
 
     }
+
+    /**
+     * @OA\Get(
+     * path="/api/agent/list",
+     * summary="list all agent",
+     * description="list all agent ",
+     * tags={"Agent"},
+     * security={{"bearer_token":{}}},
+     * @OA\Parameter(
+     *     name="role",
+     *     description="role",
+     *     required=true,
+     *     in="path",
+     *     @OA\Schema(
+     *        type="string"
+     *     )
+     * ),
+     * @OA\Response(
+     *    response=200,
+     *    description="agent list successful",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="true"),
+     *       @OA\Property(property="statusCode", type="string", example="SUCCESS-LIST-AGENT"),
+     *       @OA\Property(property="message", type="string", example="agent list successful"),
+     *    )
+     * ),
+     * @OA\Response(
+     *    response=404,
+     *    description="agent not found",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="false"),
+     *       @OA\Property(property="statusCode", type="string", example="ERR-AGENT-NOT-FOUND"),
+     *       @OA\Property(property="message", type="string", example="agent not found"),
+     *    )
+     *  ),
+     * @OA\Response(
+     *    response=500,
+     *    description="an error occurred",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="false"),
+     *       @OA\Property(property="statusCode", type="string", example="ERR-UNAVAILABLE"),
+     *       @OA\Property(property="message", type="string", example="an error occurred"),
+     *    )
+     *  ),
+     * )
+     * )
+     */
+
+    public function listAgentSwagger(){
+        try{
+            $listAgent = User::where("type_user_id", UserRolesEnum::AGENT->value)->where("distributeur_id", Auth::user()->distributeur_id)
+            ->select('id', 'name', 'surname', 'telephone', 'email', 'created_at', 'status')->get();
+            if($listAgent->count() == 0){
+                return response()->json([
+                    'success'=>false,
+                    'statusCode' => 'ERR-AGENT-NOT-FOUND', // 'ERR-CREDENTIALS-INVALID
+                    'message' => 'Agent not found',
+                ], 404);
+            }
+            return response()->json([
+                'success'=>true,
+                'statusCode' => 'SUCCESS-LIST-AGENT', // 'ERR-CREDENTIALS-INVALID
+                'message' => 'Agent list successful',
+                'data'=>$listAgent
+            ], 200);
+        }catch(\Exception $err){
+            Log::error($err);
+            return response()->json([
+                'success'=>false,
+                'statusCode' => 'ERR-UNAVAILABLE', // 'ERR-CREDENTIALS-INVALID
+                'message' => $err->getMessage(),
+            ], 500);
+        }
+
+    }
 }
