@@ -386,7 +386,7 @@ class ApiProdAuthController extends BaseController
 
     /**
      * @OA\Get(
-     * path="/api/agent/list",
+     * path="/api/v1/agent/list",
      * summary="list of all agents",
      * description="list of all agents",
      * tags={"Agent"},
