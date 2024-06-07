@@ -399,7 +399,7 @@ class ApiProdAuthController extends BaseController
      *       @OA\Property(property="statusCode", type="string", example="SUCCESS-LIST-AGENT"),
      *       @OA\Property(property="message", type="string", example="agent list successful"),
      *       @OA\Property(property="number", type="string", example="number of agent found"),
-     *       @OA\Property(property="data", type="array", example="list of agents"),
+     *       @OA\Property(property="data", type="object", example="list of agents"),
      *    )
      * ),
      * @OA\Response(
