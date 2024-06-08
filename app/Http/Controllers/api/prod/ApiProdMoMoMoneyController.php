@@ -1166,7 +1166,7 @@ class ApiProdMoMoMoneyController extends Controller
         $Transaction = Transaction::where('id',$externalId);
         if($Transaction->count()>0){
             $status = $Transaction->first()->status;
-            if($Transaction->first()->service_id ==ServiceEnum::RETRAIT_MOMO->value && $status==2){
+            if(($Transaction->first()->service_id ==ServiceEnum::RETRAIT_MOMO->value || $Transaction->first()->service_id ==ServiceEnum::PAYMENT_MOMO->value) && $status==2){
                 $financialTransactionId = $Transaction->first()->paytoken;
                 if(Arr::has($element, "financialTransactionId")) {
                     $financialTransactionId = $data->financialTransactionId;
