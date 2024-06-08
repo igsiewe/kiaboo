@@ -1340,4 +1340,217 @@ class ApiProdMoMoMoneyController extends Controller
             }
         }
     }
+
+
+    /**
+     * @OA\Post(
+     * path="/api/v1/prod/momo/payment",
+     * summary="Request to make a payment MOMO",
+     * description="This operation is used to request a payment from a consumer (Payer). The payer will be asked to authorize the payment. The transaction will be executed once the payer has authorized the payment. The requesttopay will be in status PENDING until the transaction is authorized or declined by the payer or it is timed out by the system. Status of the transaction can be validated by using the GET api/v1/momo/payment/<resourceId>",
+     * security={{"bearerAuth":{}}},
+     * tags={"Payment - MOMO"},
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="Request to make a payment MOMO",
+     *    @OA\JsonContent(
+     *       required={"phone","amount"},
+     *       @OA\Property(property="phone", type="number", example="679962015"),
+     *       @OA\Property(property="amount", type="number", example="200"),
+     *    ),
+     * ),
+     * @OA\Response(
+     *    response=400,
+     *    description="Bad request",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="false"),
+     *       @OA\Property(property="statusCode", type="string", example="ERR-INVALID-DATA-SEND"),
+     *       @OA\Property(property="message", type="string", example="Bad request, invalid data was sent in the request"),
+     *    )
+     * ),
+     * @OA\Response(
+     *     response=422,
+     *     description="attribute invalid",
+     *     @OA\JsonContent(
+     *        @OA\Property(property="success", type="boolean", example="false"),
+     *        @OA\Property(property="statusCode", type="string", example="ERR-ATTRIBUTES-INVALID"),
+     *        @OA\Property(property="message", type="string", example="attribute not valid"),
+     *     )
+     *  ),
+     * @OA\Response(
+     *    response=202,
+     *    description="Payment initiated successfully",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="true"),
+     *       @OA\Property(property="statusCode", type="string", example="PAYMENT INITIATED"),
+     *       @OA\Property(property="message", type="string", example="payment initiate successfully"),
+     *    ),
+     * ),
+     * @OA\Response(
+     *    response=500,
+     *    description="an error occurred",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="false"),
+     *       @OA\Property(property="statusCode", type="string", example="ERR-UNAVAILABLE"),
+     *       @OA\Property(property="message", type="string", example="an error occurred"),
+     *    )
+     *  )
+     * )
+     */
+    public function MOMO_Payment(Request $request){
+
+        $apiCheck = new ApiCheckController();
+
+        $service = ServiceEnum::RETRAIT_MOMO->value;
+
+        // Vérifie si l'utilisateur est autorisé à faire cette opération
+        if(!$apiCheck->checkUserValidity()){
+            return response()->json([
+                'status'=>'error',
+                'message'=>'Votre compte est désactivé. Veuillez contacter votre distributeur',
+            ],401);
+        }
+
+        // On vérifie si les commissions sont paramétrées
+        $functionCommission = new ApiCommissionController();
+        $lacommission =$functionCommission->getCommissionByService($service,$request->amount);
+        if($lacommission->getStatusCode()!=200){
+            return response()->json([
+                'success' => false,
+                'message' => "Impossible de calculer la commission",
+            ], 400);
+        }
+        $commission=json_decode($lacommission->getContent());
+
+        $commissionFiliale = doubleval($commission->commission_kiaboo);
+        $commissionDistributeur=doubleval($commission->commission_distributeur);
+        $commissionAgent=doubleval($commission->commission_agent);
+
+        //Initie la transaction
+        $device = $request->deviceId;
+        $latitude = $request->latitude;
+        $longitude = $request->longitude;
+        $place = $request->place;
+        $init_transaction = $apiCheck->init_Retrait($request->amount, $request->customerPhone, $service,"", $device,$latitude,$longitude,$place);
+
+        $dataTransactionInit = json_decode($init_transaction->getContent());
+
+        if($init_transaction->getStatusCode() !=200){
+            return response()->json([
+                'status'=>'error',
+                'message'=>$dataTransactionInit->message,
+            ],$init_transaction->getStatusCode());
+        }
+        $idTransaction = $dataTransactionInit->transId; //Id de la transaction initiée
+        $reference = $dataTransactionInit->reference; //Référence de la transaction initiée
+        //On génère le token de la transation
+        $responseToken = $this->MOMO_Collection_GetTokenAccess();
+        if($responseToken->status()!=200){
+            return response()->json(
+                [
+                    'status'=>$responseToken->status(),
+                    'message'=>$responseToken["message"],
+                ],$responseToken->status()
+            );
+        }
+
+        $dataAcessToken = json_decode($responseToken->getContent());
+        $AccessToken = $dataAcessToken->access_token;
+
+        //Référence de la transaction
+        $referenceID = $this->gen_uuid();
+        //On gardee l'UID de la transaction initiee
+        $saveUID = Transaction::where('id',$idTransaction)->update([
+            "paytoken"=>$referenceID
+        ]);
+        $customerPhone = "237".$request->customerPhone;
+        $response = Http::withOptions(['verify' => false,])->withHeaders(
+            [
+                'Authorization'=> 'Bearer '.$AccessToken,
+                'X-Reference-Id'=> $referenceID,
+                'Ocp-Apim-Subscription-Key'=> '886cc9e141ab492f80d9567b3c46d59c',
+                'X-Target-Environment'=> 'mtncameroon',
+                'X-Callback-Url'=> 'https://kiaboogroup.com/api/momo/callback',
+            ])
+            ->Post('https://proxy.momoapi.mtn.com/collection/v1_0/requesttowithdraw', [
+
+                "payeeNote" => "Transaction initiée par lagent N".Auth::user()->id." le ".Carbon::now()." vers le client ".$request->customerPhone,
+                "externalId" => $idTransaction,
+                "amount" => $request->amount,
+                "currency" => "XAF",
+                "payer" => [
+                    "partyIdType" => "MSISDN",
+                    "partyId" => $customerPhone
+                ],
+                "payerMessage" => "Transaction initiée par lagent N".Auth::user()->id." le ".Carbon::now()." vers le client ".$request->customerPhone,
+            ]);
+
+
+        Log::info([
+            "Service"=>ServiceEnum::RETRAIT_MOMO->name,
+            "url"=>"https://proxy.momoapi.mtn.com/collection/v1_0/requesttowithdraw",
+            "requete"=>[
+                "payeeNote" => "Transaction initiée par lagent N".Auth::user()->id." le ".Carbon::now()." vers le client ".$request->customerPhone,
+                "externalId" => $idTransaction,
+                "amount" => $request->amount,
+                "currency" => "XAF",
+                "payer" => [
+                    "partyIdType" => "MSISDN",
+                    "partyId" => $customerPhone
+                ],
+                "payerMessage" => "Transaction initiée par lagent N".Auth::user()->id." le ".Carbon::now()." vers le client ".$request->customerPhone,
+            ],
+            "reponse"=>json_decode($response->status()),
+        ]);
+
+
+        if($response->status()==202){
+            //Le client a été notifié. Donc on reste en attente de sa confirmation (Saisie de son code secret)
+
+            //On change le statut de la transaction dans la base de donnée
+
+            $Transaction = Transaction::where('id',$idTransaction)->where('service_id',$service)->update([
+                'reference_partenaire'=>$referenceID,
+                'balance_before'=>0,
+                'balance_after'=>0,
+                'debit'=>0,
+                'credit'=>$request->amount,
+                'status'=>2, // Pending
+                'paytoken'=>$referenceID,
+                'date_end_trans'=>Carbon::now(),
+                'description'=>'PENDING',
+                'message'=>"Transaction initiée par l'agent N°".Auth::user()->id." le ".Carbon::now()." vers le client ".$request->customerPhone." En attente confirmation du client",
+                'commission'=>$commission->commission_globale,
+                'commission_filiale'=>$commissionFiliale,
+                'commission_agent'=>$commissionAgent,
+                'commission_distributeur'=>$commissionDistributeur,
+            ]);
+
+            //Le solde du compte de l'agent ne sera mis à jour qu'après confirmation de l'agent : Opération traitée dans le callback
+
+            //On recupère toutes les transactions en attente
+
+            return response()->json(
+                [
+                    'status'=>200,
+                    'message'=>"Transaction initiée avec succès. Le client doit confirmer le retrait avec son code secret",
+                    'paytoken'=>$referenceID,
+                ],200
+            );
+
+        }else{
+            Log::error([
+                'code'=> $response->status(),
+                'function' => "MOMO_Retrait",
+                'response'=>$response->body(),
+                'user' => Auth::user()->id,
+                'request' => $request->all()
+            ]);
+            return response()->json(
+                [
+                    'status'=>$response->status(),
+                    'message'=>$response->body(),
+                ],$response->status()
+            );
+        }
+    }
 }
