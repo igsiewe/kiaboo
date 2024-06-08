@@ -1353,9 +1353,9 @@ class ApiProdMoMoMoneyController extends Controller
      *    required=true,
      *    description="Request to make a payment MOMO",
      *    @OA\JsonContent(
-     *       required={"agent","password","phone","amount"},
+     *       required={"agent","key","phone","amount"},
      *       @OA\Property(property="agent", type="string", example="679962015"),
-     *       @OA\Property(property="password", type="password", example="plmHT@\kdJ24"),
+     *       @OA\Property(property="key", type="password", example="plmHT@\kdJ24"),
      *       @OA\Property(
      *           type="object",
      *           property="data",
@@ -1374,6 +1374,15 @@ class ApiProdMoMoMoneyController extends Controller
      *    )
      * ),
      * @OA\Response(
+     *      response=403,
+     *      description="you do not have the necessary permissions",
+     *      @OA\JsonContent(
+     *         @OA\Property(property="success", type="boolean", example="false"),
+     *         @OA\Property(property="statusCode", type="string", example="ERR-NOT-PERMISSION"),
+     *         @OA\Property(property="message", type="string", example="you do not have the necessary permissions"),
+     *      )
+     * ),
+     * @OA\Response(
      *     response=422,
      *     description="attribute invalid",
      *     @OA\JsonContent(
@@ -1389,6 +1398,7 @@ class ApiProdMoMoMoneyController extends Controller
      *       @OA\Property(property="success", type="boolean", example="true"),
      *       @OA\Property(property="statusCode", type="string", example="PAYMENT INITIATED"),
      *       @OA\Property(property="message", type="string", example="payment initiate successfully"),
+     *      @OA\Property(property="paytoken", type="string", example="Payment token"),
      *    ),
      * ),
      * @OA\Response(
@@ -1403,7 +1413,7 @@ class ApiProdMoMoMoneyController extends Controller
      * )
      */
     public function MOMO_Payment(Request $request){
-
+      dd($request);
         $apiCheck = new ApiCheckController();
 
         $service = ServiceEnum::RETRAIT_MOMO->value;
@@ -1411,9 +1421,10 @@ class ApiProdMoMoMoneyController extends Controller
         // Vérifie si l'utilisateur est autorisé à faire cette opération
         if(!$apiCheck->checkUserValidity()){
             return response()->json([
-                'status'=>'error',
-                'message'=>'Votre compte est désactivé. Veuillez contacter votre distributeur',
-            ],401);
+                'success'=>false,
+                'statusCode'=>'ERR-NOT-PERMISSION',
+                'message'=>'you do not have the necessary permissions',
+            ],403);
         }
 
         // On vérifie si les commissions sont paramétrées
@@ -1421,8 +1432,9 @@ class ApiProdMoMoMoneyController extends Controller
         $lacommission =$functionCommission->getCommissionByService($service,$request->amount);
         if($lacommission->getStatusCode()!=200){
             return response()->json([
-                'success' => false,
-                'message' => "Impossible de calculer la commission",
+                'success'=>false,
+                'statusCode' => "ERR-FEES-INVALID",
+                'message' => "Impossible de calculer les frais liés à la transaction",
             ], 400);
         }
         $commission=json_decode($lacommission->getContent());
@@ -1442,7 +1454,8 @@ class ApiProdMoMoMoneyController extends Controller
 
         if($init_transaction->getStatusCode() !=200){
             return response()->json([
-                'status'=>'error',
+                'success'=>false,
+                'statusCode'=>'error',
                 'message'=>$dataTransactionInit->message,
             ],$init_transaction->getStatusCode());
         }
@@ -1453,7 +1466,8 @@ class ApiProdMoMoMoneyController extends Controller
         if($responseToken->status()!=200){
             return response()->json(
                 [
-                    'status'=>$responseToken->status(),
+                    'success'=>false,
+                    'statusCode'=>$responseToken->status(),
                     'message'=>$responseToken["message"],
                 ],$responseToken->status()
             );
@@ -1537,10 +1551,11 @@ class ApiProdMoMoMoneyController extends Controller
 
             return response()->json(
                 [
-                    'status'=>200,
+                    'success'=>true,
+                    'statusCode'=>"PAYMENT-INITIATE-SUCCESSFULLY",
                     'message'=>"Transaction initiée avec succès. Le client doit confirmer le retrait avec son code secret",
                     'paytoken'=>$referenceID,
-                ],200
+                ],202
             );
 
         }else{
