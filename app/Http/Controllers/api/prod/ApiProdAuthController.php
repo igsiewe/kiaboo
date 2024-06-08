@@ -475,10 +475,10 @@ class ApiProdAuthController extends BaseController
      * ),
      * @OA\Response(
      *    response=200,
-     *    description="user successfuly delete",
+     *    description="Agent blocked successfuly",
      *    @OA\JsonContent(
      *       @OA\Property(property="success", type="boolean", example="true"),
-     *       @OA\Property(property="statusCode", type="string", example="SUCCESS-DELETED-USER"),
+     *       @OA\Property(property="statusCode", type="string", example="SUCCESS-AGENT-BLOCKED"),
      *       @OA\Property(property="message", type="string", example="user successfuly delete"),
      *    )
      * ),
@@ -552,6 +552,121 @@ class ApiProdAuthController extends BaseController
                     'success'=>true,
                     'statusCode' => 'SUCCESS-AGENT-BLOCKED',
                     'message' => 'Agent blocked successfully',
+                ], 200);
+            }
+            return response()->json([
+                'success'=>false,
+                'statusCode' => 'ERR-AGENT-NOT-FOUND', // 'ERR-CREDENTIALS-INVALID
+                'message' => 'Agent not found',
+            ], 404);
+
+        }catch(\Exception $err){
+            Log::error($err);
+            return response()->json([
+                'success'=>false,
+                'statusCode' => 'ERR-UNAVAILABLE', // 'ERR-CREDENTIALS-INVALID
+                'message' => $err->getMessage(),
+            ], 500);
+        }
+
+    }
+
+
+    /**
+     * @OA\Put(
+     * path="/api/v1/agent/unblock/{phone}",
+     * summary="Unblocked an agent ",
+     * description="Unblocked an agent  ",
+     * tags={"Agent"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(
+     *     name="phone",
+     *     description="Login or phone number of agent",
+     *     required=true,
+     *     in="path",
+     *     @OA\Schema(
+     *        type="string"
+     *     )
+     * ),
+     * @OA\Response(
+     *    response=200,
+     *    description="Agent unblocked successfuly",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="true"),
+     *       @OA\Property(property="statusCode", type="string", example="SUCCESS-AGENT-UNBLOCKED"),
+     *       @OA\Property(property="message", type="string", example="user successfuly delete"),
+     *    )
+     * ),
+     * @OA\Response(
+     *    response=400,
+     *    description="Agent is already unblocked",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="false"),
+     *       @OA\Property(property="statusCode", type="string", example="ERR-AGENT-ALREADY-UNBLOCKED"),
+     *       @OA\Property(property="message", type="string", example="This agent is already unblocked"),
+     *    )
+     *  ),
+     *  @OA\Response(
+     *     response=403,
+     *     description="you do not have the necessary permissions",
+     *     @OA\JsonContent(
+     *        @OA\Property(property="success", type="boolean", example="false"),
+     *        @OA\Property(property="statusCode", type="string", example="ERR-NOT-PERMISSION"),
+     *        @OA\Property(property="message", type="string", example="you do not have the necessary permissions"),
+     *     )
+     *   ),
+     * @OA\Response(
+     *    response=404,
+     *    description="agent not found ",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="false"),
+     *       @OA\Property(property="statusCode", type="string", example="ERR-AGENT-NOT-FOUND"),
+     *       @OA\Property(property="message", type="string", example="agent not found "),
+     *    )
+     *  ),
+     * @OA\Response(
+     *    response=500,
+     *    description="an error occurred",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="false"),
+     *       @OA\Property(property="statusCode", type="string", example="ERR-UNAVAILABLE"),
+     *       @OA\Property(property="message", type="string", example="an error occurred"),
+     *    )
+     *  ),
+     * )
+     * )
+     */
+    public function unblockAgentSwagger($phone){
+        try{
+            $agent = User::where("telephone", $phone)->where("type_user_id",UserRolesEnum::AGENT->value);
+            if($agent->count()>0){
+                if($agent->first()->status==1){
+                    return response()->json([
+                        'success'=>false,
+                        'statusCode' => 'ERR-AGENT-ALREADY-UNBLOCKED', // 'ERR-CREDENTIALS-INVALID
+                        'message' => 'This agent is already unblocked',
+                    ], 400);
+                }
+                if($agent->first()->distributeur_id !=Auth::user()->distributeur_id){
+                    return response()->json([
+                        'success'=>false,
+                        'statusCode' => 'ERR-PERMISSION-DENIED', // 'ERR-CREDENTIALS-INVALID
+                        'message' => 'you do not have the necessary permissions',
+                    ], 403);
+                }
+                log:info([
+                    "Action"=>"Unblocked",
+                    "User"=>$phone,
+                    "Block_by"=>Auth::user()->id,
+                    "Date"=>Carbon::now()
+                ]);
+                $update = $agent->update([
+                    "status"=>1,
+                ]);
+                return response()->json([
+                    'success'=>true,
+                    'statusCode' => 'SUCCESS-AGENT-UNBLOCKED',
+                    'message' => 'Agent unblocked successfully',
                 ], 200);
             }
             return response()->json([
