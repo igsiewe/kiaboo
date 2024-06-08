@@ -545,7 +545,7 @@ class ApiProdAuthController extends BaseController
                     "Block_by"=>Auth::user()->id,
                     "Date"=>Carbon::now()
                 ]);
-                $update = $agent->updated([
+                $update = $agent->update([
                     "status"=>0,
                 ]);
                 return response()->json([
