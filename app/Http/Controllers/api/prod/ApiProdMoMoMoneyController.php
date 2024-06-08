@@ -1353,9 +1353,8 @@ class ApiProdMoMoMoneyController extends Controller
      *    required=true,
      *    description="Request to make a payment MOMO",
      *    @OA\JsonContent(
-     *       required={"agent","key","phone","amount"},
+     *       required={"agent","phone","amount"},
      *       @OA\Property(property="agent", type="string", example="679962015"),
-     *       @OA\Property(property="key", type="password", example="plmHT@\kdJ24"),
      *       @OA\Property(
      *           type="object",
      *           property="data",
