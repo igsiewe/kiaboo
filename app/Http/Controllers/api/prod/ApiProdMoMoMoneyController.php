@@ -1494,7 +1494,7 @@ class ApiProdMoMoMoneyController extends Controller
 
                 "payeeNote" => "Transaction payment initiée par lagent N".$user->first()->id." le ".Carbon::now()." vers le client ".$customerPhone,
                 "externalId" => $idTransaction,
-                "amount" => $request->amount,
+                "amount" => $amount,
                 "currency" => "XAF",
                 "payer" => [
                     "partyIdType" => "MSISDN",
