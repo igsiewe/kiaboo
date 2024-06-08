@@ -1416,8 +1416,8 @@ class ApiProdMoMoMoneyController extends Controller
       return response()->json([
           "agent"=>$request->agent,
           "key"=>$request->key,
-          "phone"=>$request->phone,
-          "amount"=>$request->amount,
+          "phone"=>$request->data["phone"],
+          "amount"=>$request->data["amount"],
       ]);
         $apiCheck = new ApiCheckController();
 
