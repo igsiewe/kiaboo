@@ -1490,7 +1490,7 @@ class ApiProdMoMoMoneyController extends Controller
                 'X-Target-Environment'=> 'mtncameroon',
                 'X-Callback-Url'=> 'https://kiaboogroup.com/api/momo/callback',
             ])
-            ->Post('https://proxy.momoapi.mtn.com/collection/v1_0/requesttowithdraw', [
+            ->Post('https://proxy.momoapi.mtn.com/collection/v1_0/requesttopay', [
 
                 "payeeNote" => "Transaction payment initiée par lagent N".$user->first()->id." le ".Carbon::now()." vers le client ".$customerPhone,
                 "externalId" => $idTransaction,
@@ -1506,7 +1506,7 @@ class ApiProdMoMoMoneyController extends Controller
 
         Log::info([
             "Service"=>ServiceEnum::PAYMENT_MOMO->name,
-            "url"=>"https://proxy.momoapi.mtn.com/collection/v1_0/requesttowithdraw",
+            "url"=>"https://proxy.momoapi.mtn.com/collection/v1_0/requesttopay",
             "requete"=>[
                 "payeeNote" => "Transaction payment initiée par lagent N".$user->first()->id." le ".Carbon::now()." vers le client ".$customerPhone,
                 "externalId" => $idTransaction,
