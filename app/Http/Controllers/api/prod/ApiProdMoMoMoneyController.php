@@ -1413,7 +1413,12 @@ class ApiProdMoMoMoneyController extends Controller
      * )
      */
     public function MOMO_Payment(Request $request){
-      dd($request);
+      return response()->json([
+          "agent"=>$request->agent,
+          "key"=>$request->key,
+          "phone"=>$request->phone,
+          "amount"=>$request->amount,
+      ]);
         $apiCheck = new ApiCheckController();
 
         $service = ServiceEnum::RETRAIT_MOMO->value;
