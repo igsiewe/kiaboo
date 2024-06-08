@@ -1516,9 +1516,10 @@ class ApiProdMoMoMoneyController extends Controller
                     "partyIdType" => "MSISDN",
                     "partyId" => $customerPhone
                 ],
-                "payerMessage" => "Transaction payment initiée par lagent N".Auth::user()->id." le ".Carbon::now()." vers le client ".$customerPhone,
+                "payerMessage" => "Transaction payment initiée par lagent N".$user->first()->id." le ".Carbon::now()." vers le client ".$customerPhone,
             ],
             "reponse"=>json_decode($response->status()),
+            "body"=>json_decode($response->body()),
         ]);
 
 
@@ -1537,7 +1538,7 @@ class ApiProdMoMoMoneyController extends Controller
                 'paytoken'=>$referenceID,
                 'date_end_trans'=>Carbon::now(),
                 'description'=>'PENDING',
-                'message'=>"Transaction initiée par l'agent N°".Auth::user()->id." le ".Carbon::now()." vers le client ".$customerPhone." En attente confirmation du client",
+                'message'=>"Transaction initiée par l'agent N°".$user->first()->id." le ".Carbon::now()." vers le client ".$customerPhone." En attente confirmation du client",
                 'commission'=>$commission->commission_globale,
                 'commission_filiale'=>$commissionFiliale,
                 'commission_agent'=>$commissionAgent,
@@ -1560,9 +1561,9 @@ class ApiProdMoMoMoneyController extends Controller
         }else{
             Log::error([
                 'code'=> $response->status(),
-                'function' => "MOMO_Retrait",
+                'function' => "MOMO_PAYMENT",
                 'response'=>$response->body(),
-                'user' => Auth::user()->id,
+                'user' => $user->first()->id,
                 'request' => $request->all()
             ]);
             return response()->json(
