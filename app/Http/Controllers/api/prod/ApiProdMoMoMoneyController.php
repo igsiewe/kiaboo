@@ -1413,15 +1413,10 @@ class ApiProdMoMoMoneyController extends Controller
      * )
      */
     public function MOMO_Payment(Request $request){
-      return response()->json([
-          "agent"=>$request->agent,
-          "key"=>$request->key,
-          "phone"=>$request->data["phone"],
-          "amount"=>$request->data["amount"],
-      ]);
+
         $apiCheck = new ApiCheckController();
 
-        $service = ServiceEnum::RETRAIT_MOMO->value;
+        $service = ServiceEnum::PAYMENT_MOMO->value;
 
         // Vérifie si l'utilisateur est autorisé à faire cette opération
         if(!$apiCheck->checkUserValidity()){
@@ -1432,9 +1427,13 @@ class ApiProdMoMoMoneyController extends Controller
             ],403);
         }
 
+        $user = User::where("telephone",$request->agent)->get();
+        $amount=$request->data["amount"];
+        $customer->$request->data["phone"];
+
         // On vérifie si les commissions sont paramétrées
         $functionCommission = new ApiCommissionController();
-        $lacommission =$functionCommission->getCommissionByService($service,$request->amount);
+        $lacommission =$functionCommission->getCommissionByService($service,$amount);
         if($lacommission->getStatusCode()!=200){
             return response()->json([
                 'success'=>false,
@@ -1449,12 +1448,8 @@ class ApiProdMoMoMoneyController extends Controller
         $commissionAgent=doubleval($commission->commission_agent);
 
         //Initie la transaction
-        $device = $request->deviceId;
-        $latitude = $request->latitude;
-        $longitude = $request->longitude;
-        $place = $request->place;
-        $init_transaction = $apiCheck->init_Retrait($request->amount, $request->customerPhone, $service,"", $device,$latitude,$longitude,$place);
 
+        $init_transaction = $apiCheck->init_Payment($amount, $customer, $service);
         $dataTransactionInit = json_decode($init_transaction->getContent());
 
         if($init_transaction->getStatusCode() !=200){
@@ -1487,7 +1482,7 @@ class ApiProdMoMoMoneyController extends Controller
         $saveUID = Transaction::where('id',$idTransaction)->update([
             "paytoken"=>$referenceID
         ]);
-        $customerPhone = "237".$request->customerPhone;
+        $customerPhone = "237".$customer;
         $response = Http::withOptions(['verify' => false,])->withHeaders(
             [
                 'Authorization'=> 'Bearer '.$AccessToken,
@@ -1498,7 +1493,7 @@ class ApiProdMoMoMoneyController extends Controller
             ])
             ->Post('https://proxy.momoapi.mtn.com/collection/v1_0/requesttowithdraw', [
 
-                "payeeNote" => "Transaction initiée par lagent N".Auth::user()->id." le ".Carbon::now()." vers le client ".$request->customerPhone,
+                "payeeNote" => "Transaction payment initiée par lagent N".$user->first()->id." le ".Carbon::now()." vers le client ".$customerPhone,
                 "externalId" => $idTransaction,
                 "amount" => $request->amount,
                 "currency" => "XAF",
@@ -1506,23 +1501,23 @@ class ApiProdMoMoMoneyController extends Controller
                     "partyIdType" => "MSISDN",
                     "partyId" => $customerPhone
                 ],
-                "payerMessage" => "Transaction initiée par lagent N".Auth::user()->id." le ".Carbon::now()." vers le client ".$request->customerPhone,
+                "payerMessage" => "Transaction initiée par lagent N".$user->first()->id." le ".Carbon::now()." vers le client ".$customer,
             ]);
 
 
         Log::info([
-            "Service"=>ServiceEnum::RETRAIT_MOMO->name,
+            "Service"=>ServiceEnum::PAYMENT_MOMO->name,
             "url"=>"https://proxy.momoapi.mtn.com/collection/v1_0/requesttowithdraw",
             "requete"=>[
-                "payeeNote" => "Transaction initiée par lagent N".Auth::user()->id." le ".Carbon::now()." vers le client ".$request->customerPhone,
+                "payeeNote" => "Transaction payment initiée par lagent N".$user->first()->id." le ".Carbon::now()." vers le client ".$customerPhone,
                 "externalId" => $idTransaction,
-                "amount" => $request->amount,
+                "amount" => $amount,
                 "currency" => "XAF",
                 "payer" => [
                     "partyIdType" => "MSISDN",
                     "partyId" => $customerPhone
                 ],
-                "payerMessage" => "Transaction initiée par lagent N".Auth::user()->id." le ".Carbon::now()." vers le client ".$request->customerPhone,
+                "payerMessage" => "Transaction payment initiée par lagent N".Auth::user()->id." le ".Carbon::now()." vers le client ".$customerPhone,
             ],
             "reponse"=>json_decode($response->status()),
         ]);
@@ -1538,12 +1533,12 @@ class ApiProdMoMoMoneyController extends Controller
                 'balance_before'=>0,
                 'balance_after'=>0,
                 'debit'=>0,
-                'credit'=>$request->amount,
+                'credit'=>$amount,
                 'status'=>2, // Pending
                 'paytoken'=>$referenceID,
                 'date_end_trans'=>Carbon::now(),
                 'description'=>'PENDING',
-                'message'=>"Transaction initiée par l'agent N°".Auth::user()->id." le ".Carbon::now()." vers le client ".$request->customerPhone." En attente confirmation du client",
+                'message'=>"Transaction initiée par l'agent N°".Auth::user()->id." le ".Carbon::now()." vers le client ".$customerPhone." En attente confirmation du client",
                 'commission'=>$commission->commission_globale,
                 'commission_filiale'=>$commissionFiliale,
                 'commission_agent'=>$commissionAgent,

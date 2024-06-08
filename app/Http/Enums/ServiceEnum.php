@@ -21,4 +21,10 @@ enum ServiceEnum:int
     case DEPOT_YOOMEE= 14;
     case RETRAIT_YOOMEE = 15;
     case FACTURE_ENEO = 16;
+
+    case PAYMENT_MOMO = 17;
+    case PAYMENT_OM = 18;
+    case PAYMENT_M2U=19;
+    case PAYMENT_YOOMEE = 20;
+
 }

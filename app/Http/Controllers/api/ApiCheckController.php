@@ -224,6 +224,69 @@ class ApiCheckController extends Controller
 
     }
 
+    function init_Payment($montant, $beneficiaire, $service, $payToken=""){
+
+        $reference = "RT".Carbon::now()->format('ymd').".".Carbon::now()->format('His').".".$this->genererChaineAleatoire(1)."".$this->GenereRang();
+
+        try{
+            DB::beginTransaction();
+            $Transaction= Transaction::create([
+                'reference'=>$reference,
+                'paytoken'=>$payToken,
+                'date_transaction'=>Carbon::now(),
+                'service_id'=>$service,
+                'balance_before'=>0,
+                'balance_after'=>0,
+                'debit'=>0,
+                'credit'=>$montant,
+                'status'=>0, //Initiate
+                'created_by'=>Auth::user()->id,
+                'created_at'=>Carbon::now(),
+                'countrie_id'=>Auth::user()->countrie_id,
+                'source'=>Auth::user()->id,
+                'fichier'=>"agent",
+                'updated_by'=>Auth::user()->id,
+                'customer_phone'=>$beneficiaire,
+                'description'=>'INITIATED',
+                'date_operation'=>date('Y-m-d'),
+                'heure_operation'=>date('H:i:s'),
+                'device_notification'=>"",
+                'latitude'=>"",
+                'longitude'=>"",
+                'place'=>""
+            ]);
+
+            if($Transaction) {
+                DB::commit();
+                return response()->json([
+                    'success' => true,
+                    'transId'=>$Transaction->id,
+                    'reference'=>$reference,
+                ], 200);
+            }else{
+                DB::rollback();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Une erreur inattentue s\' est produite. Veuillez contacter votre support.',
+                ], 404);
+            }
+        }catch (\Exception $e){
+            DB::rollback();
+            Log::error([
+                'function' => 'init_Retrait',
+                'user' => Auth::user()->id,
+                'Service'=>$service,
+                'erreur Message' => $e->getMessage(),
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' =>"Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
+            ], $e->getCode());
+        }
+
+
+    }
+
     function rang(){
         $rang =str_replace(str_replace(str_replace(Carbon::now(),"-","")," ",""),"/","");
     }
