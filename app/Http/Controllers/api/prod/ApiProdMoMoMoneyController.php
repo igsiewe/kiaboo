@@ -1430,9 +1430,9 @@ class ApiProdMoMoMoneyController extends Controller
         }
 
         // On vérifie si les commissions sont paramétrées
-       // $functionCommission = new ApiCommissionController();
-       // $lacommission =$functionCommission->getCommissionByService($service,$amount);
-        $lacommission=0;
+        $functionCommission = new ApiCommissionController();
+        $lacommission =$functionCommission->getCommissionByService($service,$amount);
+
         if($lacommission->getStatusCode()!=200){
             return response()->json([
                 'success'=>false,
