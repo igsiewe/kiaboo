@@ -1416,19 +1416,18 @@ class ApiProdMoMoMoneyController extends Controller
         $apiCheck = new ApiCheckController();
 
         $service = ServiceEnum::PAYMENT_MOMO->value;
+        $user = User::where("telephone",$request->agent)->get();
+        $amount=$request->data["amount"];
+        $customer=$request->data["phone"];
 
         // Vérifie si l'utilisateur est autorisé à faire cette opération
-        if(!$apiCheck->checkUserValidity()){
+        if(!$user->first()->statut ==0){
             return response()->json([
                 'success'=>false,
                 'statusCode'=>'ERR-NOT-PERMISSION',
                 'message'=>'you do not have the necessary permissions',
             ],403);
         }
-
-        $user = User::where("telephone",$request->agent)->get();
-        $amount=$request->data["amount"];
-        $customer->$request->data["phone"];
 
         // On vérifie si les commissions sont paramétrées
         $functionCommission = new ApiCommissionController();
