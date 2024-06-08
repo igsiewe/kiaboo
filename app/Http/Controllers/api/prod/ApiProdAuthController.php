@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use OpenApi\Annotations as OA;
 
 
 class ApiProdAuthController extends BaseController
@@ -445,6 +446,120 @@ class ApiProdAuthController extends BaseController
                 'number'=>$listAgent->count(),
                 'data'=>$listAgent
             ], 200);
+        }catch(\Exception $err){
+            Log::error($err);
+            return response()->json([
+                'success'=>false,
+                'statusCode' => 'ERR-UNAVAILABLE', // 'ERR-CREDENTIALS-INVALID
+                'message' => $err->getMessage(),
+            ], 500);
+        }
+
+    }
+
+    /**
+     * @OA\Put(
+     * path="/api/v1/agent/block/{phone}",
+     * summary="Blocked an agent ",
+     * description="Blocked an agent  ",
+     * tags={"Agent"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(
+     *     name="phone",
+     *     description="Login or phone number of agent",
+     *     required=true,
+     *     in="path",
+     *     @OA\Schema(
+     *        type="string"
+     *     )
+     * ),
+     * @OA\Response(
+     *    response=200,
+     *    description="user successfuly delete",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="true"),
+     *       @OA\Property(property="statusCode", type="string", example="SUCCESS-DELETED-USER"),
+     *       @OA\Property(property="message", type="string", example="user successfuly delete"),
+     *    )
+     * ),
+     * @OA\Response(
+     *    response=400,
+     *    description="Agent is already blocked",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="false"),
+     *       @OA\Property(property="statusCode", type="string", example="ERR-AGENT-ALREADY-BLOCKED"),
+     *       @OA\Property(property="message", type="string", example="This agent is already blocked"),
+     *    )
+     *  ),
+     *  @OA\Response(
+     *     response=403,
+     *     description="you do not have the necessary permissions",
+     *     @OA\JsonContent(
+     *        @OA\Property(property="success", type="boolean", example="false"),
+     *        @OA\Property(property="statusCode", type="string", example="ERR-NOT-PERMISSION"),
+     *        @OA\Property(property="message", type="string", example="you do not have the necessary permissions"),
+     *     )
+     *   ),
+     * @OA\Response(
+     *    response=404,
+     *    description="agent not found ",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="false"),
+     *       @OA\Property(property="statusCode", type="string", example="ERR-AGENT-NOT-FOUND"),
+     *       @OA\Property(property="message", type="string", example="agent not found "),
+     *    )
+     *  ),
+     * @OA\Response(
+     *    response=500,
+     *    description="an error occurred",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="false"),
+     *       @OA\Property(property="statusCode", type="string", example="ERR-UNAVAILABLE"),
+     *       @OA\Property(property="message", type="string", example="an error occurred"),
+     *    )
+     *  ),
+     * )
+     * )
+     */
+    public function blockAgentSwagger($phone){
+        try{
+            $agent = User::where("telephone", $phone)->where("type_user_id",UserRolesEnum::AGENT->value);
+            if($agent->count()>0){
+                if($agent->first()->status==0){
+                    return response()->json([
+                        'success'=>false,
+                        'statusCode' => 'ERR-AGENT-ALREADY-BLOCKED', // 'ERR-CREDENTIALS-INVALID
+                        'message' => 'This agent is already blocked',
+                    ], 400);
+                }
+                if($agent->first()->distributeur_id !=Auth::user()->distributeur_id){
+                    return response()->json([
+                        'success'=>false,
+                        'statusCode' => 'ERR-PERMISSION-DENIED', // 'ERR-CREDENTIALS-INVALID
+                        'message' => 'you do not have the necessary permissions',
+                    ], 403);
+                }
+                log:info([
+                    "Action"=>"Blocked",
+                    "User"=>$phone,
+                    "Block_by"=>Auth::user()->id,
+                    "Date"=>Carbon::now()
+                ]);
+                $update = $agent->updated([
+                    "status"=>0,
+                ]);
+                return response()->json([
+                    'success'=>true,
+                    'statusCode' => 'SUCCESS-AGENT-BLOCKED',
+                    'message' => 'Agent blocked successfully',
+                ], 200);
+            }
+            return response()->json([
+                'success'=>false,
+                'statusCode' => 'ERR-AGENT-NOT-FOUND', // 'ERR-CREDENTIALS-INVALID
+                'message' => 'Agent not found',
+            ], 404);
+
         }catch(\Exception $err){
             Log::error($err);
             return response()->json([
