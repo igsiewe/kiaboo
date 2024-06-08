@@ -1421,7 +1421,7 @@ class ApiProdMoMoMoneyController extends Controller
         $customer=$request->data["phone"];
 
         // Vérifie si l'utilisateur est autorisé à faire cette opération
-        if(!$user->first()->status ==0){
+        if($user->first()->status ==0){
             return response()->json([
                 'success'=>false,
                 'statusCode'=>'ERR-NOT-PERMISSION',
