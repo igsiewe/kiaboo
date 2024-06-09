@@ -1588,7 +1588,7 @@ class ApiProdMoMoMoneyController extends Controller
                     'statusCode'=>"PAYMENT-INITIATE-SUCCESSFULLY",
                     'message'=>"Transaction initiée avec succès. Le client doit confirmer le retrait avec son code secret",
                     'paytoken'=>$referenceID,
-                    'transactionId'=>$idTransaction,
+                    'transactionId'=>$reference,//$idTransaction,
                 ],202
             );
 
@@ -1685,7 +1685,7 @@ class ApiProdMoMoMoneyController extends Controller
 
     public function MOMO_Payment_Status($transactionId){
         // On cherche la transaction dans la table transaction
-        $transaction = Transaction::where("id", $transactionId)->get();
+        $transaction = Transaction::where("reference", $transactionId)->get();
         $distributeur = User::where("id", $transaction->first()->source)->get()->first()->distributeur_id;
 
         if(Auth::user()->distributeur_id !=$distributeur){
