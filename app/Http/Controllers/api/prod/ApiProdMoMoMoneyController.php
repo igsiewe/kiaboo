@@ -1632,6 +1632,7 @@ class ApiProdMoMoMoneyController extends Controller
      *       @OA\Property(property="success", type="boolean", example="true"),
      *       @OA\Property(property="statusCode", type="string", example="SUCCESSFULL"),
      *       @OA\Property(property="message", type="string", example="Transaction found"),
+     *       @OA\Property(property="data", type="object", example="Data"),
      *    )
      * ),
      * @OA\Response(
@@ -1641,6 +1642,7 @@ class ApiProdMoMoMoneyController extends Controller
      *        @OA\Property(property="success", type="boolean", example="true"),
      *        @OA\Property(property="statusCode", type="string", example="PENDING"),
      *        @OA\Property(property="message", type="string", example="Transaction pending"),
+     *        @OA\Property(property="data", type="object", example="Data"),
      *     )
      *  ),
      *     @OA\Response(
@@ -1753,6 +1755,14 @@ class ApiProdMoMoMoneyController extends Controller
                         'success'=>true,
                         'statusCode'=>'PENDING',
                         'message'=>"PENDING - Transaction en attente de confirmation par le client",
+                        'data'=>[
+                            'transactionId'=>$transactionId,
+                            'dateTransaction'=>$transaction->first()->date_transaction,
+                            'amount'=>$transaction->first()->credit,
+                            'fees'=>$transaction->first()->fees,
+                            'agent'=>User::where("id", $transaction->first()->source)->first()->telephone,
+                            'customer'=>$transaction->first()->customer_phone,
+                        ]
 
                     ],202
                 );
