@@ -1483,7 +1483,7 @@ class ApiProdMoMoMoneyController extends Controller
             "paytoken"=>$referenceID
         ]);
         $customerPhone = "237".$customer;
-        $partenaire = Distributeur::where("id",Auth::user()->distributeur_id)->name_distributeur;
+        $partenaire = Distributeur::where("id",Auth::user()->distributeur_id)->get()->first()->name_distributeur;
         $response = Http::withOptions(['verify' => false,])->withHeaders(
             [
                 'Authorization'=> 'Bearer '.$AccessToken,
