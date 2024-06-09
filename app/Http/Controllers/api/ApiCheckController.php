@@ -226,7 +226,7 @@ class ApiCheckController extends Controller
 
     function init_Payment($montant, $beneficiaire, $service, $payToken="",$user){
 
-        $reference = "RT".Carbon::now()->format('ymd').".".Carbon::now()->format('His').".".$this->genererChaineAleatoire(1)."".$this->GenereRang();
+        $reference = "PM".Carbon::now()->format('ymd').".".Carbon::now()->format('His').".".$this->genererChaineAleatoire(1)."".$this->GenereRang();
 
         try{
             DB::beginTransaction();
