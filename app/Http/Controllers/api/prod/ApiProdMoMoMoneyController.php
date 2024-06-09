@@ -1425,6 +1425,7 @@ class ApiProdMoMoMoneyController extends Controller
      *       @OA\Property(property="statusCode", type="string", example="PAYMENT INITIATED"),
      *       @OA\Property(property="message", type="string", example="payment initiate successfully"),
      *      @OA\Property(property="paytoken", type="string", example="Payment token"),
+     *     @OA\Property(property="transactionId", type="string", example="Reference transaction for any request"),
      *    ),
      * ),
      * @OA\Response(
