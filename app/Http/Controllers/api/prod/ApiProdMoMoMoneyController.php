@@ -1607,4 +1607,169 @@ class ApiProdMoMoMoneyController extends Controller
             );
         }
     }
+
+    /**
+     * @OA\Get (
+     * path="/api/v1/momo/status/{transactionId}",
+     * summary="Blocked an agent ",
+     * description="This operation is used to get the status of a request to momo pay. TransactionId that was passed in the post is used as reference to the request",
+     * tags={"Payment - momo"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(
+     *     name="transactionId",
+     *     description="reference of transaction",
+     *     required=true,
+     *     in="path",
+     *     @OA\Schema(
+     *        type="string"
+     *     )
+     * ),
+     * @OA\Response(
+     *    response=200,
+     *    description="Transaction found",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="true"),
+     *       @OA\Property(property="statusCode", type="string", example="SUCCESSFULL"),
+     *       @OA\Property(property="message", type="string", example="Transaction found"),
+     *    )
+     * ),
+     * @OA\Response(
+     *     response=202,
+     *     description="Transaction pending",
+     *     @OA\JsonContent(
+     *        @OA\Property(property="success", type="boolean", example="true"),
+     *        @OA\Property(property="statusCode", type="string", example="PENDING"),
+     *        @OA\Property(property="message", type="string", example="Transaction pending"),
+     *     )
+     *  ),
+     *     @OA\Response(
+     *      response=402,
+     *      description="Transaction failed",
+     *      @OA\JsonContent(
+     *         @OA\Property(property="false", type="boolean", example="true"),
+     *         @OA\Property(property="statusCode", type="string", example="FAILED"),
+     *         @OA\Property(property="message", type="string", example="Transaction failed"),
+     *      )
+     *   ),
+     *  @OA\Response(
+     *       response=403,
+     *       description="you do not have the necessary permissions",
+     *       @OA\JsonContent(
+     *          @OA\Property(property="success", type="boolean", example="false"),
+     *          @OA\Property(property="statusCode", type="string", example="ERR-NOT-PERMISSION"),
+     *          @OA\Property(property="message", type="string", example="you do not have the necessary permissions"),
+     *       )
+     *  ),
+     * @OA\Response(
+     *    response=404,
+     *    description="transaction not found ",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="false"),
+     *       @OA\Property(property="statusCode", type="string", example="ERR-TRANSACTION-NOT-FOUND"),
+     *       @OA\Property(property="message", type="string", example="Transaction not found "),
+     *    )
+     *  ),
+     * @OA\Response(
+     *    response=500,
+     *    description="an error occurred",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="false"),
+     *       @OA\Property(property="statusCode", type="string", example="ERR-UNAVAILABLE"),
+     *       @OA\Property(property="message", type="string", example="an error occurred"),
+     *    )
+     *  ),
+     * )
+     * )
+     */
+
+    public function MOMO_Payment_Status($referenceID){
+        // On cherche la transaction dans la table transaction
+        $transaction = Transaction::where("id", $referenceID)->get();
+        $distributeur = User::where("id", $transaction->first()->source)->get()->first()->distributeur_id;
+
+        if(Auth::user()->distributeur_id !=$distributeur){
+            return response()->json(
+                [
+                    'success'=>false,
+                    'statusCode'=>'ERR-NOT-PERMISSION',
+                    'message'=>"You are not authorized to view this transaction. It does not belong to you.",
+                ],403
+            );
+        }
+
+        //On génère le token de la transation
+        $responseToken = $this->MOMO_Payment_GetTokenAccess();
+
+        if($responseToken->status()!=200){
+            return response()->json(
+                [
+                    'success'=>false,
+                    'statusCode'=>$responseToken->status(),
+                    'message'=>$responseToken["message"],
+                ],$responseToken->status()
+            );
+        }
+
+        $dataAcessToken = json_decode($responseToken->getContent());
+        $AccessToken = $dataAcessToken->access_token;
+        $payToken = $transaction->first()->paytoken;
+        $http = "https://proxy.momoapi.mtn.com/collection/v1_0/requesttopay/".$payToken;
+
+        $response = Http::withOptions(['verify' => false,])->withHeaders(
+            [
+                'Authorization'=> 'Bearer '.$AccessToken,
+                'Ocp-Apim-Subscription-Key'=> '886cc9e141ab492f80d9567b3c46d59c',
+                'X-Target-Environment'=> 'mtncameroon',
+            ])->Get($http);
+
+        $data = json_decode($response->body());
+
+        if($response->status()==200){
+
+            if($data->status=="SUCCESSFUL"){
+
+                return response()->json(
+                    [
+                        'success'=>true,
+                        'statusCode'=>$data->status,
+                        'message'=>'Transaction terminée avec succès'
+                    ],200
+                );
+            }
+
+            if($data->status=="PENDING"){
+                // $reason = json_decode($data->reason);
+                return response()->json(
+                    [
+                        'success'=>true,
+                        'statusCode'=>'PENDING',
+                        'message'=>"PENDING - Transaction en attente de confirmation par le client",
+
+                    ],202
+                );
+            }
+            if($data->status=="FAILED"){
+                return response()->json(
+                    [
+                        'success'=>false,
+                        'statusCode'=>'FAILED',
+                        'message'=>$data->status." - Le client n'a pas validé la transaction dans les délais et l'opérateur l'a annulé",
+
+                    ],402
+                );
+            }
+
+
+        }else{
+            return response()->json(
+                [
+                    'success'=>false,
+                    'statusCode'=>$response->status(),
+                    'message'=>$response->body()
+
+                ],404
+            );
+        }
+
+    }
 }
