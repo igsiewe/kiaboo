@@ -224,7 +224,7 @@ class ApiCheckController extends Controller
 
     }
 
-    function init_Payment($montant, $beneficiaire, $service, $payToken=""){
+    function init_Payment($montant, $beneficiaire, $service, $payToken="",$user){
 
         $reference = "RT".Carbon::now()->format('ymd').".".Carbon::now()->format('His').".".$this->genererChaineAleatoire(1)."".$this->GenereRang();
 
@@ -240,12 +240,12 @@ class ApiCheckController extends Controller
                 'debit'=>0,
                 'credit'=>$montant,
                 'status'=>0, //Initiate
-                'created_by'=>Auth::user()->id,
+                'created_by'=>$user,
                 'created_at'=>Carbon::now(),
                 'countrie_id'=>Auth::user()->countrie_id,
-                'source'=>Auth::user()->id,
+                'source'=>$user,
                 'fichier'=>"agent",
-                'updated_by'=>Auth::user()->id,
+                'updated_by'=>$user,
                 'customer_phone'=>$beneficiaire,
                 'description'=>'INITIATED',
                 'date_operation'=>date('Y-m-d'),
