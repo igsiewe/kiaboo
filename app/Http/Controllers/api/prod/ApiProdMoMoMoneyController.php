@@ -1510,7 +1510,7 @@ class ApiProdMoMoMoneyController extends Controller
             "Service"=>ServiceEnum::PAYMENT_MOMO->name,
             "url"=>"https://proxy.momoapi.mtn.com/collection/v1_0/requesttopay",
             "requete"=>[
-                "payeeNote" => "Agent ".$user->first()->telephone." -> Partenaire :".strtoupper($partenaire),
+                "payeeNote" => "Agent ".$user->first()->telephone." Partenaire ".strtoupper($partenaire),
                 "externalId" => $idTransaction,
                 "amount" => $amount,
                 "currency" => "XAF",
@@ -1518,7 +1518,7 @@ class ApiProdMoMoMoneyController extends Controller
                     "partyIdType" => "MSISDN",
                     "partyId" => $customerPhone
                 ],
-                "payerMessage" => "Agent ".$user->first()->telephone." -> Partenaire :".strtoupper($partenaire),
+                "payerMessage" => "Agent ".$user->first()->telephone." Partenaire ".strtoupper($partenaire),
             ],
             "reponse"=>json_decode($response->status()),
             "body"=>json_decode($response->body()),
