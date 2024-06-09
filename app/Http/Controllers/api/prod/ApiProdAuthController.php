@@ -103,7 +103,8 @@ class ApiProdAuthController extends BaseController
             'password' => $request->password,
             'status' => 1,
             'status_delete'=>0,
-            'type_user_id' => UserRolesEnum::DISTRIBUTEUR->value
+            'type_user_id' => UserRolesEnum::DISTRIBUTEUR->value,
+            'application'=>2,
         ];
 
         if (Auth::attempt($credentials)) {
@@ -349,7 +350,7 @@ class ApiProdAuthController extends BaseController
             $user->quartier= Auth::user()->quartier;
             $user->ville_id= Auth::user()->ville_id;
             $user->adresse= Auth::user()->adresse;
-
+            $user->application =Auth::user()->application;
 
             $result = $user->save();
             if ($result) {

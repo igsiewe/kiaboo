@@ -54,7 +54,8 @@ class User extends Authenticatable
         "datecni",
         "deleted_at",
         "deleted_by",
-        "status_delete"
+        "status_delete",
+        "application",
     ];
 
     public function ville()
