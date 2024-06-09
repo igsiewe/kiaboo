@@ -1379,8 +1379,9 @@ class ApiProdMoMoMoneyController extends Controller
      *    required=true,
      *    description="Request to make a payment MOMO",
      *    @OA\JsonContent(
-     *       required={"agent","phone","amount"},
-     *       @OA\Property(property="agent", type="string", example="679962015"),
+     *       required={"agentNumber","marchandTransactionId","phone","amount"},
+     *       @OA\Property(property="agentNumber", type="string", example="679962015"),
+     *       @OA\Property(property="marchandTransactionId", type="string", example="12354"),
      *       @OA\Property(
      *           type="object",
      *           property="data",
@@ -1442,7 +1443,7 @@ class ApiProdMoMoMoneyController extends Controller
         $apiCheck = new ApiCheckController();
 
         $service = ServiceEnum::PAYMENT_MOMO->value;
-        $user = User::where("telephone",$request->agent)->get();
+        $user = User::where("telephone",$request->agentNumber)->get();
         $amount=$request->data["amount"];
         $customer=$request->data["phone"];
 
@@ -1546,6 +1547,7 @@ class ApiProdMoMoMoneyController extends Controller
                 ],
                 "payerMessage" => "Agent ".$user->first()->telephone." Partenaire ".strtoupper($partenaire),
             ],
+            "marchandTransactionID"=>$request->marchandTransactionId,
             "reponse"=>json_decode($response->status()),
             "body"=>json_decode($response->body()),
         ]);
@@ -1571,6 +1573,7 @@ class ApiProdMoMoMoneyController extends Controller
                 'commission_filiale'=>$commissionFiliale,
                 'commission_agent'=>$commissionAgent,
                 'commission_distributeur'=>$commissionDistributeur,
+                'marchand_transaction_id'=>$request->marchandTransactionId,
             ]);
 
             //Le solde du compte de l'agent ne sera mis à jour qu'après confirmation de l'agent : Opération traitée dans le callback
@@ -1583,6 +1586,7 @@ class ApiProdMoMoMoneyController extends Controller
                     'statusCode'=>"PAYMENT-INITIATE-SUCCESSFULLY",
                     'message'=>"Transaction initiée avec succès. Le client doit confirmer le retrait avec son code secret",
                     'paytoken'=>$referenceID,
+                    'transactionId'=>$idTransaction,
                 ],202
             );
 
