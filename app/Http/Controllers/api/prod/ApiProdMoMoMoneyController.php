@@ -1570,10 +1570,11 @@ class ApiProdMoMoMoneyController extends Controller
                 'date_end_trans'=>Carbon::now(),
                 'description'=>'PENDING',
                 'message'=>"Transaction initiée par l'agent N°".$user->first()->id." le ".Carbon::now()." vers le client ".$customerPhone." En attente confirmation du client",
-                'commission'=>$commission->commission_globale,
-                'commission_filiale'=>$commissionFiliale,
-                'commission_agent'=>$commissionAgent,
-                'commission_distributeur'=>$commissionDistributeur,
+                'fees'=>$commission->commission_globale,
+                'commission'=>0,//$commission->commission_globale,
+                'commission_filiale'=>0,//$commissionFiliale,
+                'commission_agent'=>0,//$commissionAgent,
+                'commission_distributeur'=>0,//$commissionDistributeur,
                 'marchand_transaction_id'=>$request->marchandTransactionId,
             ]);
 
