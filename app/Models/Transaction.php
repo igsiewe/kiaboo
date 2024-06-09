@@ -62,6 +62,7 @@ class Transaction extends Model
         'latitude',
         'longitude',
         'place',
+        'marchand_transaction_id',
 
     ];
 
