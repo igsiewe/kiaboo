@@ -1610,7 +1610,7 @@ class ApiProdMoMoMoneyController extends Controller
 
     /**
      * @OA\Get (
-     * path="/api/v1/momo/status/{transactionId}",
+     * path="/api/v1/prod/momo/status/{transactionId}",
      * summary="Check transaction status",
      * description="This operation is used to get the status of a request to momo pay. TransactionId that was passed in the post is used as reference to the request",
      * tags={"Payment - momo"},
