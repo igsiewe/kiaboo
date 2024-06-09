@@ -733,7 +733,32 @@ class ApiProdMoMoMoneyController extends Controller
             ], 400);
         }
     }
-    
+
+    public function MOMO_Payment_GetTokenAccess(){
+        $response = Http::withOptions(['verify' => false,])->withHeaders(['Ocp-Apim-Subscription-Key'=> '886cc9e141ab492f80d9567b3c46d59c'])->withBasicAuth('b20bb11d-e152-4ba0-a602-700f31832ec0', '949ab23d698b43c8af27482a514acc29')
+            ->Post('https://proxy.momoapi.mtn.com/collection/token/');
+        if($response->status()==200){
+            return response()->json($response->json());
+        }else{
+            return response()->json(
+                [
+                    'status'=>$response->status(),
+                    'message'=>$response->body(),
+                ],$response->status()
+            );
+
+        } $validator = Validator::make($request->all(), [
+            'customerPhone' => 'required|numeric|digits:9',
+            'amount' => 'required|numeric|min:50|max:500000',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first(),
+            ], 400);
+        }
+    }
     public function MOMO_Retrait(Request $request){
 
 
@@ -1462,7 +1487,8 @@ class ApiProdMoMoMoneyController extends Controller
         $idTransaction = $dataTransactionInit->transId; //Id de la transaction initiée
         $reference = $dataTransactionInit->reference; //Référence de la transaction initiée
         //On génère le token de la transation
-        $responseToken = $this->MOMO_Collection_GetTokenAccess();
+       // $responseToken = $this->MOMO_Collection_GetTokenAccess();
+        $responseToken = $this->MOMO_Payment_GetTokenAccess();
         if($responseToken->status()!=200){
             return response()->json(
                 [
