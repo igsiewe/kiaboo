@@ -8,6 +8,7 @@ use App\Http\Controllers\api\ApiNotification;
 use App\Http\Controllers\Controller;
 use App\Http\Enums\ServiceEnum;
 use App\Http\Enums\TypeServiceEnum;
+use App\Models\Distributeur;
 use App\Models\Service;
 use App\Models\Transaction;
 use App\Models\User;
@@ -1425,7 +1426,7 @@ class ApiProdMoMoMoneyController extends Controller
             return response()->json([
                 'success'=>false,
                 'statusCode'=>'ERR-NOT-PERMISSION',
-                'message'=>'you do not have the necessary permissions',
+                'message'=>"The agent used does not have the necessary permissions",
             ],403);
         }
 
@@ -1482,6 +1483,7 @@ class ApiProdMoMoMoneyController extends Controller
             "paytoken"=>$referenceID
         ]);
         $customerPhone = "237".$customer;
+        $partenaire = Distributeur::where("id",Auth::user()->distributeur_id)->name_distributeur;
         $response = Http::withOptions(['verify' => false,])->withHeaders(
             [
                 'Authorization'=> 'Bearer '.$AccessToken,
@@ -1492,7 +1494,7 @@ class ApiProdMoMoMoneyController extends Controller
             ])
             ->Post('https://proxy.momoapi.mtn.com/collection/v1_0/requesttopay', [
 
-                "payeeNote" => "Transaction payment initiée par lagent N".$user->first()->id." le ".Carbon::now()." vers le client ".$customerPhone,
+                "payeeNote" => "Agent ".$user->first()->telephone." -> Partenaire :".strtoupper($partenaire),
                 "externalId" => $idTransaction,
                 "amount" => $amount,
                 "currency" => "XAF",
@@ -1500,7 +1502,7 @@ class ApiProdMoMoMoneyController extends Controller
                     "partyIdType" => "MSISDN",
                     "partyId" => $customerPhone
                 ],
-                "payerMessage" => "Transaction initiée par lagent N".$user->first()->id." le ".Carbon::now()." vers le client ".$customer,
+                "payerMessage" => "Agent ".$user->first()->telephone." -> Partenaire :".strtoupper($partenaire),
             ]);
 
 
@@ -1508,7 +1510,7 @@ class ApiProdMoMoMoneyController extends Controller
             "Service"=>ServiceEnum::PAYMENT_MOMO->name,
             "url"=>"https://proxy.momoapi.mtn.com/collection/v1_0/requesttopay",
             "requete"=>[
-                "payeeNote" => "Transaction payment initiée par lagent N".$user->first()->id." le ".Carbon::now()." vers le client ".$customerPhone,
+                "payeeNote" => "Agent ".$user->first()->telephone." -> Partenaire :".strtoupper($partenaire),
                 "externalId" => $idTransaction,
                 "amount" => $amount,
                 "currency" => "XAF",
@@ -1516,7 +1518,7 @@ class ApiProdMoMoMoneyController extends Controller
                     "partyIdType" => "MSISDN",
                     "partyId" => $customerPhone
                 ],
-                "payerMessage" => "Transaction payment initiée par lagent N".$user->first()->id." le ".Carbon::now()." vers le client ".$customerPhone,
+                "payerMessage" => "Agent ".$user->first()->telephone." -> Partenaire :".strtoupper($partenaire),
             ],
             "reponse"=>json_decode($response->status()),
             "body"=>json_decode($response->body()),
