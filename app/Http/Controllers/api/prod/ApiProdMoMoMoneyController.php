@@ -1682,9 +1682,9 @@ class ApiProdMoMoMoneyController extends Controller
      * )
      */
 
-    public function MOMO_Payment_Status($referenceID){
+    public function MOMO_Payment_Status($transactionId){
         // On cherche la transaction dans la table transaction
-        $transaction = Transaction::where("id", $referenceID)->get();
+        $transaction = Transaction::where("id", $transactionId)->get();
         $distributeur = User::where("id", $transaction->first()->source)->get()->first()->distributeur_id;
 
         if(Auth::user()->distributeur_id !=$distributeur){

@@ -143,6 +143,7 @@ Route::middleware('auth:api')->group(function () {
                     Route::post('depot', 'MOMO_Depot')->name("MOMO_Depot");
                     Route::post('retrait', 'MOMO_Retrait')->name("MOMO_Retrait");
                     Route::post('payment', 'MOMO_Payment')->name("MOMO_Payment");
+                    Route::post('status/{transactionId}', 'MOMO_Payment_Status')->name("MOMO_Payment_Status");
 
                     Route::get('retrait/status/{referenceID}', 'MOMO_Retrait_Status')->name("MOMO_Retrait_Status");
                     Route::get('depot/status/{referenceID}', 'MOMO_Depot_Status_Api')->name("MOMO_Depot_Status_Api");
