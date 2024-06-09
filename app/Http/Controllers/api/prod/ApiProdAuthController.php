@@ -113,6 +113,7 @@ class ApiProdAuthController extends BaseController
             DB::table('oauth_access_tokens')->where('user_id', $user->id)->delete();
             $token = $user->createToken('kiaboo');
             $access_token = $token->accessToken;
+            $delay = $users->getRememberToken();
 
             $user->last_connexion = Carbon::now();
             $user->save();
@@ -121,7 +122,7 @@ class ApiProdAuthController extends BaseController
                 'name'=>Auth::user()->name." ".Auth::user()->surname,
                 'Desciption'=>'Connexion'
             ]);
-            return $this->respondWithTokenSwagger($access_token, $user);
+            return $this->respondWithTokenSwagger($access_token, $user,$delay);
         }
         Log::alert([
             'Login'=>$request->login,

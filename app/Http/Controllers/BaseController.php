@@ -136,13 +136,14 @@ class BaseController extends Controller
 
         ], 200);
     }
-    public function respondWithTokenSwagger($token, $user = null)
+    public function respondWithTokenSwagger($token, $user = null,$delay=null)
     {
         return response()->json([
             'success' => true,
             'statusCode'=> "LOGIN-SUCCESS",
             'message'=> "successful login user",
             'access_token' => $token,
+                'expired_at'=>$delay,
                 'user'=>[
                     'name'=>$user->name,
                     'surname'=>$user->surname,
