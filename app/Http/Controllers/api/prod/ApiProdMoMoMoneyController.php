@@ -1732,7 +1732,15 @@ class ApiProdMoMoMoneyController extends Controller
                     [
                         'success'=>true,
                         'statusCode'=>$data->status,
-                        'message'=>'Transaction terminée avec succès'
+                        'message'=>'Transaction terminée avec succès',
+                        'data'=>[
+                            'transactionId'=>$transactionId,
+                            'dateTransaction'=>$transaction->first()->date_transaction,
+                            'amount'=>$transaction->first()->credit,
+                            'fees'=>$transaction->first()->fees,
+                            'agent'=>User::where("id", $transaction->first()->source)->first()->telephone,
+                            'customer'=>$transaction->first()->customer_phone,
+                        ]
                     ],200
                 );
             }
