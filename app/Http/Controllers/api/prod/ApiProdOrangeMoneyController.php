@@ -15,9 +15,9 @@ class ApiProdOrangeMoneyController extends Controller
     {
 
         $response = Http::withOptions(['verify' => false,])
-            ->withBasicAuth('_Vj5oHqhBuZsotMaGpnbGPCwccoa', 'L7cNBHLZCZMJSxufRo_rfVS_4M4a')
-            ->withBody('grant_type=client_credentials', 'application/json')
-            ->Post('https://wso2am-pattern-4-am-cp-service:9443/oauth2/token');
+            ->withBasicAuth('rEvcWyBY06f9epiUYRB6hEbktTUa', 'JM5hPUe4BXa3PjZCPfcP73Da0l4a')
+            ->withBody('grant_type=client_credentials', 'application/x-www-form-urlencoded')
+            ->Post('https://apiw.orange.cm/token');
 
 
         if($response->status()==200){
