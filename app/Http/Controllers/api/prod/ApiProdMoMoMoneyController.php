@@ -1476,7 +1476,7 @@ class ApiProdMoMoMoneyController extends Controller
             return response()->json([
                 'success'=>false,
                 'statusCode'=>'ERR-AGENT-NOT-VALID',
-                'message'=>"The agent used does not valid",
+                'message'=>"The agent used is not found",
             ],404);
         }
 
