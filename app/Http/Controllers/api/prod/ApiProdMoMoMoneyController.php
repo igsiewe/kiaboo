@@ -1469,29 +1469,31 @@ class ApiProdMoMoMoneyController extends Controller
         }
 
         $checkTransactionExternalId = Transaction::where('marchand_transaction_id',$request->marchandTransactionId)->get();
-        if($checkTransactionExternalId->count()>0){
-            $checkDistributeur = User::where('id',$checkTransactionExternalId->first()->source)->get();
-            if($checkDistributeur->count()>0){
-                if($user->first()->distributeur_id==$checkDistributeur->first()->distributeur_id){
-                    return response()->json([
-                        'success'=>false,
-                        'statusCode'=>"ERR-MERCHAND-TRANSACTION-ID-DUPLICATE",
-                        'message' => "The transaction ID used by the merchant already exists",
-                        'data'=>[
-                            'status' => $checkTransactionExternalId->first()->description,
-                            'transactionId'=>$checkTransactionExternalId->first()->reference,
-                            'dateTransaction'=>$checkTransactionExternalId->first()->date_transaction,
-                            'amount'=>$checkTransactionExternalId->first()->credit,
-                            'fees'=>$checkTransactionExternalId->first()->fees,
-                            'agent'=>$checkDistributeur->first()->telephone,
-                            'customer'=>$checkTransactionExternalId->first()->customer_phone,
-                            'marchandTransactionID'=>$checkTransactionExternalId->first()->marchand_transaction_id,
-                        ]
-                    ], 208);
+        $checkService = Service::where('id',$checkTransactionExternalId->first()->service_id)->get();
+        if($checkService->first()->type_service_id ==TypeServiceEnum::PAYMENT->value){
+            if($checkTransactionExternalId->count()>0){
+                $checkDistributeur = User::where('id',$checkTransactionExternalId->first()->source)->get();
+                if($checkDistributeur->count()>0){
+                    if($user->first()->distributeur_id==$checkDistributeur->first()->distributeur_id){
+                        return response()->json([
+                            'success'=>false,
+                            'statusCode'=>"ERR-MERCHAND-TRANSACTION-ID-DUPLICATE",
+                            'message' => "The transaction ID used by the merchant already exists",
+                            'data'=>[
+                                'status' => $checkTransactionExternalId->first()->description,
+                                'transactionId'=>$checkTransactionExternalId->first()->reference,
+                                'dateTransaction'=>$checkTransactionExternalId->first()->date_transaction,
+                                'amount'=>$checkTransactionExternalId->first()->credit,
+                                'fees'=>$checkTransactionExternalId->first()->fees,
+                                'agent'=>$checkDistributeur->first()->telephone,
+                                'customer'=>$checkTransactionExternalId->first()->customer_phone,
+                                'marchandTransactionID'=>$checkTransactionExternalId->first()->marchand_transaction_id,
+                            ]
+                        ], 208);
+                    }
                 }
             }
         }
-
 
         // On vérifie si les commissions sont paramétrées
         $functionCommission = new ApiCommissionController();
