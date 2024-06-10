@@ -1689,7 +1689,7 @@ class ApiProdMoMoMoneyController extends Controller
     public function MOMO_Payment_Status($transactionId){
         // On cherche la transaction dans la table transaction
         $transaction = Transaction::where("reference", $transactionId)->get();
-        if($transaction->count()==0 || isEmpty($transaction)){
+        if($transaction->count()==0){
             return response()->json(
                 [
                     'success'=>false,
