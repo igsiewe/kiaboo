@@ -1471,12 +1471,33 @@ class ApiProdMoMoMoneyController extends Controller
         $customer=$request->data["phone"];
 
         // Vérifie si l'utilisateur est autorisé à faire cette opération
+
+        if($user->count()==0){
+            return response()->json([
+                'success'=>false,
+                'statusCode'=>'ERR-AGENT-NOT-VALID',
+                'message'=>"The agent used does not valid",
+            ],404);
+        }
+
         if($user->first()->status ==0){
             return response()->json([
                 'success'=>false,
                 'statusCode'=>'ERR-NOT-PERMISSION',
                 'message'=>"The agent used does not have the necessary permissions",
             ],403);
+        }
+
+        //On se rassure que l'utilisateur est bien rattaché au compte connecté
+
+        if($user->first()->distributeur_id !=Auth::user()->distributeur_id){
+            if($user->count()==0 || $user->first()->status ==0){
+                return response()->json([
+                    'success'=>false,
+                    'statusCode'=>'ERR-NOT-PERMISSION',
+                    'message'=>"The agent used does not have the necessary permissions with your profil",
+                ],403);
+            }
         }
 
         $checkTransactionExternalId = Transaction::where('marchand_transaction_id',$request->marchandTransactionId)->get();
