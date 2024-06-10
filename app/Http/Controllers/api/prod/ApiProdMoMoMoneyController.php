@@ -1485,6 +1485,7 @@ class ApiProdMoMoMoneyController extends Controller
                             'fees'=>$checkTransactionExternalId->first()->fees,
                             'agent'=>$checkDistributeur->first()->telephone,
                             'customer'=>$checkTransactionExternalId->first()->customer_phone,
+                            'marchandTransactionID'=>$checkTransactionExternalId->first()->marchand_transaction_id,
                         ]
                     ], 208);
                 }
