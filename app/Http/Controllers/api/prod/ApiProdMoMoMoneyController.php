@@ -1469,8 +1469,7 @@ class ApiProdMoMoMoneyController extends Controller
         }
 
         $checkTransactionExternalId = Transaction::where('marchand_transaction_id',$request->marchandTransactionId)->get();
-        $checkService = Service::where('id',$checkTransactionExternalId->first()->service_id)->get();
-        if($checkService->first()->type_service_id ==TypeServiceEnum::PAYMENT->value){
+
             if($checkTransactionExternalId->count()>0){
                 $checkDistributeur = User::where('id',$checkTransactionExternalId->first()->source)->get();
                 if($checkDistributeur->count()>0){
@@ -1493,7 +1492,7 @@ class ApiProdMoMoMoneyController extends Controller
                     }
                 }
             }
-        }
+
 
         // On vérifie si les commissions sont paramétrées
         $functionCommission = new ApiCommissionController();
@@ -1725,6 +1724,7 @@ class ApiProdMoMoMoneyController extends Controller
 
     public function MOMO_Payment_Status($transactionId){
         // On cherche la transaction dans la table transaction
+
         $transaction = Transaction::where("reference", $transactionId)->get();
         if($transaction->count()==0){
             return response()->json(
