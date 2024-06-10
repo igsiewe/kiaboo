@@ -13,6 +13,7 @@ use App\Http\Controllers\api\prod\ApiProdAuthController;
 use App\Http\Controllers\api\prod\ApiProdFactureEneoController;
 use App\Http\Controllers\api\prod\ApiProdMoMoMoneyController;
 use App\Http\Controllers\api\prod\ApiProdM2UController;
+use App\Http\Controllers\api\prod\ApiProdOrangeMoneyController;
 use App\Http\Controllers\api\prod\ApiProduction_MoMo;
 use App\Http\Controllers\api\prod\ApiProdYooMeeController;
 use Illuminate\Support\Facades\Route;
@@ -136,6 +137,11 @@ Route::middleware('auth:api')->group(function () {
                 Route::controller(ApiOperationAgent::class)->group(function () {
                    Route::post('retrait', 'setTransactionRetraitOM')->name("OM_retrait");
                    Route::post('payment', 'OM_Payment')->name("OM_Payment");
+                });
+            });
+            Route::group(['prefix' => 'om'], function () {
+                Route::controller(ApiProdOrangeMoneyController::class)->group(function () {
+                    Route::post('payment', 'OM_Payment')->name("OM_Payment");
                 });
             });
             //MTN Mobile Money
