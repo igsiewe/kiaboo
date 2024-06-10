@@ -1736,6 +1736,17 @@ class ApiProdMoMoMoneyController extends Controller
             );
         }
 
+        $service = Service::where("id",$transaction->first()->service_id)->get();
+
+        if($service->first()->type_service_id !=TypeServiceEnum::PAYMENT->value){
+            return response()->json(
+                [
+                    'success'=>false,
+                    'statusCode'=>"ERR-TRANSACTION-NOT-FOUND",
+                    'message'=>"This id transaction does not exist"
+                ],404
+            );
+        }
 
         $distributeur = User::where("id", $transaction->first()->source)->get()->first()->distributeur_id;
 
