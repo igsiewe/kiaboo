@@ -1474,10 +1474,11 @@ class ApiProdMoMoMoneyController extends Controller
             if($checkDistributeur->count()>0){
                 if($user->first()->distributeur_id==$checkDistributeur->first()->distributeur_id){
                     return response()->json([
-                        'success'=>true,
-                        'statusCode' => $checkTransactionExternalId->first()->description,
+                        'success'=>false,
+                        'statusCode'=>"ERR-MERCHAND-TRANSACTION-ID-DUPLICATE",
                         'message' => "The transaction ID used by the merchant already exists",
                         'data'=>[
+                            'status' => $checkTransactionExternalId->first()->description,
                             'transactionId'=>$checkTransactionExternalId->first()->reference,
                             'dateTransaction'=>$checkTransactionExternalId->first()->date_transaction,
                             'amount'=>$checkTransactionExternalId->first()->credit,
