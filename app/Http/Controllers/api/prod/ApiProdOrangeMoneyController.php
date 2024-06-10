@@ -137,7 +137,7 @@ class ApiProdOrangeMoneyController extends Controller
         $getToken = $this->OM_GetTokenAccess();
         $dataAcessToken = json_decode($getToken->getContent());
 
-      //  return $getToken->status();
+        return $dataAcessToken;
 
         if ($getToken->status() != 200) {
             return response()->json([
@@ -145,7 +145,7 @@ class ApiProdOrangeMoneyController extends Controller
                 'error' => '1.error = '.$getToken->getContent(),
             ]);
         }
-        $accessToken = $dataAcessToken->accessToken;
+        $accessToken = $dataAcessToken->access_token;
 
         return response()->json([
             'result'=>$accessToken,
