@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use function PHPUnit\Framework\isEmpty;
 
 class ApiProdMoMoMoneyController extends Controller
 {
@@ -1688,6 +1689,17 @@ class ApiProdMoMoMoneyController extends Controller
     public function MOMO_Payment_Status($transactionId){
         // On cherche la transaction dans la table transaction
         $transaction = Transaction::where("reference", $transactionId)->get();
+        if($transaction->count()==0 || isEmpty($transaction)){
+            return response()->json(
+                [
+                    'success'=>false,
+                    'statusCode'=>"ERR-TRANSACTION-NOT-FOUND",
+                    'message'=>"This id transaction does not exist"
+                ],404
+            );
+        }
+
+
         $distributeur = User::where("id", $transaction->first()->source)->get()->first()->distributeur_id;
 
         if(Auth::user()->distributeur_id !=$distributeur){
