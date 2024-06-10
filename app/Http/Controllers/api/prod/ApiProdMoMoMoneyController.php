@@ -1430,6 +1430,16 @@ class ApiProdMoMoMoneyController extends Controller
      *    ),
      * ),
      * @OA\Response(
+     *        response=208,
+     *        description="you do not have the necessary permissions",
+     *        @OA\JsonContent(
+     *           @OA\Property(property="success", type="boolean", example="false"),
+     *           @OA\Property(property="statusCode", type="string", example="ERR-MERCHAND-TRANSACTION-ID-DUPLICATE"),
+     *           @OA\Property(property="message", type="string", example="The transaction ID used by the merchant already exists"),
+     *           @OA\Property(property="data", type="object", example="Transaction detail"),
+     *        )
+     *   ),
+     * @OA\Response(
      *    response=500,
      *    description="an error occurred",
      *    @OA\JsonContent(
@@ -1457,6 +1467,29 @@ class ApiProdMoMoMoneyController extends Controller
                 'message'=>"The agent used does not have the necessary permissions",
             ],403);
         }
+
+        $checkTransactionExternalId = Transaction::where('marchand_transaction_id',$request->marchandTransactionId)->get();
+        if($checkTransactionExternalId->count()>0){
+            $checkDistributeur = User::where('id',$checkTransactionExternalId->first()->source)->get();
+            if($checkDistributeur->count()>0){
+                if($user->first()->distributeur_id==$checkDistributeur->first()->distributeur_id){
+                    return response()->json([
+                        'success'=>true,
+                        'statusCode' => $checkTransactionExternalId->first()->description,
+                        'message' => "The transaction ID used by the merchant already exists",
+                        'data'=>[
+                            'transactionId'=>$checkTransactionExternalId->first()->reference,
+                            'dateTransaction'=>$checkTransactionExternalId->first()->date_transaction,
+                            'amount'=>$checkTransactionExternalId->first()->credit,
+                            'fees'=>$checkTransactionExternalId->first()->fees,
+                            'agent'=>$checkDistributeur->first()->telephone,
+                            'customer'=>$checkTransactionExternalId->first()->customer_phone,
+                        ]
+                    ], 208);
+                }
+            }
+        }
+
 
         // On vérifie si les commissions sont paramétrées
         $functionCommission = new ApiCommissionController();
