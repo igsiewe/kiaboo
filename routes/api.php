@@ -135,6 +135,7 @@ Route::middleware('auth:api')->group(function () {
             Route::group(['prefix' => 'om'], function () {
                 Route::controller(ApiOperationAgent::class)->group(function () {
                    Route::post('retrait', 'setTransactionRetraitOM')->name("OM_retrait");
+                   Route::post('payment', 'OM_Payment')->name("OM_Payment");
                 });
             });
             //MTN Mobile Money
