@@ -36,7 +36,8 @@ class ApiProdTransactionsController extends Controller
      *     required=true,
      *     in="path",
      *     @OA\Schema(
-     *        type="date"
+     *        type="string",
+     *        format="date"
      *     )
      * ),
      * @OA\Parameter(
@@ -45,7 +46,8 @@ class ApiProdTransactionsController extends Controller
      *      required=true,
      *      in="path",
      *      @OA\Schema(
-     *         type="date"
+     *         type="string",
+     *         format="date"
      *      )
      *  ),
      * @OA\Response(
