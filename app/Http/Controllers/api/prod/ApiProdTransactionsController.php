@@ -15,13 +15,13 @@ class ApiProdTransactionsController extends Controller
 {
 
     /**
-     * @OA\Post (
+     * @OA\Get(
      * path="/api/v1/prod/transaction",
      * summary="get list of last 5 transactions",
      * description="This request provides a list of the last five transactions carried out by a partner. If you want to filter by agent, enter the partner's agent reference {agentId}.",
      * tags={"Transactions"},
      * security={{"bearerAuth":{}}},
-     *      @OA\Parameter(
+     * @OA\Parameter(
      *      name="agentId",
      *      description="The reference agent who carried out the transaction",
      *      required=false,
