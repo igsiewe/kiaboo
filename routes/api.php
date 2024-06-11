@@ -14,6 +14,7 @@ use App\Http\Controllers\api\prod\ApiProdFactureEneoController;
 use App\Http\Controllers\api\prod\ApiProdMoMoMoneyController;
 use App\Http\Controllers\api\prod\ApiProdM2UController;
 use App\Http\Controllers\api\prod\ApiProdOrangeMoneyController;
+use App\Http\Controllers\api\prod\ApiProdTransactionsController;
 use App\Http\Controllers\api\prod\ApiProduction_MoMo;
 use App\Http\Controllers\api\prod\ApiProdYooMeeController;
 use Illuminate\Support\Facades\Route;
@@ -135,7 +136,7 @@ Route::middleware('auth:api')->group(function () {
 
             //Transaction
             Route::group(['prefix' => 'transactions'], function () {
-                Route::controller(ApiTransactionsController::class)->group(function () {
+                Route::controller(ApiProdTransactionsController::class)->group(function () {
                     Route::post('/last', 'getLastTransactionSwagger')->name("getLastTransactionSwagger");
                 });
             });
