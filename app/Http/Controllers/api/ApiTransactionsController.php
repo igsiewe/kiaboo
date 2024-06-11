@@ -277,7 +277,6 @@ class ApiTransactionsController extends BaseController
      *             @OA\Property(property="transactionsId", type="string", example="transactionId"),
      *             @OA\Property(property="dateTransaction", type="date", example="Date transaction"),
      *             @OA\Property(property="amount", type="number", example="amount of transaction"),
-     *             @OA\Property(property="status", type="string", example="Transaction status"),
      *             @OA\Property(property="fees", type="number", example="transaction fees"),
      *             @OA\Property(property="merchand_amount", type="number", example="Amount reimbursed to merchant"),
      *             @OA\Property(property="agent", type="string", example="agent who initiate transaction"),
