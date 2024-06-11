@@ -1635,7 +1635,7 @@ class ApiProdMoMoMoneyController extends Controller
                 'date_end_trans'=>Carbon::now(),
                 'description'=>'PENDING',
                 'message'=>"Transaction initiée par l'agent N°".$user->first()->id." le ".Carbon::now()." vers le client ".$customerPhone." En attente confirmation du client",
-                'fees_collecte'=>$fees->fees_flobale,
+                'fees_collecte'=>$fees->fees_globale,
                 'fees_partenaire_service'=>$fees->fees_partenaire_service,
                 'fees_kiaboo'=>$fees->fees_kiaboo,
                 'marchand_amount'=>doubleval($amount)-doubleval($fees->fees_globale),
