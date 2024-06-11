@@ -32,7 +32,7 @@ class ApiProdTransactionsController extends Controller
      *  ),
      * @OA\Parameter(
      *     name="startDate",
-     *     description="Start date - format dd/mm/yyyy",
+     *     description="Start date - format yyyy-mm-dd",
      *     required=true,
      *     in="path",
      *     @OA\Schema(
@@ -42,7 +42,7 @@ class ApiProdTransactionsController extends Controller
      * ),
      * @OA\Parameter(
      *      name="endDate",
-     *      description="End date - format dd/mm/yyyy",
+     *      description="End date - format yyyy-mm-dd",
      *      required=true,
      *      in="path",
      *      @OA\Schema(
