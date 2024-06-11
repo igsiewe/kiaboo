@@ -132,6 +132,14 @@ Route::middleware('auth:api')->group(function () {
         //Production
 
         Route::group(['prefix' => 'prod'], function () {
+
+            //Transaction
+            Route::group(['prefix' => 'transactions'], function () {
+                Route::controller(ApiTransactionsController::class)->group(function () {
+                    Route::post('/{agentId}', 'getLastTransactionSwagger')->name("getLastTransactionSwagger");
+                });
+            });
+
             //ORANGE
             Route::group(['prefix' => 'om'], function () {
                 Route::controller(ApiOperationAgent::class)->group(function () {
