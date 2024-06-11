@@ -19,7 +19,6 @@ class Transaction extends Model
         'debit',
         'credit',
         'balance_after',
-        'fees',
         'commission',
         'commission_filiale',
         'commission_rembourse',
@@ -63,6 +62,10 @@ class Transaction extends Model
         'longitude',
         'place',
         'marchand_transaction_id',
+        'fees_collecte',
+        'fees_kiaboo',
+        'fees_partenaire_service',
+        'marchand_amount',
 
     ];
 

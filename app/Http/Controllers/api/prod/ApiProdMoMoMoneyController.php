@@ -1499,7 +1499,7 @@ class ApiProdMoMoMoneyController extends Controller
                 ],403);
             }
         }
-
+        //Verifie le statut de l'id transaction cote marchand
         $checkTransactionExternalId = Transaction::where('marchand_transaction_id',$request->marchandTransactionId)->get();
 
             if($checkTransactionExternalId->count()>0){
@@ -1515,7 +1515,7 @@ class ApiProdMoMoMoneyController extends Controller
                                 'transactionId'=>$checkTransactionExternalId->first()->reference,
                                 'dateTransaction'=>$checkTransactionExternalId->first()->date_transaction,
                                 'amount'=>$checkTransactionExternalId->first()->credit,
-                                'fees'=>$checkTransactionExternalId->first()->fees,
+                                'fees'=>$checkTransactionExternalId->first()->fees_collecte,
                                 'agent'=>$checkDistributeur->first()->telephone,
                                 'customer'=>$checkTransactionExternalId->first()->customer_phone,
                                 'marchandTransactionID'=>$checkTransactionExternalId->first()->marchand_transaction_id,
@@ -1639,7 +1639,10 @@ class ApiProdMoMoMoneyController extends Controller
                 'date_end_trans'=>Carbon::now(),
                 'description'=>'PENDING',
                 'message'=>"Transaction initiée par l'agent N°".$user->first()->id." le ".Carbon::now()." vers le client ".$customerPhone." En attente confirmation du client",
-                'fees'=>$commission->commission_globale,
+                'fees_collecte'=>$commission->commission_globale,
+                'fees_partenaire_service'=>0,
+                'fees_kiaboo'=>0,
+                'marchand_amount'=>doubleval($amount)-doubleval($commission->commission_globale),
                 'commission'=>0,//$commission->commission_globale,
                 'commission_filiale'=>0,//$commissionFiliale,
                 'commission_agent'=>0,//$commissionAgent,
@@ -1854,7 +1857,7 @@ class ApiProdMoMoMoneyController extends Controller
                             'transactionId'=>$transactionId,
                             'dateTransaction'=>$transaction->first()->date_transaction,
                             'amount'=>$transaction->first()->credit,
-                            'fees'=>$transaction->first()->fees,
+                            'fees'=>$transaction->first()->fees_collecte,
                             'agent'=>User::where("id", $transaction->first()->source)->first()->telephone,
                             'customer'=>$transaction->first()->customer_phone,
                         ]
@@ -1873,7 +1876,7 @@ class ApiProdMoMoMoneyController extends Controller
                             'transactionId'=>$transactionId,
                             'dateTransaction'=>$transaction->first()->date_transaction,
                             'amount'=>$transaction->first()->credit,
-                            'fees'=>$transaction->first()->fees,
+                            'fees'=>$transaction->first()->fees_collecte,
                             'agent'=>User::where("id", $transaction->first()->source)->first()->telephone,
                             'customer'=>$transaction->first()->customer_phone,
                         ]

@@ -140,6 +140,47 @@ class ApiCommissionController extends BaseController
 
     }
 
+    public function getFeesByService($idService, $montant)
+    {
+        $commission=0;
+
+        $takeValue = Commission::where('service_id', $idService)->where("status",1)->where('borne_min','<=', $montant)->where('borne_max','>=',$montant)->get();
+        if($takeValue->count() > 0){
+            if($takeValue->first()->type_commission == 'taux') {
+                $commission= ($takeValue->first()->taux) * $montant;
+                $com_agent=$commission * $takeValue->first()->part_agent;
+                $com_distributeur=$commission * $takeValue->first()->part_distributeur;
+                $com_kiaboo=$commission * $takeValue->first()->part_kiaboo;
+
+            }else{
+                $commission = $takeValue->first()->amount;
+                $com_agent=$commission * $takeValue->first()->part_agent;
+                $com_distributeur=$commission * $takeValue->first()->part_distributeur;
+                $com_kiaboo=$commission * $takeValue->first()->part_kiaboo;
+            }
+            if(doubleval($commission) <=0){
+                return response()->json([
+                    "status"=>false,
+                    "message"=>"Aucune commission n'est définie pour ce montant"
+                ],404);
+            } else {
+                return response()->json([
+                    "status" => true,
+                    "commission_globale" => $commission,
+                    "commission_agent" => $com_agent,
+                    "commission_distributeur" => $com_distributeur,
+                    "commission_kiaboo" => $com_kiaboo,
+                ],200);
+            }
+        }else{
+            return response()->json([
+                "status"=>false,
+                "message"=>"Aucune commission n'est définie pour ce montant"
+            ],404);
+        }
+
+    }
+
     public function commissionAgentRembourse(){
 
         //Grouper le remboursement des commissions agent par ref_remb_com_agent
