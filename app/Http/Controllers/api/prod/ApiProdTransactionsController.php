@@ -15,8 +15,8 @@ class ApiProdTransactionsController extends Controller
 {
 
     /**
-     * @OA\Get(
-     * path="/api/v1/prod/transaction",
+     * @OA\Post(
+     * path="/api/v1/prod/transactions",
      * summary="get list of last 5 transactions",
      * description="This request provides a list of the last five transactions carried out by a partner. If you want to filter by agent, enter the partner's agent reference {agentId}.",
      * tags={"Transactions"},
