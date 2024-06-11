@@ -135,7 +135,7 @@ Route::middleware('auth:api')->group(function () {
         Route::group(['prefix' => 'prod'], function () {
 
             //Transaction
-            Route::group(['prefix' => 'transactions'], function () {
+            Route::group(['prefix' => 'transaction'], function () {
                 Route::controller(ApiProdTransactionsController::class)->group(function () {
                     Route::post('/', 'getLastTransactionSwagger')->name("getLastTransactionSwagger");
                 });
