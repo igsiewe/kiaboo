@@ -241,11 +241,20 @@ class ApiTransactionsController extends BaseController
 
     /**
      * @OA\Post (
-     * path="/api/v1/prod/transaction/{agentId}",
+     * path="/api/v1/prod/transaction",
      * summary="get list of last 5 transactions",
      * description="This request provides a list of the last five transactions carried out by a partner. If you want to filter by agent, enter the partner's agent reference {agentId}.",
      * tags={"Transactions"},
      * security={{"bearerAuth":{}}},
+     *      @OA\Parameter(
+     *      name="agentId",
+     *      description="The reference agent who carried out the transaction",
+     *      required=false,
+     *      in="path",
+     *      @OA\Schema(
+     *         type="string"
+     *      )
+     *  ),
      * @OA\Parameter(
      *     name="startDate",
      *     description="Start date - format dd/mm/yyyy",

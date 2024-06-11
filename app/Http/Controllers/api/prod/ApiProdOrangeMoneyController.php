@@ -46,7 +46,7 @@ class ApiProdOrangeMoneyController extends Controller
      * summary="Request to make a Orange Money payment",
      * description="This operation is used to request a payment from a consumer (Payer). The payer will be asked to authorize the payment. The transaction will be executed once the payer has authorized the payment. The requesttopay will be in status PENDING until the transaction is authorized or declined by the payer or it is timed out by the system. Status of the transaction can be validated by using the GET api/v1/prod/momo/payment/<resourceId>",
      * security={{"bearerAuth":{}}},
-     * tags={"OM - Payment"},
+     * tags={"Merchant payment"},
      * @OA\RequestBody(
      *    required=true,
      *    description="Request to make a payment OM",
