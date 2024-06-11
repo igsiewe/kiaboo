@@ -1680,7 +1680,7 @@ class ApiProdMoMoMoneyController extends Controller
     /**
      * @OA\Get (
      * path="/api/v1/prod/momo/status/{transactionId}",
-     * summary="Check transaction status",
+     * summary="Check MoMo transaction status",
      * description="This operation is used to get the status of a request to momo pay. TransactionId that was passed in the post is used as reference to the request",
      * tags={"Merchant payment"},
      * security={{"bearerAuth":{}}},

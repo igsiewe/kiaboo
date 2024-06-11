@@ -24,7 +24,7 @@ class ApiProdAuthController extends BaseController
      * path="/api/v1/authenticate/auth",
      * summary="Login  user",
      * description="Login user",
-     * tags={"Auth"},
+     * tags={"Authenticate"},
      * @OA\RequestBody(
      *    required=true,
      *    description="user informations",
@@ -141,7 +141,7 @@ class ApiProdAuthController extends BaseController
      * summary="Change password user",
      * description="Change password user",
      * security={{"bearerAuth":{}}},
-     * tags={"Auth"},
+     * tags={"Authenticate"},
      * @OA\RequestBody(
      *    required=true,
      *    description="change password user connected",
