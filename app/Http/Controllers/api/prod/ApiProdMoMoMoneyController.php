@@ -1706,6 +1706,7 @@ class ApiProdMoMoMoneyController extends Controller
      *             @OA\Property(property="status", type="string", example="Transaction status"),
      *             @OA\Property(property="transactionId", type="string", example="transacton id database"),
      *             @OA\Property(property="dateTransaction", type="date", example="Date transaction"),
+     *             @OA\Property(property="currency", type="number", example="XAF"),
      *             @OA\Property(property="amount", type="number", example="amount of transaction"),
      *             @OA\Property(property="fees", type="number", example="transaction fees"),
      *             @OA\Property(property="agent", type="string", example="agent who initiate transaction"),
@@ -1727,6 +1728,7 @@ class ApiProdMoMoMoneyController extends Controller
      *             @OA\Property(property="status", type="string", example="Transaction status"),
      *             @OA\Property(property="transactionId", type="string", example="transacton id database"),
      *             @OA\Property(property="dateTransaction", type="date", example="Date transaction"),
+     *             @OA\Property(property="currency", type="number", example="XAF"),
      *             @OA\Property(property="amount", type="number", example="amount of transaction"),
      *             @OA\Property(property="fees", type="number", example="transaction fees"),
      *             @OA\Property(property="agent", type="string", example="agent who initiate transaction"),
@@ -1850,10 +1852,12 @@ class ApiProdMoMoMoneyController extends Controller
                         'statusCode'=>$data->status,
                         'message'=>'Transaction terminée avec succès',
                         'data'=>[
+                            'currency'='XAF',
                             'transactionId'=>$transactionId,
                             'dateTransaction'=>$transaction->first()->date_transaction,
                             'amount'=>$transaction->first()->credit,
                             'fees'=>$transaction->first()->fees_collecte,
+                            'collect'=>$transaction->marchand_amount,
                             'agent'=>User::where("id", $transaction->first()->source)->first()->telephone,
                             'customer'=>$transaction->first()->customer_phone,
                         ]
@@ -1871,6 +1875,7 @@ class ApiProdMoMoMoneyController extends Controller
                         'data'=>[
                             'transactionId'=>$transactionId,
                             'dateTransaction'=>$transaction->first()->date_transaction,
+                            'currency'='XAF',
                             'amount'=>$transaction->first()->credit,
                             'fees'=>$transaction->first()->fees_collecte,
                             'agent'=>User::where("id", $transaction->first()->source)->first()->telephone,
