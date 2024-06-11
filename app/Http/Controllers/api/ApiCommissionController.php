@@ -142,23 +142,23 @@ class ApiCommissionController extends BaseController
 
     public function getFeesByService($idService, $montant)
     {
-        $commission=0;
+        $fees_global=0;
+        $fees_kiaboo=0;
+        $fees_partenaire=0;
 
         $takeValue = Commission::where('service_id', $idService)->where("status",1)->where('borne_min','<=', $montant)->where('borne_max','>=',$montant)->get();
         if($takeValue->count() > 0){
             if($takeValue->first()->type_commission == 'taux') {
-                $commission= ($takeValue->first()->taux) * $montant;
-                $com_agent=$commission * $takeValue->first()->part_agent;
-                $com_distributeur=$commission * $takeValue->first()->part_distributeur;
-                $com_kiaboo=$commission * $takeValue->first()->part_kiaboo;
-
+                $fees_global = ($takeValue->first()->taux) * $montant;
+                $fees_partenaire = $fees_global * $takeValue->first()->part_partenaire_service;
+                $fees_kiaboo = $fees_global * $takeValue->first()->part_kiaboo;
             }else{
-                $commission = $takeValue->first()->amount;
-                $com_agent=$commission * $takeValue->first()->part_agent;
-                $com_distributeur=$commission * $takeValue->first()->part_distributeur;
-                $com_kiaboo=$commission * $takeValue->first()->part_kiaboo;
+                return response()->json([
+                    "status"=>false,
+                    "message"=>"Les fees ont été mal définis. Il doivent être en taux"
+                ],404);
             }
-            if(doubleval($commission) <=0){
+            if(doubleval($fees_global) <=0){
                 return response()->json([
                     "status"=>false,
                     "message"=>"Aucune commission n'est définie pour ce montant"
@@ -166,10 +166,9 @@ class ApiCommissionController extends BaseController
             } else {
                 return response()->json([
                     "status" => true,
-                    "commission_globale" => $commission,
-                    "commission_agent" => $com_agent,
-                    "commission_distributeur" => $com_distributeur,
-                    "commission_kiaboo" => $com_kiaboo,
+                    "fees_globale" => $fees_global,
+                    "fees_partenaire_service" => $fees_partenaire,
+                    "fees_kiaboo" => $fees_kiaboo,
                 ],200);
             }
         }else{

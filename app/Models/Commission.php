@@ -19,6 +19,7 @@ class Commission extends Model
         'part_agent',
         'part_distributeur',
         'part_kiaboo',
+        'part_partenaire_service',
         'type_commission',
         'status',
         'created_by',

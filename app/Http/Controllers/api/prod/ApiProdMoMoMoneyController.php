@@ -1527,21 +1527,17 @@ class ApiProdMoMoMoneyController extends Controller
 
 
         // On vérifie si les commissions sont paramétrées
-        $functionCommission = new ApiCommissionController();
-        $lacommission =$functionCommission->getCommissionByService($service,$amount);
+        $functionFees = new ApiCommissionController();
+        $lesFees =$functionFees->getFeesByService($service,$amount);
 
-        if($lacommission->getStatusCode()!=200){
+        if($lesFees->getStatusCode()!=200){
             return response()->json([
                 'success'=>false,
                 'statusCode' => "ERR-FEES-INVALID",
                 'message' => "Impossible de calculer les frais liés à la transaction",
             ], 400);
         }
-        $commission=json_decode($lacommission->getContent());
-
-        $commissionFiliale = doubleval($commission->commission_kiaboo);
-        $commissionDistributeur=doubleval($commission->commission_distributeur);
-        $commissionAgent=doubleval($commission->commission_agent);
+        $fees=json_decode($lesFees->getContent());
 
         //Initie la transaction
 
@@ -1639,10 +1635,10 @@ class ApiProdMoMoMoneyController extends Controller
                 'date_end_trans'=>Carbon::now(),
                 'description'=>'PENDING',
                 'message'=>"Transaction initiée par l'agent N°".$user->first()->id." le ".Carbon::now()." vers le client ".$customerPhone." En attente confirmation du client",
-                'fees_collecte'=>$commission->commission_globale,
-                'fees_partenaire_service'=>0,
-                'fees_kiaboo'=>0,
-                'marchand_amount'=>doubleval($amount)-doubleval($commission->commission_globale),
+                'fees_collecte'=>$fees->fees_flobale,
+                'fees_partenaire_service'=>$fees->fees_partenaire_service,
+                'fees_kiaboo'=>$fees->fees_kiaboo,
+                'marchand_amount'=>doubleval($amount)-doubleval($fees->fees_globale),
                 'commission'=>0,//$commission->commission_globale,
                 'commission_filiale'=>0,//$commissionFiliale,
                 'commission_agent'=>0,//$commissionAgent,
