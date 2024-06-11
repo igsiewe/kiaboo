@@ -1852,7 +1852,7 @@ class ApiProdMoMoMoneyController extends Controller
                         'statusCode'=>$data->status,
                         'message'=>'Transaction terminée avec succès',
                         'data'=>[
-                            'currency'='XAF',
+                            'currency'=>'XAF',
                             'transactionId'=>$transactionId,
                             'dateTransaction'=>$transaction->first()->date_transaction,
                             'amount'=>$transaction->first()->credit,
@@ -1875,7 +1875,7 @@ class ApiProdMoMoMoneyController extends Controller
                         'data'=>[
                             'transactionId'=>$transactionId,
                             'dateTransaction'=>$transaction->first()->date_transaction,
-                            'currency'='XAF',
+                            'currency'=>'XAF',
                             'amount'=>$transaction->first()->credit,
                             'fees'=>$transaction->first()->fees_collecte,
                             'agent'=>User::where("id", $transaction->first()->source)->first()->telephone,
