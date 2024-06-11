@@ -1857,7 +1857,7 @@ class ApiProdMoMoMoneyController extends Controller
                             'dateTransaction'=>$transaction->first()->date_transaction,
                             'amount'=>$transaction->first()->credit,
                             'fees'=>$transaction->first()->fees_collecte,
-                            'collect'=>$transaction->marchand_amount,
+                            'collect'=>$transaction->first()->marchand_amount,
                             'agent'=>User::where("id", $transaction->first()->source)->first()->telephone,
                             'customer'=>$transaction->first()->customer_phone,
                         ]
