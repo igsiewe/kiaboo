@@ -2,7 +2,14 @@
 
 namespace App\Http\Controllers\api\prod;
 
+use App\Http\Controllers\api\ApiCheckController;
+use App\Http\Controllers\api\ApiCommissionController;
 use App\Http\Controllers\Controller;
+use App\Http\Enums\ServiceEnum;
+use App\Models\Distributeur;
+use App\Models\Transaction;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -40,24 +47,61 @@ class ApiProdOrangeMoneyController extends Controller
 
     }
 
+    public function OM_getPayToken(){
+
+        $token = "eyJ4NXQiOiJNemhpTURaaE1qQTJNRGt5TURZeFlqSmtZelZoTkdSaFlXSXhZVFZtT0RabVpXSTNaakExT1EiLCJraWQiOiJNV1UwWlRZNVpqRTFOakk1TjJZMVptTmxObUUxWkRZMk5HRTRabUU1TkRNek1HTmxZamxtWXpnek4yRXdPRGM1TURnM016TXpZemM1WVRJMFlqWmxaZ19SUzI1NiIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJLSUFCT08iLCJhdXQiOiJBUFBMSUNBVElPTiIsImF1ZCI6InBGSVkxeVpfaUdITEcwYmcwZThCQ1A4ZTlMc2EiLCJuYmYiOjE3MTg2NTU0ODgsImF6cCI6InBGSVkxeVpfaUdITEcwYmcwZThCQ1A4ZTlMc2EiLCJzY29wZSI6ImRlZmF1bHQiLCJpc3MiOiJodHRwczpcL1wvb21kZXZlbG9wZXIub3JhbmdlLmNtOjQ0M1wvb2F1dGgyXC90b2tlbiIsImV4cCI6MTcxODY1OTA4OCwiaWF0IjoxNzE4NjU1NDg4LCJqdGkiOiI1ZTJlZDc2ZS1lOTkzLTRjNzMtYmRhMC01NTdlODFlNTVlNGMifQ.iqZUghH4BMnlEp5K12jEL9ItXmBlMv7cbaXnaNviUJBCJLT4ZI733CfnS1NLL3fDkSADkmV7mUmAlsRcNiiHJ3sMyWhTlcLhH55c9cOwSdhgNjxud4EG9c8wpa8pRHgdd-831jG_kNV06BxDvCgFn_GNQIj_x8zy3U7-lqK3KqPfl96ZQlqjB2Vi0HVNQGDBwjYLq6M2kxGxElDyqbbPMXeJCqDRWCkIzzpdMSh7zPwTHI8RjrDSltLDOa0nkTinPfd5ShIZDyeTds0VUlFhhnHN2EJp3qxuM2V1Wm65dzsLiIMdL2wgyHvAObsqLOpIYbYejE7iIZaTfbIbPtih3A";
+        $url = "https://omdeveloper-gateway.orange.cm/omapi/1.0.2/mp/init";
+        $auth = base64_encode("lyne-claude.kombou@kiaboo.net:24061197a328e0e9cfdff4d7f7");// "bHluZS1jbGF1ZGUua29tYm91QGtpYWJvby5uZXQ6MjQwNjExOTdhMzI4ZTBlOWNmZGZmNGQ3Zjc=";
+        $response = Http::withOptions(['verify' => false,])
+            ->withHeaders([
+                    "X-AUTH-TOKEN"=>$auth,
+                    "WSO2-Authorization"=>"Bearer ".$token,
+                    "accept"=>"application/json"
+                ]
+            )
+            ->Post($url);
+
+        log::info([
+            "function"=>"OM_InitPayment",
+            "response"=>$response->body(),
+            "statusCode"=>$response->status(),
+        ]);
+
+        if($response->status()!=200){
+            return response()->json([
+                "statusCode"=>$response->status(),
+                "message"=>$response->body(),
+            ], 400);
+        }
+
+        $payToken = $response->data["payToken"];
+
+        return response()->json([
+            "payToken"=>$payToken,
+            "message"=>$response->message
+        ], $response->status());
+
+    }
+
+
     /**
      * @OA\Post(
      * path="/api/v1/prod/om/payment",
-     * summary="Request to make a Orange Money payment",
-     * description="This operation is used to request a payment from a consumer (Payer). The payer will be asked to authorize the payment. The transaction will be executed once the payer has authorized the payment. The requesttopay will be in status PENDING until the transaction is authorized or declined by the payer or it is timed out by the system. Status of the transaction can be validated by using the GET api/v1/prod/momo/payment/<resourceId>",
+     * summary="Request to make a OM payment",
+     * description="This operation is used to request a payment from a consumer (Payer). The payer will be asked to authorize the payment. The transaction will be executed once the payer has authorized the payment. The requesttopay will be in status PENDING until the transaction is authorized or declined by the payer or it is timed out by the system. Status of the transaction can be validated by using the GET api/v1/prod/om/payment/<resourceId>",
      * security={{"bearerAuth":{}}},
      * tags={"Merchant payment"},
      * @OA\RequestBody(
      *    required=true,
-     *    description="Request to make a payment OM",
+     *    description="Request to make a OM payment",
      *    @OA\JsonContent(
      *       required={"agentNumber","marchandTransactionId","phone","amount"},
-     *       @OA\Property(property="agentNumber", type="string", example="679962015"),
+     *       @OA\Property(property="agentNumber", type="string", example="659657424"),
      *       @OA\Property(property="marchandTransactionId", type="string", example="12354"),
      *       @OA\Property(
      *           type="object",
      *           property="data",
-     *           @OA\Property(property="phone", type="number", example="679962015"),
+     *           @OA\Property(property="phone", type="number", example="659657424"),
      *           @OA\Property(property="amount", type="number", example="200"),
      *       )
      *    ),
@@ -134,17 +178,232 @@ class ApiProdOrangeMoneyController extends Controller
      */
     public function OM_Payment(Request $request){
 
-        $getToken = $this->OM_GetTokenAccess();
-        $dataAcessToken = json_decode($getToken->getContent());
+        $apiCheck = new ApiCheckController();
 
-        if ($getToken->status() != 200) {
+        $service = ServiceEnum::PAYMENT_OM->value;
+        $user = User::where("telephone",$request->agentNumber)->get();
+        $amount=$request->data["amount"];
+        $customer=$request->data["phone"];
+
+        // Vérifie si l'utilisateur est autorisé à faire cette opération
+
+        if($user->count()==0){
             return response()->json([
-                'code' => $getToken->status(),
-                'error' => '1.error = '.$getToken->getContent(),
-            ]);
+                'success'=>false,
+                'statusCode'=>'ERR-AGENT-NOT-VALID',
+                'message'=>"The agent used is not found",
+            ],404);
         }
-        $accessToken = $dataAcessToken->access_token;
+
+        if($user->first()->status ==0){
+            return response()->json([
+                'success'=>false,
+                'statusCode'=>'ERR-NOT-PERMISSION',
+                'message'=>"The agent used does not have the necessary permissions",
+            ],403);
+        }
+
+        //On se rassure que l'utilisateur est bien rattaché au compte connecté
+
+        if($user->first()->distributeur_id !=Auth::user()->distributeur_id){
+            if($user->count()==0 || $user->first()->status ==0){
+                return response()->json([
+                    'success'=>false,
+                    'statusCode'=>'ERR-NOT-PERMISSION',
+                    'message'=>"The agent used does not have the necessary permissions with your profil",
+                ],403);
+            }
+        }
+        //Verifie le statut de l'id transaction cote marchand
+        $checkTransactionExternalId = Transaction::where('marchand_transaction_id',$request->marchandTransactionId)->get();
+
+        if($checkTransactionExternalId->count()>0){
+            $checkDistributeur = User::where('id',$checkTransactionExternalId->first()->source)->get();
+            if($checkDistributeur->count()>0){
+                if($user->first()->distributeur_id==$checkDistributeur->first()->distributeur_id){
+                    return response()->json([
+                        'success'=>false,
+                        'statusCode'=>"ERR-MERCHAND-TRANSACTION-ID-DUPLICATE",
+                        'message' => "The transaction ID used by the merchant already exists",
+                        'data'=>[
+                            'status' => $checkTransactionExternalId->first()->description,
+                            'transactionId'=>$checkTransactionExternalId->first()->reference,
+                            'dateTransaction'=>$checkTransactionExternalId->first()->date_transaction,
+                            'amount'=>$checkTransactionExternalId->first()->credit,
+                            'fees'=>$checkTransactionExternalId->first()->fees_collecte,
+                            'agent'=>$checkDistributeur->first()->telephone,
+                            'customer'=>$checkTransactionExternalId->first()->customer_phone,
+                            'marchandTransactionID'=>$checkTransactionExternalId->first()->marchand_transaction_id,
+                        ]
+                    ], 208);
+                }
+            }
+        }
 
 
+        // On vérifie si les commissions sont paramétrées
+        $functionFees = new ApiCommissionController();
+        $lesFees =$functionFees->getFeesByService($service,$amount);
+
+        if($lesFees->getStatusCode()!=200){
+            return response()->json([
+                'success'=>false,
+                'statusCode' => "ERR-FEES-INVALID",
+                'message' => "Impossible de calculer les frais liés à la transaction",
+            ], 400);
+        }
+        $fees=json_decode($lesFees->getContent());
+
+        //Initie la transaction
+
+        $init_transaction = $apiCheck->init_Payment($amount, $customer, $service,"",$user->first()->id);
+        $dataTransactionInit = json_decode($init_transaction->getContent());
+
+        if($init_transaction->getStatusCode() !=200){
+            return response()->json([
+                'success'=>false,
+                'statusCode'=>'error',
+                'message'=>$dataTransactionInit->message,
+            ],$init_transaction->getStatusCode());
+        }
+        $idTransaction = $dataTransactionInit->transId; //Id de la transaction initiée
+        $reference = $dataTransactionInit->reference; //Référence de la transaction initiée
+        //On génère le token de la transation
+        // $responseToken = $this->MOMO_Collection_GetTokenAccess();
+//        $responseToken = $this->OM_Payment_GetTokenAccess();
+//        if($responseToken->status()!=200){
+//            return response()->json(
+//                [
+//                    'success'=>false,
+//                    'statusCode'=>$responseToken->status(),
+//                    'message'=>$responseToken["message"],
+//                ],$responseToken->status()
+//            );
+//        }
+//
+//        $dataAcessToken = json_decode($responseToken->getContent());
+//        $AccessToken = $dataAcessToken->access_token;
+
+
+        //Référence de la transaction :On génère le payToken
+        $dataPayToken = $this->OM_getPayToken();
+        if($dataPayToken->status()!=200){
+            return response()->json(
+                [
+                    'success'=>false,
+                    'statusCode'=>$dataPayToken->status(),
+                    'message'=>$dataPayToken["message"],
+                ],$dataPayToken->status()
+            );
+        }
+        $payToken = $dataPayToken["payToken"];
+
+        //On gardee l'UID de la transaction initiee
+        $saveUID = Transaction::where('id',$idTransaction)->update([
+            "paytoken"=>$payToken
+        ]);
+
+        $customerPhone = "237".$customer;
+        $partenaire = Distributeur::where("id",Auth::user()->distributeur_id)->get()->first()->name_distributeur;
+
+        $token = "eyJ4NXQiOiJNemhpTURaaE1qQTJNRGt5TURZeFlqSmtZelZoTkdSaFlXSXhZVFZtT0RabVpXSTNaakExT1EiLCJraWQiOiJNV1UwWlRZNVpqRTFOakk1TjJZMVptTmxObUUxWkRZMk5HRTRabUU1TkRNek1HTmxZamxtWXpnek4yRXdPRGM1TURnM016TXpZemM1WVRJMFlqWmxaZ19SUzI1NiIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJLSUFCT08iLCJhdXQiOiJBUFBMSUNBVElPTiIsImF1ZCI6InBGSVkxeVpfaUdITEcwYmcwZThCQ1A4ZTlMc2EiLCJuYmYiOjE3MTg2NTU0ODgsImF6cCI6InBGSVkxeVpfaUdITEcwYmcwZThCQ1A4ZTlMc2EiLCJzY29wZSI6ImRlZmF1bHQiLCJpc3MiOiJodHRwczpcL1wvb21kZXZlbG9wZXIub3JhbmdlLmNtOjQ0M1wvb2F1dGgyXC90b2tlbiIsImV4cCI6MTcxODY1OTA4OCwiaWF0IjoxNzE4NjU1NDg4LCJqdGkiOiI1ZTJlZDc2ZS1lOTkzLTRjNzMtYmRhMC01NTdlODFlNTVlNGMifQ.iqZUghH4BMnlEp5K12jEL9ItXmBlMv7cbaXnaNviUJBCJLT4ZI733CfnS1NLL3fDkSADkmV7mUmAlsRcNiiHJ3sMyWhTlcLhH55c9cOwSdhgNjxud4EG9c8wpa8pRHgdd-831jG_kNV06BxDvCgFn_GNQIj_x8zy3U7-lqK3KqPfl96ZQlqjB2Vi0HVNQGDBwjYLq6M2kxGxElDyqbbPMXeJCqDRWCkIzzpdMSh7zPwTHI8RjrDSltLDOa0nkTinPfd5ShIZDyeTds0VUlFhhnHN2EJp3qxuM2V1Wm65dzsLiIMdL2wgyHvAObsqLOpIYbYejE7iIZaTfbIbPtih3A";
+        $url = "https://omdeveloper-gateway.orange.cm/omapi/1.0.2/mp/init";
+        $auth = base64_encode("lyne-claude.kombou@kiaboo.net:24061197a328e0e9cfdff4d7f7");// "bHluZS1jbGF1ZGUua29tYm91QGtpYWJvby5uZXQ6MjQwNjExOTdhMzI4ZTBlOWNmZGZmNGQ3Zjc=";
+        $response = Http::withOptions(['verify' => false,])
+            ->withHeaders([
+                    "X-AUTH-TOKEN"=>$auth,
+                    "WSO2-Authorization"=>"Bearer ".$token,
+                    "accept"=>"application/json",
+                    "Content-Type"=>"application/json"
+                ]
+            )
+            ->withBody(
+                [
+                     "notifUrl"=> "https://kiaboogroup.com/api/om/payment",
+                      "channelUserMsisdn"=> "656805492",
+                      "amount"=> $amount,
+                      "subscriberMsisdn"=> $customer,
+                      "pin"=> "string",
+                      "orderId"=> $request->marchandTransactionId,
+                      "description"=> "Transaction initie by ".$user->telephone,
+                      "payToken"=> $payToken
+                ]
+            )
+            ->Post($url);
+
+        Log::info([
+            "Service"=>ServiceEnum::PAYMENT_OM->name,
+            "url"=>$url,
+            "requete"=>[
+                "notifUrl"=> "https://kiaboogroup.com/api/om/payment",
+                "channelUserMsisdn"=> "656805492",
+                "amount"=> $amount,
+                "subscriberMsisdn"=> $customer,
+                "pin"=> "string",
+                "orderId"=> $request->marchandTransactionId,
+                "description"=> "Transaction initie by ".$user->telephone,
+                "payToken"=> $payToken
+                ]
+        ]);
+
+
+        if($response->status()==200){
+            //Le client a été notifié. Donc on reste en attente de sa confirmation (Saisie de son code secret)
+
+            //On change le statut de la transaction dans la base de donnée
+
+            $Transaction = Transaction::where('id',$idTransaction)->where('service_id',$service)->update([
+                'reference_partenaire'=>$payToken,
+                'balance_before'=>0,
+                'balance_after'=>0,
+                'debit'=>0,
+                'credit'=>$amount,
+                'status'=>2, // Pending
+                'paytoken'=>$payToken,
+                'date_end_trans'=>Carbon::now(),
+                'description'=>'PENDING',
+                'message'=>"Transaction initiée par l'agent N°".$user->first()->id." le ".Carbon::now()." vers le client ".$customerPhone." En attente confirmation du client",
+                'fees_collecte'=>$fees->fees_globale,
+                'fees_partenaire_service'=>$fees->fees_partenaire_service,
+                'fees_kiaboo'=>$fees->fees_kiaboo,
+                'marchand_amount'=>doubleval($amount)-doubleval($fees->fees_globale),
+                'commission'=>0,//$commission->commission_globale,
+                'commission_filiale'=>0,//$commissionFiliale,
+                'commission_agent'=>0,//$commissionAgent,
+                'commission_distributeur'=>0,//$commissionDistributeur,
+                'marchand_transaction_id'=>$request->marchandTransactionId,
+            ]);
+
+            //Le solde du compte de l'agent ne sera mis à jour qu'après confirmation de l'agent : Opération traitée dans le callback
+
+            //On recupère toutes les transactions en attente
+
+            return response()->json(
+                [
+                    'success'=>true,
+                    'statusCode'=>"PAYMENT-INITIATE-SUCCESSFULLY",
+                    'message'=>"Transaction initiée avec succès. Le client doit confirmer le retrait avec son code secret",
+                    'paytoken'=>$payToken,
+                    'transactionId'=>$reference,//$idTransaction,
+                ],202
+            );
+
+        }else{
+            Log::error([
+                'code'=> $response->status(),
+                'function' => "MOMO_PAYMENT",
+                'response'=>$response->body(),
+                'user' => $user->first()->id,
+                'request' => $request->all()
+            ]);
+            return response()->json(
+                [
+                    'status'=>$response->status(),
+                    'message'=>$response->body(),
+                ],$response->status()
+            );
+        }
     }
+
+
 }
