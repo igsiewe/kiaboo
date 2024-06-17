@@ -51,7 +51,7 @@ class ApiProdOrangeMoneyController extends Controller
 
         $token = "eyJ4NXQiOiJNemhpTURaaE1qQTJNRGt5TURZeFlqSmtZelZoTkdSaFlXSXhZVFZtT0RabVpXSTNaakExT1EiLCJraWQiOiJNV1UwWlRZNVpqRTFOakk1TjJZMVptTmxObUUxWkRZMk5HRTRabUU1TkRNek1HTmxZamxtWXpnek4yRXdPRGM1TURnM016TXpZemM1WVRJMFlqWmxaZ19SUzI1NiIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJLSUFCT08iLCJhdXQiOiJBUFBMSUNBVElPTiIsImF1ZCI6InBGSVkxeVpfaUdITEcwYmcwZThCQ1A4ZTlMc2EiLCJuYmYiOjE3MTg2NTU0ODgsImF6cCI6InBGSVkxeVpfaUdITEcwYmcwZThCQ1A4ZTlMc2EiLCJzY29wZSI6ImRlZmF1bHQiLCJpc3MiOiJodHRwczpcL1wvb21kZXZlbG9wZXIub3JhbmdlLmNtOjQ0M1wvb2F1dGgyXC90b2tlbiIsImV4cCI6MTcxODY1OTA4OCwiaWF0IjoxNzE4NjU1NDg4LCJqdGkiOiI1ZTJlZDc2ZS1lOTkzLTRjNzMtYmRhMC01NTdlODFlNTVlNGMifQ.iqZUghH4BMnlEp5K12jEL9ItXmBlMv7cbaXnaNviUJBCJLT4ZI733CfnS1NLL3fDkSADkmV7mUmAlsRcNiiHJ3sMyWhTlcLhH55c9cOwSdhgNjxud4EG9c8wpa8pRHgdd-831jG_kNV06BxDvCgFn_GNQIj_x8zy3U7-lqK3KqPfl96ZQlqjB2Vi0HVNQGDBwjYLq6M2kxGxElDyqbbPMXeJCqDRWCkIzzpdMSh7zPwTHI8RjrDSltLDOa0nkTinPfd5ShIZDyeTds0VUlFhhnHN2EJp3qxuM2V1Wm65dzsLiIMdL2wgyHvAObsqLOpIYbYejE7iIZaTfbIbPtih3A";
         $url = "https://omdeveloper-gateway.orange.cm/omapi/1.0.2/mp/init";
-        $auth = base64_encode("lyne-claude.kombou@kiaboo.net:24061197a328e0e9cfdff4d7f7");// "bHluZS1jbGF1ZGUua29tYm91QGtpYWJvby5uZXQ6MjQwNjExOTdhMzI4ZTBlOWNmZGZmNGQ3Zjc=";
+        $auth = "bHluZS1jbGF1ZGUua29tYm91QGtpYWJvby5uZXQ6MjQwNjExOTdhMzI4ZTBlOWNmZGZmNGQ3Zjc=";
         $response = Http::withOptions(['verify' => false,])
             ->withHeaders([
                     "X-AUTH-TOKEN"=>$auth,
