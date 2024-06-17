@@ -299,7 +299,7 @@ class ApiProdOrangeMoneyController extends Controller
             );
         }
         $dataResponse = json_decode($dataPayToken);
-        $payToken = $dataResponse->payToken;
+        $payToken = $dataResponse["payToken"];
 
         //On gardee l'UID de la transaction initiee
         $saveUID = Transaction::where('id',$idTransaction)->update([
