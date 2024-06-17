@@ -75,7 +75,9 @@ class ApiProdOrangeMoneyController extends Controller
         }
         $dataResponse = json_decode($response);
         $payToken = $dataResponse->data->payToken;
-
+        log::info([
+            "payToken"=>$payToken,
+        ]);
         return response()->json([
             "payToken"=>$payToken,
             "message"=>$dataResponse->message
