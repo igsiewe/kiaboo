@@ -74,7 +74,7 @@ class ApiProdOrangeMoneyController extends Controller
             ], 400);
         }
         $dataResponse = json_decode($response);
-        $payToken = $dataResponse->data["payToken"];
+        $payToken = $dataResponse->data->payToken;
 
         return response()->json([
             "payToken"=>$payToken,
