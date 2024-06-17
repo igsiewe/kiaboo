@@ -75,9 +75,7 @@ class ApiProdOrangeMoneyController extends Controller
         }
         $dataResponse = json_decode($response);
         $payToken = $dataResponse->data->payToken;
-        log::info([
-            "payToken"=>$payToken,
-        ]);
+
         return response()->json([
             "payToken"=>$payToken,
             "message"=>$dataResponse->message
@@ -299,6 +297,7 @@ class ApiProdOrangeMoneyController extends Controller
             );
         }
         $dataResponse = json_decode($dataPayToken);
+        Log::info($dataResponse);
         $payToken = $dataResponse["payToken"];
 
         //On gardee l'UID de la transaction initiee
