@@ -49,7 +49,7 @@ class ApiProdOrangeMoneyController extends Controller
 
     public function OM_getPayToken(){
 
-        $token = "eyJ4NXQiOiJNemhpTURaaE1qQTJNRGt5TURZeFlqSmtZelZoTkdSaFlXSXhZVFZtT0RabVpXSTNaakExT1EiLCJraWQiOiJNV1UwWlRZNVpqRTFOakk1TjJZMVptTmxObUUxWkRZMk5HRTRabUU1TkRNek1HTmxZamxtWXpnek4yRXdPRGM1TURnM016TXpZemM1WVRJMFlqWmxaZ19SUzI1NiIsImFsZyI6IlJTMjU2In0",
+        $token = "eyJ4NXQiOiJNemhpTURaaE1qQTJNRGt5TURZeFlqSmtZelZoTkdSaFlXSXhZVFZtT0RabVpXSTNaakExT1EiLCJraWQiOiJNV1UwWlRZNVpqRTFOakk1TjJZMVptTmxObUUxWkRZMk5HRTRabUU1TkRNek1HTmxZamxtWXpnek4yRXdPRGM1TURnM016TXpZemM1WVRJMFlqWmxaZ19SUzI1NiIsImFsZyI6IlJTMjU2In0";
         $url = "https://omdeveloper-gateway.orange.cm/omapi/1.0.2/mp/init";
         $auth = "bHluZS1jbGF1ZGUua29tYm91QGtpYWJvby5uZXQ6MjQwNjExOTdhMzI4ZTBlOWNmZGZmNGQ3Zjc=";
         $response = Http::withOptions(['verify' => false,])
@@ -306,7 +306,7 @@ class ApiProdOrangeMoneyController extends Controller
         $customerPhone = "237".$customer;
         $partenaire = Distributeur::where("id",Auth::user()->distributeur_id)->get()->first()->name_distributeur;
 
-        $token = "eyJ4NXQiOiJNemhpTURaaE1qQTJNRGt5TURZeFlqSmtZelZoTkdSaFlXSXhZVFZtT0RabVpXSTNaakExT1EiLCJraWQiOiJNV1UwWlRZNVpqRTFOakk1TjJZMVptTmxObUUxWkRZMk5HRTRabUU1TkRNek1HTmxZamxtWXpnek4yRXdPRGM1TURnM016TXpZemM1WVRJMFlqWmxaZ19SUzI1NiIsImFsZyI6IlJTMjU2In0",
+        $token = "eyJ4NXQiOiJNemhpTURaaE1qQTJNRGt5TURZeFlqSmtZelZoTkdSaFlXSXhZVFZtT0RabVpXSTNaakExT1EiLCJraWQiOiJNV1UwWlRZNVpqRTFOakk1TjJZMVptTmxObUUxWkRZMk5HRTRabUU1TkRNek1HTmxZamxtWXpnek4yRXdPRGM1TURnM016TXpZemM1WVRJMFlqWmxaZ19SUzI1NiIsImFsZyI6IlJTMjU2In0";
         $url = "https://omdeveloper-gateway.orange.cm/omapi/1.0.2/mp/init";
         $auth = base64_encode("lyne-claude.kombou@kiaboo.net:24061197a328e0e9cfdff4d7f7");// "bHluZS1jbGF1ZGUua29tYm91QGtpYWJvby5uZXQ6MjQwNjExOTdhMzI4ZTBlOWNmZGZmNGQ3Zjc=";
         $response = Http::withOptions(['verify' => false,])
