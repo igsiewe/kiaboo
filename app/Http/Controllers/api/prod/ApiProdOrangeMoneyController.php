@@ -342,7 +342,7 @@ class ApiProdOrangeMoneyController extends Controller
                 "subscriberMsisdn"=> $customer,
                 "pin"=> "string",
                 "orderId"=> $request->marchandTransactionId,
-                "description"=> "Transaction initie by ".$user->telephone,
+                "description"=> "Transaction initie by ".$user->first()->telephone,
                 "payToken"=> $payToken
                 ]
         ]);
