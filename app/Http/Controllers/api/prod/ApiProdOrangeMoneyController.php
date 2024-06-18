@@ -86,7 +86,6 @@ class ApiProdOrangeMoneyController extends Controller
             "function"=>"OM_getPayToken.",
             "response"=>$response->body(),
             "statusCode"=>$response->status(),
-            "detail"=>$response
         ]);
         if($response->status()==401){
                 $data = json_decode($response->body());
@@ -357,7 +356,8 @@ class ApiProdOrangeMoneyController extends Controller
                 "orderId"=> $request->marchandTransactionId,
                 "description"=> "Transaction initie by ".$user->first()->telephone." ".$partenaire,
                 "payToken"=> $payToken
-                ]
+                ],
+            "response"=>$response->body()
         ]);
 
 
