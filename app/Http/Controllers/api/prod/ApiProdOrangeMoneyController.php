@@ -33,6 +33,7 @@ class ApiProdOrangeMoneyController extends Controller
         $getTokenResponse = $this->OM_GetTokenAccess();
         if($getTokenResponse->status()==200){
             $dataToken = json_decode($getTokenResponse);
+            Log::info($dataToken);
             $this->token = $dataToken->access_token;
         }
     }
