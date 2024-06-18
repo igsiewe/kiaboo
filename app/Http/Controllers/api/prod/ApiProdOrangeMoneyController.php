@@ -326,10 +326,11 @@ class ApiProdOrangeMoneyController extends Controller
         $partenaire = Distributeur::where("id",Auth::user()->distributeur_id)->get()->first()->name_distributeur;
         $url = "https://omdeveloper-gateway.orange.cm/omapi/1.0.2/mp/pay";
 
-        $response = Http::withHeaders([
+        $response = Http::withOptions(['verify' => false,])
+            ->withHeaders([
                 "accept"=>"application/json",
                 "X-AUTH-TOKEN"=>$this->auth_x_token,
-                "Content-Type"=>"application/json",
+                "Content-Type"=>"multipart/form-data",
                 "WSO2-Authorization"=>"Bearer ".$this->token,
             ]
         )->withBody([
