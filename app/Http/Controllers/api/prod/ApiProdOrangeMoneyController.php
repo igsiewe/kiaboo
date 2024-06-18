@@ -77,7 +77,7 @@ class ApiProdOrangeMoneyController extends Controller
 
                 $data = json_decode($response->body());
                 return response()->json([
-                    "statusCode"=>$data->code,
+                    "statusCode"=>$data->message,
                     "message"=>$data->description,
                 ], 401);
         }
