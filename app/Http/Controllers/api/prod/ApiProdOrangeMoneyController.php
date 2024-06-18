@@ -80,19 +80,21 @@ class ApiProdOrangeMoneyController extends Controller
             ->Post($url);
 
         log::info([
-            "function"=>"OM_getPayToken",
+            "function"=>"OM_getPayToken.",
             "response"=>$response->body(),
             "statusCode"=>$response->status(),
         ]);
         if($response->status()==401){
                 $data = json_decode($response->body());
                 return response()->json([
+                    "success"=>false,
                     "statusCode"=>$data->message,
                     "message"=>$data->description,
                 ], 401);
         }
         if($response->status()!=200){
             return response()->json([
+                "success"=>false,
                 "statusCode"=>$response->status(),
                 "message"=>$response->body(),
             ], 400);
@@ -101,6 +103,7 @@ class ApiProdOrangeMoneyController extends Controller
         $payToken = $dataResponse->data->payToken;
 
         return response()->json([
+            "success"=>true,
             "payToken"=>$payToken,
             "message"=>$dataResponse->message
         ], $response->status());
