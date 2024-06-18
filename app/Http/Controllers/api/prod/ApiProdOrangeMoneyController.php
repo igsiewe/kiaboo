@@ -328,7 +328,7 @@ class ApiProdOrangeMoneyController extends Controller
             ->withHeaders([
                     "accept"=>"application/json",
                     "X-AUTH-TOKEN"=>$this->auth_x_token,
-                    "Content-Type"=>"application/json",
+                    "Content-Type"=>"application/x-www-form-urlencoded",
                     "WSO2-Authorization"=>"Bearer ".$this->token,
                 ]
             )
@@ -342,7 +342,7 @@ class ApiProdOrangeMoneyController extends Controller
                       "orderId"=> $request->marchandTransactionId,
                       "description"=> "Transaction initie by ".$user->first()->telephone,
                       "payToken"=> $payToken
-                ],"application/json"
+                ]
             )
             ->Post($url);
 
