@@ -73,7 +73,7 @@ class ApiProdOrangeMoneyController extends Controller
         $url = "https://omdeveloper-gateway.orange.cm/omapi/1.0.2/mp/init";
         $response = Http::withOptions(['verify' => false,])
             ->withHeaders([
-                    "X-AUTH-TOKEN"=>$this->auth_x_token,
+                    "X-AUTH-TOKEN"=>$this->auth,
                     "WSO2-Authorization"=>"Bearer ".$this->token,
                     "accept"=>"application/json"
                 ]
@@ -325,7 +325,7 @@ class ApiProdOrangeMoneyController extends Controller
         $response = Http::withOptions(['verify' => false,])
             ->withHeaders([
                     "accept"=>"application/json",
-                    "X-AUTH-TOKEN"=>$this->auth_x_token,
+                    "X-AUTH-TOKEN"=>$this->auth,
                     "Content-Type"=>"application/json",
                     "WSO2-Authorization"=>"Bearer ".$this->token,
                 ]
