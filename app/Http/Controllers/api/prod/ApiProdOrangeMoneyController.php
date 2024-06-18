@@ -337,20 +337,6 @@ class ApiProdOrangeMoneyController extends Controller
             "payToken"=> $payToken
         ];
 
-//        $response = Http::withHeaders([
-//
-//            "X-AUTH-TOKEN"=>$this->auth_x_token,
-//            "Content-Type"=>"application/json",
-//            "WSO2-Authorization"=>"Bearer ".$this->token,
-//
-//        ])->withBody($data)->Post($url);
-//
-//        Log::info([
-//            "Service"=>ServiceEnum::PAYMENT_OM->name,
-//            "url"=>$url,
-//            "requete"=>$data,
-//            "response"=>$response->body()
-//        ]);
 
         $curl = curl_init();
 
@@ -386,8 +372,14 @@ class ApiProdOrangeMoneyController extends Controller
         $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
         curl_close($curl);
-
         $dataResponse = json_decode($response);
+        Log::info([
+            "fontion"=>"OM_Payment",
+            "url"=>$url,
+            "request"=>$data,
+            "response"=>$dataResponse
+        ]);
+
         if($httpcode==200){
             //Le client a été notifié. Donc on reste en attente de sa confirmation (Saisie de son code secret)
 
