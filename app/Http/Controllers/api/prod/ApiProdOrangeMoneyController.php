@@ -69,7 +69,7 @@ class ApiProdOrangeMoneyController extends Controller
         $montoken = $this->OM_GetTokenAccess();
         log::info([
             "function"=>"OM_getPayToken 2",
-            "montoken"=>$montoken->body(),
+            "montoken"=>$montoken->content(),
             "statusCode"=>$montoken->status(),
         ]);
 
