@@ -6,6 +6,7 @@ use App\Http\Controllers\api\ApiCheckController;
 use App\Http\Controllers\api\ApiCommissionController;
 use App\Http\Controllers\Controller;
 use App\Http\Enums\ServiceEnum;
+use App\Http\Enums\UserRolesEnum;
 use App\Models\Distributeur;
 use App\Models\Transaction;
 use App\Models\User;
@@ -211,7 +212,7 @@ class ApiProdOrangeMoneyController extends Controller
         $apiCheck = new ApiCheckController();
 
         $service = ServiceEnum::PAYMENT_OM->value;
-        $user = User::where("telephone",$request->agentNumber)->get();
+        $user = User::where("telephone",$request->agentNumber)->where('type_user_id', UserRolesEnum::AGENT->value)->get();
         $amount=$request->data["amount"];
         $customer=$request->data["phone"];
 
