@@ -391,12 +391,12 @@ class ApiProdOrangeMoneyController extends Controller
         ));
 
         $response = curl_exec($curl);
-
+        $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
 
 
 
-        if($response->status()==200){
+        if($httpcode ==200){
             //Le client a été notifié. Donc on reste en attente de sa confirmation (Saisie de son code secret)
 
             //On change le statut de la transaction dans la base de donnée
@@ -439,17 +439,17 @@ class ApiProdOrangeMoneyController extends Controller
 
         }else{
             Log::error([
-                'code'=> $response->status(),
+                'code'=> $httpcode,
                 'function' => "MOMO_PAYMENT",
-                'response'=>$response->body(),
+                'response'=>$response,
                 'user' => $user->first()->id,
                 'request' => $request->all()
             ]);
             return response()->json(
                 [
-                    'status'=>$response->status(),
-                    'message'=>$response->body(),
-                ],$response->status()
+                    'status'=>$httpcode,
+                    'message'=>$response,
+                ],$httpcode
             );
         }
     }
