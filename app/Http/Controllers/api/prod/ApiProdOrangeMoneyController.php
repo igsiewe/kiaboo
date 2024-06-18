@@ -74,7 +74,6 @@ class ApiProdOrangeMoneyController extends Controller
             "statusCode"=>$response->status(),
         ]);
         if($response->status()==401){
-
                 $data = json_decode($response->body());
                 return response()->json([
                     "statusCode"=>$data->message,
@@ -290,7 +289,7 @@ class ApiProdOrangeMoneyController extends Controller
             return response()->json(
                 [
                     'success'=>false,
-                    'statusCode'=>$dataPayTokenResponse->status(),
+                    'statusCode'=>$dataPayToken->statusCode,
                     'message'=>$dataPayToken->message,
                 ],$dataPayTokenResponse->status()
             );
