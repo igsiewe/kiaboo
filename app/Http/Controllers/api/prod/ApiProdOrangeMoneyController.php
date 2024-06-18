@@ -326,77 +326,77 @@ class ApiProdOrangeMoneyController extends Controller
         $partenaire = Distributeur::where("id",Auth::user()->distributeur_id)->get()->first()->name_distributeur;
         $url = "https://omdeveloper-gateway.orange.cm/omapi/1.0.2/mp/pay";
 
-//        $response = Http::withOptions(['verify' => false,])
-//            ->withHeaders([
-//                "accept"=>"application/json",
-//                "X-AUTH-TOKEN"=>$this->auth_x_token,
-//                "Content-Type"=>"application/json",
-//                "WSO2-Authorization"=>"Bearer ".$this->token,
-//            ]
-//        )->withBody([
-//            "notifUrl"=> "https://kiaboogroup.com/api/om/pm",
-//            "channelUserMsisdn"=> $this->channel,
-//            "amount"=> $amount,
-//            "subscriberMsisdn"=> $customer,
-//            "pin"=> $this->pin,
-//            "orderId"=> $request->marchandTransactionId,
-//            "description"=> "Transaction initie by ".$user->first()->telephone. " de ".$partenaire,
-//            "payToken"=> $payToken
-//            ])->Post($url);
+        $response = Http::withOptions(['verify' => false,])
+            ->withHeaders([
+
+                "X-AUTH-TOKEN"=>$this->auth_x_token,
+                "Content-Type"=>"application/json",
+                "WSO2-Authorization"=>"Bearer ".$this->token,
+            ]
+        )->Post($url, [
+                "notifUrl"=> "https://kiaboogroup.com/api/om/pm",
+                "channelUserMsisdn"=> $this->channel,
+                "amount"=> $amount,
+                "subscriberMsisdn"=> $customer,
+                "pin"=> $this->pin,
+                "orderId"=> $request->marchandTransactionId,
+                "description"=> "Transaction initie by ".$user->first()->telephone. " de ".$partenaire,
+                "payToken"=> $payToken
+            ]);
+
+        Log::info([
+            "Service"=>ServiceEnum::PAYMENT_OM->name,
+            "url"=>$url,
+            "requete"=>[
+                "notifUrl"=> "https://kiaboogroup.com/api/om/pm",
+                "channelUserMsisdn"=> $this->channel,
+                "amount"=> $amount,
+                "subscriberMsisdn"=> $customer,
+                "pin"=> "2222",
+                "orderId"=> $request->marchandTransactionId,
+                "description"=> "Transaction initie by ".$user->first()->telephone." ".$partenaire,
+                "payToken"=> $payToken
+                ],
+            "response"=>$response->body()
+        ]);
+
+//        $curl = curl_init();
 //
-//        Log::info([
-//            "Service"=>ServiceEnum::PAYMENT_OM->name,
-//            "url"=>$url,
-//            "requete"=>[
-//                "notifUrl"=> "https://kiaboogroup.com/api/om/pm",
-//                "channelUserMsisdn"=> $this->channel,
-//                "amount"=> $amount,
-//                "subscriberMsisdn"=> $customer,
-//                "pin"=> "2222",
-//                "orderId"=> $request->marchandTransactionId,
-//                "description"=> "Transaction initie by ".$user->first()->telephone." ".$partenaire,
-//                "payToken"=> $payToken
-//                ],
-//            "response"=>$response->body()
-//        ]);
-
-        $curl = curl_init();
-
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS =>'{
-              "notifUrl": "https://kiaboogroup.com/api/callback/om/pm",
-              "channelUserMsisdn": '.$this->channel.'",
-              "amount": '.$amount.'",
-              "subscriberMsisdn": '.$customer.'",
-              "pin": "2222",
-              "orderId": '.$request->marchandTransactionId.'",
-              "description": "Transaction initiate by '.$user->first()->telephone.' '.$partenaire.'",
-              "payToken": '.$payToken.'"
-            }',
-            CURLOPT_HTTPHEADER => array(
-                'accept: application/json',
-                'X-AUTH-TOKEN: '.$this->auth_x_token,
-                'Content-Type: application/json',
-                'WSO2-Authorization: Bearer '.$this->token,
-                'Cookie: 90172f9a61281d25f6dbdf1a5564f031=bf070161f093e553682ea80b8694a3f2'
-            ),
-        ));
-
-        $response = curl_exec($curl);
-        $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
+//        curl_setopt_array($curl, array(
+//            CURLOPT_URL => $url,
+//            CURLOPT_RETURNTRANSFER => true,
+//            CURLOPT_ENCODING => '',
+//            CURLOPT_MAXREDIRS => 10,
+//            CURLOPT_TIMEOUT => 0,
+//            CURLOPT_FOLLOWLOCATION => true,
+//            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+//            CURLOPT_CUSTOMREQUEST => 'POST',
+//            CURLOPT_POSTFIELDS =>'{
+//              "notifUrl": "https://kiaboogroup.com/api/callback/om/pm",
+//              "channelUserMsisdn": '.$this->channel.'",
+//              "amount": '.$amount.'",
+//              "subscriberMsisdn": '.$customer.'",
+//              "pin": "2222",
+//              "orderId": '.$request->marchandTransactionId.'",
+//              "description": "Transaction initiate by '.$user->first()->telephone.' '.$partenaire.'",
+//              "payToken": '.$payToken.'"
+//            }',
+//            CURLOPT_HTTPHEADER => array(
+//                'accept: application/json',
+//                'X-AUTH-TOKEN: '.$this->auth_x_token,
+//                'Content-Type: application/json',
+//                'WSO2-Authorization: Bearer '.$this->token,
+//                'Cookie: 90172f9a61281d25f6dbdf1a5564f031=bf070161f093e553682ea80b8694a3f2'
+//            ),
+//        ));
+//
+//        $response = curl_exec($curl);
+//
+//        curl_close($curl);
 
 
 
-        if($httpcode ==200){
+        if($response->status()==200){
             //Le client a été notifié. Donc on reste en attente de sa confirmation (Saisie de son code secret)
 
             //On change le statut de la transaction dans la base de donnée
@@ -439,17 +439,17 @@ class ApiProdOrangeMoneyController extends Controller
 
         }else{
             Log::error([
-                'code'=> $httpcode,
+                'code'=> $response->status(),
                 'function' => "MOMO_PAYMENT",
-                'response'=>$response,
+                'response'=>$response->body(),
                 'user' => $user->first()->id,
                 'request' => $request->all()
             ]);
             return response()->json(
                 [
-                    'status'=>$httpcode,
-                    'message'=>$response,
-                ],$httpcode
+                    'status'=>$response->status(),
+                    'message'=>$response->body(),
+                ],$response->status()
             );
         }
     }
