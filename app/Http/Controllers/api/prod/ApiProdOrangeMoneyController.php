@@ -26,9 +26,9 @@ class ApiProdOrangeMoneyController extends Controller
 
     public function __construct()
     {
-        $this->token="eyJ4NXQiOiJNemhpTURaaE1qQTJNRGt5TURZeFlqSmtZelZoTkdSaFlXSXhZVFZtT0RabVpXSTNaakExT1EiLCJraWQiOiJNV1UwWlRZNVpqRTFOakk1TjJZMVptTmxObUUxWkRZMk5HRTRabUU1TkRNek1HTmxZamxtWXpnek4yRXdPRGM1TURnM016TXpZemM1WVRJMFlqWmxaZ19SUzI1NiIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJLSUFCT08iLCJhdXQiOiJBUFBMSUNBVElPTiIsImF1ZCI6InBGSVkxeVpfaUdITEcwYmcwZThCQ1A4ZTlMc2EiLCJuYmYiOjE3MTg3MDI4MDMsImF6cCI6InBGSVkxeVpfaUdITEcwYmcwZThCQ1A4ZTlMc2EiLCJzY29wZSI6ImRlZmF1bHQiLCJpc3MiOiJodHRwczpcL1wvb21kZXZlbG9wZXIub3JhbmdlLmNtOjQ0M1wvb2F1dGgyXC90b2tlbiIsImV4cCI6MTcxODcwNjQwMywiaWF0IjoxNzE4NzAyODAzLCJqdGkiOiI1NGQ0ZDUxZS1hNjU3LTQ2NTUtYWRjMS1lMzgxY2QwYWExYzIifQ.NVV52gCDoffPwzJa_CM7mvuNsB99AiLUYMTDdzIisLS7biEgqLUqZvDUvqzItZaP7Mg_zlnrEZxgCQfT37H5OBRgTQHhvQMJq6V2Tb6495CSNemUWnTzMaKWHqPvAmRcdFhUSS8WkTpP9harHtur_7p4Faa1KbrF5GWaM-G30SgblamsJKatnzzcmXpfE_BilkjYSTFOFeQT2bU5Hq_78ixkn816XO-PW4Y8EDRqpwusxA4MQiJohB-o3_-ry9010-oHLSFot4VYdj4J3jfyGKw7ZX6hccjMTM1ZJ1eqQeFgy3JX8Ip-9HB4W1_zdjO3EF-tnFjXRz05TZLLCJHW2Q";
+        $this->token="";
+        $this->auth="cEZJWTF5Wl9pR0hMRzBiZzBlOEJDUDhlOUxzYTpuRGppWTJ6UDZPY0Q2cktkVFg5RmE0eXoxYW9h"; //Utiliser pour générer le token
         $this->auth_x_token ="bHluZS1jbGF1ZGUua29tYm91QGtpYWJvby5uZXQ6MjQwNjExOTdhMzI4ZTBlOWNmZGZmNGQ3Zjc=";//base64_encode("lyne-claude.kombou@kiaboo.net:24061197a328e0e9cfdff4d7f7") ;//
-        $this->auth="cEZJWTF5Wl9pR0hMRzBiZzBlOEJDUDhlOUxzYTpuRGppWTJ6UDZPY0Q2cktkVFg5RmE0eXoxYW9h";
         $this->channel="691301143";
         $this->pin="2222";
         $getTokenResponse = $this->OM_GetTokenAccess();
@@ -328,13 +328,13 @@ class ApiProdOrangeMoneyController extends Controller
             ->withHeaders([
                     "accept"=>"application/json",
                     "X-AUTH-TOKEN"=>$this->auth_x_token,
-                    "Content-Type"=>"application/x-www-form-urlencoded",
+                    "Content-Type"=>"application/json",
                     "WSO2-Authorization"=>"Bearer ".$this->token,
                 ]
             )
             ->withBody(
                 [
-                     "notifUrl"=> "https://kiaboogroup.com/api/om/payment",
+                     "notifUrl"=> "https://kiaboogroup.com/api/om/pm",
                       "channelUserMsisdn"=> $this->channel,
                       "amount"=> $amount,
                       "subscriberMsisdn"=> $customer,
