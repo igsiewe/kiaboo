@@ -337,20 +337,20 @@ class ApiProdOrangeMoneyController extends Controller
             "payToken"=> $payToken
         ];
 
-        $response = Http::withHeaders([
-
-            "X-AUTH-TOKEN"=>$this->auth_x_token,
-            "Content-Type"=>"application/json",
-            "WSO2-Authorization"=>"Bearer ".$this->token,
-
-        ])->withBody($data)->Post($url);
-
-        Log::info([
-            "Service"=>ServiceEnum::PAYMENT_OM->name,
-            "url"=>$url,
-            "requete"=>$data,
-            "response"=>$response->body()
-        ]);
+//        $response = Http::withHeaders([
+//
+//            "X-AUTH-TOKEN"=>$this->auth_x_token,
+//            "Content-Type"=>"application/json",
+//            "WSO2-Authorization"=>"Bearer ".$this->token,
+//
+//        ])->withBody($data)->Post($url);
+//
+//        Log::info([
+//            "Service"=>ServiceEnum::PAYMENT_OM->name,
+//            "url"=>$url,
+//            "requete"=>$data,
+//            "response"=>$response->body()
+//        ]);
 
         $curl = curl_init();
 
