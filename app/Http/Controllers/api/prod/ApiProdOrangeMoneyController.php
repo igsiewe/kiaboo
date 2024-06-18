@@ -326,8 +326,7 @@ class ApiProdOrangeMoneyController extends Controller
         $partenaire = Distributeur::where("id",Auth::user()->distributeur_id)->get()->first()->name_distributeur;
         $url = "https://omdeveloper-gateway.orange.cm/omapi/1.0.2/mp/pay";
 
-        $response = Http::withOptions(['verify' => false,])
-            ->withHeaders([
+        $response = Http::withHeaders([
                 "accept"=>"application/json",
                 "X-AUTH-TOKEN"=>$this->auth_x_token,
                 "Content-Type"=>"application/json",
@@ -341,8 +340,8 @@ class ApiProdOrangeMoneyController extends Controller
             "pin"=> $this->pin,
             "orderId"=> $request->marchandTransactionId,
             "description"=> "Transaction initie by ".$user->first()->telephone. " de ".$partenaire,
-            "payToken"=> $payToken])
-            ->Post($url);
+            "payToken"=> $payToken
+            ])->Post($url);
 
         Log::info([
             "Service"=>ServiceEnum::PAYMENT_OM->name,
