@@ -333,17 +333,17 @@ class ApiProdOrangeMoneyController extends Controller
                 "Content-Type"=>"application/json",
                 "WSO2-Authorization"=>"Bearer ".$this->token,
             ]
-        )->withBody([
-            "notifUrl"=> "https://kiaboogroup.com/api/om/pm",
-            "channelUserMsisdn"=> $this->channel,
-            "amount"=> $amount,
-            "subscriberMsisdn"=> $customer,
-            "pin"=> $this->pin,
-            "orderId"=> $request->marchandTransactionId,
-            "description"=> "Transaction initie by ".$user->first()->telephone. " de ".$partenaire,
-            "payToken"=> $payToken
-            ])->asForm()
-            ->Post($url);
+        )->asForm()
+            ->Post($url,[
+                "notifUrl"=> "https://kiaboogroup.com/api/om/pm",
+                "channelUserMsisdn"=> $this->channel,
+                "amount"=> $amount,
+                "subscriberMsisdn"=> $customer,
+                "pin"=> $this->pin,
+                "orderId"=> $request->marchandTransactionId,
+                "description"=> "Transaction initie by ".$user->first()->telephone. " de ".$partenaire,
+                "payToken"=> $payToken
+            ]);
 
         Log::info([
             "Service"=>ServiceEnum::PAYMENT_OM->name,
