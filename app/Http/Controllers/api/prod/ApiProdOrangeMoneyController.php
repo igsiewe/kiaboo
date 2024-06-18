@@ -286,14 +286,15 @@ class ApiProdOrangeMoneyController extends Controller
 
 
         //Référence de la transaction :On génère le payToken
-        $dataPayToken = $this->OM_getPayToken();
-        if($dataPayToken->status()!=200){
+        $dataPayTokenResponse = $this->OM_getPayToken();
+        $dataPayToken = json_decode($dataPayTokenResponse);
+        if($dataPayTokenResponse->status()!=200){
             return response()->json(
                 [
                     'success'=>false,
-                    'statusCode'=>$dataPayToken->status(),
+                    'statusCode'=>$dataPayTokenResponse->status(),
                     'message'=>$dataPayToken->message,
-                ],$dataPayToken->status()
+                ],$dataPayTokenResponse->status()
             );
         }
         $dataResultat = json_decode($dataPayToken->content());
@@ -340,7 +341,7 @@ class ApiProdOrangeMoneyController extends Controller
                 "channelUserMsisdn"=> "656805492",
                 "amount"=> $amount,
                 "subscriberMsisdn"=> $customer,
-                "pin"=> "string",
+                "pin"=> "2222",
                 "orderId"=> $request->marchandTransactionId,
                 "description"=> "Transaction initie by ".$user->first()->telephone,
                 "payToken"=> $payToken
