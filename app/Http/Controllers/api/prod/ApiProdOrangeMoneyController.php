@@ -335,7 +335,7 @@ class ApiProdOrangeMoneyController extends Controller
             "description"=> "Transaction initie by ".$user->first()->telephone. " de ".$partenaire,
             "payToken"=> "'.$payToken.'"
         ];
-
+return $data;
         $response = Http::withOptions(['verify' => false])
             ->withHeaders([
                 "X-AUTH-TOKEN"=>$this->auth_x_token,
