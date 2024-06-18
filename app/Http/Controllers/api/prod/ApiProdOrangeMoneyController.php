@@ -337,14 +337,14 @@ class ApiProdOrangeMoneyController extends Controller
         ];
        // return $data;
 
-        $response = Http::withOptions(['verify' => false])
+        $response = Http::withOptions(['verify' => false,])
             ->withHeaders([
                 "X-AUTH-TOKEN"=>$this->auth_x_token,
                 "Content-Type"=>"application/json",
-              //  "WSO2-Authorization"=>"Bearer ".$this->token,
+                "WSO2-Authorization"=>"Bearer ".$this->token,
             ]
         )->withBody($data)->Post($url);
-
+return $response;
         Log::info([
             "Service"=>ServiceEnum::PAYMENT_OM->name,
             "url"=>$url,
