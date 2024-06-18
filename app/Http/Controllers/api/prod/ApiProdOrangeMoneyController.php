@@ -328,8 +328,8 @@ class ApiProdOrangeMoneyController extends Controller
         $data = [
             "notifUrl"=> "https://kiaboogroup.com/api/callback/om/pm",
             "channelUserMsisdn"=> $this->channel,
-            "amount"=> "'.$amount.'",
-            "subscriberMsisdn"=> "'.$customer.'",
+            "amount"=> "$amount",
+            "subscriberMsisdn"=> "$customer",
             "pin"=> $this->pin,
             "orderId"=> $request->marchandTransactionId,
             "description"=> "Transaction initie by ".$user->first()->telephone. " de ".$partenaire,
