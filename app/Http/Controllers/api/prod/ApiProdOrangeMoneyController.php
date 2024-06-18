@@ -250,6 +250,10 @@ class ApiProdOrangeMoneyController extends Controller
         if($checkTransactionExternalId->count()>0){
             $checkDistributeur = User::where('id',$checkTransactionExternalId->first()->source)->get();
             if($checkDistributeur->count()>0){
+                Log::info([
+                    "user1"=>$user->first()->distributeur_id,
+                    "user2"=>$checkDistributeur->first()->distributeur_id
+                ]);
                 if($user->first()->distributeur_id==$checkDistributeur->first()->distributeur_id){
                     return response()->json([
                         'success'=>false,
