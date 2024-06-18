@@ -326,15 +326,7 @@ class ApiProdOrangeMoneyController extends Controller
         $partenaire = Distributeur::where("id",Auth::user()->distributeur_id)->get()->first()->name_distributeur;
         $url = "https://omdeveloper-gateway.orange.cm/omapi/1.0.2/mp/pay";
 
-        $response = Http::withOptions(['verify' => false,])
-            ->withHeaders([
-                "accept"=>"application/json",
-                "X-AUTH-TOKEN"=>$this->auth_x_token,
-                "Content-Type"=>"application/json",
-                "WSO2-Authorization"=>"Bearer ".$this->token,
-            ]
-        )->withBody([
-            "notifUrl"=> "https://kiaboogroup.com/api/om/pm",
+        $response = Http::withOptions(['verify' => false,"notifUrl"=> "https://kiaboogroup.com/api/om/pm",
             "channelUserMsisdn"=> $this->channel,
             "amount"=> $amount,
             "subscriberMsisdn"=> $customer,
@@ -342,7 +334,13 @@ class ApiProdOrangeMoneyController extends Controller
             "orderId"=> $request->marchandTransactionId,
             "description"=> "Transaction initie by ".$user->first()->telephone. " de ".$partenaire,
             "payToken"=> $payToken])
-            ->Post($url);
+            ->withHeaders([
+                "accept"=>"application/json",
+                "X-AUTH-TOKEN"=>$this->auth_x_token,
+                "Content-Type"=>"application/json",
+                "WSO2-Authorization"=>"Bearer ".$this->token,
+            ]
+        )->Post($url);
 
         Log::info([
             "Service"=>ServiceEnum::PAYMENT_OM->name,
