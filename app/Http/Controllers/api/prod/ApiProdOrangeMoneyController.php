@@ -18,13 +18,13 @@ use Illuminate\Support\Facades\Log;
 class ApiProdOrangeMoneyController extends Controller
 {
 
-    private $token;
-    private $auth;
+    protected $token;
+    protected $auth;
 
     public function __construct()
     {
-        $token="eyJ4NXQiOiJNemhpTURaaE1qQTJNRGt5TURZeFlqSmtZelZoTkdSaFlXSXhZVFZtT0RabVpXSTNaakExT1EiLCJraWQiOiJNV1UwWlRZNVpqRTFOakk1TjJZMVptTmxObUUxWkRZMk5HRTRabUU1TkRNek1HTmxZamxtWXpnek4yRXdPRGM1TURnM016TXpZemM1WVRJMFlqWmxaZ19SUzI1NiIsImFsZyI6IlJTMjU2In0";
-        $auth = "bHluZS1jbGF1ZGUua29tYm91QGtpYWJvby5uZXQ6MjQwNjExOTdhMzI4ZTBlOWNmZGZmNGQ3Zjc=";
+        $this->token="eyJ4NXQiOiJNemhpTURaaE1qQTJNRGt5TURZeFlqSmtZelZoTkdSaFlXSXhZVFZtT0RabVpXSTNaakExT1EiLCJraWQiOiJNV1UwWlRZNVpqRTFOakk1TjJZMVptTmxObUUxWkRZMk5HRTRabUU1TkRNek1HTmxZamxtWXpnek4yRXdPRGM1TURnM016TXpZemM1WVRJMFlqWmxaZ19SUzI1NiIsImFsZyI6IlJTMjU2In0";
+        $this->auth = "bHluZS1jbGF1ZGUua29tYm91QGtpYWJvby5uZXQ6MjQwNjExOTdhMzI4ZTBlOWNmZGZmNGQ3Zjc=";
     }
 
     public function OM_GetTokenAccess()
