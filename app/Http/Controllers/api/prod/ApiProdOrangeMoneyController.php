@@ -325,6 +325,7 @@ class ApiProdOrangeMoneyController extends Controller
         $customerPhone = "237".$customer;
         $partenaire = Distributeur::where("id",Auth::user()->distributeur_id)->get()->first()->name_distributeur;
         $url = "https://omdeveloper-gateway.orange.cm/omapi/1.0.2/mp/pay";
+        $description ="Transaction initie by ".$user->first()->telephone. " de ".$partenaire;
         $data = [
             "notifUrl"=> "https://kiaboogroup.com/api/callback/om/pm",
             "channelUserMsisdn"=> $this->channel,
@@ -332,7 +333,7 @@ class ApiProdOrangeMoneyController extends Controller
             "subscriberMsisdn"=> "$customer",
             "pin"=> $this->pin,
             "orderId"=> $request->marchandTransactionId,
-            "description"=> "Transaction initie by ".$user->first()->telephone. " de ".$partenaire,
+            "description"=>$description,
             "payToken"=> $payToken
         ];
 
@@ -351,7 +352,43 @@ class ApiProdOrangeMoneyController extends Controller
             "response"=>$response->body()
         ]);
 
-        if($response->status()==200){
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS =>'{
+              "notifUrl": "https://kiaboogroup.com/api/callback/om/payment",
+              "channelUserMsisdn": "'.$this->channel.'",
+              "amount": "'.$amount.'",
+              "subscriberMsisdn": "'.$customer.'",
+              "pin": "2222",
+              "orderId": "'.$request->marchandTransactionId.'",
+              "description": "'.$description.'",
+              "payToken": "'.$payToken.'"
+            }',
+            CURLOPT_HTTPHEADER => array(
+                'accept: application/json',
+                'X-AUTH-TOKEN: '.$this->auth_x_token,
+                'Content-Type: application/json',
+                'WSO2-Authorization: Bearer '.$this->token,
+                'Cookie: 90172f9a61281d25f6dbdf1a5564f031=bf070161f093e553682ea80b8694a3f2'
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+        curl_close($curl);
+
+        $dataResponse = json_decode($response);
+        if($httpcode==200){
             //Le client a été notifié. Donc on reste en attente de sa confirmation (Saisie de son code secret)
 
             //On change le statut de la transaction dans la base de donnée
@@ -365,7 +402,7 @@ class ApiProdOrangeMoneyController extends Controller
                 'status'=>2, // Pending
                 'paytoken'=>$payToken,
                 'date_end_trans'=>Carbon::now(),
-                'description'=>'PENDING',
+                'description'=>$dataResponse->data->status, //'PENDING',
                 'message'=>"Transaction initiée par l'agent N°".$user->first()->id." le ".Carbon::now()." vers le client ".$customerPhone." En attente confirmation du client",
                 'fees_collecte'=>$fees->fees_globale,
                 'fees_partenaire_service'=>$fees->fees_partenaire_service,
@@ -394,7 +431,7 @@ class ApiProdOrangeMoneyController extends Controller
 
         }else{
             Log::error([
-                'code'=> $response->status(),
+                'code'=> $httpcode,
                 'function' => "MOMO_PAYMENT",
                 'response'=>$response->body(),
                 'user' => $user->first()->id,
@@ -404,7 +441,7 @@ class ApiProdOrangeMoneyController extends Controller
                 [
                     'status'=>$response->status(),
                     'message'=>$response->body(),
-                ],$response->status()
+                ],$httpcode
             );
         }
     }
