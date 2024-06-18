@@ -73,7 +73,14 @@ class ApiProdOrangeMoneyController extends Controller
             "response"=>$response->body(),
             "statusCode"=>$response->status(),
         ]);
+        if($response->status()==401){
 
+                $data = json_decode($response->body());
+                return response()->json([
+                    "statusCode"=>$data->code,
+                    "message"=>$data->description,
+                ], 401);
+        }
         if($response->status()!=200){
             return response()->json([
                 "statusCode"=>$response->status(),
@@ -303,10 +310,10 @@ class ApiProdOrangeMoneyController extends Controller
        // $auth = "bHluZS1jbGF1ZGUua29tYm91QGtpYWJvby5uZXQ6MjQwNjExOTdhMzI4ZTBlOWNmZGZmNGQ3Zjc=";
         $response = Http::withOptions(['verify' => false,])
             ->withHeaders([
-                    "X-AUTH-TOKEN"=>$this->auth,
-                    "WSO2-Authorization"=>"Bearer ".$this->token,
                     "accept"=>"application/json",
-                    "Content-Type"=>"application/json"
+                    "X-AUTH-TOKEN"=>$this->auth,
+                    "Content-Type"=>"application/json",
+                    "WSO2-Authorization"=>"Bearer ".$this->token,
                 ]
             )
             ->withBody(
