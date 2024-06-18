@@ -20,32 +20,39 @@ class ApiProdOrangeMoneyController extends Controller
 
     protected $token;
     protected $auth;
+    protected $channel;
+    protected $pin;
 
     public function __construct()
     {
         $this->token="eyJ4NXQiOiJNemhpTURaaE1qQTJNRGt5TURZeFlqSmtZelZoTkdSaFlXSXhZVFZtT0RabVpXSTNaakExT1EiLCJraWQiOiJNV1UwWlRZNVpqRTFOakk1TjJZMVptTmxObUUxWkRZMk5HRTRabUU1TkRNek1HTmxZamxtWXpnek4yRXdPRGM1TURnM016TXpZemM1WVRJMFlqWmxaZ19SUzI1NiIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJLSUFCT08iLCJhdXQiOiJBUFBMSUNBVElPTiIsImF1ZCI6InBGSVkxeVpfaUdITEcwYmcwZThCQ1A4ZTlMc2EiLCJuYmYiOjE3MTg3MDI4MDMsImF6cCI6InBGSVkxeVpfaUdITEcwYmcwZThCQ1A4ZTlMc2EiLCJzY29wZSI6ImRlZmF1bHQiLCJpc3MiOiJodHRwczpcL1wvb21kZXZlbG9wZXIub3JhbmdlLmNtOjQ0M1wvb2F1dGgyXC90b2tlbiIsImV4cCI6MTcxODcwNjQwMywiaWF0IjoxNzE4NzAyODAzLCJqdGkiOiI1NGQ0ZDUxZS1hNjU3LTQ2NTUtYWRjMS1lMzgxY2QwYWExYzIifQ.NVV52gCDoffPwzJa_CM7mvuNsB99AiLUYMTDdzIisLS7biEgqLUqZvDUvqzItZaP7Mg_zlnrEZxgCQfT37H5OBRgTQHhvQMJq6V2Tb6495CSNemUWnTzMaKWHqPvAmRcdFhUSS8WkTpP9harHtur_7p4Faa1KbrF5GWaM-G30SgblamsJKatnzzcmXpfE_BilkjYSTFOFeQT2bU5Hq_78ixkn816XO-PW4Y8EDRqpwusxA4MQiJohB-o3_-ry9010-oHLSFot4VYdj4J3jfyGKw7ZX6hccjMTM1ZJ1eqQeFgy3JX8Ip-9HB4W1_zdjO3EF-tnFjXRz05TZLLCJHW2Q";
         $this->auth =base64_encode("lyne-claude.kombou@kiaboo.net:24061197a328e0e9cfdff4d7f7") ;//"bHluZS1jbGF1ZGUua29tYm91QGtpYWJvby5uZXQ6MjQwNjExOTdhMzI4ZTBlOWNmZGZmNGQ3Zjc=";
+        $this->channel="691301143";
+        $this->pin="2222";
+
+
     }
 
     public function OM_GetTokenAccess()
     {
 
         $response = Http::withOptions(['verify' => false,])
-            ->withBasicAuth('rEvcWyBY06f9epiUYRB6hEbktTUa', 'JM5hPUe4BXa3PjZCPfcP73Da0l4a')
+            ->withHeaders(
+                [
+                    "Authorization"=>"Basic ".$this->auth
+                ]
+            )
             ->withBody('grant_type=client_credentials', 'application/x-www-form-urlencoded')
-            ->Post('https://apiw.orange.cm/token');
-
+            ->Post('https://omdeveloper.orange.cm/oauth2/token');
 
         if($response->status()==200){
             return response()->json($response->json());
         }
         else{
             Log::error([
-                'user' => Auth::user()->id,
-                'code'=> $response->status(),
                 'function' => "OM_GetTokenAccess",
+                'code'=> $response->status(),
                 'response'=>$response->body(),
-
             ]);
             return response()->json([
                 'status'=>'error',
@@ -57,6 +64,14 @@ class ApiProdOrangeMoneyController extends Controller
     }
 
     public function OM_getPayToken(){
+
+        $montoken = $this->OM_GetTokenAccess();
+        log::info([
+            "function"=>"OM_getPayToken 2",
+            "montoken"=>$montoken->body(),
+            "statusCode"=>$montoken->status(),
+        ]);
+
 
         $url = "https://omdeveloper-gateway.orange.cm/omapi/1.0.2/mp/init";
         $response = Http::withOptions(['verify' => false,])
@@ -318,10 +333,10 @@ class ApiProdOrangeMoneyController extends Controller
             ->withBody(
                 [
                      "notifUrl"=> "https://kiaboogroup.com/api/om/payment",
-                      "channelUserMsisdn"=> "656805492",
+                      "channelUserMsisdn"=> $this->channel,
                       "amount"=> $amount,
                       "subscriberMsisdn"=> $customer,
-                      "pin"=> "2222",
+                      "pin"=> $this->pin,
                       "orderId"=> $request->marchandTransactionId,
                       "description"=> "Transaction initie by ".$user->first()->telephone,
                       "payToken"=> $payToken
