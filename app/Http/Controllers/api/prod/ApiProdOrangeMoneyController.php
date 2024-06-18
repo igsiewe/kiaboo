@@ -18,6 +18,15 @@ use Illuminate\Support\Facades\Log;
 class ApiProdOrangeMoneyController extends Controller
 {
 
+    private $token;
+    private $auth;
+
+    public function __construct()
+    {
+        $token="eyJ4NXQiOiJNemhpTURaaE1qQTJNRGt5TURZeFlqSmtZelZoTkdSaFlXSXhZVFZtT0RabVpXSTNaakExT1EiLCJraWQiOiJNV1UwWlRZNVpqRTFOakk1TjJZMVptTmxObUUxWkRZMk5HRTRabUU1TkRNek1HTmxZamxtWXpnek4yRXdPRGM1TURnM016TXpZemM1WVRJMFlqWmxaZ19SUzI1NiIsImFsZyI6IlJTMjU2In0";
+        $auth = "bHluZS1jbGF1ZGUua29tYm91QGtpYWJvby5uZXQ6MjQwNjExOTdhMzI4ZTBlOWNmZGZmNGQ3Zjc=";
+    }
+
     public function OM_GetTokenAccess()
     {
 
@@ -49,13 +58,13 @@ class ApiProdOrangeMoneyController extends Controller
 
     public function OM_getPayToken(){
 
-        $token = "eyJ4NXQiOiJNemhpTURaaE1qQTJNRGt5TURZeFlqSmtZelZoTkdSaFlXSXhZVFZtT0RabVpXSTNaakExT1EiLCJraWQiOiJNV1UwWlRZNVpqRTFOakk1TjJZMVptTmxObUUxWkRZMk5HRTRabUU1TkRNek1HTmxZamxtWXpnek4yRXdPRGM1TURnM016TXpZemM1WVRJMFlqWmxaZ19SUzI1NiIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJLSUFCT08iLCJhdXQiOiJBUFBMSUNBVElPTiIsImF1ZCI6InBGSVkxeVpfaUdITEcwYmcwZThCQ1A4ZTlMc2EiLCJuYmYiOjE3MTg2NTk3NDYsImF6cCI6InBGSVkxeVpfaUdITEcwYmcwZThCQ1A4ZTlMc2EiLCJzY29wZSI6ImRlZmF1bHQiLCJpc3MiOiJodHRwczpcL1wvb21kZXZlbG9wZXIub3JhbmdlLmNtOjQ0M1wvb2F1dGgyXC90b2tlbiIsImV4cCI6MTcxODY2MzM0NiwiaWF0IjoxNzE4NjU5NzQ2LCJqdGkiOiJmMDE2MjhhNC1iMDU2LTRiZTQtYjE2YS0wZDM3NTQxMDE3Y2EifQ.TCfpcIBWwXB_y0qL2RGvKa6tQlSKIXQQ6aPgL7aGMHPNnBzT_lq31Uxr-QJQiLpq1-rPSY-Dx4MKAmVyuUEUs7hlJoYNLKHQNRvxHiZi_IwBulmC-mEh2JxdPCLIRAwJGSidhqv5OuX8eFlEmV6PIG-8ojUzbMUVYEG-zEOZDwJNRN8aQFAkIQzf8kUDYFOlQ2kuerFdhBZrUKvfXU2e5A1Hr1HHGA-AYHxMtyoOEvdMd4Lyt49SZnQwDUudUKJoUw8LEAXMyStAgF8eh68niEocZrRSOfpUQa3dgOI3VRY0OhoQeumChHuqdTK_JcDepo3pMlfVFYv_vHedb0aklQ";
+       // $token = "eyJ4NXQiOiJNemhpTURaaE1qQTJNRGt5TURZeFlqSmtZelZoTkdSaFlXSXhZVFZtT0RabVpXSTNaakExT1EiLCJraWQiOiJNV1UwWlRZNVpqRTFOakk1TjJZMVptTmxObUUxWkRZMk5HRTRabUU1TkRNek1HTmxZamxtWXpnek4yRXdPRGM1TURnM016TXpZemM1WVRJMFlqWmxaZ19SUzI1NiIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJLSUFCT08iLCJhdXQiOiJBUFBMSUNBVElPTiIsImF1ZCI6InBGSVkxeVpfaUdITEcwYmcwZThCQ1A4ZTlMc2EiLCJuYmYiOjE3MTg2NTk3NDYsImF6cCI6InBGSVkxeVpfaUdITEcwYmcwZThCQ1A4ZTlMc2EiLCJzY29wZSI6ImRlZmF1bHQiLCJpc3MiOiJodHRwczpcL1wvb21kZXZlbG9wZXIub3JhbmdlLmNtOjQ0M1wvb2F1dGgyXC90b2tlbiIsImV4cCI6MTcxODY2MzM0NiwiaWF0IjoxNzE4NjU5NzQ2LCJqdGkiOiJmMDE2MjhhNC1iMDU2LTRiZTQtYjE2YS0wZDM3NTQxMDE3Y2EifQ.TCfpcIBWwXB_y0qL2RGvKa6tQlSKIXQQ6aPgL7aGMHPNnBzT_lq31Uxr-QJQiLpq1-rPSY-Dx4MKAmVyuUEUs7hlJoYNLKHQNRvxHiZi_IwBulmC-mEh2JxdPCLIRAwJGSidhqv5OuX8eFlEmV6PIG-8ojUzbMUVYEG-zEOZDwJNRN8aQFAkIQzf8kUDYFOlQ2kuerFdhBZrUKvfXU2e5A1Hr1HHGA-AYHxMtyoOEvdMd4Lyt49SZnQwDUudUKJoUw8LEAXMyStAgF8eh68niEocZrRSOfpUQa3dgOI3VRY0OhoQeumChHuqdTK_JcDepo3pMlfVFYv_vHedb0aklQ";
         $url = "https://omdeveloper-gateway.orange.cm/omapi/1.0.2/mp/init";
-        $auth = "bHluZS1jbGF1ZGUua29tYm91QGtpYWJvby5uZXQ6MjQwNjExOTdhMzI4ZTBlOWNmZGZmNGQ3Zjc=";
+      //  $auth = "bHluZS1jbGF1ZGUua29tYm91QGtpYWJvby5uZXQ6MjQwNjExOTdhMzI4ZTBlOWNmZGZmNGQ3Zjc=";
         $response = Http::withOptions(['verify' => false,])
             ->withHeaders([
-                    "X-AUTH-TOKEN"=>$auth,
-                    "WSO2-Authorization"=>"Bearer ".$token,
+                    "X-AUTH-TOKEN"=>$this->auth,
+                    "WSO2-Authorization"=>"Bearer ".$this->token,
                     "accept"=>"application/json"
                 ]
             )
@@ -284,7 +293,6 @@ class ApiProdOrangeMoneyController extends Controller
 //        $dataAcessToken = json_decode($responseToken->getContent());
 //        $AccessToken = $dataAcessToken->access_token;
 
-
         //Référence de la transaction :On génère le payToken
         $dataPayTokenResponse = $this->OM_getPayToken();
         $dataPayToken = json_decode($dataPayTokenResponse);
@@ -308,13 +316,13 @@ class ApiProdOrangeMoneyController extends Controller
         $customerPhone = "237".$customer;
         $partenaire = Distributeur::where("id",Auth::user()->distributeur_id)->get()->first()->name_distributeur;
 
-        $token = "eyJ4NXQiOiJNemhpTURaaE1qQTJNRGt5TURZeFlqSmtZelZoTkdSaFlXSXhZVFZtT0RabVpXSTNaakExT1EiLCJraWQiOiJNV1UwWlRZNVpqRTFOakk1TjJZMVptTmxObUUxWkRZMk5HRTRabUU1TkRNek1HTmxZamxtWXpnek4yRXdPRGM1TURnM016TXpZemM1WVRJMFlqWmxaZ19SUzI1NiIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJLSUFCT08iLCJhdXQiOiJBUFBMSUNBVElPTiIsImF1ZCI6InBGSVkxeVpfaUdITEcwYmcwZThCQ1A4ZTlMc2EiLCJuYmYiOjE3MTg2NTk3NDYsImF6cCI6InBGSVkxeVpfaUdITEcwYmcwZThCQ1A4ZTlMc2EiLCJzY29wZSI6ImRlZmF1bHQiLCJpc3MiOiJodHRwczpcL1wvb21kZXZlbG9wZXIub3JhbmdlLmNtOjQ0M1wvb2F1dGgyXC90b2tlbiIsImV4cCI6MTcxODY2MzM0NiwiaWF0IjoxNzE4NjU5NzQ2LCJqdGkiOiJmMDE2MjhhNC1iMDU2LTRiZTQtYjE2YS0wZDM3NTQxMDE3Y2EifQ.TCfpcIBWwXB_y0qL2RGvKa6tQlSKIXQQ6aPgL7aGMHPNnBzT_lq31Uxr-QJQiLpq1-rPSY-Dx4MKAmVyuUEUs7hlJoYNLKHQNRvxHiZi_IwBulmC-mEh2JxdPCLIRAwJGSidhqv5OuX8eFlEmV6PIG-8ojUzbMUVYEG-zEOZDwJNRN8aQFAkIQzf8kUDYFOlQ2kuerFdhBZrUKvfXU2e5A1Hr1HHGA-AYHxMtyoOEvdMd4Lyt49SZnQwDUudUKJoUw8LEAXMyStAgF8eh68niEocZrRSOfpUQa3dgOI3VRY0OhoQeumChHuqdTK_JcDepo3pMlfVFYv_vHedb0aklQ";
+       // $token = "eyJ4NXQiOiJNemhpTURaaE1qQTJNRGt5TURZeFlqSmtZelZoTkdSaFlXSXhZVFZtT0RabVpXSTNaakExT1EiLCJraWQiOiJNV1UwWlRZNVpqRTFOakk1TjJZMVptTmxObUUxWkRZMk5HRTRabUU1TkRNek1HTmxZamxtWXpnek4yRXdPRGM1TURnM016TXpZemM1WVRJMFlqWmxaZ19SUzI1NiIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJLSUFCT08iLCJhdXQiOiJBUFBMSUNBVElPTiIsImF1ZCI6InBGSVkxeVpfaUdITEcwYmcwZThCQ1A4ZTlMc2EiLCJuYmYiOjE3MTg2NTk3NDYsImF6cCI6InBGSVkxeVpfaUdITEcwYmcwZThCQ1A4ZTlMc2EiLCJzY29wZSI6ImRlZmF1bHQiLCJpc3MiOiJodHRwczpcL1wvb21kZXZlbG9wZXIub3JhbmdlLmNtOjQ0M1wvb2F1dGgyXC90b2tlbiIsImV4cCI6MTcxODY2MzM0NiwiaWF0IjoxNzE4NjU5NzQ2LCJqdGkiOiJmMDE2MjhhNC1iMDU2LTRiZTQtYjE2YS0wZDM3NTQxMDE3Y2EifQ.TCfpcIBWwXB_y0qL2RGvKa6tQlSKIXQQ6aPgL7aGMHPNnBzT_lq31Uxr-QJQiLpq1-rPSY-Dx4MKAmVyuUEUs7hlJoYNLKHQNRvxHiZi_IwBulmC-mEh2JxdPCLIRAwJGSidhqv5OuX8eFlEmV6PIG-8ojUzbMUVYEG-zEOZDwJNRN8aQFAkIQzf8kUDYFOlQ2kuerFdhBZrUKvfXU2e5A1Hr1HHGA-AYHxMtyoOEvdMd4Lyt49SZnQwDUudUKJoUw8LEAXMyStAgF8eh68niEocZrRSOfpUQa3dgOI3VRY0OhoQeumChHuqdTK_JcDepo3pMlfVFYv_vHedb0aklQ";
         $url = "https://omdeveloper-gateway.orange.cm/omapi/1.0.2/mp/init";
-        $auth = "bHluZS1jbGF1ZGUua29tYm91QGtpYWJvby5uZXQ6MjQwNjExOTdhMzI4ZTBlOWNmZGZmNGQ3Zjc=";
+       // $auth = "bHluZS1jbGF1ZGUua29tYm91QGtpYWJvby5uZXQ6MjQwNjExOTdhMzI4ZTBlOWNmZGZmNGQ3Zjc=";
         $response = Http::withOptions(['verify' => false,])
             ->withHeaders([
-                    "X-AUTH-TOKEN"=>$auth,
-                    "WSO2-Authorization"=>"Bearer ".$token,
+                    "X-AUTH-TOKEN"=>$this->auth,
+                    "WSO2-Authorization"=>"Bearer ".$this->token,
                     "accept"=>"application/json",
                     "Content-Type"=>"application/json"
                 ]
