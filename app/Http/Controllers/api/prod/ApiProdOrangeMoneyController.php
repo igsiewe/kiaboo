@@ -309,9 +309,11 @@ class ApiProdOrangeMoneyController extends Controller
                 ],$dataPayTokenResponse->status()
             );
         }
-        $dataResultat = json_decode($dataPayToken->content());
-         $payToken = $dataResultat->payToken;
-
+      //  $dataResultat = json_decode($dataPayToken->content(), associative: true);
+         $payToken = $dataPayToken->data->payToken;
+        Log::info([
+            "resultatToken"=>$payToken
+        ]);
         //On gardee l'UID de la transaction initiee
         $saveUID = Transaction::where('id',$idTransaction)->update([
             "paytoken"=>$payToken
