@@ -11,6 +11,7 @@ use App\Models\Distributeur;
 use App\Models\Transaction;
 use App\Models\User;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -337,19 +338,19 @@ class ApiProdOrangeMoneyController extends Controller
             "payToken"=> $payToken
         ];
 
+        try{
+            $curl = curl_init();
 
-        $curl = curl_init();
-
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS =>'{
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS =>'{
               "notifUrl": "https://kiaboogroup.com/api/callback/om/payment",
               "channelUserMsisdn": "'.$this->channel.'",
               "amount": "'.$amount.'",
@@ -359,26 +360,42 @@ class ApiProdOrangeMoneyController extends Controller
               "description": "'.$description.'",
               "payToken": "'.$payToken.'"
             }',
-            CURLOPT_HTTPHEADER => array(
-                'accept: application/json',
-                'X-AUTH-TOKEN: '.$this->auth_x_token,
-                'Content-Type: application/json',
-                'WSO2-Authorization: Bearer '.$this->token,
-                'Cookie: 90172f9a61281d25f6dbdf1a5564f031=bf070161f093e553682ea80b8694a3f2'
-            ),
-        ));
+                CURLOPT_HTTPHEADER => array(
+                    'accept: application/json',
+                    'X-AUTH-TOKEN: '.$this->auth_x_token,
+                    'Content-Type: application/json',
+                    'WSO2-Authorization: Bearer '.$this->token,
+                    'Cookie: 90172f9a61281d25f6dbdf1a5564f031=bf070161f093e553682ea80b8694a3f2'
+                ),
+            ));
 
-        $response = curl_exec($curl);
-        $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+            $response = curl_exec($curl);
+            $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
-        curl_close($curl);
-        $dataResponse = json_decode($response);
-        Log::info([
-            "fontion"=>"OM_Payment",
-            "url"=>$url,
-            "request"=>$data,
-            "response"=>$dataResponse
-        ]);
+            curl_close($curl);
+            $dataResponse = json_decode($response);
+            Log::info([
+                "fontion"=>"OM_Payment",
+                "url"=>$url,
+                "request"=>$data,
+                "response"=>$dataResponse
+            ]);
+        }catch (Exception $e){
+            throw $e;
+            Log::error([
+                "fontion"=>"OM_Payment",
+                "url"=>$url,
+                "request"=>$data,
+                "error"=>$e->getMessage()
+            ]);
+            return response()->json([
+                "fontion"=>"OM_Payment",
+                "url"=>$url,
+                "request"=>$data,
+                "response"=>$e->getMessage()
+            ]);
+        }
+
 
         if($httpcode==200){
             //Le client a été notifié. Donc on reste en attente de sa confirmation (Saisie de son code secret)
