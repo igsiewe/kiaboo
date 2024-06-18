@@ -342,7 +342,7 @@ class ApiProdOrangeMoneyController extends Controller
             "Content-Type"=>"application/json",
             "WSO2-Authorization"=>"Bearer ".$this->token,
 
-        ])->withOptions(['verify' => false,])->withBody($data)->Post($url);
+        ])->withOptions(['verify' => false,])->Post($url, $data);
 
         Log::info([
             "Service"=>ServiceEnum::PAYMENT_OM->name,
