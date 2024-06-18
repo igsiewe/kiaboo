@@ -42,12 +42,12 @@ class ApiProdOrangeMoneyController extends Controller
     {
 
         $response = Http::withOptions(['verify' => false,])
-//            ->withHeaders(
-//                [
-//                    "Authorization"=>"Basic ".$this->auth
-//                ]
-//            )
-            ->withBasicAuth("lyne-claude.kombou@kiaboo.net","24061197a328e0e9cfdff4d7f7")
+            ->withHeaders(
+                [
+                    "Authorization"=>"Basic ".$this->auth
+                ]
+            )
+
             ->withBody('grant_type=client_credentials', 'application/x-www-form-urlencoded')
             ->Post('https://omdeveloper.orange.cm/oauth2/token');
 
@@ -62,7 +62,7 @@ class ApiProdOrangeMoneyController extends Controller
             ]);
             return response()->json([
                 'status'=>'error',
-                'message'=>"Erreur ".$response->status(). ' : Erreur lors de la connexion au serveur. Veuillez réessayer plus tard'
+                'message'=>"Erreur innattendue : ".$response->body()
             ],$response->status());
 
         }
