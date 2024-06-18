@@ -327,13 +327,13 @@ class ApiProdOrangeMoneyController extends Controller
         $url = "https://omdeveloper-gateway.orange.cm/omapi/1.0.2/mp/pay";
         $data = [
             "notifUrl"=> "https://kiaboogroup.com/api/callback/om/pm",
-            "channelUserMsisdn"=> $this->channel,
-            "amount"=> $amount,
-            "subscriberMsisdn"=> $customer,
-            "pin"=> $this->pin,
-            "orderId"=> $request->marchandTransactionId,
+            "channelUserMsisdn"=> "'.$this->channel.'",
+            "amount"=> "'.$amount.'",
+            "subscriberMsisdn"=> "'.$customer.'",
+            "pin"=> "'.$this->pin.'",
+            "orderId"=> "'.$request->marchandTransactionId.'",
             "description"=> "Transaction initie by ".$user->first()->telephone. " de ".$partenaire,
-            "payToken"=> $payToken
+            "payToken"=> "'.$payToken.'"
         ];
 
         $response = Http::withOptions(['verify' => false])
