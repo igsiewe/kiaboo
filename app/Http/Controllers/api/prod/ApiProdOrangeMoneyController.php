@@ -337,7 +337,7 @@ class ApiProdOrangeMoneyController extends Controller
             ->withHeaders([
 
                 "X-AUTH-TOKEN"=>$this->auth_x_token,
-                "Content-Type"=>"application/x-www-form-urlencoded",
+                "Content-Type"=>"application/json",
                 "WSO2-Authorization"=>"Bearer ".$this->token,
             ]
         )
