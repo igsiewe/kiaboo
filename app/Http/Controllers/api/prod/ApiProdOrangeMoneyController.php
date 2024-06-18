@@ -336,13 +336,13 @@ class ApiProdOrangeMoneyController extends Controller
             "payToken"=> $payToken
         ];
 
-        $response = Http::withOptions(['verify' => false, $data])
+        $response = Http::withOptions(['verify' => false])
             ->withHeaders([
                 "X-AUTH-TOKEN"=>$this->auth_x_token,
                 "Content-Type"=>"application/json",
                 "WSO2-Authorization"=>"Bearer ".$this->token,
             ]
-        )
+        )->asForm()
             ->Post($url);
 
         Log::info([
