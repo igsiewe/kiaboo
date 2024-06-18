@@ -30,8 +30,11 @@ class ApiProdOrangeMoneyController extends Controller
         $this->auth="cEZJWTF5Wl9pR0hMRzBiZzBlOEJDUDhlOUxzYTpuRGppWTJ6UDZPY0Q2cktkVFg5RmE0eXoxYW9h";
         $this->channel="691301143";
         $this->pin="2222";
-
-
+        $getTokenResponse = $this->OM_GetTokenAccess();
+        if($getTokenResponse->status()==200){
+            $dataToken = json_decode($getTokenResponse);
+            $this->token = $dataToken->access_token;
+        }
     }
 
     public function OM_GetTokenAccess()
@@ -65,14 +68,6 @@ class ApiProdOrangeMoneyController extends Controller
     }
 
     public function OM_getPayToken(){
-
-        $montoken = $this->OM_GetTokenAccess();
-        log::info([
-            "function"=>"OM_getPayToken 2",
-            "montoken"=>$montoken->content(),
-            "statusCode"=>$montoken->status(),
-        ]);
-
 
         $url = "https://omdeveloper-gateway.orange.cm/omapi/1.0.2/mp/init";
         $response = Http::withOptions(['verify' => false,])
