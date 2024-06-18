@@ -58,13 +58,7 @@ class ApiProdOrangeMoneyController extends Controller
 
     public function OM_getPayToken(){
 
-       // $token = "eyJ4NXQiOiJNemhpTURaaE1qQTJNRGt5TURZeFlqSmtZelZoTkdSaFlXSXhZVFZtT0RabVpXSTNaakExT1EiLCJraWQiOiJNV1UwWlRZNVpqRTFOakk1TjJZMVptTmxObUUxWkRZMk5HRTRabUU1TkRNek1HTmxZamxtWXpnek4yRXdPRGM1TURnM016TXpZemM1WVRJMFlqWmxaZ19SUzI1NiIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJLSUFCT08iLCJhdXQiOiJBUFBMSUNBVElPTiIsImF1ZCI6InBGSVkxeVpfaUdITEcwYmcwZThCQ1A4ZTlMc2EiLCJuYmYiOjE3MTg2NTk3NDYsImF6cCI6InBGSVkxeVpfaUdITEcwYmcwZThCQ1A4ZTlMc2EiLCJzY29wZSI6ImRlZmF1bHQiLCJpc3MiOiJodHRwczpcL1wvb21kZXZlbG9wZXIub3JhbmdlLmNtOjQ0M1wvb2F1dGgyXC90b2tlbiIsImV4cCI6MTcxODY2MzM0NiwiaWF0IjoxNzE4NjU5NzQ2LCJqdGkiOiJmMDE2MjhhNC1iMDU2LTRiZTQtYjE2YS0wZDM3NTQxMDE3Y2EifQ.TCfpcIBWwXB_y0qL2RGvKa6tQlSKIXQQ6aPgL7aGMHPNnBzT_lq31Uxr-QJQiLpq1-rPSY-Dx4MKAmVyuUEUs7hlJoYNLKHQNRvxHiZi_IwBulmC-mEh2JxdPCLIRAwJGSidhqv5OuX8eFlEmV6PIG-8ojUzbMUVYEG-zEOZDwJNRN8aQFAkIQzf8kUDYFOlQ2kuerFdhBZrUKvfXU2e5A1Hr1HHGA-AYHxMtyoOEvdMd4Lyt49SZnQwDUudUKJoUw8LEAXMyStAgF8eh68niEocZrRSOfpUQa3dgOI3VRY0OhoQeumChHuqdTK_JcDepo3pMlfVFYv_vHedb0aklQ";
         $url = "https://omdeveloper-gateway.orange.cm/omapi/1.0.2/mp/init";
-      //  $auth = "bHluZS1jbGF1ZGUua29tYm91QGtpYWJvby5uZXQ6MjQwNjExOTdhMzI4ZTBlOWNmZGZmNGQ3Zjc=";
-        Log::info([
-            "token"=>$this->token,
-            "auth"=>$this->auth
-        ]);
         $response = Http::withOptions(['verify' => false,])
             ->withHeaders([
                     "X-AUTH-TOKEN"=>$this->auth,
@@ -281,25 +275,10 @@ class ApiProdOrangeMoneyController extends Controller
         }
         $idTransaction = $dataTransactionInit->transId; //Id de la transaction initiée
         $reference = $dataTransactionInit->reference; //Référence de la transaction initiée
-        //On génère le token de la transation
-        // $responseToken = $this->MOMO_Collection_GetTokenAccess();
-//        $responseToken = $this->OM_Payment_GetTokenAccess();
-//        if($responseToken->status()!=200){
-//            return response()->json(
-//                [
-//                    'success'=>false,
-//                    'statusCode'=>$responseToken->status(),
-//                    'message'=>$responseToken["message"],
-//                ],$responseToken->status()
-//            );
-//        }
-//
-//        $dataAcessToken = json_decode($responseToken->getContent());
-//        $AccessToken = $dataAcessToken->access_token;
 
         //Référence de la transaction :On génère le payToken
         $dataPayTokenResponse = $this->OM_getPayToken();
-        $dataPayToken = json_decode($dataPayTokenResponse);
+        $dataPayToken = json_decode($dataPayTokenResponse->content());
         if($dataPayTokenResponse->status()!=200){
             return response()->json(
                 [
@@ -309,11 +288,12 @@ class ApiProdOrangeMoneyController extends Controller
                 ],$dataPayTokenResponse->status()
             );
         }
-      //  $dataResultat = json_decode($dataPayToken->content(), associative: true);
-         $payToken = $dataPayToken->data->payToken;
+        $payToken = $dataPayToken->data->payToken;
+
         Log::info([
             "resultatToken"=>$payToken
         ]);
+        $payToken = $dataPayToken->data->payToken;
         //On gardee l'UID de la transaction initiee
         $saveUID = Transaction::where('id',$idTransaction)->update([
             "paytoken"=>$payToken
