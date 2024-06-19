@@ -611,6 +611,191 @@ class ApiProdOrangeMoneyController extends Controller
 
     }
 
+    /**
+     * @OA\Get (
+     * path="/api/v1/prod/om/status/{transactionId}",
+     * summary="Check OM transaction status",
+     * description="This operation is used to get the status of a request to momo pay. TransactionId that was passed in the post is used as reference to the request",
+     * tags={"Merchant payment"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(
+     *     name="transactionId",
+     *     description="reference of transaction",
+     *     required=true,
+     *     in="path",
+     *     @OA\Schema(
+     *        type="string"
+     *     )
+     * ),
+     * @OA\Response(
+     *    response=200,
+     *    description="Transaction found",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="true"),
+     *       @OA\Property(property="statusCode", type="string", example="SUCCESSFULL"),
+     *       @OA\Property(property="message", type="string", example="Transaction found"),
+     *       @OA\Property(
+     *             type="object",
+     *             property="data",
+     *             @OA\Property(property="status", type="string", example="Transaction status"),
+     *             @OA\Property(property="transactionId", type="string", example="transacton id database"),
+     *             @OA\Property(property="dateTransaction", type="date", example="Date transaction"),
+     *             @OA\Property(property="currency", type="number", example="XAF"),
+     *             @OA\Property(property="amount", type="number", example="amount of transaction"),
+     *             @OA\Property(property="fees", type="number", example="transaction fees"),
+     *             @OA\Property(property="agent", type="string", example="agent who initiate transaction"),
+     *             @OA\Property(property="customer", type="number", example="customer phone number"),
+     *             @OA\Property(property="marchandTransactionID", type="number", example="id transaction of partner"),
+     *       )
+     *    )
+     * ),
+     * @OA\Response(
+     *     response=202,
+     *     description="Transaction pending",
+     *     @OA\JsonContent(
+     *        @OA\Property(property="success", type="boolean", example="true"),
+     *        @OA\Property(property="statusCode", type="string", example="PENDING"),
+     *        @OA\Property(property="message", type="string", example="Transaction pending"),
+     *        @OA\Property(
+     *             type="object",
+     *             property="data",
+     *             @OA\Property(property="status", type="string", example="Transaction status"),
+     *             @OA\Property(property="transactionId", type="string", example="transacton id database"),
+     *             @OA\Property(property="dateTransaction", type="date", example="Date transaction"),
+     *             @OA\Property(property="currency", type="number", example="XAF"),
+     *             @OA\Property(property="amount", type="number", example="amount of transaction"),
+     *             @OA\Property(property="fees", type="number", example="transaction fees"),
+     *             @OA\Property(property="agent", type="string", example="agent who initiate transaction"),
+     *             @OA\Property(property="customer", type="number", example="customer phone number"),
+     *             @OA\Property(property="marchandTransactionID", type="number", example="id transaction of partner"),
+     *        )
+     *     )
+     *  ),
+     *     @OA\Response(
+     *      response=402,
+     *      description="Transaction failed",
+     *      @OA\JsonContent(
+     *         @OA\Property(property="false", type="boolean", example="true"),
+     *         @OA\Property(property="statusCode", type="string", example="FAILED"),
+     *         @OA\Property(property="message", type="string", example="Transaction failed"),
+     *      )
+     *   ),
+     *  @OA\Response(
+     *       response=403,
+     *       description="you do not have the necessary permissions",
+     *       @OA\JsonContent(
+     *          @OA\Property(property="success", type="boolean", example="false"),
+     *          @OA\Property(property="statusCode", type="string", example="ERR-NOT-PERMISSION"),
+     *          @OA\Property(property="message", type="string", example="you do not have the necessary permissions"),
+     *       )
+     *  ),
+     * @OA\Response(
+     *    response=404,
+     *    description="transaction not found ",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="false"),
+     *       @OA\Property(property="statusCode", type="string", example="ERR-TRANSACTION-NOT-FOUND"),
+     *       @OA\Property(property="message", type="string", example="Transaction not found "),
+     *    )
+     *  ),
+     * @OA\Response(
+     *    response=500,
+     *    description="an error occurred",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="false"),
+     *       @OA\Property(property="statusCode", type="string", example="ERR-UNAVAILABLE"),
+     *       @OA\Property(property="message", type="string", example="an error occurred"),
+     *    )
+     *  ),
+     * )
+     * )
+     */
+
+    public function OM_Payment_Status($transactionId){
+        // On cherche la transaction dans la table transaction
+
+        $transaction = Transaction::where("reference", $transactionId)->get();
+        if($transaction->count()==0){
+            return response()->json(
+                [
+                    'success'=>false,
+                    'statusCode'=>"ERR-TRANSACTION-NOT-FOUND",
+                    'message'=>"This id transaction does not exist"
+                ],404
+            );
+        }
+
+        $service = Service::where("id",$transaction->first()->service_id)->get();
+
+        if($service->first()->type_service_id !=TypeServiceEnum::PAYMENT->value){
+            return response()->json(
+                [
+                    'success'=>false,
+                    'statusCode'=>"ERR-TRANSACTION-NOT-FOUND",
+                    'message'=>"This id transaction does not exist"
+                ],404
+            );
+        }
+
+        $distributeur = User::where("id", $transaction->first()->source)->get()->first()->distributeur_id;
+
+        if(Auth::user()->distributeur_id !=$distributeur){
+            return response()->json(
+                [
+                    'success'=>false,
+                    'statusCode'=>'ERR-NOT-PERMISSION',
+                    'message'=>"You are not authorized to view this transaction. It does not belong to you.",
+                ],403
+            );
+        }
+
+        $payToken = $transaction->first()->paytoken;
+        $http = "https://omdeveloper-gateway.orange.cm/omapi/1.0.2/mp/paymentstatus/".$payToken;
+
+        $response = Http::withOptions(['verify' => false,])->withHeaders(
+            [
+                "X-AUTH-TOKEN"=>$this->auth_x_token,
+                "WSO2-Authorization"=>"Bearer ".$this->token,
+                "accept"=>"application/json"
+            ])->Get($http);
+
+        Log::info([
+            "fonction"=>"OM_Payment_Status",
+            "url"=>$http,
+            "status"=>$response->status(),
+            "response"=>$response->body(),
+        ]);
+
+        $data = json_decode($response->body());
+
+        if($response->status()==200){
+            return response()->json(
+                [
+                    'success'=>true,
+                    'statusCode'=>$data->data->status,
+                    'message'=>$data->data->inittxnmessage,
+                    'data'=>[
+                        'currency'=>'XAF',
+                        'transactionId'=>$transactionId,
+                        'dateTransaction'=>$transaction->first()->date_transaction,
+                        'amount'=>$transaction->first()->credit,
+                        'agent'=>User::where("id", $transaction->first()->source)->first()->telephone,
+                        'customer'=>$transaction->first()->customer_phone,
+                    ]
+                ],200
+            );
+        }else{
+            return response()->json(
+                [
+                    'success'=>false,
+                    'statusCode'=>$data->data->status,
+                    'message'=>$data->message
+
+                ],$response->status()
+            );
+        }
+
+    }
     public function OMCallBack(Request $request)
     {
         header("Content-Type: application/json");
