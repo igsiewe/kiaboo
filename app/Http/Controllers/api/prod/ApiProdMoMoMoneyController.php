@@ -1492,13 +1492,13 @@ class ApiProdMoMoMoneyController extends Controller
         //On se rassure que l'utilisateur est bien rattaché au compte connecté
 
         if($user->first()->distributeur_id !=Auth::user()->distributeur_id){
-            if($user->count()==0 || $user->first()->status ==0){
+           // if($user->count()==0 || $user->first()->status ==0){
                 return response()->json([
                     'success'=>false,
                     'statusCode'=>'ERR-NOT-PERMISSION',
                     'message'=>"The agent used does not have the necessary permissions with your profil",
                 ],403);
-            }
+           // }
         }
         return response()->json([
             "user1"=>$user->first()->distributeur_id,
