@@ -224,7 +224,7 @@ class ApiCheckController extends Controller
 
     }
 
-    function init_Payment($montant, $beneficiaire, $service, $payToken="",$user){
+    function init_Payment($montant, $beneficiaire, $service, $payToken="",$user,$application){
 
         $reference = "PM".Carbon::now()->format('ymd').".".Carbon::now()->format('His').".".$this->genererChaineAleatoire(1)."".$this->GenereRang();
 
@@ -253,7 +253,8 @@ class ApiCheckController extends Controller
                 'device_notification'=>"",
                 'latitude'=>"",
                 'longitude'=>"",
-                'place'=>""
+                'place'=>"",
+                'application'=>$application
             ]);
 
             if($Transaction) {

@@ -1543,7 +1543,7 @@ class ApiProdMoMoMoneyController extends Controller
 
         //Initie la transaction
 
-        $init_transaction = $apiCheck->init_Payment($amount, $customer, $service,"",$user->first()->id);
+        $init_transaction = $apiCheck->init_Payment($amount, $customer, $service,"",$user->first()->id,2);
         $dataTransactionInit = json_decode($init_transaction->getContent());
 
         if($init_transaction->getStatusCode() !=200){
