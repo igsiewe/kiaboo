@@ -146,7 +146,7 @@ Route::middleware('auth:api')->group(function () {
                 Route::controller(ApiOperationAgent::class)->group(function () {
                    Route::post('retrait', 'setTransactionRetraitOM')->name("OM_retrait");
                    Route::post('payment', 'OM_Payment')->name("OM_Payment");
-                    Route::post('payment/push', 'OM_Payment_Push')->name("OM_Payment_Push");
+                    Route::get('payment/push/{transactionId}', 'OM_Payment_Push')->name("OM_Payment_Push");
                 });
             });
             Route::group(['prefix' => 'om'], function () {
