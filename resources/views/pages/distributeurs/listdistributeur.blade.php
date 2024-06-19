@@ -84,7 +84,9 @@
                                             <th scope="col">Region</th>
                                             <th scope="col">Date de création</th>
                                             <th scope="col">Date mise à jour</th>
+                                            <th scope="col">Source</th>
                                             <th scope="col">Statut</th>
+
                                             <th scope="col"></th>
                                         </tr>
                                         </thead>
@@ -100,6 +102,7 @@
                                                         <td nowrap>{{$c->region->name_region}}</td>
                                                         <td nowrap align="center">{{$c->created_at}}</td>
                                                         <td nowrap align="center">{{$c->updated_at}}</td>
+                                                        <td nowrap align="center">{{$c->application==1?"Web":"API"}}</td>
                                                         @if($c->status==0)
                                                             <td align="center" title="Distributeur bloqué">
                                                                 <form action="{{route("debloqueDistributeur",[$c->id])}}" id="frmDebloque{{$c->id}}" name="frmDebloque{{$c->id}}">
