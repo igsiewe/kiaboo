@@ -91,7 +91,8 @@ class WebApproDistributeurController extends Controller
             ->whereDate('transactions.created_at', '<=', $endDate. " 23:59:59")
             ->where("transactions.fichier","distributeur")
             ->where('transactions.status',1);
-        $listdistributeurs = Distributeur::all();
+       // $listdistributeurs = Distributeur::all();
+        $listdistributeurs = Distributeur::where('application',1)->orderBy('name_distributeur')->get();
         if(Auth::user()->type_user_id==UserRolesEnum::DISTRIBUTEUR->value){
             $listApprovisionnement = $listApprovisionnement->where("distributeur_id",Auth::user()->distributeur_id);
             $listOperation = $listOperation->where("transactions.source",Auth::user()->distributeur_id);
@@ -250,7 +251,7 @@ class WebApproDistributeurController extends Controller
 
         $distributeur = Distributeur::where('id',$request->distributeur)->where('status',1)->where('application',1);
         if ($distributeur->count()==0) {
-            return redirect()->back()->with('error','Distributeur not found.');
+            return redirect()->back()->with('error','Distributeur not found or not authorized.');
         }
         if($distributeur->first()->status == 0){
             return redirect()->back()->with('error','Distributeur is not active.');
