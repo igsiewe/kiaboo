@@ -102,8 +102,8 @@
                                                         <td nowrap>{{$c->telephone}}</td>
 {{--                                                        <td nowrap>{{$c->ville !=null?$c->ville->name_ville:""}}</td>--}}
                                                         <td nowrap>{{$c->distributeur !=null?$c->distributeur->name_distributeur:""}}</td>
-                                                        <td nowrap><center>{{$c->created_at}}</center></td>
-                                                        <td nowrap>{{$c->updated_at}}</td>
+                                                        <td nowrap align="center">{{$c->created_at}}</td>
+                                                        <td nowrap align="center">{{$c->updated_at}}</td>
                                                         <td nowrap align="center">{{$c->last_connexion}}</td>
                                                         <td nowrap align="center">{{$c->application==1?"WEB":"API"}}</td>
                                                         @if($c->status==0)

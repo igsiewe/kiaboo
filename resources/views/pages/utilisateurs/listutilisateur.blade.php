@@ -98,7 +98,7 @@
                                                         <td nowrap>{{$c->telephone}}</td>
                                                         <td nowrap>{{$c->typeUser->name_type_user}}</td>
                                                         <td nowrap>{{$c->distributeur !=null?$c->distributeur->name_distributeur:""}}</td>
-                                                        <td nowrap>{{$c->created_at}}</td>
+                                                        <td nowrap align="center">{{$c->created_at}}</td>
 
                                                         <td nowrap align="center">{{$c->last_connexion}}</td>
                                                         <td nowrap align="center">{{$c->application==1?"WEB":"API"}}</td>
