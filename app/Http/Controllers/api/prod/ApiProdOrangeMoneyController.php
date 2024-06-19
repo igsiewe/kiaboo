@@ -353,7 +353,7 @@ class ApiProdOrangeMoneyController extends Controller
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST => 'POST',
                 CURLOPT_POSTFIELDS =>'{
-              "notifUrl": "https://kiaboogroup.com/om/api/callback/pm",
+              "notifUrl": "https://kiaboogroup.com/api/om/callback/pm",
               "channelUserMsisdn": "'.$this->channel.'",
               "amount": "'.$amount.'",
               "subscriberMsisdn": "'.$customer.'",
