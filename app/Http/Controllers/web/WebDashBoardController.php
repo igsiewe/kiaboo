@@ -52,8 +52,9 @@ class WebDashBoardController extends Controller
             }
 
             $volumeofTransaction = $query->sum("debit")+$query->sum("credit");
-
+            dd($query->get()->pluck("commission"));
             $revenue = $query->get()->sum("commission");
+
             $lastTransactions = $query->orderBy('transactions.date_transaction', 'desc')->limit(5)->get();
 
             $transAgent = DB::table("transactions")
