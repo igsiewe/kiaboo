@@ -604,8 +604,8 @@ class ApiProdOrangeMoneyController extends Controller
             return response()->json(
                 [
                     'success'=>false,
-                    'statusCode'=>$response->data->status,
-                    'message'=>$response->message
+                    'statusCode'=>$data->data->status,
+                    'message'=>$data->message
 
                 ],$response->status()
             );
