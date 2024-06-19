@@ -557,7 +557,7 @@ class ApiProdOrangeMoneyController extends Controller
 return response()->json([
     "d1"=>$distributeur,
     "d2"=>Auth::user()->distributeur_id,
-    "source"=>$transaction->first()->source
+    "source"=>User::where("id", $transaction->first()->source)->get()
 ]);
         if(Auth::user()->distributeur_id !=$distributeur){
             return response()->json(
