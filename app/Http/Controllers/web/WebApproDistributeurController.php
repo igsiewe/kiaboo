@@ -53,7 +53,7 @@ class WebApproDistributeurController extends Controller
             ->where("transactions.fichier","distributeur")
             ->where('transactions.status',1);
       //  $listdistributeurs = Distributeur::all()->sortBy("name_distributeur");
-        $listdistributeurs = Distributeur::where('application',1)->orderBy('name_distributeur');
+        $listdistributeurs = Distributeur::where('application',1)->orderBy('name_distributeur')->get();
         if(Auth::user()->type_user_id==UserRolesEnum::DISTRIBUTEUR->value){
             $listApprovisionnement = $listApprovisionnement->where("distributeur_id",Auth::user()->distributeur_id);
             $listOperation = $listOperation->where("transactions.source",Auth::user()->distributeur_id);
