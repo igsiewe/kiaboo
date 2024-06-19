@@ -36,7 +36,7 @@ class WebApproAgentController extends Controller
         }
 
         $Distributeur_id = Auth::user()->distributeur_id;
-        $Distributeur = Distributeur::where('id', $Distributeur_id)->get();
+        $Distributeur = Distributeur::where('id', $Distributeur_id)->where('application',1)->get();
 
         if($Distributeur->count()==0){
             return redirect()->back()->withErrors('Distributor have not been specified in your profil');
@@ -46,7 +46,7 @@ class WebApproAgentController extends Controller
         if(doubleval($balanceDistributeur)<doubleval($request->amount)){
             return redirect()->back()->withErrors('You don\'t have enough balance to perform this operation');
         }
-        $agent = User::where('id', $request->agent)->get();
+        $agent = User::where('id', $request->agent)->where('application',1)->get();
 
         if($agent->count()==0){
             return redirect()->back()->withErrors('Agent not found');

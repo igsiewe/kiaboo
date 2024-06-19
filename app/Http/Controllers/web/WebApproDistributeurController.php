@@ -16,6 +16,33 @@ use Illuminate\Support\Facades\Validator;
 
 class WebApproDistributeurController extends Controller
 {
+    public function GenereRang(){
+
+    $rang = "";
+    $chaine = ApproDistributeur::all()->count();
+    $longueur = strlen($chaine);
+
+    if($longueur==0){
+        $rang = "00001";
+    }
+    if ( $longueur == 1){
+        $rang="0000".($chaine+1);
+    }
+    if ( $longueur == 2){
+        $rang="000".($chaine+1);
+    }
+    if ( $longueur == 3){
+        $rang="00".($chaine+1);
+    }
+    if ( $longueur == 4){
+        $rang="0".($chaine+1);
+    }
+    if ( $longueur > 4){
+        $rang=($chaine+1);
+    }
+
+    return $rang;
+}
     public function getApproDistributor(){
         $listApprovisionnement = ApproDistributeur::with('distributeur', 'createdBy','validatedBy','rejectedBy');
         $listOperation  = DB::table('transactions')
@@ -203,33 +230,7 @@ class WebApproDistributeurController extends Controller
         }
 
     }
-    public function GenereRang(){
 
-        $rang = "";
-        $chaine = ApproDistributeur::all()->count();
-        $longueur = strlen($chaine);
-
-        if($longueur==0){
-            $rang = "00001";
-        }
-        if ( $longueur == 1){
-            $rang="0000".($chaine+1);
-        }
-        if ( $longueur == 2){
-            $rang="000".($chaine+1);
-        }
-        if ( $longueur == 3){
-            $rang="00".($chaine+1);
-        }
-        if ( $longueur == 4){
-            $rang="0".($chaine+1);
-        }
-        if ( $longueur > 4){
-            $rang=($chaine+1);
-        }
-
-        return $rang;
-    }
     public function initApproDistributeur(Request $request)  {
 
 //        if(Auth::user()->type_user_id != UserRolesEnum::FRONTOFFICE->value){
@@ -246,7 +247,7 @@ class WebApproDistributeurController extends Controller
             return redirect()->back()->with('error',$validator->errors()->first());
         }
 
-        $distributeur = Distributeur::where('id',$request->distributeur)->where('status',1);
+        $distributeur = Distributeur::where('id',$request->distributeur)->where('status',1)->where('application',1);
         if ($distributeur->count()==0) {
             return redirect()->back()->with('error','Distributeur not found.');
         }

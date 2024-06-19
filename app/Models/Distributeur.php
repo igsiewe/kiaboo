@@ -29,6 +29,7 @@ class Distributeur extends Model
         'user_last_transaction_id',
         'created_by',
         'updated_by',
+        'application',
     ];
 
     public function region(){
