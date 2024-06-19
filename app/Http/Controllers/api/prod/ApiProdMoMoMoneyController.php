@@ -1490,10 +1490,7 @@ class ApiProdMoMoMoneyController extends Controller
         }
 
         //On se rassure que l'utilisateur est bien rattaché au compte connecté
-        return response()->json([
-            "user1"=>$user->first()->distributeur_id,
-            "user2"=>Auth::user()->distributeur_id,
-        ]);
+
         if($user->first()->distributeur_id !=Auth::user()->distributeur_id){
             if($user->count()==0 || $user->first()->status ==0){
                 return response()->json([
@@ -1503,6 +1500,11 @@ class ApiProdMoMoMoneyController extends Controller
                 ],403);
             }
         }
+        return response()->json([
+            "user1"=>$user->first()->distributeur_id,
+            "user2"=>Auth::user()->distributeur_id,
+        ]);
+
         //Verifie le statut de l'id transaction cote marchand
         $checkTransactionExternalId = Transaction::where('marchand_transaction_id',$request->marchandTransactionId)->get();
 
