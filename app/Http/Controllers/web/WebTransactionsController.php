@@ -139,8 +139,8 @@ class WebTransactionsController extends BaseController
             ->where('transactions.status',StatusTransEnum::VALIDATED->value)
             ->where("users.type_user_id", UserRolesEnum::DISTRIBUTEUR->value);
 
-        $seuilDepasse = User::where("type_user_id", UserRolesEnum::AGENT->value);
-        $listagents = User::where("type_user_id",UserRolesEnum::AGENT->value);
+        $seuilDepasse = User::where("type_user_id", UserRolesEnum::AGENT->value)->where('application',1);
+        $listagents = User::where("type_user_id",UserRolesEnum::AGENT->value)->where('application',1);
         $listDistributeurs = Distributeur::all();
 
         if(Auth::user()->type_user_id ==UserRolesEnum::AGENT->value || Auth::user()->type_user_id ==UserRolesEnum::SDISTRIBUTEUR->value || Auth::user()->type_user_id ==UserRolesEnum::DISTRIBUTEUR->value){
@@ -195,8 +195,8 @@ class WebTransactionsController extends BaseController
             ->whereDate('transactions.created_at', '<=', $endDate);
 
 
-        $seuilDepasse = User::where("type_user_id", UserRolesEnum::AGENT->value);
-        $listagents = User::where("type_user_id",UserRolesEnum::AGENT->value);
+        $seuilDepasse = User::where("type_user_id", UserRolesEnum::AGENT->value)->where('application',1);
+        $listagents = User::where("type_user_id",UserRolesEnum::AGENT->value)->where('application',1);
         $listDistributeurs = Distributeur::all();
 
         if(Auth::user()->type_user_id ==UserRolesEnum::AGENT->value || Auth::user()->type_user_id ==UserRolesEnum::SDISTRIBUTEUR->value || Auth::user()->type_user_id ==UserRolesEnum::DISTRIBUTEUR->value){
