@@ -82,6 +82,7 @@
                                             <th scope="col">Distributeur</th>
                                             <th scope="col">Date de création</th>
                                             <th scope="col">Dernière connexion</th>
+                                            <th scope="col">Source</th>
                                             <th scope="col">Statut</th>
                                             <th scope="col"></th>
                                         </tr>
@@ -100,6 +101,7 @@
                                                         <td nowrap>{{$c->created_at}}</td>
 
                                                         <td nowrap align="center">{{$c->last_connexion}}</td>
+                                                        <td nowrap align="center">{{$c->application==1?"WEB":"API"}}</td>
                                                         @if($c->status==0)
                                                             <td align="center" title="Utilisateur bloqué">
                                                                 <form action="{{route("debloqueUtilisateur",[$c->id])}}" id="frmDebloque{{$c->id}}" name="frmDebloque{{$c->id}}">
