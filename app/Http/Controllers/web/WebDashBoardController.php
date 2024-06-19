@@ -73,16 +73,7 @@ class WebDashBoardController extends Controller
                 ->get();
 
             if(Auth::user()->type_user_id==UserRolesEnum::DISTRIBUTEUR->value){
-                $transAgent = DB::table("transactions")
-                    ->join("users", "users.id","transactions.source")
-                    ->join("distributeurs","distributeurs.id","users.distributeur_id")
-                    ->join("services","services.id","transactions.service_id")
-                    ->join("type_services","type_services.id","services.type_service_id")
-                    ->where("transactions.fichier","agent")
-                    ->where("users.distributeur_id", Auth::user()->distributeur_id)
-                    ->where('transactions.status',StatusTransEnum::VALIDATED->value)
-                    ->whereIn("type_services.id", [TypeServiceEnum::ENVOI->value,TypeServiceEnum::RETRAIT->value,TypeServiceEnum::FACTURE->value]);
-
+                $transAgent = $transAgent ->where("users.distributeur_id", Auth::user()->distributeur_id);
 
                 $bestAgents =$transAgent->selectRaw('kb_users.id, kb_users.login, kb_users.name, kb_users.surname, kb_distributeurs.name_distributeur, sum(kb_transactions.debit+kb_transactions.credit) as volume, sum(kb_transactions.commission_distributeur) as commission')
                     ->groupBy('users.name', 'users.surname','users.login','users.id')
@@ -91,7 +82,7 @@ class WebDashBoardController extends Controller
                     ->get();
 
                 $revenue = $transAgent->get()->sum("commission");
-                dd($transAgent->get());
+
             }
 
 
