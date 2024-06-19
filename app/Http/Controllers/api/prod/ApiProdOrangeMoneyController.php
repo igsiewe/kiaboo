@@ -639,8 +639,6 @@ class ApiProdOrangeMoneyController extends Controller
      *             @OA\Property(property="dateTransaction", type="date", example="Date transaction"),
      *             @OA\Property(property="currency", type="number", example="XAF"),
      *             @OA\Property(property="amount", type="number", example="amount of transaction"),
-     *             @OA\Property(property="fees", type="number", example="transaction fees"),
-     *             @OA\Property(property="agent", type="string", example="agent who initiate transaction"),
      *             @OA\Property(property="customer", type="number", example="customer phone number"),
      *             @OA\Property(property="marchandTransactionID", type="number", example="id transaction of partner"),
      *       )
