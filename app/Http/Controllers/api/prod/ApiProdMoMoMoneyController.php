@@ -1467,7 +1467,7 @@ class ApiProdMoMoMoneyController extends Controller
         $apiCheck = new ApiCheckController();
 
         $service = ServiceEnum::PAYMENT_MOMO->value;
-        $user = User::where("telephone",$request->agentNumber)->where('type_user_id', UserRolesEnum::AGENT->value)->get();
+        $user = User::where("telephone",$request->agentNumber)->where('type_user_id', UserRolesEnum::AGENT->value)->where('application',2)->get();
         $amount=$request->data["amount"];
         $customer=$request->data["phone"];
 
@@ -1500,10 +1500,6 @@ class ApiProdMoMoMoneyController extends Controller
                 ],403);
            // }
         }
-        return response()->json([
-            "user1"=>$user->first()->distributeur_id,
-            "user2"=>Auth::user()->distributeur_id,
-        ]);
 
         //Verifie le statut de l'id transaction cote marchand
         $checkTransactionExternalId = Transaction::where('marchand_transaction_id',$request->marchandTransactionId)->get();
