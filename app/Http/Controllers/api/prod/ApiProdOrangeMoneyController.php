@@ -746,7 +746,7 @@ class ApiProdOrangeMoneyController extends Controller
                 [
                     'success'=>true,
                     'statusCode'=>$data->data->status,
-                    'message'=>$data->data->inittxnmessage,
+                    'message'=>$data->data->status=="PENDING"?$data->data->inittxnmessage:$data->message,
                     'data'=>[
                         'currency'=>'XAF',
                         'transactionId'=>$transactionId,
