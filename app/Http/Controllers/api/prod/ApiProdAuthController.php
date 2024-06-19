@@ -141,7 +141,7 @@ class ApiProdAuthController extends BaseController
      * summary="Change password user",
      * description="Change password user",
      * security={{"bearerAuth":{}}},
-     * tags={"Authenticate"},
+     * tags={"Auth"},
      * @OA\RequestBody(
      *    required=true,
      *    description="change password user connected",
