@@ -52,7 +52,8 @@ class WebApproDistributeurController extends Controller
             ->select('users.login as auteur','transactions.id','transactions.reference','transactions.reference_partenaire','transactions.date_transaction','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.commission','transactions.commission_agent','transactions.commission_distributeur','transactions.balance_before','transactions.balance_after' ,'transactions.status','transactions.service_id','services.name_service','services.logo_service','type_services.name_type_service','type_services.id as type_service_id','transactions.date_operation', 'transactions.heure_operation')
             ->where("transactions.fichier","distributeur")
             ->where('transactions.status',1);
-        $listdistributeurs = Distributeur::all()->sortBy("name_distributeur");
+        //$listdistributeurs = Distributeur::all()->sortBy("name_distributeur");
+        $listdistributeurs = Distributeur::where('application',1)->orderBy("name_distributeur");
         if(Auth::user()->type_user_id==UserRolesEnum::DISTRIBUTEUR->value){
             $listApprovisionnement = $listApprovisionnement->where("distributeur_id",Auth::user()->distributeur_id);
             $listOperation = $listOperation->where("transactions.source",Auth::user()->distributeur_id);
@@ -90,7 +91,8 @@ class WebApproDistributeurController extends Controller
             ->whereDate('transactions.created_at', '<=', $endDate. " 23:59:59")
             ->where("transactions.fichier","distributeur")
             ->where('transactions.status',1);
-        $listdistributeurs = Distributeur::all();
+       // $listdistributeurs = Distributeur::all();
+        $listdistributeurs = Distributeur::where('application',1)->orderBy("name_distributeur");
         if(Auth::user()->type_user_id==UserRolesEnum::DISTRIBUTEUR->value){
             $listApprovisionnement = $listApprovisionnement->where("distributeur_id",Auth::user()->distributeur_id);
             $listOperation = $listOperation->where("transactions.source",Auth::user()->distributeur_id);
