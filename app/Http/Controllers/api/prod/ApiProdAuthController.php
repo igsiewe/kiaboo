@@ -333,7 +333,7 @@ class ApiProdAuthController extends BaseController
 
             $file = new ApiAuthController();
             $newPassword = $file->genererChaineAleatoire(8);
-            $codeParrainage ="KI".$this->genererChaineAleatoire(12);
+            $codeParrainage ="KI".strtoupper($file->genererChaineAleatoire(12));
             $user->name = $request->name;
             $user->surname = strtoupper($request->surname);
             $user->email = $request->email;
