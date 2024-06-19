@@ -145,13 +145,14 @@ Route::middleware('auth:api')->group(function () {
             Route::group(['prefix' => 'om'], function () {
                 Route::controller(ApiOperationAgent::class)->group(function () {
                    Route::post('retrait', 'setTransactionRetraitOM')->name("OM_retrait");
-                   Route::post('payment', 'OM_Payment')->name("OM_Payment");
-                    Route::get('payment/push/{transactionId}', 'OM_Payment_Push')->name("OM_Payment_Push");
+                 //  Route::post('payment', 'OM_Payment')->name("OM_Payment");
+
                 });
             });
             Route::group(['prefix' => 'om'], function () {
                 Route::controller(ApiProdOrangeMoneyController::class)->group(function () {
                     Route::post('payment', 'OM_Payment')->name("OM_Payment");
+                    Route::get('payment/push/{transactionId}', 'OM_Payment_Push')->name("OM_Payment_Push");
                 });
             });
             //MTN Mobile Money
