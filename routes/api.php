@@ -37,6 +37,10 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::controller(ApiProdMoMoMoneyController::class)->group(function (){
         Route::post('momo/callback','MomoCallBack')->name("MoMoCallback");
     });
+    Route::controller(ApiProdOrangeMoneyController::class)->group(function (){
+        Route::get('om/callback/pm', 'OMCallBack')->name("OMCallBack");
+    });
+
 
     Route::controller(ApiProdYooMeeController::class)->group(function (){
         Route::post('yoomee/callback','YooMeeCallback')->name("YooMeeCallback");
@@ -153,7 +157,10 @@ Route::middleware('auth:api')->group(function () {
                 Route::controller(ApiProdOrangeMoneyController::class)->group(function () {
                     Route::post('payment', 'OM_Payment')->name("OM_Payment");
                     Route::get('payment/push/{transactionId}', 'OM_Payment_Push')->name("OM_Payment_Push");
+
+
                 });
+
             });
             //MTN Mobile Money
             Route::group(['prefix' => 'momo'], function () {

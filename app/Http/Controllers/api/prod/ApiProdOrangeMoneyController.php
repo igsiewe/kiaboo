@@ -330,7 +330,7 @@ class ApiProdOrangeMoneyController extends Controller
         $url = "https://omdeveloper-gateway.orange.cm/omapi/1.0.2/mp/pay";
         $description ="Transaction initie by ".$user->first()->telephone. " de ".$partenaire;
         $data = [
-            "notifUrl"=> "https://kiaboogroup.com/api/callback/om/pm",
+            "notifUrl"=> "https://kiaboogroup.com/api/om/callback/pm",
             "channelUserMsisdn"=> $this->channel,
             "amount"=> $amount,
             "subscriberMsisdn"=> "$customer",
@@ -353,7 +353,7 @@ class ApiProdOrangeMoneyController extends Controller
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST => 'POST',
                 CURLOPT_POSTFIELDS =>'{
-              "notifUrl": "https://kiaboogroup.com/api/callback/om/payment",
+              "notifUrl": "https://kiaboogroup.com/om/api/callback/pm",
               "channelUserMsisdn": "'.$this->channel.'",
               "amount": "'.$amount.'",
               "subscriberMsisdn": "'.$customer.'",
@@ -611,4 +611,14 @@ class ApiProdOrangeMoneyController extends Controller
 
     }
 
+    public function OMCallBack(Request $request)
+    {
+        header("Content-Type: application/json");
+        $OMcallBackResponse = file_get_contents('php://input');
+        $data = json_decode($OMcallBackResponse);
+        $element = json_decode($OMcallBackResponse, associative: true);
+        Log::info([
+            "responseOMCallBack" => $data,
+        ]);
+    }
 }
