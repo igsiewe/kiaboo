@@ -24,7 +24,7 @@ class ApiProdAuthController extends BaseController
      * path="/api/v1/authenticate/auth",
      * summary="Login  user",
      * description="Login user",
-     * tags={"Authenticate"},
+     * tags={"Auth"},
      * @OA\RequestBody(
      *    required=true,
      *    description="user informations",
