@@ -587,7 +587,7 @@ class ApiProdOrangeMoneyController extends Controller
                     [
                         'success'=>true,
                         'statusCode'=>$data->data->status,
-                        'message'=>$data->message,
+                        'message'=>$data->data->inittxnmessage,
                         'data'=>[
                             'currency'=>'XAF',
                             'transactionId'=>$transactionId,
