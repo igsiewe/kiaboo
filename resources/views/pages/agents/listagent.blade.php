@@ -84,6 +84,7 @@
                                             <th scope="col">Date de création</th>
                                             <th scope="col">Date de mise à jour</th>
                                             <th scope="col">Dernière connexion</th>
+                                            <th scope="col">Source</th>
                                             <th scope="col">Statut</th>
                                             @if(Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::SUPADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::ADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::DISTRIBUTEUR->value)
                                             <th scope="col"></th>
@@ -104,6 +105,7 @@
                                                         <td nowrap>{{$c->created_at}}</td>
                                                         <td nowrap>{{$c->updated_at}}</td>
                                                         <td nowrap align="center">{{$c->last_connexion}}</td>
+                                                        <td nowrap align="center">{{$c->application==1?"WEB":"API"}}</td>
                                                         @if($c->status==0)
                                                             <td align="center" title="Utilisateur bloqué">
                                                                 <form action="{{route("debloqueAgent",[$c->id])}}" id="frmDebloque{{$c->id}}" name="frmDebloque{{$c->id}}">
