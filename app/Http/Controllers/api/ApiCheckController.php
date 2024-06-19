@@ -224,7 +224,7 @@ class ApiCheckController extends Controller
 
     }
 
-    function init_Payment($montant, $beneficiaire, $service, $payToken="",$user,$application){
+    function init_Payment($montant, $beneficiaire, $service, $payToken="",$user, $application="2"){
 
         $reference = "PM".Carbon::now()->format('ymd').".".Carbon::now()->format('His').".".$this->genererChaineAleatoire(1)."".$this->GenereRang();
 
