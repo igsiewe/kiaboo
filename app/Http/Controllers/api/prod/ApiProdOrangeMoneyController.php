@@ -535,7 +535,7 @@ class ApiProdOrangeMoneyController extends Controller
             return response()->json(
                 [
                     'success'=>false,
-                    'statusCode'=>"ERR-TRANSACTION-NOT-FOUND",
+                    'statusCode'=>"ERR-NO-MP-PAYTOKEN-FOUND",
                     'message'=>"This id transaction does not exist"
                 ],404
             );
@@ -547,7 +547,7 @@ class ApiProdOrangeMoneyController extends Controller
             return response()->json(
                 [
                     'success'=>false,
-                    'statusCode'=>"ERR-TRANSACTION-NOT-FOUND",
+                    'statusCode'=>"ERR-NO-MP-PAYTOKEN-FOUND",
                     'message'=>"This id transaction does not exist"
                 ],404
             );
@@ -565,42 +565,29 @@ class ApiProdOrangeMoneyController extends Controller
             );
         }
 
-        //On génère le token de la transation
-        $responseToken = $this->MOMO_Payment_GetTokenAccess();
-
-        if($responseToken->status()!=200){
-            return response()->json(
-                [
-                    'success'=>false,
-                    'statusCode'=>$responseToken->status(),
-                    'message'=>$responseToken["message"],
-                ],$responseToken->status()
-            );
-        }
-
-        $dataAcessToken = json_decode($responseToken->getContent());
-        $AccessToken = $dataAcessToken->access_token;
         $payToken = $transaction->first()->paytoken;
-        $http = "https://proxy.momoapi.mtn.com/collection/v1_0/requesttopay/".$payToken;
+        $http = "https://omdeveloper-gateway.orange.cm/omapi/1.0.2/mp/push/".$payToken;
 
         $response = Http::withOptions(['verify' => false,])->withHeaders(
             [
-                'Authorization'=> 'Bearer '.$AccessToken,
-                'Ocp-Apim-Subscription-Key'=> '886cc9e141ab492f80d9567b3c46d59c',
-                'X-Target-Environment'=> 'mtncameroon',
+                "X-AUTH-TOKEN"=>$this->auth_x_token,
+                "WSO2-Authorization"=>"Bearer ".$this->token,
+                "accept"=>"application/json"
             ])->Get($http);
-
+        Log::info([
+            "fonction"=>"OM_Payment_Push",
+            "url"=>$http,
+            "status"=>$response->status(),
+            "response"=>$response->body(),
+        ]);
         $data = json_decode($response->body());
 
         if($response->status()==200){
-
-            if($data->status=="SUCCESSFUL"){
-
                 return response()->json(
                     [
                         'success'=>true,
-                        'statusCode'=>$data->status,
-                        'message'=>'Transaction terminée avec succès',
+                        'statusCode'=>$data->data->status,
+                        'message'=>$data->message,
                         'data'=>[
                             'currency'=>'XAF',
                             'transactionId'=>$transactionId,
@@ -613,40 +600,6 @@ class ApiProdOrangeMoneyController extends Controller
                         ]
                     ],200
                 );
-            }
-
-            if($data->status=="PENDING"){
-                // $reason = json_decode($data->reason);
-                return response()->json(
-                    [
-                        'success'=>true,
-                        'statusCode'=>'PENDING',
-                        'message'=>"PENDING - Transaction en attente de confirmation par le client",
-                        'data'=>[
-                            'transactionId'=>$transactionId,
-                            'dateTransaction'=>$transaction->first()->date_transaction,
-                            'currency'=>'XAF',
-                            'amount'=>$transaction->first()->credit,
-                            'fees'=>$transaction->first()->fees_collecte,
-                            'agent'=>User::where("id", $transaction->first()->source)->first()->telephone,
-                            'customer'=>$transaction->first()->customer_phone,
-                        ]
-
-                    ],202
-                );
-            }
-            if($data->status=="FAILED"){
-                return response()->json(
-                    [
-                        'success'=>false,
-                        'statusCode'=>'FAILED',
-                        'message'=>$data->status." - Le client n'a pas validé la transaction dans les délais et l'opérateur l'a annulé",
-
-                    ],402
-                );
-            }
-
-
         }else{
             return response()->json(
                 [
