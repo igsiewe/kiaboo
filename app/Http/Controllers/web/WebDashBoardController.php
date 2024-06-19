@@ -65,13 +65,13 @@ class WebDashBoardController extends Controller
                 ->where("transactions.fichier","agent")
                 ->where('transactions.status',StatusTransEnum::VALIDATED->value)
                 ->whereIn("type_services.id", [TypeServiceEnum::ENVOI->value,TypeServiceEnum::RETRAIT->value,TypeServiceEnum::FACTURE->value]);
-            dd($transAgent->get());
+
             $bestAgents =$transAgent->selectRaw('kb_users.id, kb_users.login, kb_users.name, kb_users.surname, kb_distributeurs.name_distributeur, sum(kb_transactions.debit+kb_transactions.credit) as volume, sum(kb_transactions.commission) as commission')
                 ->groupBy('users.name', 'users.surname','users.login','users.id')
                 ->orderBy('volume', 'desc')
                 ->limit(5)
                 ->get();
-
+            dd($transAgent->get());
             if(Auth::user()->type_user_id==UserRolesEnum::DISTRIBUTEUR->value){
                 $transAgent = $transAgent ->where("users.distributeur_id", Auth::user()->distributeur_id);
 
