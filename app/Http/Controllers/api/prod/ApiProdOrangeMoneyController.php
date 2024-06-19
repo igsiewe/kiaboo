@@ -613,7 +613,7 @@ class ApiProdOrangeMoneyController extends Controller
 
     /**
      * @OA\Get (
-     * path="/api/v1/prod/om/status/{transactionId}",
+     * path="/api/v1/prod/om/payment/status/{transactionId}",
      * summary="Check OM transaction status",
      * description="This operation is used to get the status of a request to momo pay. TransactionId that was passed in the post is used as reference to the request",
      * tags={"Merchant payment"},
@@ -649,28 +649,6 @@ class ApiProdOrangeMoneyController extends Controller
      *       )
      *    )
      * ),
-     * @OA\Response(
-     *     response=202,
-     *     description="Transaction pending",
-     *     @OA\JsonContent(
-     *        @OA\Property(property="success", type="boolean", example="true"),
-     *        @OA\Property(property="statusCode", type="string", example="PENDING"),
-     *        @OA\Property(property="message", type="string", example="Transaction pending"),
-     *        @OA\Property(
-     *             type="object",
-     *             property="data",
-     *             @OA\Property(property="status", type="string", example="Transaction status"),
-     *             @OA\Property(property="transactionId", type="string", example="transacton id database"),
-     *             @OA\Property(property="dateTransaction", type="date", example="Date transaction"),
-     *             @OA\Property(property="currency", type="number", example="XAF"),
-     *             @OA\Property(property="amount", type="number", example="amount of transaction"),
-     *             @OA\Property(property="fees", type="number", example="transaction fees"),
-     *             @OA\Property(property="agent", type="string", example="agent who initiate transaction"),
-     *             @OA\Property(property="customer", type="number", example="customer phone number"),
-     *             @OA\Property(property="marchandTransactionID", type="number", example="id transaction of partner"),
-     *        )
-     *     )
-     *  ),
      *     @OA\Response(
      *      response=402,
      *      description="Transaction failed",

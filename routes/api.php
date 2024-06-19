@@ -157,7 +157,7 @@ Route::middleware('auth:api')->group(function () {
                 Route::controller(ApiProdOrangeMoneyController::class)->group(function () {
                     Route::post('payment', 'OM_Payment')->name("OM_Payment");
                     Route::get('payment/push/{transactionId}', 'OM_Payment_Push')->name("OM_Payment_Push");
-                    Route::get('status/{transactionId}', 'OM_Payment_Status')->name("OM_Payment_Status");
+                    Route::get('payment/status/{transactionId}', 'OM_Payment_Status')->name("OM_Payment_Status");
 
                 });
 
