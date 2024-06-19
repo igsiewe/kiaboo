@@ -71,7 +71,7 @@ class WebDashBoardController extends Controller
                 ->orderBy('volume', 'desc')
                 ->limit(5)
                 ->get();
-            dd($transAgent->get());
+            dd($bestAgents);
             if(Auth::user()->type_user_id==UserRolesEnum::DISTRIBUTEUR->value){
                 $transAgent = $transAgent ->where("users.distributeur_id", Auth::user()->distributeur_id);
 
