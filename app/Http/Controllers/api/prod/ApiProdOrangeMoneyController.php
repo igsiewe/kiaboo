@@ -434,7 +434,7 @@ class ApiProdOrangeMoneyController extends Controller
                 [
                     'success'=>true,
                     'statusCode'=>"PAYMENT-INITIATE-SUCCESSFULLY",
-                    'message'=>"Transaction initiée avec succès. Le client doit confirmer le retrait avec son code secret",
+                    'message'=>$dataResponse->data->inittxnmessage,
                     'paytoken'=>$payToken,
                     'transactionId'=>$reference,//$idTransaction,
                 ],202
