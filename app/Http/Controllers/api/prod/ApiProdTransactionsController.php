@@ -29,8 +29,8 @@ class ApiProdTransactionsController extends Controller
      *     @OA\JsonContent(
      *        required={"startDate","endDate"},
      *        @OA\Property(property="agentId", type="string", example="679962015"),
-     *        @OA\Property(property="startDate", type="string", format="date", example="2024-01-01"),
-     *        @OA\Property(property="endDate", type="string", format="date, example="2024-01-31"),
+     *        @OA\Property(property="startDate", type="string", format="date", example="01-01-2024"),
+     *        @OA\Property(property="endDate", type="string", format="date, example="31-01-2024"),
      *     ),
      *  ),
      *
