@@ -527,7 +527,7 @@ class ApiProdOrangeMoneyController extends Controller
     public function OM_Payment_Push($transactionId){
         // On cherche la transaction dans la table transaction
 
-        $transaction = Transaction::where("reference", $transactionId)->get();
+        $transaction = Transaction::where("reference", $transactionId)->where('service_id',ServiceEnum::PAYMENT_OM->value)->get();
         if($transaction->count()==0){
             return response()->json(
                 [
