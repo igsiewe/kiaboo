@@ -129,7 +129,7 @@ class ApiProdTransactionsController extends Controller
         $endDate =$request->endDate;// Carbon::createFromFormat('d/m/Y', $request->endDate)->format('Y-m-d');
         $telephoneAgent= $request->agentId;
         $listAgent=User::where('distributeur_id',Auth::user()->distributeur_id)->where('type_user_id',UserRolesEnum::AGENT->value)->pluck('id')->toArray();
-
+return $listAgent;
         if($listAgent->count() == 0){
             return response()->json([
                 "success"=> false,
