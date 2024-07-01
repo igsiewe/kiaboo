@@ -1491,6 +1491,7 @@ class ApiProdMoMoMoneyController extends Controller
         }
 
         //On se rassure que l'utilisateur est bien rattaché au compte connecté
+        return $user->first()->distributeur_id."-".Auth::user()->distributeur_id;
 
         if($user->first()->distributeur_id !=Auth::user()->distributeur_id){
            // if($user->count()==0 || $user->first()->status ==0){
@@ -1507,7 +1508,6 @@ class ApiProdMoMoMoneyController extends Controller
 
             if($checkTransactionExternalId->count()>0){
                 $checkDistributeur = User::where('id',$checkTransactionExternalId->first()->source)->get();
-
                 if($checkDistributeur->count()>0){
                     if($user->first()->distributeur_id==$checkDistributeur->first()->distributeur_id){
                         return response()->json([
