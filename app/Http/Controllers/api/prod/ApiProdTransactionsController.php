@@ -125,17 +125,17 @@ class ApiProdTransactionsController extends Controller
 
         $startDate =$request->startDate;// Carbon::createFromFormat('d/m/Y', $request->startDate)->format('Y-m-d');
         $endDate =$request->endDate;// Carbon::createFromFormat('d/m/Y', $request->endDate)->format('Y-m-d');
-        $agent = $request->agentId;
+        $telephoneAgent= $request->agentId;
 
-        $agentId=User::where('telephone',$agent)->where('distributeur_id',Auth::user()->distributeur_id)->first();
-        if(!$agentId){
+        $agent=User::where('telephone',$telephoneAgent)->where('distributeur_id',Auth::user()->distributeur_id)->get();
+        if(!$agent){
             return response()->json([
                 "success"=> false,
                 "statusCode"=>"ERR-AGENT-NOT-FOUND",
                 "message"=>"Agent ID not found"
             ], 404);
         }
-
+        $agentId = $agent->first()->id;
         $transactions = DB::table('transactions')
             ->join('services', 'transactions.service_id', '=', 'services.id')
             ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
