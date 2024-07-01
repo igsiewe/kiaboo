@@ -25,7 +25,7 @@ class ApiProdTransactionsController extends Controller
      *      name="agentId",
      *      description="The reference agent who carried out the transaction",
      *      required=false,
-     *      in="path",
+     *      in="formData",
      *      @OA\Schema(
      *         type="string"
      *      )
@@ -34,7 +34,7 @@ class ApiProdTransactionsController extends Controller
      *     name="startDate",
      *     description="Start date - format yyyy-mm-dd",
      *     required=true,
-     *     in="path",
+     *     in="formData",
      *     @OA\Schema(
      *        type="string",
      *        format="date"
@@ -44,7 +44,7 @@ class ApiProdTransactionsController extends Controller
      *      name="endDate",
      *      description="End date - format yyyy-mm-dd",
      *      required=true,
-     *      in="path",
+     *      in="formData",
      *      @OA\Schema(
      *         type="string",
      *         format="date"
