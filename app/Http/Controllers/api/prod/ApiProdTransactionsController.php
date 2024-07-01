@@ -93,8 +93,8 @@ class ApiProdTransactionsController extends Controller
 
 
         $validator = Validator::make($request->all(), [
-            'startDate' => 'required|string',
-            'endDate' => 'required|string',
+            'startDate' => 'required|date',
+            'endDate' => 'required|date',
         ]);
 
         if ($validator->fails()) {
