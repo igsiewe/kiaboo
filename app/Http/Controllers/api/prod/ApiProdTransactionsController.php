@@ -158,7 +158,7 @@ class ApiProdTransactionsController extends Controller
             'success'=>true,
             'statusCode' => 'SUCCESS',
             'message'=> $transactions->count()." transactions found",
-            'data'=>$transactions->get(),
+            'data'=>$transactions,
         ], 200);
 
     }
