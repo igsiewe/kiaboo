@@ -46,6 +46,7 @@ class ApiProdTransactionsController extends Controller
      *             property="data",
      *             @OA\Property(property="transactionsId", type="string", example="transactionId"),
      *             @OA\Property(property="dateTransaction", type="date", example="Date transaction"),
+     *             @OA\Property(property="serviceName", type="string", example="Name service"),
      *             @OA\Property(property="amount", type="number", example="amount of transaction"),
      *             @OA\Property(property="fees", type="number", example="transaction fees"),
      *             @OA\Property(property="merchand_amount", type="number", example="Amount reimbursed to merchant"),
@@ -54,6 +55,7 @@ class ApiProdTransactionsController extends Controller
      *             @OA\Property(property="marchandTransactionID", type="number", example="id transaction of partner"),
      *             @OA\Property(property="dateEndTransaction", type="date", example="Date end transaction"),
      *             @OA\Property(property="status", type="string", example="Transaction status"),
+     *             @OA\Property(property="logoService", type="string", example="Service logo name"),
      *        )
      *     )
      *  ),
@@ -124,7 +126,7 @@ class ApiProdTransactionsController extends Controller
             ->join('services', 'transactions.service_id', '=', 'services.id')
             ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
             ->join('users','users.id','=','transactions.source')
-            ->select('transactions.reference as transactionId','transactions.date_transaction as dateTransaction','transactions.credit as amount' ,'transactions.commission_agent_rembourse as fees','transactions.balance_before','transactions.balance_after' ,'transactions.customer_phone as customer','transactions.description as status','services.name_service','type_services.name_type_service as type_service','users.telephone as agent','transactions.marchand_transaction_id as marchandTransactionID','transactions.date_end_trans as dateEndTransaction')
+            ->select('transactions.reference as transactionId','transactions.date_transaction as dateTransaction','transactions.credit as amount' ,'transactions.commission_agent_rembourse as fees','transactions.balance_before','transactions.balance_after' ,'transactions.customer_phone as customer','transactions.description as status','services.name_service as serviceName','type_services.name_type_service as type_service','users.telephone as agent','transactions.marchand_transaction_id as marchandTransactionID','transactions.date_end_trans as dateEndTransaction','services.logo_service as logoService')
             ->where("fichier","agent")
             ->where('transactions.status',1)
             ->where("transactions.date_transaction",">=",$startDate.' 00:00:00')
