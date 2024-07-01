@@ -1506,7 +1506,7 @@ class ApiProdMoMoMoneyController extends Controller
 
             if($checkTransactionExternalId->count()>0){
                 $checkDistributeur = User::where('id',$checkTransactionExternalId->first()->source)->get();
-                return  $checkDistributeur->first()->distributeur_id."-".$user->first()->distributeur_id;
+                return  $checkDistributeur->first()->distributeur_id."-".Auth()->user()->distributeur_id;
                 if($checkDistributeur->count()>0){
                     if($user->first()->distributeur_id==$checkDistributeur->first()->distributeur_id){
                         return response()->json([
