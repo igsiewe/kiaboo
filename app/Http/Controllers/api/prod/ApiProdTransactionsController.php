@@ -127,15 +127,7 @@ class ApiProdTransactionsController extends Controller
         $endDate =$request->endDate;// Carbon::createFromFormat('d/m/Y', $request->endDate)->format('Y-m-d');
         $telephoneAgent= $request->agentId;
 
-        $agent=User::where('telephone',$telephoneAgent)->where('distributeur_id',Auth::user()->distributeur_id)->get();
-        if($agent->count() == 0){
-            return response()->json([
-                "success"=> false,
-                "statusCode"=>"ERR-AGENT-NOT-FOUND",
-                "message"=>"Agent ID not found"
-            ], 404);
-        }
-        $agentId = $agent->first()->id;
+
         $transactions = DB::table('transactions')
             ->join('services', 'transactions.service_id', '=', 'services.id')
             ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
@@ -147,7 +139,17 @@ class ApiProdTransactionsController extends Controller
             ->where("transactions.date_transaction","<=",$endDate.' 23:59:59');
 
 
-        if($agentId !=0 || $agentId !=null){
+        if($telephoneAgent !=0 || $telephoneAgent !=null){
+
+            $agent=User::where('telephone',$telephoneAgent)->where('distributeur_id',Auth::user()->distributeur_id)->get();
+            if($agent->count() == 0){
+                return response()->json([
+                    "success"=> false,
+                    "statusCode"=>"ERR-AGENT-NOT-FOUND",
+                    "message"=>"Agent ID not found"
+                ], 404);
+            }
+            $agentId = $agent->first()->id;
             $transactions = $transactions->where("transactions.source",$agentId);
         }
 
