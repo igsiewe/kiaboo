@@ -1503,7 +1503,7 @@ class ApiProdMoMoMoneyController extends Controller
 
         //Verifie le statut de l'id transaction cote marchand
         $checkTransactionExternalId = Transaction::where('marchand_transaction_id',$request->marchandTransactionId)->get();
-
+            return $checkTransactionExternalId;
             if($checkTransactionExternalId->count()>0){
                 $checkDistributeur = User::where('id',$checkTransactionExternalId->first()->source)->get();
                 if($checkDistributeur->count()>0){
