@@ -23,35 +23,17 @@ class ApiProdTransactionsController extends Controller
      * description="This request provides a list of the last five transactions carried out by a partner. If you want to filter by agent, enter the partner's agent reference {agentId}.",
      * tags={"Transactions"},
      * security={{"bearerAuth":{}}},
-     * @OA\Parameter(
-     *      name="agentId",
-     *      description="The reference agent who carried out the transaction",
-     *      required=false,
-     *      in="query",
-     *      @OA\Schema(
-     *         type="string"
-     *      )
-     *  ),
-     * @OA\Parameter(
-     *     name="startDate",
-     *     description="Start date - format yyyy-mm-dd",
+     *      @OA\RequestBody(
      *     required=true,
-     *     in="query",
-     *     @OA\Schema(
-     *        type="string",
-     *        format="date"
-     *     )
-     * ),
-     * @OA\Parameter(
-     *      name="endDate",
-     *      description="End date - format yyyy-mm-dd",
-     *      required=true,
-     *      in="query",
-     *      @OA\Schema(
-     *         type="string",
-     *         format="date"
-     *      )
+     *     description="Request to get transaction",
+     *     @OA\JsonContent(
+     *        required={"startDate","endDate"},
+     *        @OA\Property(property="agentId", type="string", example="679962015"),
+     *        @OA\Property(property="startDate", type="string", format="date", example="yyyy-mm-dd"),
+     *        @OA\Property(property="endDate", type="string", format="date, example="yyyy-mm-dd"),
+     *     ),
      *  ),
+     *
      * @OA\Response(
      *     response=200,
      *     description="Transaction found",
