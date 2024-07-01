@@ -142,7 +142,7 @@ class ApiProdTransactionsController extends Controller
             ->join('services', 'transactions.service_id', '=', 'services.id')
             ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
             ->join('users','users.id','=','transactions.source')
-            ->select('transactions.id','transactions.reference as reference','transactions.reference_partenaire','transactions.date_transaction','transactions.credit as amount' ,'transactions.customer_phone','transactions.commission_agent as commission','transactions.balance_before','transactions.balance_after' ,'transactions.status','transactions.description','transactions.service_id','services.name_service','services.logo_service','type_services.name_type_service as type_service','transactions.date_operation', 'transactions.commission_agent_rembourse as commission_agent','users.telephone as compte')
+            ->select('transactions.reference as transactionId','transactions.date_transaction as dateTransaction','transactions.credit as amount' ,'transactions.commission_agent_rembourse as fees','transactions.balance_before','transactions.balance_after' ,'transactions.customer_phone as customer','transactions.description as status','services.name_service','type_services.name_type_service as type_service','users.telephone as agent','transactions.marchand_transaction_id as marchandTransactionID')
             ->where("fichier","agent")
             ->where('transactions.status',1)
             ->where("transactions.date_transaction",">=",$startDate.' 00:00:00')
