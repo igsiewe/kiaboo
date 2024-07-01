@@ -131,9 +131,9 @@ class ApiProdTransactionsController extends Controller
         $transactions = DB::table('transactions')
             ->join('services', 'transactions.service_id', '=', 'services.id')
             ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
-            ->select('transactions.id','transactions.reference as reference','transactions.reference_partenaire','transactions.date_transaction','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.commission_agent as commission','transactions.balance_before','transactions.balance_after' ,'transactions.status','transactions.service_id','services.name_service','services.logo_service','type_services.name_type_service','type_services.id as type_service_id','transactions.date_operation', 'transactions.heure_operation','transactions.commission_agent_rembourse as commission_agent')
+            ->join('users','users.id','=','transactions.source')
+            ->select('transactions.id','transactions.reference as reference','transactions.reference_partenaire','transactions.date_transaction','transactions.credit as amount' ,'transactions.customer_phone','transactions.commission_agent as commission','transactions.balance_before','transactions.balance_after' ,'transactions.status','transactions.description','transactions.service_id','services.name_service','services.logo_service','type_services.name_type_service as type_service','transactions.date_operation', 'transactions.commission_agent_rembourse as commission_agent','users.telephone as compte')
             ->where("fichier","agent")
-           // ->where("source",Auth::user()->id)
             ->where('transactions.status',1)
             ->where("transactions.date_transaction",">=",$startDate.' 00:00:00')
             ->where("transactions.date_transaction","<=",$endDate.' 23:59:59');
