@@ -128,7 +128,7 @@ class ApiProdTransactionsController extends Controller
         $telephoneAgent= $request->agentId;
 
         $agent=User::where('telephone',$telephoneAgent)->where('distributeur_id',Auth::user()->distributeur_id)->get();
-        if(!$agent){
+        if($agent->count() == 0){
             return response()->json([
                 "success"=> false,
                 "statusCode"=>"ERR-AGENT-NOT-FOUND",
