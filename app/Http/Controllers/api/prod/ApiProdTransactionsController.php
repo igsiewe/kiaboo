@@ -125,8 +125,8 @@ class ApiProdTransactionsController extends Controller
 
         $startDate =$request->startDate;// Carbon::createFromFormat('d/m/Y', $request->startDate)->format('Y-m-d');
         $endDate =$request->endDate;// Carbon::createFromFormat('d/m/Y', $request->endDate)->format('Y-m-d');
-        //$partenaireId = $request->partenaireID;
-        $partenaire = "";
+        $agentId = $request->agentId;
+
 
         $transactions = DB::table('transactions')
             ->join('services', 'transactions.service_id', '=', 'services.id')
@@ -137,47 +137,28 @@ class ApiProdTransactionsController extends Controller
             ->where('transactions.status',1)
             ->where("transactions.date_transaction",">=",$startDate.' 00:00:00')
             ->where("transactions.date_transaction","<=",$endDate.' 23:59:59');
-return response()->json([
-            'status'=>"true",
-            'message'=> $transactions->count()." transactions trouvées",
-            'transactions'=> $transactions->get(),
-            'partenaire'=>$partenaire
 
-        ], 200);
 
-        if($request->partenaireID !=0 || $request->partenaireID !=null){
-            $transactions = $transactions->where("services.partenaire_id",$request->partenaireID);
-            $partenaire = DB::table('partenaires')->where('id',$request->partenaireID)->first()->name_partenaire;
+        if($agentId !=0 || $agentId !=null){
+            $transactions = $transactions->where("transactions.source",$agentId);
         }
 
         $transactions = $transactions->orderBy('transactions.date_transaction', 'desc')->get();
 
-        $user = User::where('id', Auth::user()->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before', 'balance_after','total_commission', 'last_amount','sous_distributeur_id','date_last_transaction','moncodeparrainage')->first();
-
         if($transactions->isEmpty()){
-            return response()->json(['message' => 'Aucune transaction trouvée'], 404);
+            return response()->json([
+                "success"=> false,
+                "statusCode"=>"ERR-TRANSACTION-NOT-FOUND",
+                "message"=>"Transaction not found "
+            ], 404);
+
         }
 
-        $appro=$transactions->where( 'type_service_id', TypeServiceEnum::APPROVISIONNEMENT->value)->sum("credit");
-        $depot=$transactions->where( 'type_service_id', TypeServiceEnum::ENVOI->value)->sum("debit");
-        $retrait=$transactions->where('type_service_id', TypeServiceEnum::RETRAIT->value)->sum("credit");
-        $facture=$transactions->where('type_service_id', TypeServiceEnum::FACTURE->value)->sum("debit");
-        $commission=$transactions->sum("commission");
-
-        $solde = $appro + $retrait-$depot-$facture;
         return response()->json([
-            'status'=>"true",
-            'message'=> $transactions->count()." transactions trouvées",
-            'appro'=>$appro,
-            'depot'=>$depot,
-            'retrait'=>$retrait,
-            'facture'=>$facture,
-            'solde'=>$solde,
-            'commission'=>$commission,
-            'transactions'=> $transactions,
-            'partenaire'=>$partenaire,
-            'user'=>$user
-
+            'success'=>true,
+            'statusCode' => 'SUCCESS',
+            'message'=> $transactions->count()." transactions found",
+            'data'=>$transactions->get(),
         ], 200);
 
     }
