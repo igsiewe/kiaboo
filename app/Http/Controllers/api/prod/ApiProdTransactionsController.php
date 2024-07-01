@@ -123,9 +123,9 @@ class ApiProdTransactionsController extends Controller
                 ], 422);
         }
 
-        $startDate = Carbon::createFromFormat('d/m/Y', $request->startDate)->format('Y-m-d');
-        $endDate = Carbon::createFromFormat('d/m/Y', $request->endDate)->format('Y-m-d');
-        $partenaireId = $request->partenaireID;
+        $startDate =$request->startDate;// Carbon::createFromFormat('d/m/Y', $request->startDate)->format('Y-m-d');
+        $endDate =$request->endDate;// Carbon::createFromFormat('d/m/Y', $request->endDate)->format('Y-m-d');
+        //$partenaireId = $request->partenaireID;
         $partenaire = "";
 
         $transactions = DB::table('transactions')
@@ -137,6 +137,13 @@ class ApiProdTransactionsController extends Controller
             ->where('transactions.status',1)
             ->where("transactions.date_transaction",">=",$startDate.' 00:00:00')
             ->where("transactions.date_transaction","<=",$endDate.' 23:59:59');
+return response()->json([
+            'status'=>"true",
+            'message'=> $transactions->count()." transactions trouvées",
+            'transactions'=> $transactions->get(),
+            'partenaire'=>$partenaire
+
+        ], 200);
 
         if($request->partenaireID !=0 || $request->partenaireID !=null){
             $transactions = $transactions->where("services.partenaire_id",$request->partenaireID);
