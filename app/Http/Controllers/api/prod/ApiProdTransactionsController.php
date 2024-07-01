@@ -107,7 +107,7 @@ class ApiProdTransactionsController extends Controller
 
     public function getLastTransactionSwagger(Request $request){
 
-        return response()->json($request->all());
+
         $validator = Validator::make($request->all(), [
             'startDate' => 'required|string',
             'endDate' => 'required|string',
