@@ -4,6 +4,8 @@ namespace App\Http\Controllers\api\prod;
 
 use App\Http\Controllers\Controller;
 use App\Http\Enums\TypeServiceEnum;
+use App\Http\Enums\UserRolesEnum;
+use App\Models\Distributeur;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -126,7 +128,15 @@ class ApiProdTransactionsController extends Controller
         $startDate =$request->startDate;// Carbon::createFromFormat('d/m/Y', $request->startDate)->format('Y-m-d');
         $endDate =$request->endDate;// Carbon::createFromFormat('d/m/Y', $request->endDate)->format('Y-m-d');
         $telephoneAgent= $request->agentId;
+        $listAgent=User::where('distributeur_id',Auth::user()->distributeur_id)->where('type_user_id',UserRolesEnum::AGENT->value)->pluck('id')->toArray();
 
+        if($listAgent->count() == 0){
+            return response()->json([
+                "success"=> false,
+                "statusCode"=>"ERR-AGENT-NOT-FOUND",
+                "message"=>"Agent ID not found"
+            ], 404);
+        }
 
         $transactions = DB::table('transactions')
             ->join('services', 'transactions.service_id', '=', 'services.id')
@@ -136,8 +146,8 @@ class ApiProdTransactionsController extends Controller
             ->where("fichier","agent")
             ->where('transactions.status',1)
             ->where("transactions.date_transaction",">=",$startDate.' 00:00:00')
-            ->where("transactions.date_transaction","<=",$endDate.' 23:59:59');
-
+            ->where("transactions.date_transaction","<=",$endDate.' 23:59:59')
+            ->whereIn('transactions.source',$listAgent);
 
         if($telephoneAgent !=0 || $telephoneAgent !=null){
 
