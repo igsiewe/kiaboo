@@ -17,16 +17,15 @@ class ApiProdTransactionsController extends Controller
     /**
      * @OA\Post(
      * path="/api/v1/prod/transactions",
-     * summary="get list of last 5 transactions",
+     * summary="get list of transactions",
      * description="This request provides a list of the last five transactions carried out by a partner. If you want to filter by agent, enter the partner's agent reference {agentId}.",
      * tags={"Transactions"},
      * security={{"bearerAuth":{}}},
-     * consumes={"application/x-www-form-urlencoded"},
      * @OA\Parameter(
      *      name="agentId",
      *      description="The reference agent who carried out the transaction",
      *      required=false,
-     *      in="formData",
+     *      in="query",
      *      @OA\Schema(
      *         type="string"
      *      )
@@ -35,7 +34,7 @@ class ApiProdTransactionsController extends Controller
      *     name="startDate",
      *     description="Start date - format yyyy-mm-dd",
      *     required=true,
-     *     in="formData",
+     *     in="query",
      *     @OA\Schema(
      *        type="string",
      *        format="date"
@@ -45,7 +44,7 @@ class ApiProdTransactionsController extends Controller
      *      name="endDate",
      *      description="End date - format yyyy-mm-dd",
      *      required=true,
-     *      in="formData",
+     *      in="query",
      *      @OA\Schema(
      *         type="string",
      *         format="date"
