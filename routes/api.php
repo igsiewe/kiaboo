@@ -152,6 +152,8 @@ Route::middleware('auth:api')->group(function () {
             Route::group(['prefix' => 'payment'], function () {
                 Route::controller(ApiProdRemboursementPaymentController::class)->group(function () {
                     Route::post('/refund', 'getListRemboursement')->name("getListRemboursement");
+                    Route::post('/refund/search', 'getListRemboursementSearch')->name("getListRemboursementSearch");
+
                 });
             });
 
