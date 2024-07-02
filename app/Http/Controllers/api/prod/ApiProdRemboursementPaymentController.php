@@ -63,7 +63,7 @@ class ApiProdRemboursementPaymentController extends Controller
         $listAgent=$agent->pluck('id')->toArray();
         if($agent->count()>0){
             $listRemboursement=DB::table('remboursement_payments')->join('users','users.id','=','remboursement_payments.user_id')
-                ->select('users.id as idUsers', 'users.name','users.surname', 'users.telephone','remboursement_payment.*')
+                ->select('users.id as idUsers', 'users.name','users.surname', 'users.telephone','remboursement_payments.*')
                 ->whereIn('remboursement_payments.user_id',$listAgent)
                 ->where("remboursement_payments.date_demande",">=",$startDate.' 00:00:00')
                 ->where("remboursement_payments.date_demande","<=",$endDate.' 23:59:59');
