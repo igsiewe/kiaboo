@@ -14,6 +14,7 @@ use App\Http\Controllers\api\prod\ApiProdFactureEneoController;
 use App\Http\Controllers\api\prod\ApiProdMoMoMoneyController;
 use App\Http\Controllers\api\prod\ApiProdM2UController;
 use App\Http\Controllers\api\prod\ApiProdOrangeMoneyController;
+use App\Http\Controllers\api\prod\ApiProdRemboursementPaymentController;
 use App\Http\Controllers\api\prod\ApiProdTransactionsController;
 use App\Http\Controllers\api\prod\ApiProduction_MoMo;
 use App\Http\Controllers\api\prod\ApiProdYooMeeController;
@@ -145,6 +146,12 @@ Route::middleware('auth:api')->group(function () {
                     Route::post('/', 'getTransactionSwagger')->name("getTransactionSwagger");
                     Route::get('/{nbre}', 'getLastTransactionSwagger')->name("getLastTransactionSwagger");
                     Route::get('/dashboard/data', 'getDataDashBoard')->name("getDataDashBoard");
+                });
+            });
+
+            Route::group(['prefix' => 'payment'], function () {
+                Route::controller(ApiProdRemboursementPaymentController::class)->group(function () {
+                    Route::post('/refund', 'getListRemboursement')->name("getListRemboursement");
                 });
             });
 
