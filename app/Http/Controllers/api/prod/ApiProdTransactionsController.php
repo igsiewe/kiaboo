@@ -91,9 +91,7 @@ class ApiProdTransactionsController extends Controller
      */
 
 
-    public function getLastTransactionSwagger(Request $request){
-
-
+    public function getTransactionSwagger(Request $request){
         $validator = Validator::make($request->all(), [
             'startDate' => 'required|date',
             'endDate' => 'required|date',
@@ -148,6 +146,48 @@ class ApiProdTransactionsController extends Controller
         }
 
         $transactions = $transactions->orderBy('transactions.date_transaction', 'desc')->get();
+
+        if($transactions->isEmpty()){
+            return response()->json([
+                "success"=> false,
+                "statusCode"=>"ERR-TRANSACTION-NOT-FOUND",
+                "message"=>"Transaction not found "
+            ], 404);
+
+        }
+
+        return response()->json([
+            'success'=>true,
+            'statusCode' => 'SUCCESS',
+            'message'=> $transactions->count()." transactions found",
+            'data'=>$transactions,
+        ], 200);
+
+    }
+
+    public function getLastTransactionSwagger($nbre=5){
+
+        $listAgent=User::where('distributeur_id',Auth::user()->distributeur_id)->where('type_user_id',UserRolesEnum::AGENT->value)->pluck('id')->toArray();
+
+        if($listAgent == null || empty($listAgent)){
+            return response()->json([
+                "success"=> false,
+                "statusCode"=>"ERR-AGENT-NOT-FOUND",
+                "message"=>"Agent ID not found"
+            ], 404);
+        }
+
+        $transactions = DB::table('transactions')
+            ->join('services', 'transactions.service_id', '=', 'services.id')
+            ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
+            ->join('users','users.id','=','transactions.source')
+            ->select('transactions.reference as transactionId','transactions.date_transaction as dateTransaction','transactions.credit as amount' ,'transactions.commission_agent_rembourse as fees','transactions.balance_before','transactions.balance_after' ,'transactions.customer_phone as customer','transactions.description as status','services.name_service as serviceName','type_services.name_type_service as type_service','users.telephone as agent','transactions.marchand_transaction_id as marchandTransactionID','transactions.date_end_trans as dateEndTransaction','services.logo_service as logoService')
+            ->where("fichier","agent")
+            ->where('transactions.status',1)
+            ->whereIn('transactions.source',$listAgent)
+            ->orderBy('transactions.date_transaction', 'desc')
+            ->limit($nbre)
+            ->get();
 
         if($transactions->isEmpty()){
             return response()->json([
