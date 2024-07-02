@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('remboursement_payments', function (Blueprint $table) {
             $table->id();
+            $table->string('reference');
             $table->foreignId("user_id")->references("id")->on("users");
             $table->dateTime("date_demande");
             $table->double('amount')->default(0);

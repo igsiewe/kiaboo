@@ -9,6 +9,7 @@ class remboursementPayment extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'reference',
         'user_id',
         'date_demande',
         'amount',
