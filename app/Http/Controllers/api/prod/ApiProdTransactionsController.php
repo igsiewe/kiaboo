@@ -210,7 +210,7 @@ class ApiProdTransactionsController extends Controller
     public function getDataDashBoard(){
 
         $agent = User::where('distributeur_id',Auth::user()->distributeur_id)->where('type_user_id',UserRolesEnum::AGENT->value)
-            ->select('id','name','surname','telephone','email','status','balance_after as balance','sum_payment','sum_refund');
+            ->select('id','name','surname','telephone','email','status','balance_after','balance_after as balance','sum_payment','sum_refund');
 
         $listAgent=$agent->pluck('id')->toArray();
 
@@ -230,7 +230,7 @@ class ApiProdTransactionsController extends Controller
                 'success'=>true,
                 'statusCode' => 'SUCCESS',
                 'numberAgent'=> $agent->count(),
-                'totalBalance'=> $agent->sum('balance'),
+                'totalBalance'=> $agent->sum('balance_after'),
                 'sumPayment'=> $agent->sum('sum_payment'),
                 'sumRefund'=> $agent->sum('sum_refund'),
                 'transactions'=>$transactions,
