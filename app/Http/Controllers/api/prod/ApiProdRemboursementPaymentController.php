@@ -18,7 +18,7 @@ class ApiProdRemboursementPaymentController extends Controller
         $listAgent=$agent->pluck('id')->toArray();
         if($agent->count()>0){
             $listRemboursement=DB::table('remboursement_payments')->join('users','users.id','=','remboursement_payments.user_id')
-            ->select('users.id as idUsers', 'users.name','users.surname', 'users.telephone','remboursement_payment.*')
+            ->select('users.id as idUsers', 'users.name','users.surname', 'users.telephone','remboursement_payments.*')
             ->whereIn('remboursement_payments.user_id',$listAgent)->get();
             if($listRemboursement->count()>0){
                 return response()->json([
