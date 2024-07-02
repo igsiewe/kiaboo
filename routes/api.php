@@ -139,10 +139,12 @@ Route::middleware('auth:api')->group(function () {
         Route::group(['prefix' => 'prod'], function () {
 
             //Transaction
+
             Route::group(['prefix' => 'transactions'], function () {
                 Route::controller(ApiProdTransactionsController::class)->group(function () {
                     Route::post('/', 'getTransactionSwagger')->name("getTransactionSwagger");
                     Route::get('/{nbre}', 'getLastTransactionSwagger')->name("getLastTransactionSwagger");
+                    Route::get('/dashboard/data', 'getDataDashBoard')->name("getDataDashBoard");
                 });
             });
 

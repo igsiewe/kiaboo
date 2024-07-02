@@ -56,6 +56,8 @@ class User extends Authenticatable
         "deleted_by",
         "status_delete",
         "application",
+        'sum_payment',
+        'sum_refund',
     ];
 
     public function ville()

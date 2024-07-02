@@ -183,7 +183,7 @@ class ApiProdTransactionsController extends Controller
             ->join('users','users.id','=','transactions.source')
             ->select('transactions.reference as transactionId','transactions.date_transaction as dateTransaction','transactions.credit as amount' ,'transactions.commission_agent_rembourse as fees','transactions.balance_before','transactions.balance_after' ,'transactions.customer_phone as customer','transactions.description as status','services.name_service as serviceName','type_services.name_type_service as type_service','users.telephone as agent','transactions.marchand_transaction_id as marchandTransactionID','transactions.date_end_trans as dateEndTransaction','services.logo_service as logoService')
             ->where("fichier","agent")
-            ->where('transactions.status',1)
+           // ->where('transactions.status',1)
             ->whereIn('transactions.source',$listAgent)
             ->orderBy('transactions.date_transaction', 'desc')
             ->limit($nbre)
@@ -205,6 +205,44 @@ class ApiProdTransactionsController extends Controller
             'data'=>$transactions,
         ], 200);
 
+    }
+
+    public function getDataDashBoard(){
+
+        $agent = User::where('distributeur_id',Auth::user()->distributeur_id)->where('type_user_id',UserRolesEnum::AGENT->value)
+            ->select('id','name','surname','telephone','email','status','balance_after as balance','sum_payment','sum_refund');
+
+        $listAgent=$agent->pluck('id')->toArray();
+
+        $transactions = DB::table('transactions')
+            ->join('services', 'transactions.service_id', '=', 'services.id')
+            ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
+            ->join('users','users.id','=','transactions.source')
+            ->select('transactions.reference as transactionId','transactions.date_transaction as dateTransaction','transactions.credit as amount' ,'transactions.commission_agent_rembourse as fees','transactions.balance_before','transactions.balance_after' ,'transactions.customer_phone as customer','transactions.description as status','services.name_service as serviceName','type_services.name_type_service as type_service','users.telephone as agent','transactions.marchand_transaction_id as marchandTransactionID','transactions.date_end_trans as dateEndTransaction','services.logo_service as logoService')
+            ->where("fichier","agent")
+            // ->where('transactions.status',1)
+            ->whereIn('transactions.source',$listAgent)
+            ->orderBy('transactions.date_transaction', 'desc')
+            ->limit(5)
+            ->get();
+        if($agent->count()>0){
+            return response()->json([
+                'success'=>true,
+                'statusCode' => 'SUCCESS',
+                'numberAgent'=> $agent->count(),
+                'totalBalance'=> $agent->sum('balance'),
+                'sumPayment'=> $agent->sum('sum_payment'),
+                'sumRefund'=> $agent->sum('sum_refund'),
+                'transactions'=>$transactions,
+                'agents'=>$agent->get(),
+            ], 200);
+        }else{
+            return response()->json([
+                'success'=>false,
+                'statusCode' => 'ERR-AGENT-NOT-FOUND',
+                'message'=> 'Agent not found',
+            ], 404);
+        }
     }
 
 }

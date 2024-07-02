@@ -34,6 +34,8 @@ return new class extends Migration
             $table->double("last_amount")->default(0);
             $table->double("total_commission")->default(0);
             $table->integer("last_transaction_id")->default(0);
+            $table->double("sum_payment")->default(0);
+            $table->double("sum_refund")->default(0);
             $table->integer("seuilapprovisionnement")->default(0);
             $table->date("date_last_transaction")->default(now());
             $table->foreignId("user_last_transaction_id")->references("id")->on("users");
