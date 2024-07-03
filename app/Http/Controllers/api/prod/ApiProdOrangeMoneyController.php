@@ -53,7 +53,7 @@ class ApiProdOrangeMoneyController extends Controller
             )
 
             ->withBody('grant_type=client_credentials', 'application/x-www-form-urlencoded')
-            ->Post('https://omdeveloper.orange.cm/oauth2/token');
+            ->Post('https://omdeveloper-gateway.orange.cm/oauth2/token');
 
         if($response->status()==200){
             return response()->json($response->json());
