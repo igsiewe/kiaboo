@@ -1517,7 +1517,7 @@ class ApiProdMoMoMoneyController extends Controller
             return response()->json([
                 'success'=>false,
                 'statusCode'=>"ERR-MERCHAND-TRANSACTION-ID-DUPLICATE",
-                'message' => "The transaction ID used by the merchant already exists",
+                'message' => "The merchand transaction ID used exists already : ".$request->marchandTransactionId,
                 'data'=>[
                     'status' => $checkTransactionExternalId->first()->description,
                     'transactionId'=>$checkTransactionExternalId->first()->reference,
