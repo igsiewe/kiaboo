@@ -122,7 +122,8 @@ class ApiProdAuthController extends BaseController
                 'name'=>Auth::user()->name." ".Auth::user()->surname,
                 'Desciption'=>'Connexion'
             ]);
-            return $this->respondWithTokenSwagger($access_token, $user);
+            $delay=Carbon::parse($token->token->expires_at)->diffInSeconds(Carbon::now());
+            return $this->respondWithTokenSwagger($access_token, $user,$delay);
         }
         Log::alert([
             'Login'=>$request->login,
