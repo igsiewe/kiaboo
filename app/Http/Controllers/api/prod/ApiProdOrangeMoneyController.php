@@ -260,12 +260,13 @@ class ApiProdOrangeMoneyController extends Controller
            // }
         }
         //Verifie le statut de l'id transaction cote marchand
-        $checkTransactionExternalId = Transaction::where('marchand_transaction_id',$request->marchandTransactionId)->get();
+        $checkTransactionExternalId = Transaction::where('marchand_transaction_id',$request->marchandTransactionId)->select('source'); // Je cherche s'l y'a une transaction avec ce numero merchand_id dans la base
         return $checkTransactionExternalId;
         if($checkTransactionExternalId->count()>0){
-            $checkDistributeur = User::where('id',$checkTransactionExternalId->first()->source)->get();
-            if($checkDistributeur->count()>0){
 
+            $checkDistributeur = User::where('id',$checkTransactionExternalId->first()->source)->get()->first()->distributeur_id; //Je cherche le distributeur qui a fait la transaction
+
+            if($checkDistributeur->count()>0){
                 if($user->first()->distributeur_id==$checkDistributeur->first()->distributeur_id){
                     return response()->json([
                         'success'=>false,
