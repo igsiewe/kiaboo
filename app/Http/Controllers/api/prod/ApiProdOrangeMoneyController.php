@@ -16,6 +16,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -260,9 +261,22 @@ class ApiProdOrangeMoneyController extends Controller
            // }
         }
         //Verifie le statut de l'id transaction cote marchand
-        $checkTransactionExternalId = Transaction::where('marchand_transaction_id',$request->marchandTransactionId)->select('source')->get(); // Je cherche s'l y'a une transaction avec ce numero merchand_id dans la base
-        return $checkTransactionExternalId->pluck('source');
+
+        $checkTransactionExternalId = Transaction::where('marchand_transaction_id',$request->marchandTransactionId)->select('source')->get(); // Je cherche s'l y'a une transaction avec ce numero merchand_id et je recupère tous les aagents qui l'ont fait
+
+        $distributeurAuquelAppartienAgent = $user->first()->distributeur_id;
+
+        $data = DB::table('transactions')
+            ->join('users', 'transactions.source', '=', 'users.id')
+            ->select('transactions.*')
+            ->where('transactions.marchand_transaction_id', $request->marchandTransactionId)
+            ->where('users.distributeur_id', $distributeurAuquelAppartienAgent)
+            ->get();
+
+        return $data;
+
         if($checkTransactionExternalId->count()>0){
+          ///  return $checkTransactionExternalId->pluck('source');
 
             $checkDistributeur = User::where('id',$checkTransactionExternalId->first()->source)->get()->first()->distributeur_id; //Je cherche le distributeur qui a fait la transaction
 
