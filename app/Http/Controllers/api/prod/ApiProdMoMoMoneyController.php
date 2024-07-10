@@ -1491,7 +1491,7 @@ class ApiProdMoMoMoneyController extends Controller
         }
 
         //On se rassure que l'utilisateur est bien rattaché au compte connecté
-        //return $user->first()->distributeur_id."-".Auth::user()->distributeur_id;
+        return $user->first()->distributeur_id."-".Auth::user()->distributeur_id;
 
         if($user->first()->distributeur_id !=Auth::user()->distributeur_id){
            // if($user->count()==0 || $user->first()->status ==0){

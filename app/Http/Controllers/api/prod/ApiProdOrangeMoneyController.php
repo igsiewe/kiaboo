@@ -251,17 +251,17 @@ class ApiProdOrangeMoneyController extends Controller
         //On se rassure que l'utilisateur est bien rattaché au compte connecté
 
         if($user->first()->distributeur_id !=Auth::user()->distributeur_id){
-            if($user->count()==0 || $user->first()->status ==0){
+          //  if($user->count()==0 || $user->first()->status ==0){
                 return response()->json([
                     'success'=>false,
                     'statusCode'=>'ERR-NOT-PERMISSION',
                     'message'=>"The agent used does not have the necessary permissions with your profil",
                 ],403);
-            }
+           // }
         }
         //Verifie le statut de l'id transaction cote marchand
         $checkTransactionExternalId = Transaction::where('marchand_transaction_id',$request->marchandTransactionId)->get();
-
+        return $checkTransactionExternalId;
         if($checkTransactionExternalId->count()>0){
             $checkDistributeur = User::where('id',$checkTransactionExternalId->first()->source)->get();
             if($checkDistributeur->count()>0){
