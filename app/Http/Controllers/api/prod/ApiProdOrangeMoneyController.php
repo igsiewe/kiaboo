@@ -292,7 +292,7 @@ class ApiProdOrangeMoneyController extends Controller
                             'dateTransaction'=>$checkTransactionExternalId->first()->date_transaction,
                             'amount'=>$checkTransactionExternalId->first()->credit,
                             'fees'=>$checkTransactionExternalId->first()->fees_collecte,
-                            'agent'=>$checkDistributeur->first()->telephone,
+                            'agent'=>$user->first()->telephone,
                             'customer'=>$checkTransactionExternalId->first()->customer_phone,
                             'marchandTransactionID'=>$checkTransactionExternalId->first()->marchand_transaction_id,
                         ]
