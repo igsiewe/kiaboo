@@ -273,7 +273,7 @@ class ApiProdOrangeMoneyController extends Controller
             ->where('users.distributeur_id', $distributeurAuquelAppartienAgent)
             ->get();
 
-        return $data;
+        return $data->count();
 
         if($checkTransactionExternalId->count()>0){
           ///  return $checkTransactionExternalId->pluck('source');
