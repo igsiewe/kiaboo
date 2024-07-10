@@ -273,32 +273,22 @@ class ApiProdOrangeMoneyController extends Controller
             ->where('users.distributeur_id', $distributeurAuquelAppartienAgent)
             ->get();
 
-       // return $data->count();
-
         if($checkTransactionExternalId->count()>0){
-          ///  return $checkTransactionExternalId->pluck('source');
-
-          //  $checkDistributeur = User::where('id',$checkTransactionExternalId->first()->source)->get()->first()->distributeur_id; //Je cherche le distributeur qui a fait la transaction
-
-          //  if($checkDistributeur->count()>0){
-           //     if($user->first()->distributeur_id==$checkDistributeur->first()->distributeur_id){
-                    return response()->json([
-                        'success'=>false,
-                        'statusCode'=>"ERR-MERCHAND-TRANSACTION-ID-DUPLICATE",
-                        'message' => "The transaction ID used by the merchant already exists",
-                        'data'=>[
-                            'status' => $checkTransactionExternalId->first()->description,
-                            'transactionId'=>$checkTransactionExternalId->first()->reference,
-                            'dateTransaction'=>$checkTransactionExternalId->first()->date_transaction,
-                            'amount'=>$checkTransactionExternalId->first()->credit,
-                            'fees'=>$checkTransactionExternalId->first()->fees_collecte,
-                            'agent'=>$user->first()->telephone,
-                            'customer'=>$checkTransactionExternalId->first()->customer_phone,
-                            'marchandTransactionID'=>$checkTransactionExternalId->first()->marchand_transaction_id,
-                        ]
-                    ], 208);
-               // }
-          //  }
+            return response()->json([
+                'success'=>false,
+                'statusCode'=>"ERR-MERCHAND-TRANSACTION-ID-DUPLICATE",
+                'message' => "The transaction ID used by the merchant already exists",
+                'data'=>[
+                    'status' => $checkTransactionExternalId->first()->description,
+                    'transactionId'=>$checkTransactionExternalId->first()->reference,
+                    'dateTransaction'=>$checkTransactionExternalId->first()->date_transaction,
+                    'amount'=>$checkTransactionExternalId->first()->credit,
+                    'fees'=>$checkTransactionExternalId->first()->fees_collecte,
+                    'agent'=>$user->first()->telephone,
+                    'customer'=>$checkTransactionExternalId->first()->customer_phone,
+                    'marchandTransactionID'=>$checkTransactionExternalId->first()->marchand_transaction_id,
+                ]
+            ], 208);
         }
 
 

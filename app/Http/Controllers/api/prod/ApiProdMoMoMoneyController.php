@@ -1504,31 +1504,32 @@ class ApiProdMoMoMoneyController extends Controller
         }
 
         //Verifie le statut de l'id transaction cote marchand
-        $checkTransactionExternalId = Transaction::where('marchand_transaction_id',$request->marchandTransactionId)->get();
+        $distributeurAuquelAppartienAgent = $user->first()->distributeur_id;
 
-            if($checkTransactionExternalId->count()>0){
-                $checkDistributeur = User::where('id',$checkTransactionExternalId->first()->source)->get();
-                $distributeurRattacheLaTransaction = $checkDistributeur->first()->distributeur_id;
-                if($checkDistributeur->count()>0){
-                    if($user->first()->distributeur_id==$checkDistributeur->first()->distributeur_id){
-                        return response()->json([
-                            'success'=>false,
-                            'statusCode'=>"ERR-MERCHAND-TRANSACTION-ID-DUPLICATE",
-                            'message' => "The transaction ID used by the merchant already exists",
-                            'data'=>[
-                                'status' => $checkTransactionExternalId->first()->description,
-                                'transactionId'=>$checkTransactionExternalId->first()->reference,
-                                'dateTransaction'=>$checkTransactionExternalId->first()->date_transaction,
-                                'amount'=>$checkTransactionExternalId->first()->credit,
-                                'fees'=>$checkTransactionExternalId->first()->fees_collecte,
-                                'agent'=>$checkDistributeur->first()->telephone,
-                                'customer'=>$checkTransactionExternalId->first()->customer_phone,
-                                'marchandTransactionID'=>$checkTransactionExternalId->first()->marchand_transaction_id,
-                            ]
-                        ], 208);
-                    }
-                }
-            }
+        $checkTransactionExternalId = DB::table('transactions')
+            ->join('users', 'transactions.source', '=', 'users.id')
+            ->select('transactions.*')
+            ->where('transactions.marchand_transaction_id', $request->marchandTransactionId)
+            ->where('users.distributeur_id', $distributeurAuquelAppartienAgent)
+            ->get();
+
+        if($checkTransactionExternalId->count()>0){
+            return response()->json([
+                'success'=>false,
+                'statusCode'=>"ERR-MERCHAND-TRANSACTION-ID-DUPLICATE",
+                'message' => "The transaction ID used by the merchant already exists",
+                'data'=>[
+                    'status' => $checkTransactionExternalId->first()->description,
+                    'transactionId'=>$checkTransactionExternalId->first()->reference,
+                    'dateTransaction'=>$checkTransactionExternalId->first()->date_transaction,
+                    'amount'=>$checkTransactionExternalId->first()->credit,
+                    'fees'=>$checkTransactionExternalId->first()->fees_collecte,
+                    'agent'=>$user->first()->telephone,
+                    'customer'=>$checkTransactionExternalId->first()->customer_phone,
+                    'marchandTransactionID'=>$checkTransactionExternalId->first()->marchand_transaction_id,
+                ]
+            ], 208);
+        }
 
 
         // On vérifie si les commissions sont paramétrées
