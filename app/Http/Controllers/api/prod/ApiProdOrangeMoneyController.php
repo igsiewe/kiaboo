@@ -262,26 +262,26 @@ class ApiProdOrangeMoneyController extends Controller
         }
         //Verifie le statut de l'id transaction cote marchand
 
-        $checkTransactionExternalId = Transaction::where('marchand_transaction_id',$request->marchandTransactionId)->select('source')->get(); // Je cherche s'l y'a une transaction avec ce numero merchand_id et je recupère tous les aagents qui l'ont fait
+       // $checkTransactionExternalId = Transaction::where('marchand_transaction_id',$request->marchandTransactionId)->select('source')->get(); // Je cherche s'l y'a une transaction avec ce numero merchand_id et je recupère tous les aagents qui l'ont fait
 
         $distributeurAuquelAppartienAgent = $user->first()->distributeur_id;
 
-        $data = DB::table('transactions')
+        $checkTransactionExternalId = DB::table('transactions')
             ->join('users', 'transactions.source', '=', 'users.id')
             ->select('transactions.*')
             ->where('transactions.marchand_transaction_id', $request->marchandTransactionId)
             ->where('users.distributeur_id', $distributeurAuquelAppartienAgent)
             ->get();
 
-        return $data->count();
+       // return $data->count();
 
         if($checkTransactionExternalId->count()>0){
           ///  return $checkTransactionExternalId->pluck('source');
 
-            $checkDistributeur = User::where('id',$checkTransactionExternalId->first()->source)->get()->first()->distributeur_id; //Je cherche le distributeur qui a fait la transaction
+          //  $checkDistributeur = User::where('id',$checkTransactionExternalId->first()->source)->get()->first()->distributeur_id; //Je cherche le distributeur qui a fait la transaction
 
-            if($checkDistributeur->count()>0){
-                if($user->first()->distributeur_id==$checkDistributeur->first()->distributeur_id){
+          //  if($checkDistributeur->count()>0){
+           //     if($user->first()->distributeur_id==$checkDistributeur->first()->distributeur_id){
                     return response()->json([
                         'success'=>false,
                         'statusCode'=>"ERR-MERCHAND-TRANSACTION-ID-DUPLICATE",
@@ -297,8 +297,8 @@ class ApiProdOrangeMoneyController extends Controller
                             'marchandTransactionID'=>$checkTransactionExternalId->first()->marchand_transaction_id,
                         ]
                     ], 208);
-                }
-            }
+               // }
+          //  }
         }
 
 
