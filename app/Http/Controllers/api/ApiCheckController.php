@@ -81,7 +81,7 @@ class ApiCheckController extends Controller
 
     function checkUserApiBalance($user, $montant)
     {
-        if (User::where("id",$user)->balance_after < $montant) {
+        if (User::where("id",$user)->first()->balance_after < $montant) {
             return false;
         }
         return true;
