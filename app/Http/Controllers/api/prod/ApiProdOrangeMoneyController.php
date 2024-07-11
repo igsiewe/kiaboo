@@ -67,7 +67,7 @@ class ApiProdOrangeMoneyController extends Controller
             )
 
             ->withBody('grant_type=client_credentials', 'application/x-www-form-urlencoded')
-            ->Post('https://wso2am-pattern-4-am-cp-service:9443/oauth2/token');
+            ->Post('https://omdeveloper-gateway.orange.cm/oauth2/token');
 //        Log::info([
 //            'function' => "OM_GetTokenAccess",
 //            'url'=>"https://omdeveloper.orange.cm/oauth2/token",
