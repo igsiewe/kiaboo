@@ -139,7 +139,7 @@ class ApiCheckController extends Controller
                 "longitude"=>$longitude,
                 "place"=>$place,
                 "application"=>$application,
-                "merchand_transaction_id"=>$merchandTransactionId,
+                "marchand_transaction_id"=>$merchandTransactionId,
             ]);
 
             if($Transaction) {
