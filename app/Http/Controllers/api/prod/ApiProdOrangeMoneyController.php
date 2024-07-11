@@ -1214,10 +1214,10 @@ class ApiProdOrangeMoneyController extends Controller
                 [
                     'success'=>true,
                     'statusCode'=>"PAYMENT-INITIATE-SUCCESSFULLY",
-                    'message'=>$dataResponse->data->inittxnmessage,
+                    'message'=>$dataResponse->message,
                     'paytoken'=>$payToken,
                     'transactionId'=>$reference,//$idTransaction,
-                ],202
+                ],200
             );
 
         }else{
