@@ -171,6 +171,8 @@ Route::middleware('auth:api')->group(function () {
                     Route::get('payment/push/{transactionId}', 'OM_Payment_Push')->name("OM_Payment_Push");
                     Route::get('payment/status/{transactionId}', 'OM_Payment_Status')->name("OM_Payment_Status");
 
+                    Route::post('cashin', 'OM_CashIn')->name("OM_CashIn");
+
                 });
 
             });
