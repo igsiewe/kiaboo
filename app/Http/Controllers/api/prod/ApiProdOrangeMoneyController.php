@@ -1030,7 +1030,6 @@ class ApiProdOrangeMoneyController extends Controller
         }
 
         // On vérifie si les commissions sont paramétrées
-        // On vérifie si les commissions sont paramétrées
         $functionCommission = new ApiCommissionController();
         $lacommission =$functionCommission->getCommissionByService($service,$amount);
         if($lacommission->getStatusCode()!=200){
@@ -1041,7 +1040,7 @@ class ApiProdOrangeMoneyController extends Controller
         }
 
         //Initie la transaction
-        $init_transaction = $apiCheck->init_Depot($amount, $customer, $service, "","", "", "", "",2,$user->first()->id);
+        $init_transaction = $apiCheck->init_Depot($amount, $customer, $service, "","", "", "", "",2,$user->first()->id,$request->marchandTransactionId);
         $dataTransactionInit = json_decode($init_transaction->getContent());
 
         if($init_transaction->getStatusCode() !=200){

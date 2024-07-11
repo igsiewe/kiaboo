@@ -115,7 +115,7 @@ class ApiProdFactureEneoController extends Controller
         $latitude = $request->latitude;
         $longitude = $request->longitude;
         $place = $request->place;
-        $init_transaction = $apiCheck->init_Depot($montant, $customerNumber, $service, "",$device, $latitude, $longitude, $place,1, Auth::user()->id);
+        $init_transaction = $apiCheck->init_Depot($montant, $customerNumber, $service, "",$device, $latitude, $longitude, $place,1, Auth::user()->id,"");
         $dataInit = json_decode($init_transaction->getContent());
 
         if($init_transaction->getStatusCode() !=200){
