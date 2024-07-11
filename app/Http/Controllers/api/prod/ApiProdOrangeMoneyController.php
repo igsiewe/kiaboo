@@ -1147,13 +1147,12 @@ class ApiProdOrangeMoneyController extends Controller
         if($httpcode==200){
             //La transaction s'est bien déroulée
             try{
-                DB::beginTransaction();
+               // DB::beginTransaction();
                 //On Calcule la commission
                 $commission=json_decode($lacommission->getContent());
                 $commissionFiliale = doubleval($commission->commission_kiaboo);
                 $commissionDistributeur=doubleval($commission->commission_distributeur);
                 $commissionAgent=doubleval($commission->commission_agent);
-
 
                 $balanceBeforeAgent = $user->first()->balance_after;
                 $balanceAfterAgent = floatval($balanceBeforeAgent) - floatval($amount);
@@ -1193,7 +1192,15 @@ class ApiProdOrangeMoneyController extends Controller
                     'remember_token'=>$payToken,
                     'total_commission'=>$commission_agent,
                 ]);
-
+                return response()->json(
+                    [
+                        'success'=>true,
+                        'statusCode'=>"PAYMENT-INITIATE-SUCCESSFULLY",
+                        'message'=>$dataResponse->message,
+                        'paytoken'=>$payToken,
+                        'transactionId'=>$reference,//$idTransaction,
+                    ],200
+                );
             }catch (Exception $e){
                 Log::error([
                     'code'=> $httpcode,
@@ -1209,17 +1216,6 @@ class ApiProdOrangeMoneyController extends Controller
                     ],$e->getCode()
                 );
             }
-           // return $dataResponse;
-            return response()->json(
-                [
-                    'success'=>true,
-                    'statusCode'=>"PAYMENT-INITIATE-SUCCESSFULLY",
-                    'message'=>$dataResponse->message,
-                    'paytoken'=>$payToken,
-                    'transactionId'=>$reference,//$idTransaction,
-                ],200
-            );
-
         }else{
             Log::error([
                 'code'=> $httpcode,
