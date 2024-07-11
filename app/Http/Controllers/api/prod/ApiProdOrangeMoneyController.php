@@ -86,7 +86,7 @@ class ApiProdOrangeMoneyController extends Controller
 
     }
 
-    public function OM_getPayToken(){
+    public function OM_getPMPayToken(){
 
         $url = "https://omdeveloper-gateway.orange.cm/omapi/1.0.2/mp/init";
         $response = Http::withOptions(['verify' => false,])
@@ -321,7 +321,7 @@ class ApiProdOrangeMoneyController extends Controller
         $reference = $dataTransactionInit->reference; //Référence de la transaction initiée
 
         //Référence de la transaction :On génère le payToken
-        $dataPayTokenResponse = $this->OM_getPayToken();
+        $dataPayTokenResponse = $this->OM_getPMPayToken();
         $dataPayToken = json_decode($dataPayTokenResponse->content());
         if($dataPayTokenResponse->status()!=200){
             return response()->json(
@@ -409,7 +409,7 @@ class ApiProdOrangeMoneyController extends Controller
                 "url"=>$url,
                 "request"=>$data,
                 "response"=>$e->getMessage()
-            ]);
+            ],$e->getCode());
         }
 
 
@@ -795,5 +795,444 @@ class ApiProdOrangeMoneyController extends Controller
         Log::info([
             "responseOMCallBack" => $data,
         ]);
+    }
+
+    public function OM_getCashInPayToken(){
+
+        $url = "https://omdeveloper-gateway.orange.cm/omapi/1.0.2/cashin/init";
+        $response = Http::withOptions(['verify' => false,])
+            ->withHeaders([
+                    "X-AUTH-TOKEN"=>$this->auth_x_token,
+                    "WSO2-Authorization"=>"Bearer ".$this->token,
+                    "accept"=>"application/json"
+                ]
+            )
+            ->Post($url);
+
+        log::info([
+            "function"=>"OM_getPayToken.",
+            "response"=>$response->body(),
+            "statusCode"=>$response->status(),
+        ]);
+        if($response->status()==401){
+            $data = json_decode($response->body());
+            return response()->json([
+                "success"=>false,
+                "statusCode"=>$data->message,
+                "message"=>$data->description,
+            ], 401);
+        }
+        if($response->status()!=200){
+            return response()->json([
+                "success"=>false,
+                "statusCode"=>$response->status(),
+                "message"=>$response->body(),
+            ], 400);
+        }
+        $dataResponse = json_decode($response);
+        $payToken = $dataResponse->data->payToken;
+
+        return response()->json([
+            "success"=>true,
+            "payToken"=>$payToken,
+            "message"=>$dataResponse->message
+        ], $response->status());
+
+    }
+
+    /**
+     * @OA\Post(
+     * path="/api/v1/prod/om/cashin",
+     * summary="Request to make a OM deposit",
+     * description="This request is used to deposit money into a customer's account using the OM service",
+     * security={{"bearerAuth":{}}},
+     * tags={"Cashin"},
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="Request to make a OM payment",
+     *    @OA\JsonContent(
+     *       required={"agentNumber","marchandTransactionId","phone","amount"},
+     *       @OA\Property(property="agentNumber", type="string", example="659657424"),
+     *       @OA\Property(property="marchandTransactionId", type="string", example="12354"),
+     *       @OA\Property(
+     *           type="object",
+     *           property="data",
+     *           @OA\Property(property="phone", type="number", example="659657424"),
+     *           @OA\Property(property="amount", type="number", example="200"),
+     *       )
+     *    ),
+     * ),
+     * @OA\Response(
+     *    response=200,
+     *    description="Payment initiated successfully",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="true"),
+     *       @OA\Property(property="statusCode", type="string", example="PAYMENT INITIATED"),
+     *       @OA\Property(property="message", type="string", example="payment initiate successfully"),
+     *      @OA\Property(property="paytoken", type="string", example="Payment token"),
+     *     @OA\Property(property="transactionId", type="string", example="Reference transaction for any request"),
+     *    ),
+     * ),
+     * @OA\Response(
+     *        response=208,
+     *        description="you do not have the necessary permissions",
+     *        @OA\JsonContent(
+     *           @OA\Property(property="success", type="boolean", example="false"),
+     *           @OA\Property(property="statusCode", type="string", example="ERR-MERCHAND-TRANSACTION-ID-DUPLICATE"),
+     *           @OA\Property(property="message", type="string", example="The transaction ID used by the merchant already exists"),
+     *            @OA\Property(
+     *            type="object",
+     *            property="data",
+     *            @OA\Property(property="status", type="string", example="Transaction status"),
+     *            @OA\Property(property="transactionId", type="string", example="transacton id database"),
+     *            @OA\Property(property="dateTransaction", type="date", example="Date transaction"),
+     *            @OA\Property(property="amount", type="number", example="amount of transaction"),
+     *            @OA\Property(property="fees", type="number", example="transaction fees"),
+     *            @OA\Property(property="agent", type="string", example="agent who initiate transaction"),
+     *            @OA\Property(property="customer", type="number", example="customer phone number"),
+     *            @OA\Property(property="marchandTransactionID", type="number", example="id transaction of partner"),
+     *            )
+     *        )
+     *   ),
+     *      @OA\Response(
+     *     response=400,
+     *     description="Bad request",
+     *     @OA\JsonContent(
+     *        @OA\Property(property="success", type="boolean", example="false"),
+     *        @OA\Property(property="statusCode", type="string", example="ERR-INVALID-DATA-SEND"),
+     *        @OA\Property(property="message", type="string", example="Bad request, invalid data was sent in the request"),
+     *     )
+     *  ),
+     *  @OA\Response(
+     *       response=403,
+     *       description="you do not have the necessary permissions",
+     *       @OA\JsonContent(
+     *          @OA\Property(property="success", type="boolean", example="false"),
+     *          @OA\Property(property="statusCode", type="string", example="ERR-NOT-PERMISSION"),
+     *          @OA\Property(property="message", type="string", example="you do not have the necessary permissions"),
+     *       )
+     *  ),
+     *  @OA\Response(
+     *      response=422,
+     *      description="attribute invalid",
+     *      @OA\JsonContent(
+     *         @OA\Property(property="success", type="boolean", example="false"),
+     *         @OA\Property(property="statusCode", type="string", example="ERR-ATTRIBUTES-INVALID"),
+     *         @OA\Property(property="message", type="string", example="attribute not valid"),
+     *      )
+     *   ),
+     *
+     * @OA\Response(
+     *    response=500,
+     *    description="an error occurred",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="false"),
+     *       @OA\Property(property="statusCode", type="string", example="ERR-UNAVAILABLE"),
+     *       @OA\Property(property="message", type="string", example="an error occurred"),
+     *    )
+     *  )
+     * )
+     */
+    public function OM_CashIn(Request $request){
+
+        $apiCheck = new ApiCheckController();
+
+        $service = ServiceEnum::DEPOT_OM->value;
+        $user = User::where("telephone",$request->agentNumber)->where('type_user_id', UserRolesEnum::AGENT->value)->get();
+        $amount=$request->data["amount"];
+        $customer=$request->data["phone"];
+
+        // Vérifie si l'utilisateur est autorisé à faire cette opération
+
+        if($user->count()==0){
+            return response()->json([
+                'success'=>false,
+                'statusCode'=>'ERR-AGENT-NOT-VALID',
+                'message'=>"The agent used is not found",
+            ],404);
+        }
+
+        if($user->first()->status ==0){
+            return response()->json([
+                'success'=>false,
+                'statusCode'=>'ERR-NOT-PERMISSION',
+                'message'=>"The agent used does not have the necessary permissions",
+            ],403);
+        }
+
+        //On se rassure que l'utilisateur est bien rattaché au compte connecté
+
+        if($user->first()->distributeur_id !=Auth::user()->distributeur_id){
+            //  if($user->count()==0 || $user->first()->status ==0){
+            return response()->json([
+                'success'=>false,
+                'statusCode'=>'ERR-NOT-PERMISSION',
+                'message'=>"The agent used does not have the necessary permissions with your profil",
+            ],403);
+            // }
+        }
+        //Verifie le statut de l'id transaction cote marchand
+
+        // $checkTransactionExternalId = Transaction::where('marchand_transaction_id',$request->marchandTransactionId)->select('source')->get(); // Je cherche s'l y'a une transaction avec ce numero merchand_id et je recupère tous les aagents qui l'ont fait
+
+        $distributeurAuquelAppartienAgent = $user->first()->distributeur_id;
+
+        $checkTransactionExternalId = DB::table('transactions')
+            ->join('users', 'transactions.source', '=', 'users.id')
+            ->select('transactions.*')
+            ->where('transactions.marchand_transaction_id', $request->marchandTransactionId)
+            ->where('users.distributeur_id', $distributeurAuquelAppartienAgent)
+            ->get();
+
+        if($checkTransactionExternalId->count()>0){
+            return response()->json([
+                'success'=>false,
+                'statusCode'=>"ERR-MERCHAND-TRANSACTION-ID-DUPLICATE",
+                'message' => "The merchand transaction ID used exists already : ".$request->marchandTransactionId,
+                'data'=>[
+                    'status' => $checkTransactionExternalId->first()->description,
+                    'transactionId'=>$checkTransactionExternalId->first()->reference,
+                    'dateTransaction'=>$checkTransactionExternalId->first()->date_transaction,
+                    'amount'=>$checkTransactionExternalId->first()->credit,
+                    'fees'=>$checkTransactionExternalId->first()->fees_collecte,
+                    'agent'=>$user->first()->telephone,
+                    'customer'=>$checkTransactionExternalId->first()->customer_phone,
+                    'marchandTransactionID'=>$checkTransactionExternalId->first()->marchand_transaction_id,
+                ]
+            ], 208);
+        }
+
+        // Vérifie si le service est actif
+        if($apiCheck->checkStatusService($service)==false){
+            return response()->json([
+                'success'=>false,
+                'statusCode'=>"ERR-SERVICE-PARTNER-NOT-AVAILABLE",
+                'message'=>"Ce service n'est pas actif",
+            ],403);
+        }
+        // Vérifie si le solde de l'utilisateur lui permet d'effectuer cette opération
+        if(!$apiCheck->checkUserApiBalance($user->first()->id, $amount)){
+            return response()->json([
+                'success'=>false,
+                'statusCode'=>'ERR-INSUFFICIENT-BALANCE',
+                'message'=>'Votre solde est insuffisant pour effectuer cette opération',
+            ],403);
+        }
+
+        //Vérifie si l'utilisateur n'a pas initié une operation similaire dans les 5 dernières minutes
+
+        if($apiCheck->checkFiveLastTransaction($customer, $customer, $service)){
+            return response()->json([
+                'success'=>false,
+                'statusCode'=>'ERR-TRANSACTION-SIMILAR-FOUND',
+                'message'=>'Une transaction similaire a été faite il y\'a moins de 5 minutes',
+            ],403);
+        }
+
+        // On vérifie si les commissions sont paramétrées
+        // On vérifie si les commissions sont paramétrées
+        $functionCommission = new ApiCommissionController();
+        $lacommission =$functionCommission->getCommissionByService($service,$amount);
+        if($lacommission->getStatusCode()!=200){
+            return response()->json([
+                'success' => false,
+                'message' => "Impossible de calculer la commission",
+            ], 400);
+        }
+
+        //Initie la transaction
+        $init_transaction = $apiCheck->init_Depot($amount, $customer, $service, "","", "", "", "",2,$user->first()->id);
+        $dataTransactionInit = json_decode($init_transaction->getContent());
+
+        if($init_transaction->getStatusCode() !=200){
+            return response()->json([
+                'success'=>false,
+                'statusCode'=>'error',
+                'message'=>$dataTransactionInit->message,
+            ],$init_transaction->getStatusCode());
+        }
+        $idTransaction = $dataTransactionInit->transId; //Id de la transaction initiée
+        $reference = $dataTransactionInit->reference; //Référence de la transaction initiée
+
+        //Référence de la transaction :On génère le payToken
+        $dataPayTokenResponse = $this->OM_getCashInPayToken();
+        $dataPayToken = json_decode($dataPayTokenResponse->content());
+        if($dataPayTokenResponse->status()!=200){
+            return response()->json(
+                [
+                    'success'=>false,
+                    'statusCode'=>$dataPayToken->statusCode,
+                    'message'=>$dataPayToken->message,
+                ],$dataPayTokenResponse->status()
+            );
+        }
+        $payToken = $dataPayToken->payToken;
+
+        //On gardee l'UID de la transaction initiee
+        $saveUID = Transaction::where('id',$idTransaction)->update([
+            "paytoken"=>$payToken
+        ]);
+
+        $customerPhone = "237".$customer;
+        $partenaire = Distributeur::where("id",Auth::user()->distributeur_id)->get()->first()->name_distributeur;
+        $url = "https://omdeveloper-gateway.orange.cm/omapi/1.0.2/cashin/pay";
+        $description ="Transaction cashin initiate by ".$user->first()->telephone. " de ".$partenaire;
+        $data = [
+            "channelUserMsisdn"=> $this->channel,
+            "amount"=> $amount,
+            "subscriberMsisdn"=> "$customer",
+            "pin"=> $this->pin,
+            "orderId"=> $request->marchandTransactionId,
+            "description"=>$description,
+            "payToken"=> $payToken
+        ];
+
+        try{
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS =>'{
+              "channelUserMsisdn": "'.$this->channel.'",
+              "amount": "'.$amount.'",
+              "subscriberMsisdn": "'.$customer.'",
+              "pin": "2222",
+              "orderId": "'.$request->marchandTransactionId.'",
+              "description": "'.$description.'",
+              "payToken": "'.$payToken.'"
+            }',
+                CURLOPT_HTTPHEADER => array(
+                    'accept: application/json',
+                    'X-AUTH-TOKEN: '.$this->auth_x_token,
+                    'Content-Type: application/json',
+                    'WSO2-Authorization: Bearer '.$this->token,
+                    'Cookie: 90172f9a61281d25f6dbdf1a5564f031=bf070161f093e553682ea80b8694a3f2'
+                ),
+            ));
+
+            $response = curl_exec($curl);
+            $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+            curl_close($curl);
+            $dataResponse = json_decode($response);
+            Log::info([
+                "fontion"=>"OM_Payment",
+                "url"=>$url,
+                "request"=>$data,
+                "response"=>$dataResponse
+            ]);
+        }catch (Exception $e){
+            throw $e;
+            Log::error([
+                "fontion"=>"OM_Cashin",
+                "url"=>$url,
+                "request"=>$data,
+                "error"=>$e->getMessage()
+            ]);
+            return response()->json([
+                "fontion"=>"OM_Cashin",
+                "url"=>$url,
+                "request"=>$data,
+                "response"=>$e->getMessage()
+            ],$e->getCode());
+        }
+
+
+        if($httpcode==200){
+            //La transaction s'est bien déroulée
+            try{
+                DB::beginTransaction();
+                //On Calcule la commission
+                $commission=json_decode($lacommission->getContent());
+                $commissionFiliale = doubleval($commission->commission_kiaboo);
+                $commissionDistributeur=doubleval($commission->commission_distributeur);
+                $commissionAgent=doubleval($commission->commission_agent);
+
+
+                $balanceBeforeAgent = $user->first()->balance_after;
+                $balanceAfterAgent = floatval($balanceBeforeAgent) - floatval($amount);
+                //on met à jour la table transaction
+
+                $Transaction = Transaction::where('id',$idTransaction)->where('service_id',$service)->update([
+                    // 'reference_partenaire'=>$referenceID, //$financialTransactionId,
+                    'balance_before'=>$balanceBeforeAgent,
+                    'balance_after'=>$balanceAfterAgent,
+                    'debit'=>$amount,
+                    'credit'=>0,
+                    'status'=>1, //End successfully
+                    'paytoken'=>$payToken,
+                    'date_end_trans'=>Carbon::now(),
+                    'description'=>$dataResponse->data->status,
+                    'message'=>$dataResponse->message,
+                    'commission'=>$commission->commission_globale,
+                    'commission_filiale'=>$commissionFiliale,
+                    'commission_agent'=>$commissionAgent,
+                    'commission_distributeur'=>$commissionDistributeur,
+                ]);
+
+                //on met à jour le solde de l'utilisateur
+
+                //La commmission de l'agent après chaque transaction
+
+                $commission_agent = Transaction::where("fichier","agent")->where("commission_agent_rembourse",0)->where("source",$user->first()->id)->sum("commission_agent");
+
+                $debitAgent = DB::table("users")->where("id", $user->first()->id)->update([
+                    'balance_after'=>$balanceAfterAgent,
+                    'balance_before'=>$balanceBeforeAgent,
+                    'last_amount'=>$amount,
+                    'date_last_transaction'=>Carbon::now(),
+                    'user_last_transaction_id'=>$user->first()->id,
+                    'last_service_id'=>ServiceEnum::DEPOT_OM->value,
+                    'reference_last_transaction'=>$reference,
+                    'remember_token'=>$payToken,
+                    'total_commission'=>$commission_agent,
+                ]);
+
+            }catch (Exception $e){
+                Log::error([
+                    'code'=> $httpcode,
+                    'function' => "OM_Cashin",
+                    'response'=>$response->body(),
+                    'user' => $user->first()->id,
+                    'request' => $request->all()
+                ]);
+                return response()->json(
+                    [
+                        'status'=>$response->status(),
+                        'message'=>$response->body(),
+                    ],$e->getCode()
+                );
+            }
+            return response()->json(
+                [
+                    'success'=>true,
+                    'statusCode'=>"PAYMENT-INITIATE-SUCCESSFULLY",
+                    'message'=>$dataResponse->data->inittxnmessage,
+                    'paytoken'=>$payToken,
+                    'transactionId'=>$reference,//$idTransaction,
+                ],202
+            );
+
+        }else{
+            Log::error([
+                'code'=> $httpcode,
+                'function' => "MOMO_PAYMENT",
+                'response'=>$response->body(),
+                'user' => $user->first()->id,
+                'request' => $request->all()
+            ]);
+            return response()->json(
+                [
+                    'status'=>$response->status(),
+                    'message'=>$response->body(),
+                ],$httpcode
+            );
+        }
     }
 }

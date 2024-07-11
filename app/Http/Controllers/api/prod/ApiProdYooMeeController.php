@@ -194,7 +194,7 @@ class ApiProdYooMeeController extends Controller
         $latitude = $request->latitude;
         $longitude = $request->longitude;
         $place = $request->place;
-        $init_transaction = $apiCheck->init_Depot($montant, $customerNumber, $service, "",$device,$latitude,$longitude,$place);
+        $init_transaction = $apiCheck->init_Depot($montant, $customerNumber, $service, "",$device,$latitude,$longitude,$place1, Auth::user()->id);
         $dataInit = json_decode($init_transaction->getContent());
 
         if($init_transaction->getStatusCode() !=200){

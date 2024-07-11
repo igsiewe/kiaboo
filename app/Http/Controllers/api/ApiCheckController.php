@@ -7,6 +7,7 @@ use App\Http\Enums\ServiceEnum;
 use App\Http\Enums\UserRolesEnum;
 use App\Models\Service;
 use App\Models\Transaction;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -78,6 +79,14 @@ class ApiCheckController extends Controller
         return true;
     }
 
+    function checkUserApiBalance($user, $montant)
+    {
+        if (User::where("id",$user)->balance_after < $montant) {
+            return false;
+        }
+        return true;
+    }
+
     function checkFiveLastTransaction($beneficiaire, $montant, $service){
         $dateActuelle = Carbon::now();
         $dateAvant = Carbon::now()->addMinutes(-5);
@@ -99,7 +108,7 @@ class ApiCheckController extends Controller
         return false;
     }
 
-    function init_Depot($montant, $beneficiaire, $service, $payToken="", $device,$latitude, $longitude, $place){
+    function init_Depot($montant, $beneficiaire, $service, $payToken="", $device="",$latitude="", $longitude="", $place="",$application=1, $user=0){
 
         $reference = "DP".Carbon::now()->format('ymd').".".Carbon::now()->format('His').".".$this->genererChaineAleatoire(1)."".$this->GenereRang();
 
@@ -115,12 +124,12 @@ class ApiCheckController extends Controller
                 'debit'=>$montant,
                 'credit'=>0,
                 'status'=>0, //Initiate
-                'created_by'=>Auth::user()->id,
+                'created_by'=>$user, //Auth::user()->id,
                 'created_at'=>Carbon::now(),
                 'countrie_id'=>Auth::user()->countrie_id,
-                'source'=>Auth::user()->id,
+                'source'=>$user, //Auth::user()->id,
                 'fichier'=>"agent",
-                'updated_by'=>Auth::user()->id,
+                'updated_by'=>$user, //Auth::user()->id,
                 'customer_phone'=>$beneficiaire,
                 'description'=>'INITIATED',
                 'date_operation'=>date('Y-m-d'),
@@ -128,7 +137,8 @@ class ApiCheckController extends Controller
                 'device_notification'=>$device,
                 'latitude'=>$latitude,
                 "longitude"=>$longitude,
-                "place"=>$place
+                "place"=>$place,
+                "application"=>$application,
             ]);
 
             if($Transaction) {
