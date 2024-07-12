@@ -41,19 +41,6 @@ class ApiProdOrangeMoneyController extends Controller
             $dataToken = json_decode($getTokenResponse->content());
             $this->token = $dataToken->access_token;
         }
-//        else{
-//            Log::error([
-//                'function' => "ApiProdOrangeMoneyController",
-//                'code'=> $getTokenResponse->status(),
-//                'response'=>$getTokenResponse->content(),
-//            ]);
-//            return response()->json(
-//                [
-//                    'status'=>'error',
-//                    'message'=>"Erreur innattendue : ".$getTokenResponse->content()
-//                ],$getTokenResponse->status()
-//            );
-//        }
     }
 
     public function OM_GetTokenAccess()
