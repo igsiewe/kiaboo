@@ -453,13 +453,12 @@ class ApiProdOrangeMoneyController extends Controller
                     'transactionId'=>$reference,//$idTransaction,
                     'data'=>[
                         'status'=>'PENDING',
-                        'transactionId'=>$reference,
                         'dateTransaction'=>Carbon::now(),
                         'currency'=>'XAF',
                         'amount'=>$amount,
                         'fees'=>$fees->fees_globale,
                         'agent'=>$user->first()->telephone,
-                        'customer'=>$customerPhone,
+                        'customer'=>$customer,
                         'marchandTransactionID'=>$request->marchandTransactionId,
                     ]
                 ],202
