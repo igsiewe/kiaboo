@@ -353,7 +353,7 @@ class ApiProdOrangeMoneyController extends Controller
             "description"=>$description,
             "payToken"=> $payToken
         ];
-return $data;
+
         try{
             $curl = curl_init();
 
