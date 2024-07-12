@@ -186,8 +186,19 @@ class ApiProdOrangeMoneyController extends Controller
      *       @OA\Property(property="success", type="boolean", example="true"),
      *       @OA\Property(property="statusCode", type="string", example="PAYMENT INITIATED"),
      *       @OA\Property(property="message", type="string", example="payment initiate successfully"),
-     *      @OA\Property(property="paytoken", type="string", example="Payment token"),
-     *     @OA\Property(property="transactionId", type="string", example="Reference transaction for any request"),
+     *       @OA\Property(property="paytoken", type="string", example="Payment token"),
+     *       @OA\Property(
+     *             type="object",
+     *             property="data",
+     *             @OA\Property(property="status", type="string", example="Transaction status"),
+     *             @OA\Property(property="transactionId", type="string", example="transacton id database"),
+     *             @OA\Property(property="dateTransaction", type="date", example="Date transaction"),
+     *             @OA\Property(property="amount", type="number", example="amount of transaction"),
+     *             @OA\Property(property="fees", type="number", example="transaction fees"),
+     *             @OA\Property(property="agent", type="string", example="agent who initiate transaction"),
+     *             @OA\Property(property="customer", type="number", example="customer phone number"),
+     *             @OA\Property(property="marchandTransactionID", type="number", example="id transaction of partner"),
+     *      )
      *    ),
      * ),
      * @OA\Response(
@@ -372,7 +383,7 @@ class ApiProdOrangeMoneyController extends Controller
                     "amount": "'.$amount.'",
                     "description": "'.$description.'",
                     "orderId": "'.$request->marchandTransactionId.'",
-                    "pin": "2222",
+                    "pin": "'.$this->pin.'",
                     "payToken": "'.$payToken.'",
                     "notifUrl": "https://kiaboogroup.com/api/om/callback/pm"
                     }',
@@ -452,7 +463,7 @@ class ApiProdOrangeMoneyController extends Controller
                     'paytoken'=>$payToken,
                     'transactionId'=>$reference,//$idTransaction,
                     'data'=>[
-                        'status'=>'PENDING',
+                        'status'=>$dataResponse->data->status,
                         'dateTransaction'=>Carbon::now(),
                         'currency'=>'XAF',
                         'amount'=>$amount,
