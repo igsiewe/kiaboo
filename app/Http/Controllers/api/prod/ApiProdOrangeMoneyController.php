@@ -147,8 +147,8 @@ class ApiProdOrangeMoneyController extends Controller
      *       @OA\Property(
      *           type="object",
      *           property="data",
-     *           @OA\Property(property="phone", type="number", example="659657424"),
-     *           @OA\Property(property="amount", type="number", example="200"),
+     *           @OA\Property(property="phone", type="string", example="659657424"),
+     *           @OA\Property(property="amount", type="string", example="200"),
      *       )
      *    ),
      * ),
