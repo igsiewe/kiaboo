@@ -367,14 +367,14 @@ class ApiProdOrangeMoneyController extends Controller
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST => 'POST',
                 CURLOPT_POSTFIELDS =>'{
-              "notifUrl": "https://kiaboogroup.com/api/om/callback/pm",
-              "channelUserMsisdn": "'.$this->channel.'",
-              "amount": "'.$amount.'",
-              "subscriberMsisdn": "'.$customer.'",
-              "pin": "2222",
-              "orderId": "'.$request->marchandTransactionId.'",
-              "description": "'.$description.'",
-              "payToken": "'.$payToken.'"
+                "subscriberMsisdn": "'.$customer.'",
+                "channelUserMsisdn": "'.$this->channel.'",
+                "amount": "'.$amount.'",
+                "description": "'.$description.'",
+                "orderId": "'.$request->marchandTransactionId.'", 
+                "pin": "2222",
+                "payToken": "'.$payToken.'"
+                "notifUrl": "https://kiaboogroup.com/api/om/callback/pm",
             }',
                 CURLOPT_HTTPHEADER => array(
                     'accept: application/json',
