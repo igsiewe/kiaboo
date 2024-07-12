@@ -373,9 +373,9 @@ class ApiProdOrangeMoneyController extends Controller
                 "description": "'.$description.'",
                 "orderId": "'.$request->marchandTransactionId.'", 
                 "pin": "2222",
-                "payToken": "'.$payToken.'"
+                "payToken": "'.$payToken.'",
                 "notifUrl": "https://kiaboogroup.com/api/om/callback/pm",
-            }',
+                }',
                 CURLOPT_HTTPHEADER => array(
                     'accept: application/json',
                     'X-AUTH-TOKEN: '.$this->auth_x_token,
