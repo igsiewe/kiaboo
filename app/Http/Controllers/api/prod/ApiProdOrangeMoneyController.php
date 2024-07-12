@@ -369,7 +369,7 @@ class ApiProdOrangeMoneyController extends Controller
                 CURLOPT_POSTFIELDS =>'{
                     "subscriberMsisdn": "'.$customer.'",
                     "channelUserMsisdn": "'.$this->channel.'",
-                    "amount": '.$amount.',
+                    "amount": 1,
                     "description": "'.$description.'",
                     "orderId": "'.$request->marchandTransactionId.'",
                     "pin": "2222",
