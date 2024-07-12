@@ -367,14 +367,14 @@ class ApiProdOrangeMoneyController extends Controller
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST => 'POST',
                 CURLOPT_POSTFIELDS =>'{
-                    "subscriberMsisdn": "699947211",
-                    "channelUserMsisdn": "691301143",
-                    "amount": "1",
-                    "description": "mppay",
-                    "orderId": "Testuser",
+                    "subscriberMsisdn": "'.$customer.'",
+                    "channelUserMsisdn": "'.$this->channel.'",
+                    "amount": "'.$amount.'",
+                    "description": "'.$description.'",
+                    "orderId": "'.$request->marchandTransactionId.'",
                     "pin": "2222",
                     "payToken": "'.$payToken.'",
-                    "notifUrl": "http://send.com/test"
+                    "notifUrl": "'.$description.'"
                     }',
                 CURLOPT_HTTPHEADER => array(
                     'accept: application/json',
