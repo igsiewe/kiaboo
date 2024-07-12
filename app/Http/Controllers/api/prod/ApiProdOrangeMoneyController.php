@@ -230,7 +230,7 @@ class ApiProdOrangeMoneyController extends Controller
         $user = User::where("telephone",$request->agentNumber)->where('type_user_id', UserRolesEnum::AGENT->value)->get();
         $amount=$request->data["amount"];
         $customer=$request->data["phone"];
-return $amount;
+
         // Vérifie si l'utilisateur est autorisé à faire cette opération
 
         if($user->count()==0){
@@ -353,7 +353,7 @@ return $amount;
             "description"=>$description,
             "payToken"=> $payToken
         ];
-
+return $data;
         try{
             $curl = curl_init();
 
