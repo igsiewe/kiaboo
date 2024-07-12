@@ -1099,12 +1099,13 @@ class ApiProdOrangeMoneyController extends Controller
                 CURLOPT_CUSTOMREQUEST => 'POST',
                 CURLOPT_POSTFIELDS =>'{
               "channelUserMsisdn": "'.$this->channel.'",
-              "amount": "'.$amount.'"",
+              "amount": "'.$amount.'",
               "subscriberMsisdn": "'.$customer.'",
               "pin": "2222",
               "orderId": "'.$request->marchandTransactionId.'",
               "description": "'.$description.'",
-              "payToken": "'.$payToken.'"
+              "payToken": "'.$payToken.'",
+              "notifUrl": "https://kiaboogroup.com/api/om/callback/pm",
             }',
                 CURLOPT_HTTPHEADER => array(
                     'accept: application/json',
