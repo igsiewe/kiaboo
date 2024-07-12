@@ -458,7 +458,7 @@ class ApiProdOrangeMoneyController extends Controller
             Log::error([
                 'code'=> $httpcode,
                 'function' => "MOMO_PAYMENT",
-                'response'=>$response->body(),
+                'response'=>$response,
                 'user' => $user->first()->id,
                 'request' => $request->all()
             ]);
