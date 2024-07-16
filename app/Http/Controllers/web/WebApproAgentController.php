@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\web;
 
+use App\Http\Controllers\api\ApiSmsController;
 use App\Http\Controllers\Controller;
 use App\Http\Enums\UserRolesEnum;
 use App\Models\ApproDistributeur;
@@ -47,7 +48,7 @@ class WebApproAgentController extends Controller
             return redirect()->back()->withErrors('You don\'t have enough balance to perform this operation');
         }
         $agent = User::where('id', $request->agent)->where('application',1)->get();
-
+        $telephoneAgent = $agent->first()->telephone;
         if($agent->count()==0){
             return redirect()->back()->withErrors('Agent not found');
         }
@@ -149,6 +150,11 @@ class WebApproAgentController extends Controller
                 'date_end_trans'=>Carbon::now(),
                 'moyen_payment'=>"Cash",
             ]);
+            $nomDistributeur = Auth::user()->name;
+            $msg = "Depot effectué par ".strtoupper($nomDistributeur).". ID transaction:".$payToken.", Montant net : ".$request->amount." F CFA. Votre solde est de ".$newBalanceAgent." F CFA. Merci de votre confiance";
+            $sms = new ApiSmsController();
+            $tel ="237".$telephoneAgent;
+            $envoyerSMS = $sms->SendSMS($tel,utf8_decode($msg));
             DB::commit();
             return redirect()->back()->with('success', 'Approvisionnement agent effectué avec succès');
         } catch (\Exception $e) {
