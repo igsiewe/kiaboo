@@ -152,7 +152,7 @@ class WebApproAgentController extends Controller
                 'moyen_payment'=>"Cash",
             ]);
             $nomDistributeur =Auth::user()->telephone." ".Auth::user()->name;
-            $msg = "Depot effectué par ".strtoupper($nomDistributeur)." vers ".$nomAgent.". Informations détaillées: ID transaction: ".$payToken.", Montant transaction : ".$request->amount." F CFA. Nouveau solde : ".$newBalanceAgent." F CFA. Merci de votre confiance";
+            $msg = "Dépôt effectué par ".strtoupper($nomDistributeur)." vers ".$nomAgent.". Informations détaillées: ID transaction: ".$payToken.", Montant transaction : ".$request->amount." F CFA. Nouveau solde : ".$newBalanceAgent." F CFA. Merci de votre confiance";
             $sms = new ApiSmsController();
             $tel ="237".$telephoneAgent;
             $envoyerSMS = $sms->SendSMS($tel,utf8_decode($msg));
