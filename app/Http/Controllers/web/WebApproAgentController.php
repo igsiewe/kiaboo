@@ -49,6 +49,7 @@ class WebApproAgentController extends Controller
         }
         $agent = User::where('id', $request->agent)->where('application',1)->get();
         $telephoneAgent = $agent->first()->telephone;
+        $nomAgent = $telephoneAgent." ".strtoupper($agent()->first()->name);
         if($agent->count()==0){
             return redirect()->back()->withErrors('Agent not found');
         }
@@ -150,8 +151,8 @@ class WebApproAgentController extends Controller
                 'date_end_trans'=>Carbon::now(),
                 'moyen_payment'=>"Cash",
             ]);
-            $nomDistributeur = Auth::user()->name;
-            $msg = "Depot effectué par ".strtoupper($nomDistributeur).". ID transaction:".$payToken.", Montant net : ".$request->amount." F CFA. Votre solde est de ".$newBalanceAgent." F CFA. Merci de votre confiance";
+            $nomDistributeur =Auth::user()->telephone." ".Auth::user()->name;
+            $msg = "Depot effectué par ".strtoupper($nomDistributeur)." vers ".$nomAgent.". Informations détaillées: ID transaction: ".$payToken.", Montant transaction : ".$request->amount." F CFA. Nouveau solde : ".$newBalanceAgent." F CFA. Merci de votre confiance";
             $sms = new ApiSmsController();
             $tel ="237".$telephoneAgent;
             $envoyerSMS = $sms->SendSMS($tel,utf8_decode($msg));
