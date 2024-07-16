@@ -49,7 +49,7 @@ class WebApproAgentController extends Controller
         }
         $agent = User::where('id', $request->agent)->where('application',1)->get();
         $telephoneAgent = $agent->first()->telephone;
-        $nomAgent = $telephoneAgent." ".strtoupper($agent()->first()->name);
+        $nomAgent = $telephoneAgent." ".strtoupper($agent->first()->name);
         if($agent->count()==0){
             return redirect()->back()->withErrors('Agent not found');
         }
