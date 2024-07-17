@@ -220,6 +220,7 @@ class ApiTransactionsController extends BaseController
             ->where("transactions.fichier","=","agent")
             ->where("transactions.source",Auth::user()->id)
             ->where('transactions.status',StatusTransEnum::PENDING->value)
+            ->whereIn('type_services.id',[TypeServiceEnum::ENVOI->value,TypeServiceEnum::RETRAIT->value,TypeServiceEnum::FACTURE->value])
             ->orderBy('transactions.date_transaction', 'desc')
             ->get();
 
