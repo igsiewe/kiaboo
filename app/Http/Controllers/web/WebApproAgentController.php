@@ -166,7 +166,8 @@ class WebApproAgentController extends Controller
                 'idTransaction'=>$payToken,
                 'amount'=>$request->amount,
                 'newBalance'=>$newBalanceAgent,
-                'nameDistributeur'=>$nomDistributeur
+                'nameDistributeur'=>$nomDistributeur,
+                'logo'=>base64_encode(file_get_contents(asset('/assets/images/logoMail.png')))
             ];
             $idAppro = "DépôtN°".$payToken;
             if(mail::to($emailAgent)->send(new infoRechargeAgent($data))){

@@ -44,7 +44,8 @@ class infoRechargeAgent extends Mailable
                 'idTransaction'=>$this->data['idTransaction'],
                 'amount'=>$this->data['amount'],
                 'newBalance'=>$this->data['newBalance'],
-                'nameDistributeur'=>$this->data['nameDistributeur']
+                'nameDistributeur'=>$this->data['nameDistributeur'],
+                'logo'=>$this->data['logo']
             ]
         );
     }
