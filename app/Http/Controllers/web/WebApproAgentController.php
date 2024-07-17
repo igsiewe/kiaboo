@@ -167,7 +167,8 @@ class WebApproAgentController extends Controller
                 'newBalance'=>$newBalanceAgent,
                 'nameDistributeur'=>$nomDistributeur
             ];
-            mail($emailAgent)->send(new infoRechargeAgent($data));
+            $idAppro = "DépôtN°".$payToken;
+            mail($emailAgent, $idAppro,"Approvisionnement du compte KIABOO")->send(new infoRechargeAgent($data));
 
             DB::commit();
             return redirect()->back()->with('success', 'Approvisionnement agent effectué avec succès');
