@@ -5,6 +5,8 @@ namespace App\Http\Controllers\web;
 use App\Http\Controllers\api\ApiSmsController;
 use App\Http\Controllers\Controller;
 use App\Http\Enums\UserRolesEnum;
+use App\Mail\infoRechargeAgent;
+use App\Mail\mailCreateAgent;
 use App\Models\Distributeur;
 use App\Models\User;
 use App\Models\ville;
@@ -12,6 +14,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class WebAgentController extends Controller
@@ -102,8 +105,17 @@ class WebAgentController extends Controller
         $sms = new ApiSmsController();
         $tel ="237".$request->telephone;
         $msg = $request->surname.", Votre compte KIABOO a été crée avec succès. Votre mot de passe temporaire est ".$newPassword.". Veuillez le changer dès votre première connexion";
-        $envoyerSMS = $sms->SendSMS($tel,utf8_decode($msg));
+       // $envoyerSMS = $sms->SendSMS($tel,utf8_decode($msg));
 
+        $data = [
+            'name'=>strtoupper($request->name) ." ".$request->surname,
+            'login'=>$request->telephone,
+            'password'=>$newPassword,
+        ];
+
+        if(mail::to($request->email)->send(new mailCreateAgent($data))){
+            $envoyerSMS = $sms->SendSMS($tel,utf8_decode($msg));
+        }
         return redirect()->back()->with('success', 'Agent created successfully');
     }
 
