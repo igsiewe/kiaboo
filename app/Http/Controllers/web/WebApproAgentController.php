@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class WebApproAgentController extends Controller
@@ -168,7 +169,7 @@ class WebApproAgentController extends Controller
                 'nameDistributeur'=>$nomDistributeur
             ];
             $idAppro = "DépôtN°".$payToken;
-            mail($emailAgent, $idAppro,"Approvisionnement du compte KIABOO")->send(new infoRechargeAgent($data));
+            mail::to($emailAgent)->send(new infoRechargeAgent($data));
 
             DB::commit();
             return redirect()->back()->with('success', 'Approvisionnement agent effectué avec succès');
