@@ -162,7 +162,7 @@ class WebApproAgentController extends Controller
             $envoyerSMS = $sms->SendSMS($tel,utf8_decode($msg));
 
             $data = [
-                'name'=>$nomAgent,
+                'nameAgent'=>$nomAgent,
                 'idTransaction'=>$payToken,
                 'amount'=>$request->amount,
                 'newBalance'=>$newBalanceAgent,

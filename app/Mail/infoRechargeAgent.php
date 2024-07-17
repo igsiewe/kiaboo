@@ -40,7 +40,7 @@ class infoRechargeAgent extends Mailable
         return new Content(
             view: 'mail.mailInfoRechargeAgent',
             with: [
-                'name'=>$this->data['nameAgent'],
+                'nameAgent'=>$this->data['nameAgent'],
                 'idTransaction'=>$this->data['idTransaction'],
                 'amount'=>$this->data['amount'],
                 'newBalance'=>$this->data['newBalance'],

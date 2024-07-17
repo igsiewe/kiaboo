@@ -7,7 +7,7 @@
 <h1>{{ config('app.name')  }}</h1>
 
 <br>Bonjour M./Mme, </br>
-<br>Votre compte {{ $data['name'] }} vient d'être approvisionné. </br><p><p/>
+<br>Votre compte {{ $data['nameAgent'] }} vient d'être approvisionné. </br><p><p/>
 IdTransaction : {{ $data['IdTransaction'] }} <br/>
 Montant rechargé :  {{ $data['amount'] }} <br/>
 Nouveau solde :  {{ $data['newBalance'] }} <br/>
