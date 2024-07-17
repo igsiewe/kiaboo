@@ -210,7 +210,7 @@ class WebTransactionsController extends BaseController
         if($request->agent !=null){
             $transactions = $transactions->where("transactions.agent_id",$request->agent);
         }
-        $transactions  = $transactions->orderByDesc('transactions.date_transaction')->get();
+        $transactions  = $transactions->orderByDesc('transactions.id')->get();
         $seuilDepasse = $seuilDepasse->get();
         $listagents = $listagents->orderBy("name")->orderBy("surname")->get();
 
