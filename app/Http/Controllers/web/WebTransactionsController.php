@@ -149,7 +149,7 @@ class WebTransactionsController extends BaseController
             $listagents = $seuilDepasse->where("type_user_id",UserRolesEnum::AGENT->value);
             $listDistributeurs = Distributeur::where("id", Auth::user()->distributeur_id)->orderBy("name_distributeur")->get();
         }
-        $transactions  = $transactions->orderByDesc('transactions.date_transaction')->get();
+        $transactions  = $transactions->orderByDesc('transactions.id')->get();
         $seuilDepasse = $seuilDepasse->get();
         $listagents = $listagents->orderBy("name")->orderBy("surname")->get();
 
