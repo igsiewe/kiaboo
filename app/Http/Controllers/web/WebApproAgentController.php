@@ -5,6 +5,7 @@ namespace App\Http\Controllers\web;
 use App\Http\Controllers\api\ApiSmsController;
 use App\Http\Controllers\Controller;
 use App\Http\Enums\UserRolesEnum;
+use App\Mail\infoRechargeAgent;
 use App\Models\ApproDistributeur;
 use App\Models\Distributeur;
 use App\Models\Transaction;
@@ -50,6 +51,8 @@ class WebApproAgentController extends Controller
         $agent = User::where('id', $request->agent)->where('application',1)->get();
         $telephoneAgent = $agent->first()->telephone;
         $nomAgent = $telephoneAgent." ".strtoupper($agent->first()->name);
+        $emailAgent = $agent->first()->email;
+
         if($agent->count()==0){
             return redirect()->back()->withErrors('Agent not found');
         }
@@ -156,6 +159,16 @@ class WebApproAgentController extends Controller
             $sms = new ApiSmsController();
             $tel ="237".$telephoneAgent;
             $envoyerSMS = $sms->SendSMS($tel,utf8_decode($msg));
+
+            $data = [
+                'name'=>$nomAgent,
+                'idTransaction'=>$payToken,
+                'amount'=>$request->amount,
+                'newBalance'=>$newBalanceAgent,
+                'nameDistributeur'=>$nomDistributeur
+            ];
+            mail($emailAgent)->send(new infoRechargeAgent($data));
+
             DB::commit();
             return redirect()->back()->with('success', 'Approvisionnement agent effectué avec succès');
         } catch (\Exception $e) {
