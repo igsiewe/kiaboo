@@ -8,7 +8,7 @@
 
 <br>Bonjour M./Mme, </br>
 <br>Votre compte {{ $data['nameAgent'] }} vient d'être approvisionné. </br><p><p/>
-IdTransaction : {{ $data['IdTransaction'] }} <br/>
+IdTransaction : {{ $data['idTransaction'] }} <br/>
 Montant rechargé :  {{ $data['amount'] }} <br/>
 Nouveau solde :  {{ $data['newBalance'] }} <br/>
 <br>Merci pour votre confiance</br><p><p/>
