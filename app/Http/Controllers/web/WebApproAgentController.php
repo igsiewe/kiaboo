@@ -159,7 +159,7 @@ class WebApproAgentController extends Controller
             $msg = "Compte rechargé par ".strtoupper($nomDistributeur)." vers ".$nomAgent.". Informations détaillées: ID transaction: ".$payToken.", Montant transaction : ".$request->amount." F CFA. Nouveau solde : ".$newBalanceAgent." F CFA. Merci de votre confiance";
             $sms = new ApiSmsController();
             $tel ="237".$telephoneAgent;
-            $envoyerSMS = $sms->SendSMS($tel,utf8_decode($msg));
+
 
             $data = [
                 'nameAgent'=>$nomAgent,
@@ -169,8 +169,9 @@ class WebApproAgentController extends Controller
                 'nameDistributeur'=>$nomDistributeur
             ];
             $idAppro = "DépôtN°".$payToken;
-            mail::to($emailAgent)->send(new infoRechargeAgent($data));
-
+            if(mail::to($emailAgent)->send(new infoRechargeAgent($data))){
+                $envoyerSMS = $sms->SendSMS($tel,utf8_decode($msg));
+            }
             DB::commit();
             return redirect()->back()->with('success', 'Approvisionnement agent effectué avec succès');
         } catch (\Exception $e) {
