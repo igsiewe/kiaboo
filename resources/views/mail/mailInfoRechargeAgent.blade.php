@@ -13,6 +13,7 @@ Montant rechargé :  {{ $data['amount'] }} F CFA<br/>
 Nouveau solde :  {{ $data['newBalance'] }} F CFA<br/>
 <br>Merci pour votre confiance</br><p><p/>
 Cordialement<br/>
+{{$data["logo"]}}
 <br/>
 
 PS : Ceci est un mail automatique, merci de ne pas y répondre<br/><br/>
