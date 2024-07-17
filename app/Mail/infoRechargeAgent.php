@@ -28,7 +28,7 @@ class infoRechargeAgent extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Info Recharge Agent',
+            subject: 'Dépôt Kiaboo '.$this->data['idTransaction'],
         );
     }
 
