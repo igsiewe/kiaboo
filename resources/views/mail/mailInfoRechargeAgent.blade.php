@@ -17,7 +17,7 @@ Cordialement<br/>
 
 PS : Ceci est un mail automatique, merci de ne pas y répondre<br/><br/>
 {{--<img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('/assets/images/logoMail.png'))) }}" class="logo" alt="kiaboo">--}}
-<img src="data:image/png;base64,{{ base64_encode(file_get_contents(asset('/assets/images/logoMail.png')) ) }}" class="logo" alt="kiaboo">
-{{$image = base64_encode( file_get_contents(asset('/assets/images/logoMail.png') ))}}
+<img src="data:image/png;base64, {{ base64_encode(file_get_contents(asset('/assets/images/logoMail.png')) ) }}" class="logo" alt="kiaboo">
+
 </body>
 </html>
