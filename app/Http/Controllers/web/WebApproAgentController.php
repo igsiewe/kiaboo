@@ -171,7 +171,7 @@ class WebApproAgentController extends Controller
             ];
             $idAppro = "DépôtN°".$payToken;
             if(mail::to($emailAgent)->send(new infoRechargeAgent($data))){
-               // $envoyerSMS = $sms->SendSMS($tel,utf8_decode($msg));
+                $envoyerSMS = $sms->SendSMS($tel,utf8_decode($msg));
             }
             DB::commit();
             return redirect()->back()->with('success', 'Approvisionnement agent effectué avec succès');
