@@ -472,7 +472,7 @@ class ApiAuthController extends BaseController
     {
         # Validation
         $request->validate([
-            'old_password' => 'required',
+            'old_password' => 'required|string|min:12|max:50',
             'new_password' => 'required|confirmed',
         ]);
 
