@@ -550,7 +550,7 @@ class ApiAuthController extends BaseController
         # Validation
         $request->validate([
             'userphone'=>'required',
-            'password' => 'required|string|min:8|max:20',
+            'password' => 'required|string|min:12|max:50',
            // 'password_confirmation' => 'required|string|min:8|max:20|confirmed',
         ]);
         #Find user
