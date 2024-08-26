@@ -170,9 +170,9 @@ class WebApproAgentController extends Controller
                 'logo'=>base64_encode(file_get_contents(asset('/assets/images/logoMail.png')))
             ];
             $idAppro = "DépôtN°".$payToken;
-            if(mail::to($emailAgent)->send(new infoRechargeAgent($data))){
-                $envoyerSMS = $sms->SendSMS($tel,utf8_decode($msg));
-            }
+//            if(mail::to($emailAgent)->send(new infoRechargeAgent($data))){
+//                $envoyerSMS = $sms->SendSMS($tel,utf8_decode($msg));
+//            }
             DB::commit();
             return redirect()->back()->with('success', 'Approvisionnement agent effectué avec succès');
         } catch (\Exception $e) {

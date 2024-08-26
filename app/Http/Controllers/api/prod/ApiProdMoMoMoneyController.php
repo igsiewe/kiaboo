@@ -762,9 +762,6 @@ class ApiProdMoMoMoneyController extends Controller
         }
     }
     public function MOMO_Retrait(Request $request){
-
-
-
         $apiCheck = new ApiCheckController();
 
         $service = ServiceEnum::RETRAIT_MOMO->value;
