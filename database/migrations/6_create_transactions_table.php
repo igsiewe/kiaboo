@@ -19,7 +19,8 @@ return new class extends Migration
             $table->date("date_operation")->nullable();
             $table->time("heure_operation")->nullable();
             $table->dateTime("date_end_trans")->nullable();
-            $table->foreignId("service_id")->references("id")->on("services");
+            $table->integer("service_id");
+           // $table->foreignId("service_id")->references("id")->on("services");
             $table->double("balance_before")->default(0);
             $table->double("debit")->default(0);
             $table->double("credit")->default(0);
