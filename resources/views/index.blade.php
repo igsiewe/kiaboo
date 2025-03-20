@@ -82,7 +82,6 @@
                         </div>
                         @enderror
                         @if($errors->any())
-
                             <div class="position-relative form-group">
                                 <div class="input-group">
                                     <div class="col-lg-12 alert alert-danger alert-dismissable">
@@ -91,7 +90,6 @@
                                     </div>
                                 </div>
                             </div>
-
                         @endif
                         <div class="form-group mt-4 mb-4">
                             <div class="captcha">

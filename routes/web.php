@@ -144,6 +144,7 @@ Route::middleware(['auth','checkStatus'])->group(function (){
     Route::controller(WebAgentController::class)->group(function(){
         Route::get('agent/list', 'listAgent')->name('listAgent');
         Route::get('agent/edit/{id}', 'getUpdateUser')->name('getUpdateUser');
+        Route::get('agent/edit/{id}', 'getUpdateUser')->name('getUpdateUser');
         Route::middleware(['routedealer'])->group(function () {
             Route::any('agent/update/{id}', 'setUpdateAgent')->name('setUpdateAgent');
             Route::any('agent/create', 'setNewAgent')->name('setNewAgent');
