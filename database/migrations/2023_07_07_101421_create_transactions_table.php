@@ -41,7 +41,6 @@ return new class extends Migration
             $table->integer("status")->default(1)->comment("0 : INITIATED, 1:VALIDATED OR SUCCESSFUL");
             $table->string("description",255)->nullable();
 
-            $table->Time("heure_operation")->nullable();
             $table->string("description",255)->nullable();
             $table->string("paytoken",255)->nullable();
             $table->string("device_notification",255)->nullable();
