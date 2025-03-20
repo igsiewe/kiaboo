@@ -40,8 +40,6 @@ return new class extends Migration
             $table->string("ref_remb_com_distributeur",80)->nullable();
             $table->integer("status")->default(1)->comment("0 : INITIATED, 1:VALIDATED OR SUCCESSFUL");
             $table->string("description",255)->nullable();
-
-            $table->string("description",255)->nullable();
             $table->string("paytoken",255)->nullable();
             $table->string("device_notification",255)->nullable();
 
