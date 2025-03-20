@@ -45,7 +45,7 @@ return new class extends Migration
             $table->integer("last_service_id")->nullable();
             $table->integer("status_delete")->nullable()->default(0)->comment("0 : no deleted, 1:deleted");;
             $table->dateTime("deleted_at")->nullable();
-
+            $table->integer("ville_id");
 
             $table->rememberToken();
             $table->timestamps();
@@ -53,7 +53,7 @@ return new class extends Migration
 
         Schema::table('users', function($table) {
             $table->foreignId("deleted_by")->references("id")->on("users");
-            $table->foreignId("ville_id")->references("id")->on("villes");
+           // $table->foreignId("ville_id")->references("id")->on("villes");
             $table->integer("status")->default(1)->comment("0 : Deactivated, 1:Activated");
             $table->foreignId("user_last_transaction_id")->references("id")->on("users");
             $table->foreignId("distributeur_id")->references("id")->on("distributeurs");
