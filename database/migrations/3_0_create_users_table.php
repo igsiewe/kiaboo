@@ -46,7 +46,7 @@ return new class extends Migration
             $table->integer("status_delete")->nullable()->default(0)->comment("0 : no deleted, 1:deleted");;
             $table->dateTime("deleted_at")->nullable();
             $table->integer("ville_id");
-
+            $table->integer("distributeur_id");
             $table->rememberToken();
             $table->timestamps();
         });
@@ -56,7 +56,7 @@ return new class extends Migration
            // $table->foreignId("ville_id")->references("id")->on("villes");
             $table->integer("status")->default(1)->comment("0 : Deactivated, 1:Activated");
             $table->foreignId("user_last_transaction_id")->references("id")->on("users");
-            $table->foreignId("distributeur_id")->references("id")->on("distributeurs");
+           // $table->foreignId("distributeur_id")->references("id")->on("distributeurs");
             $table->foreignId("type_user_id")->references("id")->on("type_users");
             $table->foreignId("countrie_id")->references("id")->on("countries");
 
