@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string("surname_contact",200);
             $table->string("phone",100);
             $table->string("email",250);
-            $table->foreignId("zone_id")->references("id")->on("zone");
+            $table->integer("zone_id");
+          //  $table->foreignId("zone_id")->references("id")->on("zone");
             $table->foreignId("distributeur_id")->references("id")->on("distributeurs");
             $table->double("balance_before")->default(0);
             $table->double("balance_after")->default(0);
