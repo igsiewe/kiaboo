@@ -30,7 +30,7 @@ class WebAgentController extends Controller
         }
         $mesdistributeurs = $mesdistributeurs->orderBy("name_distributeur","asc")->get();
         $agents = $agents->with('ville','distributeur')->orderBy("name")->orderBy("surname")->get();
-        $ville = ville::where("status",1)->orderBy("name_ville","asc")->get();
+        $ville = Ville::where("status",1)->orderBy("name_ville","asc")->get();
         return view('pages.agents.listagent', compact('agents','ville','mesdistributeurs'));
     }
 
