@@ -76,8 +76,8 @@
                                         <tr>
                                             <th scope="col"></th>
                                             <th scope="col">Noms & Prénoms</th>
-                                            <th scope="col">Email</th>
-                                            <th scope="col">Téléphone</th>
+{{--                                            <th scope="col">Email</th>--}}
+{{--                                            <th scope="col">Téléphone</th>--}}
                                             <th scope="col">Role</th>
                                             <th scope="col">Distributeur</th>
                                             <th scope="col">Date de création</th>
@@ -94,8 +94,8 @@
                                                     <tr>
                                                         <td>{{$loop->iteration}}</td>
                                                         <td nowrap>{{$c->name." ".$c->surname}}</td>
-                                                        <td nowrap>{{$c->email}}</td>
-                                                        <td nowrap>{{$c->telephone}}</td>
+{{--                                                        <td nowrap>{{$c->email}}</td>--}}
+{{--                                                        <td nowrap>{{$c->telephone}}</td>--}}
                                                         <td nowrap>{{$c->typeUser->name_type_user}}</td>
                                                         <td nowrap>{{$c->distributeur !=null?$c->distributeur->name_distributeur:""}}</td>
                                                         <td nowrap align="center">{{$c->created_at}}</td>
