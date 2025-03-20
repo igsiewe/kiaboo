@@ -14,11 +14,16 @@ return new class extends Migration
         Schema::create('regions', function (Blueprint $table) {
             $table->id();
             $table->string("name_region",60);
-            $table->foreignId("countrie_id")->references("id")->on("countries");
+
             $table->integer("status")->default(1)->comment("0 : Deactivated, 1:Activated");
+
+            $table->timestamps();
+        });
+
+        Schema::table('regions', function($table) {
+            $table->foreignId("countrie_id")->references("id")->on("countries");
             $table->foreignId("created_by")->references("id")->on("users");
             $table->foreignId("updated_by")->references("id")->on("users");
-            $table->timestamps();
         });
     }
 

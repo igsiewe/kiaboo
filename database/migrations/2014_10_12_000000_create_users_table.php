@@ -21,9 +21,6 @@ return new class extends Migration
             $table->timestamp('expires_at')->nullable();
             $table->dateTime('last_connexion')->nullable();
             $table->string('password');
-//            $table->string('google2fa_secret')->nullable()->after('password');
-//            $table->boolean('uses_two_factor_auth')->nullable()->after('google2fa_secret');
-
             $table->string('codeparrainage',200)->nullable();
             $table->string('moncodeparrainage',200)->nullable();
             $table->string('numcni',200)->nullable();
