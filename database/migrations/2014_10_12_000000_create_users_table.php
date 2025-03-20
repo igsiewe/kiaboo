@@ -38,15 +38,7 @@ return new class extends Migration
             $table->double("sum_refund")->default(0);
             $table->integer("seuilapprovisionnement")->default(0);
             $table->date("date_last_transaction")->default(now());
-            $table->foreignId("user_last_transaction_id")->references("id")->on("users");
-        //    $table->foreignId("sous_distributeur_id")->references("id")->on("sous_distributeurs");
-            $table->foreignId("distributeur_id")->references("id")->on("distributeurs");
-            $table->foreignId("ville_id")->references("id")->on("villes");
-            $table->integer("status")->default(1)->comment("0 : Deactivated, 1:Activated");
-            $table->foreignId("type_user_id")->references("id")->on("type_users");
-            $table->foreignId("countrie_id")->references("id")->on("countries");
             $table->string('countrie');
-         //   $table->string('ville')->nullable();
             $table->string('quartier')->nullable();
             $table->string('adresse')->nullable();
             $table->boolean('optin');
@@ -56,10 +48,21 @@ return new class extends Migration
             $table->integer("last_service_id")->nullable();
             $table->integer("status_delete")->nullable()->default(0)->comment("0 : no deleted, 1:deleted");;
             $table->dateTime("deleted_at")->nullable();
-            $table->foreignId("deleted_by")->references("id")->on("users");
+
 
             $table->rememberToken();
             $table->timestamps();
+        });
+
+        Schema::table('users', function($table) {
+            $table->foreignId("deleted_by")->references("id")->on("users");
+            $table->foreignId("ville_id")->references("id")->on("villes");
+            $table->integer("status")->default(1)->comment("0 : Deactivated, 1:Activated");
+            $table->foreignId("user_last_transaction_id")->references("id")->on("users");
+            $table->foreignId("distributeur_id")->references("id")->on("distributeurs");
+            $table->foreignId("type_user_id")->references("id")->on("type_users");
+            $table->foreignId("countrie_id")->references("id")->on("countries");
+
         });
     }
 

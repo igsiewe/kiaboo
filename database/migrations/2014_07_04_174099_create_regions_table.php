@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string("name_region",60);
             $table->foreignId("countrie_id")->references("id")->on("countries");
             $table->integer("status")->default(1)->comment("0 : Deactivated, 1:Activated");
-          //  $table->foreignId("created_by")->references("id")->on("users");
-          //  $table->foreignId("updated_by")->references("id")->on("users");
+            $table->foreignId("created_by")->references("id")->on("users");
+            $table->foreignId("updated_by")->references("id")->on("users");
             $table->timestamps();
         });
     }
