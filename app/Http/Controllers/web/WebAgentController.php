@@ -9,7 +9,7 @@ use App\Mail\infoRechargeAgent;
 use App\Mail\mailCreateAgent;
 use App\Models\Distributeur;
 use App\Models\User;
-use App\Models\ville;
+use App\Models\Ville;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
