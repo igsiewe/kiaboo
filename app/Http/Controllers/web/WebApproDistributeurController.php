@@ -270,6 +270,7 @@ class WebApproDistributeurController extends Controller
             $approDistributeur->description = $request->description;
             $approDistributeur->status = 0;
             $approDistributeur->created_by = Auth::user()->id;
+            $approDistributeur->updated_by = Auth::user()->id;
             $approDistributeur->countrie_id = Auth::user()->countrie_id;
             $approDistributeur->save();
             DB::commit();
