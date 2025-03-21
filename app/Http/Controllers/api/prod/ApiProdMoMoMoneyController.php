@@ -536,7 +536,7 @@ class ApiProdMoMoMoneyController extends Controller
             ->Get($http);
 
         $data = json_decode($response->body());
-        dd($data);
+        //dd($data);
         Log::info([
             'responseMoMoDepotStatus'=>$data,
         ]);
