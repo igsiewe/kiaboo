@@ -217,6 +217,7 @@ class ApiProdMoMoMoneyController extends Controller
 
         //On génère le token de la transation
         $responseToken = $this->MOMO_Disbursement_GetTokenAccess();
+        dd($responseToken);
         if($responseToken->status()!=200){
             return response()->json(
                 [
