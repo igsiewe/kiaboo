@@ -593,7 +593,34 @@ class ApiProdMoMoMoneyController extends Controller
             }
 
             if($data->status=="SUCCESSFUL"){
-                    $Transaction = Transaction::where('paytoken',$referenceId)->where('service_id',ServiceEnum::DEPOT_MOMO->value)->where('status',2);
+                $Transaction = Transaction::where('paytoken',$referenceId)->where('service_id',ServiceEnum::DEPOT_MOMO->value)->where('status',2);
+
+                if($Transaction->count()==0){
+                    $userRefresh = User::where('id', Auth::user()->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before', 'balance_after','total_commission', 'last_amount','sous_distributeur_id','date_last_transaction')->first();
+                    $transactionsRefresh = DB::table('transactions')
+                        ->join('services', 'transactions.service_id', '=', 'services.id')
+                        ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
+                        ->select('transactions.id','transactions.reference as reference','transactions.reference_partenaire','transactions.date_transaction','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.commission_agent as commission','transactions.balance_before','transactions.balance_after' ,'transactions.status','transactions.service_id','services.name_service','services.logo_service','type_services.name_type_service','type_services.id as type_service_id','transactions.date_operation', 'transactions.heure_operation','transactions.commission_agent_rembourse as commission_agent')
+                        ->where("fichier","agent")
+                        ->where("source",Auth::user()->id)
+                        ->where('transactions.status',1)
+                        ->orderBy('transactions.date_transaction', 'desc')
+                        ->limit(5)
+                        ->get();
+                        return response()->json(
+                            [
+                                'status'=>200,
+                                'amount'=>$data->amount,
+                                'externalId'=>$data->externalId,
+                                'message'=>"Terminée avec succès",
+                                'description'=>$data->status,
+                                'response'=>$data,
+                                'user'=>$userRefresh,
+                                'transactions'=>$transactionsRefresh,
+                                // 'financialTransactionId'=>$data->financialTransactionId,
+                            ],200
+                        );
+                    }
                     $idTransaction = $Transaction->first()->id;
                     $service = $Transaction->first()->service_id;
                     $montant = $Transaction->first()->debit;
