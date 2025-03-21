@@ -99,7 +99,7 @@ class ApiProdMoMoMoneyController extends Controller
         $response = Http::withOptions(['verify' => false,])->withHeaders(
             [
                 'Authorization'=> 'Bearer '.$AccessToken,
-                'Ocp-Apim-Subscription-Key'=> 'c22f08082732417ea3ee479820813317',
+                'Ocp-Apim-Subscription-Key'=> '1466a4536a3c476ab18baf82ce82a1f3',
                 'X-Target-Environment'=> 'mtncameroon',
                 'Accept'=>'application/json',
             ])
@@ -217,7 +217,7 @@ class ApiProdMoMoMoneyController extends Controller
 
         //On génère le token de la transation
         $responseToken = $this->MOMO_Disbursement_GetTokenAccess();
-        dd($responseToken);
+
         if($responseToken->status()!=200){
             return response()->json(
                 [
@@ -235,7 +235,7 @@ class ApiProdMoMoMoneyController extends Controller
             'reference_partenaire'=>$referenceID,
             "paytoken"=>$referenceID
         ]);
-        $subcriptionKey = 'c22f08082732417ea3ee479820813317';
+        $subcriptionKey = '1466a4536a3c476ab18baf82ce82a1f3';
         $customerPhone = "237".$customerNumber;
         $response = Http::withOptions(['verify' => false,])->withHeaders(
             [
