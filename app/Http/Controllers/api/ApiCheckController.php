@@ -305,11 +305,8 @@ class ApiCheckController extends Controller
 
     function checkStatusService($idService)
     {
-        dd($idService);
+
         $service = Service::where("id", $idService)->first();
-        if($service->isEmpty()){
-            return false;
-        }
         if($service->count() == 0){
             return false;
         }
