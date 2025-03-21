@@ -752,7 +752,7 @@ class ApiProdMoMoMoneyController extends Controller
     }
 
     public function MOMO_Payment_GetTokenAccess(){
-        $response = Http::withOptions(['verify' => false,])->withHeaders(['Ocp-Apim-Subscription-Key'=> '886cc9e141ab492f80d9567b3c46d59c'])->withBasicAuth('b20bb11d-e152-4ba0-a602-700f31832ec0', '949ab23d698b43c8af27482a514acc29')
+        $response = Http::withOptions(['verify' => false,])->withHeaders(['Ocp-Apim-Subscription-Key'=> '886cc9e141ab492f80d9567b3c46d59c'])->withBasicAuth('748d8c40-bbe9-46e5-9d78-eb646c0de2af', '6ece0272f24745b7bedd0c3406abf3c9')
             ->Post('https://proxy.momoapi.mtn.com/collection/token/');
         if($response->status()==200){
             return response()->json($response->json());
