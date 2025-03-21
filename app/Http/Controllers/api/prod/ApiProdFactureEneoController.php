@@ -155,7 +155,7 @@ class ApiProdFactureEneoController extends Controller
                 'X-Reference-Id'=> $referenceID,
                 'Ocp-Apim-Subscription-Key'=> $subcriptionKey,
                 'X-Target-Environment'=> 'mtncameroon',
-                'X-Callback-Url'=>'https://kiaboogroup.com/api/momo/callback'
+                'X-Callback-Url'=>'https://kiaboopay.com/api/momo/callback'
             ])
             ->Post("https://proxy.momoapi.mtn.com/disbursement/v1_0/transfer", [
                 "amount" => $montant,

@@ -355,7 +355,7 @@ class ApiProdOrangeMoneyController extends Controller
         $url = "https://omdeveloper-gateway.orange.cm/omapi/1.0.2/mp/pay";
         $description ="Transaction initie by ".$user->first()->telephone. " de ".$partenaire;
         $data = [
-            "notifUrl"=> "https://kiaboogroup.com/api/om/callback/pm",
+            "notifUrl"=> "https://kiaboopay.com/api/om/callback/pm",
             "channelUserMsisdn"=> $this->channel,
             "amount"=> $amount,
             "subscriberMsisdn"=> "$customer",
@@ -385,7 +385,7 @@ class ApiProdOrangeMoneyController extends Controller
                     "orderId": "'.$request->marchandTransactionId.'",
                     "pin": "'.$this->pin.'",
                     "payToken": "'.$payToken.'",
-                    "notifUrl": "https://kiaboogroup.com/api/om/callback/pm"
+                    "notifUrl": "https://kiaboopay.com/api/om/callback/pm"
                     }',
                 CURLOPT_HTTPHEADER => array(
                     'accept: application/json',
@@ -1126,7 +1126,7 @@ class ApiProdOrangeMoneyController extends Controller
               "orderId": "'.$request->marchandTransactionId.'",
               "description": "'.$description.'",
               "payToken": "'.$payToken.'",
-              "notifUrl": "https://kiaboogroup.com/api/om/callback/pm",
+              "notifUrl": "https://kiaboopay.com/api/om/callback/pm",
             }',
                 CURLOPT_HTTPHEADER => array(
                     'accept: application/json',

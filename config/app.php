@@ -55,7 +55,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'https://kiaboogroup.com'),
+    'url' => env('APP_URL', 'https://kiaboopay.com'),
 
     'asset_url' => env('ASSET_URL'),
 
