@@ -542,7 +542,7 @@ class ApiProdMoMoMoneyController extends Controller
         ]);
 
         $element = json_decode($response, associative: true);
-        dd($response->statusCode());
+        dd($element->statusCode());
         $externalId = $data->externalId;
         //On se rassure que la transaction est bien en status en attente
         $Transaction = Transaction::where('id',$externalId);
