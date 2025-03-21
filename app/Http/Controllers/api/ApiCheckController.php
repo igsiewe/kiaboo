@@ -164,7 +164,7 @@ class ApiCheckController extends Controller
                 'Service'=>$service,
                 'erreur Message' => $e->getMessage(),
             ]);
-            dd($e->getMessage());
+
             return response()->json([
                 'success' => false,
                 'message' =>"Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
