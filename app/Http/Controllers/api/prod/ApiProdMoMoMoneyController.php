@@ -823,6 +823,7 @@ class ApiProdMoMoMoneyController extends Controller
         $reference = $dataTransactionInit->reference; //Référence de la transaction initiée
         //On génère le token de la transation
         $responseToken = $this->MOMO_Collection_GetTokenAccess();
+        dd($responseToken);
         if($responseToken->status()!=200){
             return response()->json(
                 [

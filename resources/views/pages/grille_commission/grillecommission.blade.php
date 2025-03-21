@@ -208,7 +208,7 @@
                                 <label class="form-label">Commission</label>
                                 <div class="input-group mb-12">
                                     <span class="input-group-text"><i class="fa fa-money-check-alt"></i></span>
-                                    <input type="number" class="form-control" name="commission" id="commission" placeholder="Commission" required>
+                                    <input type="number" class="form-control" min="0" max="1" name="commission" id="commission" placeholder="Commission" required>
                                 </div>
                             </div>
                         </div>
