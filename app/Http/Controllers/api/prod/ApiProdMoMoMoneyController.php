@@ -726,7 +726,7 @@ class ApiProdMoMoMoneyController extends Controller
     }
 
     public function MOMO_Collection_GetTokenAccess(){
-        $response = Http::withOptions(['verify' => false,])->withHeaders(['Ocp-Apim-Subscription-Key'=> '1466a4536a3c476ab18baf82ce82a1f3'])->withBasicAuth('d51773a3-837d-4dd7-9413-2f82bc3c2de2', 'c22f08082732417ea3ee479820813317')
+        $response = Http::withOptions(['verify' => false,])->withHeaders(['Ocp-Apim-Subscription-Key'=> '886cc9e141ab492f80d9567b3c46d59c'])->withBasicAuth('d51773a3-837d-4dd7-9413-2f82bc3c2de2', 'c22f08082732417ea3ee479820813317')
             ->Post('https://proxy.momoapi.mtn.com/collection/token/');
         if($response->status()==200){
             return response()->json($response->json());
@@ -847,7 +847,7 @@ class ApiProdMoMoMoneyController extends Controller
             [
                 'Authorization'=> 'Bearer '.$AccessToken,
                 'X-Reference-Id'=> $referenceID,
-                'Ocp-Apim-Subscription-Key'=> '1466a4536a3c476ab18baf82ce82a1f3',
+                'Ocp-Apim-Subscription-Key'=> '886cc9e141ab492f80d9567b3c46d59c',
                 'X-Target-Environment'=> 'mtncameroon',
                 'X-Callback-Url'=> 'https://kiaboopay.com/api/momo/callback',
             ])
