@@ -535,8 +535,16 @@ class ApiProdMoMoMoneyController extends Controller
             ])
             ->Get($http);
 
+        dd($response);
 
-        dd($response->status());
+//        if($response->status()!=200){
+//            return response()->json(
+//                [
+//                    'status'=>$response->status(),
+//                    'message'=>$data->message,
+//                ],$response->status()
+//            );
+//        }
 
         $data = json_decode($response->body());
 
