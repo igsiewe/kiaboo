@@ -540,6 +540,19 @@ class ApiProdMoMoMoneyController extends Controller
             'responseMoMoDepotStatus'=>$response,
         ]);
 
+        if($data==null){
+            return response()->json(
+                [
+                    'status'=>404,
+                    'amount'=>0,
+                    'externalId'=>$referenceId,
+                    'message'=>"La transaction n'existe pas",
+                    'description'=>"NOT_FOUND",
+                ],404
+            );
+
+        }
+
         $element = json_decode($response, associative: true);
         $externalId = $data->externalId;
         //On se rassure que la transaction est bien en status en attente
