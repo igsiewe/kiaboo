@@ -536,13 +536,13 @@ class ApiProdMoMoMoneyController extends Controller
             ->Get($http);
 
         $data = json_decode($response->body());
-        //dd($data);
+        dd($data);
         Log::info([
             'responseMoMoDepotStatus'=>$data,
         ]);
 
         $element = json_decode($response, associative: true);
-        dd($element);
+
         $externalId = $data->externalId;
         //On se rassure que la transaction est bien en status en attente
         $Transaction = Transaction::where('id',$externalId);
