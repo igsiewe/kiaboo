@@ -228,7 +228,7 @@ class WebApproDistributeurController extends Controller
         catch (\Throwable $e) {
             DB::rollBack();
             $message = $e->getMessage();
-            return $this->error($message,$e);
+            return redirect()->back()->with('error', $message);
         }
 
     }
