@@ -111,7 +111,7 @@ class ApiCheckController extends Controller
     function init_Depot($montant, $beneficiaire, $service, $payToken="", $device="",$latitude="", $longitude="", $place="",$application=1, $user=0,$merchandTransactionId=""){
 
         $reference = "DP".Carbon::now()->format('ymd').".".Carbon::now()->format('His').".".$this->genererChaineAleatoire(1)."".$this->GenereRang();
-dd($reference);
+
         try{
             DB::beginTransaction();
             $Transaction= Transaction::create([
