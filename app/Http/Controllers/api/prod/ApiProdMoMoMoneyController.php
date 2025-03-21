@@ -1481,9 +1481,11 @@ class ApiProdMoMoMoneyController extends Controller
 
         $service = ServiceEnum::PAYMENT_MOMO->value;
         $user = User::where("telephone",$request->agentNumber)->where('type_user_id', UserRolesEnum::AGENT->value)->where('application',2)->get();
+        $amount=$request->amount;
+        $customer=$request->phone;
 
-        $amount=$request->data["amount"];
-        $customer=$request->data["phone"];
+      //  $amount=$request->data["amount"];
+      //  $customer=$request->data["phone"];
 
         // Vérifie si l'utilisateur est autorisé à faire cette opération
 
