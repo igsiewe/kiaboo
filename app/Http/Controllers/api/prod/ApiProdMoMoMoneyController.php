@@ -523,7 +523,7 @@ class ApiProdMoMoMoneyController extends Controller
         $dataAcessToken = json_decode($responseToken->getContent());
         $token = $dataAcessToken->access_token;
 
-        $subcriptionKey = 'c22f08082732417ea3ee479820813317';
+        $subcriptionKey = '1466a4536a3c476ab18baf82ce82a1f3';
 
         $http = "https://proxy.momoapi.mtn.com/disbursement/v1_0/transfer/".$referenceId;
 
@@ -536,6 +536,7 @@ class ApiProdMoMoMoneyController extends Controller
             ->Get($http);
 
         $data = json_decode($response->body());
+        dd($data);
         Log::info([
             'responseMoMoDepotStatus'=>$data,
         ]);
