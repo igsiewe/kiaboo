@@ -66,6 +66,12 @@ return new class extends Migration
             $table->string("latitude",255)->nullable();
             $table->string("longitude",255)->nullable();
             $table->text("place")->nullable();
+            $table->text("marchand_transaction_id")->nullable();
+            $table->double('fees_collecte')->default(0);
+            $table->double('fees_kiaboo')->default(0);
+            $table->double('fees_partenaire_service')->default(0);
+            $table->double('marchand_amount')->default(0);
+
 
             $table->timestamps();
         });
