@@ -351,7 +351,7 @@
             </div>
         </div>
     </div>
-    @if(\Illuminate\Support\Facades\Auth::user()->type_user_id==\App\Http\Enums\UserRolesEnum::BACKOFFICE->value || \Illuminate\Support\Facades\Auth::user()->type_user_id==\App\Http\Enums\UserRolesEnum::SUPADMIN->value)
+    @if(\Illuminate\Support\Facades\Auth::user()->type_user_id==\App\Http\Enums\UserRolesEnum::FRONTOFFICE->value || \Illuminate\Support\Facades\Auth::user()->type_user_id==\App\Http\Enums\UserRolesEnum::SUPADMIN->value)
     <div class="modal fade" id="staticBackdropAppro" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
