@@ -604,7 +604,7 @@ class ApiProdMoMoMoneyController extends Controller
 
             if($data->status=="SUCCESSFUL"){
                    $Transaction = Transaction::where('paytoken',$referenceId)->where('service_id',ServiceEnum::DEPOT_MOMO->value);
-                  //  if($Transaction->first()->status ==2) {
+                   if($Transaction->first()->status ==2) {
                         $idTransaction = $Transaction->first()->id;
                         $service = $Transaction->first()->service_id;
                         $montant = $Transaction->first()->debit;
@@ -668,7 +668,7 @@ class ApiProdMoMoMoneyController extends Controller
                             'remember_token' => $reference,
                             'total_commission' => $commission_agent,
                         ]);
-                  //  }
+                  }
                     $userRefresh = User::where('id', Auth::user()->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email', 'balance_before', 'balance_after', 'total_commission', 'last_amount', 'sous_distributeur_id', 'date_last_transaction')->first();
                     $transactionsRefresh = DB::table('transactions')
                         ->join('services', 'transactions.service_id', '=', 'services.id')
