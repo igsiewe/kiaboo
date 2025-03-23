@@ -1202,7 +1202,7 @@ class ApiProdM2UController extends Controller
                         if($data->TransactionExpired=="YES"){
                             return response()->json([
                                 'success' => false,
-                                'message' => $data->Result,
+                                'message' => "10 ". $data->Result,
                                 'ReturnCode'=>$data->ReturnCode,
                                 'TransactionExpired'=> $data->TransactionExpired,
                                 'PID'=> $data->PID,
