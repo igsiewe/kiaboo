@@ -44,7 +44,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     });
 
     Route::controller(ApiVersion::class)->group(function (){
-        Route::get('version', 'getVersion')->name("getVersion");
+        Route::get('version/uplaod/new/futures', 'getVersion')->name("getVersion");
     });
 
 
