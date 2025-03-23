@@ -75,7 +75,7 @@ class ApiProdM2UController extends Controller
                     'status' => 'echec',
                     'firstName' => $firstName,
                     'lastName' => $lastName,
-                    'message'=>'Ce numéro de client n\'existe pas',
+                    'message'=>"1. Exception 404 \nCe numéro client n'existe pas",
                 ],404);
             }
 
@@ -86,7 +86,7 @@ class ApiProdM2UController extends Controller
                     'status' => 'echec',
                     'firstName' => $firstName,
                     'lastName' => $lastName,
-                    'message'=>'Ce numéro de client n\'a pas de compte actif',
+                    'message'=>"2. Exception 204\nCe numéro de client n'a pas de compte actif",
                 ],404);
             }
 
@@ -110,7 +110,7 @@ class ApiProdM2UController extends Controller
             //$body = json_decode($response->body());
             return response()->json([
                 'code' => $response->status(),
-                'message' =>"1. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
+                'message' =>"3. Exception ".$response->status()."\nUne exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
             ],$response->status());
         }
 
@@ -155,7 +155,7 @@ class ApiProdM2UController extends Controller
             if($data->OK != 200){
                 return response()->json([
                     'status' => 'error',
-                    'message'=>'Une error s\'est produite. Veuillez contacter votre support',
+                    'message'=>"1. Exception ".$data->OK."\nUne erreur s'est produite. Veuillez contacter votre support",
                 ],$data->OK);
             }
             $LiveToken = $data->LiveToken;
@@ -174,7 +174,7 @@ class ApiProdM2UController extends Controller
 
             return response()->json([
                 'code' => $response->status(),
-                'message' =>"2. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
+                'message' =>"2. Exception ".$response->status()." Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
             ],$response->status());
         }
     }
@@ -210,14 +210,14 @@ class ApiProdM2UController extends Controller
         if($apiCheck->checkStatusService($service)==false){
             return response()->json([
                 'status'=>'error',
-                'message'=>"Ce service n'est pas actif",
+                'message'=>"1. Exception 203 \nCe service n'est pas actif",
             ],401);
         }
         // Vérifie si l'utilisateur est autorisé à faire cette opération
         if(!$apiCheck->checkUserValidity()){
             return response()->json([
                 'status'=>'error',
-                'message'=>'Votre compte est désactivé. Veuillez contacter votre distributeur',
+                'message'=>"2. Exception 203 \nVotre compte est désactivé. Veuillez contacter votre distributeur",
             ],401);
         }
 
@@ -225,7 +225,7 @@ class ApiProdM2UController extends Controller
         if(!$apiCheck->checkUserBalance($montant)){
             return response()->json([
                 'status'=>'error',
-                'message'=>'Votre solde est insuffisant pour effectuer cette opération',
+                'message'=>"3. Exception 203 \nVotre solde est insuffisant pour effectuer cette opération",
             ],401);
         }
 
@@ -234,7 +234,7 @@ class ApiProdM2UController extends Controller
         if($apiCheck->checkFiveLastTransaction($customerNumber, $montant, $service)){
             return response()->json([
                 'status'=>'error',
-                'message'=>'Une transaction similaire a été faite il y\'a moins de 5 minutes',
+                'message'=>"4. Exception 203 \nUne transaction similaire a été faite il y'a moins de 5 minutes",
             ],401);
         }
 
@@ -243,8 +243,8 @@ class ApiProdM2UController extends Controller
         $lacommission =$functionCommission->getCommissionByService($service,$montant);
         if($lacommission->getStatusCode()!=200){
             return response()->json([
-                'success' => false,
-                'message' => "Impossible de calculer la commission",
+                "success" => false,
+                "message" => "5. Exception 400 \nImpossible de calculer la commission",
             ], 400);
         }
         $commission=json_decode($lacommission->getContent());
@@ -264,7 +264,7 @@ class ApiProdM2UController extends Controller
         if($init_transaction->getStatusCode() !=200){
             return response()->json([
                 'status'=>'error',
-                'message'=>$dataInit->message,
+                'message'=>"6. Exception ".$init_transaction->getStatusCode()."\n".$dataInit->message,
             ],$init_transaction->getStatusCode());
         }
         $idTransaction = $dataInit->transId; //Id de la transaction initiée
@@ -294,7 +294,7 @@ class ApiProdM2UController extends Controller
                 );
                 return response()->json([
                     'status'=>'error',
-                    'message'=>'Impossible de vérifier le solde du wallet de l\'agent',
+                    'message'=>"7. Exception ".$checkSolde->getStatusCode()."\nImpossible de vérifier le solde du wallet de l'agent",
                 ],$checkSolde->getStatusCode());
             }
             if($checkSolde->getStatusCode()==200){
@@ -313,7 +313,7 @@ class ApiProdM2UController extends Controller
                     );
                     return response()->json([
                         'status'=>'error',
-                        'message'=>"Le solde du compte M2U est insuffisant pour effectuer cette opération",
+                        'message'=>"8. Exception 401 \nLe solde du compte M2U est insuffisant pour effectuer cette opération",
                     ],401);
                 }
             }
@@ -369,13 +369,13 @@ class ApiProdM2UController extends Controller
                 if ($dataResultat->OK != 200) {
                     return response()->json([
                         'status' => 'error',
-                        'message' => 'Une error s\'est produite. Veuillez contacter votre support',
+                        'message' => "9. Exception ".$dataResultat->OK."\nUne error s'est produite. Veuillez contacter votre support",
                     ], $dataResultat->OK);
                 }
                 if ($dataResultat->Result != "Success") {
                     return response()->json([
                         'status' => 'error',
-                        'message' => 'Une error s\'est produite. Veuillez contacter votre support',
+                        'message' => "10. Exception ".$dataResultat->OK."\nUne error s'est produite. Veuillez contacter votre support",
                     ], $dataResultat->OK);
                 }
                 //On met à jour la table transaction
@@ -463,7 +463,7 @@ class ApiProdM2UController extends Controller
                     ]);
                     return response()->json([
                         'success' => false,
-                        'message' =>"3. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
+                        'message' =>"11. Exception ".$e->getCode()."\nUne exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
                     ],$e->getCode());
                 }
             }else{
@@ -478,7 +478,7 @@ class ApiProdM2UController extends Controller
 
                 return response()->json([
                     'code' => $response->status(),
-                    'message' =>"4. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
+                    'message' =>"12. Exception ".$response->status()."\nUne exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
                 ],$response->status());
             }
         }else{
@@ -493,7 +493,7 @@ class ApiProdM2UController extends Controller
 
             return response()->json([
                 'status'=>'error',
-                'message' =>"5. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
+                'message' =>"13. Exception ".$getToken->getStatusCode()."\nUne exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
                 'response'=>json_decode($getToken->getContent()),
             ],$getToken->getStatusCode());
         }
@@ -569,25 +569,25 @@ class ApiProdM2UController extends Controller
                         );
                         return response()->json([
                             'success' => false,
-                            'message' =>$data->Description,// "Wrong voucher number or security code",
+                            'message' =>"1. Exception ".$data->OK."(".$data->ReturnCode.")\n".$data->Description,// "Wrong voucher number or security code",
                         ], 401);
                     }
                     if($data->ReturnCode=="1"){
                         return response()->json([
                             'success' => false,
-                            'message' => $data->Description,//"This voucher is already used",
+                            'message' => "2. Exception ".$data->OK."(".$data->ReturnCode.")\n".$data->Description,//"This voucher is already used",
                         ], 401);
                     }
                     if($data->ReturnCode=="2"){
                         return response()->json([
                             'success' => false,
-                            'message' => $data->Description,//"This transfer number is for another country",
+                            'message' => "3. Exception ".$data->OK."(".$data->ReturnCode.")\n".$data->Description,//"This transfer number is for another country",
                         ], 401);
                     }
                     if($data->ReturnCode=="3"){
                         return response()->json([
                             'success' => false,
-                            'message' => $data->Description,//"This voucher has been cancelled by the originator",
+                            'message' => "4. Exception ".$data->OK."(".$data->ReturnCode.")\n".$data->Description,//"This voucher has been cancelled by the originator",
                         ], 401);
                     }
                     if($data->ReturnCode=="0"){
@@ -614,15 +614,15 @@ class ApiProdM2UController extends Controller
                     }else{
                         return response()->json([
                             'success' => false,
-                            'message' => "5.Une erreur inatendue s'est produite, veuillez contacter votre superviseur si le problème persiste",
+                            'message' => "5. Exception 401 \nUne erreur inatendue s'est produite, veuillez contacter votre superviseur si le problème persiste",
                         ], 401);
                     }
 
                 } else {
                     return response()->json([
                         'success' => false,
-                        'message' => "6. Exception : Une erreur inatendue s'est produite, veuillez contacter votre superviseur si le problème persiste",
-                    ], 200);
+                        'message' => "6. Exception 200\nUne erreur inatendue s'est produite, veuillez contacter votre superviseur si le problème persiste",
+                    ], $data->OK);
                 }
             }
         }else{
@@ -639,7 +639,7 @@ class ApiProdM2UController extends Controller
             );
             return response()->json([
                 'success' => false,
-                'message' => "7. Exception : Une erreur inatendue s'est produite, veuillez contacter votre superviseur si le problème persiste",
+                'message' => "7. Exception ".$getToken->getStatusCode()."\nUne erreur inatendue s'est produite, veuillez contacter votre superviseur si le problème persiste",
             ], $getToken->getStatusCode());
         }
     }
@@ -668,7 +668,7 @@ class ApiProdM2UController extends Controller
         if($apiCheck->checkUserValidity()==false){
             return response()->json([
                 'status'=>'error',
-                'message'=>'Votre compte est désactivé. Veuillez contacter votre distributeur',
+                'message'=>"1. Exception 204 \nVotre compte est désactivé. Veuillez contacter votre distributeur",
             ],401);
         }
 
@@ -679,7 +679,7 @@ class ApiProdM2UController extends Controller
         if($lacommission->getStatusCode()!=200){
             return response()->json([
                 'success' => false,
-                'message' => "Impossible de calculer la commission",
+                'message' => "2. Exception 400\nImpossible de calculer la commission",
             ], 400);
         }
         $commission=json_decode($lacommission->getContent());
@@ -705,7 +705,7 @@ class ApiProdM2UController extends Controller
         if($init_transaction->getStatusCode() !=200){
             return response()->json([
                 'status'=>'error',
-                'message'=>$dataInit->message,
+                'message'=>"3. Exception ".$init_transaction->getStatusCode()."\n".$dataInit->message,
             ],$init_transaction->getStatusCode());
         }
         $idTransaction = $dataInit->transId; //Id de la transaction initiée
@@ -761,13 +761,13 @@ class ApiProdM2UController extends Controller
                 if($result==false){
                     return response()->json([
                         'status' => 'error',
-                        'message' =>"3 - ".$dataResultat->Description,//  'Une error s\'est produite. Veuillez contacter votre support',
+                        'message' =>"4. Exception 404\n".$dataResultat->Description,//  'Une error s\'est produite. Veuillez contacter votre support',
                     ], 404);
                 }
                 if ($result==true && $dataResultat->Result != "Success") {
                     return response()->json([
                         'status' => 'error',
-                        'message' =>"4 - ".$dataResultat->Description,//  'Une error s\'est produite. Veuillez contacter votre support',
+                        'message' =>"4. Exception 404\n".$dataResultat->Description,//  'Une error s\'est produite. Veuillez contacter votre support',
                     ], 404);
                 }
                 //On met à jour la table transaction
@@ -852,7 +852,7 @@ class ApiProdM2UController extends Controller
                     ]);
                     return response()->json([
                         'success' => false,
-                        'message' =>"3. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste. Code error : ".$e->getCode(),
+                        'message' =>"5. Exception ".$e->getCode()."\nUne exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
                     ],$e->getCode());
                 }
             }else{
@@ -866,7 +866,7 @@ class ApiProdM2UController extends Controller
 
                 return response()->json([
                     'code' => $response->status(),
-                    'message' =>"4. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste. Code error : ".$response->status(),
+                    'message' =>"6. Exception ".$response->status()."\nUne exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
                 ],$response->status());
             }
         }else{
@@ -881,7 +881,7 @@ class ApiProdM2UController extends Controller
 
             return response()->json([
                 'status'=>'error',
-                'message' =>"5. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste. Code error : ".$getToken->getStatusCode(),
+                'message' =>"7. Exception ".$getToken->getContent()." Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
                 'response'=>json_decode($getToken->getContent()),
             ],$getToken->getStatusCode());
         }
@@ -911,7 +911,7 @@ class ApiProdM2UController extends Controller
         if($apiCheck->checkUserValidity()==false){
             return response()->json([
                 'status'=>'error',
-                'message'=>'Votre compte est désactivé. Veuillez contacter votre distributeur',
+                'message'=>"1. Exception 401\nVotre compte est désactivé. Veuillez contacter votre distributeur",
             ],401);
         }
 
@@ -922,7 +922,7 @@ class ApiProdM2UController extends Controller
         if($lacommission->getStatusCode()!=200){
             return response()->json([
                 'success' => false,
-                'message' => "Impossible de calculer la commission",
+                'message' => "2. Exception 400\nImpossible de calculer la commission",
             ], 400);
         }
         $commission=json_decode($lacommission->getContent());
@@ -948,7 +948,7 @@ class ApiProdM2UController extends Controller
         if($init_transaction->getStatusCode() !=200){
             return response()->json([
                 'status'=>'error',
-                'message'=>$dataInit->message,
+                'message'=>"3. Exception ".$init_transaction->getStatusCode() ."\n".$dataInit->message,
             ],$init_transaction->getStatusCode());
         }
         $idTransaction = $dataInit->transId; //Id de la transaction initiée
@@ -1003,7 +1003,7 @@ class ApiProdM2UController extends Controller
                     if ($dataResultat->OK != 200) {
                         return response()->json([
                             'status' => 'error',
-                            'message' =>"1 - ".$dataResultat->Description,// 'Une error s\'est produite. Veuillez contacter votre support',
+                            'message' =>"4. Exception ".$dataResultat->OK."\n".$dataResultat->Description,// 'Une error s\'est produite. Veuillez contacter votre support',
                         ], 404);
                     }
                     if ($dataResultat->OK == "200") {
@@ -1109,7 +1109,7 @@ class ApiProdM2UController extends Controller
                                 ]);
                                 return response()->json([
                                     'success' => false,
-                                    'message' =>"2. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste. Code error : ".$e->getCode(),
+                                    'message' =>"5. Exception ".$e->getCode()."\nUne exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
                                 ],$e->getCode());
                             }
                         }
@@ -1117,7 +1117,7 @@ class ApiProdM2UController extends Controller
                 }else{
                     return response()->json([
                         'status' => 'error',
-                        'message' =>"3 - ".$dataResultat->Description,// 'Une error s\'est produite. Veuillez contacter votre support',
+                        'message' =>"6. Exception 404\n".$dataResultat->Description,// 'Une error s\'est produite. Veuillez contacter votre support',
                     ], 404);
                 }
 
@@ -1134,7 +1134,7 @@ class ApiProdM2UController extends Controller
                 ]);
                 return response()->json([
                     'code' => $response->status(),
-                    'message' =>"4 - ".$dataResultat->Description." Code error : ".$response->status(),//"4. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
+                    'message' =>"7. Exception ".$response->status()."\n".$dataResultat->Description,//"4. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
                 ],$response->status());
             }
         }else{
@@ -1148,7 +1148,7 @@ class ApiProdM2UController extends Controller
             ]);
             return response()->json([
                 'status'=>'error',
-                'message' =>"5. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste. Code error : ".$getToken->getStatusCode(),
+                'message' =>"8. Exception ".$getToken->getStatusCode()."\nUne exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
                 'response'=>json_decode($getToken->getContent()),
             ],$getToken->getStatusCode());
         }
@@ -1202,7 +1202,7 @@ class ApiProdM2UController extends Controller
                         if($data->TransactionExpired=="YES"){
                             return response()->json([
                                 'success' => false,
-                                'message' => "1. Exception :".$data->Description, // $data->Result,
+                                'message' => "1. Exception \n".$data->Description, // $data->Result,
                                 'ReturnCode'=>$data->ReturnCode,
                                 'TransactionExpired'=> $data->TransactionExpired,
                                 'PID'=> $data->PID,
@@ -1233,13 +1233,13 @@ class ApiProdM2UController extends Controller
                     } else {
                         return response()->json([
                             'success' => false,
-                            'message' => "2. Exception : ".$data->Description,
+                            'message' => "1. Exception ".$data->OK." \n".$data->Description,
                         ], 404);
                     }
                 }else{
                     return response()->json([
                         'success' => false,
-                        'message' => "3. Exception : ".$data->Description,
+                        'message' => "2. Exception 404 \n".$data->Description,
                     ], 404);
                 }
             }else{
@@ -1252,7 +1252,7 @@ class ApiProdM2UController extends Controller
                 );
                 return response()->json([
                     'success' => false,
-                    'message' => "4. Exception : ".$data->Description,
+                    'message' => "3. Exception ".$response->status()."\n".$data->Description,
                 ], $response->status());
             }
         }else{
@@ -1265,7 +1265,7 @@ class ApiProdM2UController extends Controller
             );
             return response()->json([
                 'success' => false,
-                'message' => "5. Exception : Une erreur inatendue s'est produite, veuillez contacter votre superviseur si le problème persiste. Code error : ".$getToken->getStatusCode(),
+                'message' => "4. Exception ".$getToken->getStatusCode()."\nUne erreur inatendue s'est produite, veuillez contacter votre superviseur si le problème persiste. Code error : ".$getToken->getStatusCode(),
             ], $getToken->getStatusCode());
         }
     }
@@ -1376,7 +1376,7 @@ class ApiProdM2UController extends Controller
             //$body = json_decode($response->body());
             return response()->json([
                 'code' => $response->status(),
-                'message' =>"1. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste. Code error : ".$response->status(),
+                'message' =>"1. Exception :".$response->status()." \nUne exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
             ],$response->status());
         }
 
