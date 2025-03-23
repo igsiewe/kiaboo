@@ -852,7 +852,7 @@ class ApiProdM2UController extends Controller
                     ]);
                     return response()->json([
                         'success' => false,
-                        'message' =>"3. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
+                        'message' =>"3. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste. Code error : ".$e->getCode(),
                     ],$e->getCode());
                 }
             }else{
@@ -866,7 +866,7 @@ class ApiProdM2UController extends Controller
 
                 return response()->json([
                     'code' => $response->status(),
-                    'message' =>"4. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste. Code error : ".$response,
+                    'message' =>"4. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste. Code error : ".$response->status(),
                 ],$response->status());
             }
         }else{
@@ -881,7 +881,7 @@ class ApiProdM2UController extends Controller
 
             return response()->json([
                 'status'=>'error',
-                'message' =>"5. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
+                'message' =>"5. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste. Code error : ".$getToken->getStatusCode(),
                 'response'=>json_decode($getToken->getContent()),
             ],$getToken->getStatusCode());
         }
