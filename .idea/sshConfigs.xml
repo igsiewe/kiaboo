@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SshConfigs">
+    <configs>
+      <sshConfig host="ec2-16-171-187-56.eu-north-1.compute.amazonaws.com" id="55d33abd-209f-4676-bb1a-63497a11b8fa" keyPath="$PROJECT_DIR$/../../kiaboopay/kiaboopay.pem" port="22" customName="KiabooPay" nameFormat="CUSTOM" username="ubuntu" useOpenSSHConfig="true">
+        <option name="customName" value="KiabooPay" />
+      </sshConfig>
+    </configs>
+  </component>
+</project>
