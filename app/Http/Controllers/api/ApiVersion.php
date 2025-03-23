@@ -14,6 +14,7 @@ class ApiVersion extends Controller
         return response()->json([
             'version' => $version->first()->version,
             'url'=> $version->first()->url,
+            'description'=> $version->first()->description,
             'message' => 'Version is active'
         ]);
     }
