@@ -1202,7 +1202,7 @@ class ApiProdM2UController extends Controller
                         if($data->TransactionExpired=="YES"){
                             return response()->json([
                                 'success' => false,
-                                'message' => $data->Description, // $data->Result,
+                                'message' => "1. Exception :".$data->Description, // $data->Result,
                                 'ReturnCode'=>$data->ReturnCode,
                                 'TransactionExpired'=> $data->TransactionExpired,
                                 'PID'=> $data->PID,
@@ -1233,14 +1233,13 @@ class ApiProdM2UController extends Controller
                     } else {
                         return response()->json([
                             'success' => false,
-                            'message' => "1.".$data->Description,
-                            'resultat'=>response()->json($response->body()),
+                            'message' => "2. Exception : ".$data->Description,
                         ], 404);
                     }
                 }else{
                     return response()->json([
                         'success' => false,
-                        'message' => "2.".$data->Description,
+                        'message' => "3. Exception : ".$data->Description,
                     ], 404);
                 }
             }else{
@@ -1253,7 +1252,7 @@ class ApiProdM2UController extends Controller
                 );
                 return response()->json([
                     'success' => false,
-                    'message' => "1. Exception : ".$data->Description,
+                    'message' => "4. Exception : ".$data->Description,
                 ], $response->status());
             }
         }else{
@@ -1266,7 +1265,7 @@ class ApiProdM2UController extends Controller
             );
             return response()->json([
                 'success' => false,
-                'message' => "2. Exception : Une erreur inatendue s'est produite, veuillez contacter votre superviseur si le problème persiste. Code error : ".$getToken->getStatusCode(),
+                'message' => "5. Exception : Une erreur inatendue s'est produite, veuillez contacter votre superviseur si le problème persiste. Code error : ".$getToken->getStatusCode(),
             ], $getToken->getStatusCode());
         }
     }
@@ -1377,7 +1376,7 @@ class ApiProdM2UController extends Controller
             //$body = json_decode($response->body());
             return response()->json([
                 'code' => $response->status(),
-                'message' =>"1. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
+                'message' =>"1. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste. Code error : ".$response->status(),
             ],$response->status());
         }
 
