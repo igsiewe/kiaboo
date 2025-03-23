@@ -866,7 +866,7 @@ class ApiProdM2UController extends Controller
 
                 return response()->json([
                     'code' => $response->status(),
-                    'message' =>"4. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste. Code error :".$response->status(),
+                    'message' =>"4. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste. Code error : ".$response,
                 ],$response->status());
             }
         }else{
