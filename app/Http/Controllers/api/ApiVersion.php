@@ -12,8 +12,8 @@ class ApiVersion extends Controller
     public function getVersion(){
         $version = Version::where('status',1)->get();
         return response()->json([
-            'version' => $version->version,
-            'url'=> $version->url,
+            'version' => $version->first()->version,
+            'url'=> $version->first()->url,
             'message' => 'Version is active'
         ]);
     }
