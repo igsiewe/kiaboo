@@ -29,7 +29,7 @@ class WebTransactionsController extends BaseController
        // phpinfo() ;die;
         $money = "F CFA";
         $listpartenaires = Partenaire::where("id","<>",1)->orderBy("name_partenaire")->get();
-        $listservices = Service::where("id","<>",1)->orderBy("name_service")->get();
+        $listservices = Service::where("id","<>",1)->where("display",1)->orderBy("name_service")->get();
 
 
         $auth = Auth::user()->type_user_id==UserRolesEnum::DISTRIBUTEUR->value ? User::where("type_user_id",UserRolesEnum::AGENT->value)->where("distributeur_id",Auth::user()->distributeur_id)->pluck('id') :  User::where("type_user_id",UserRolesEnum::AGENT->value)->pluck('id');
@@ -67,7 +67,7 @@ class WebTransactionsController extends BaseController
         $endDate = $request->endDate;
         $money = "F CFA";
         $listpartenaires = Partenaire::where("id","<>",1)->orderBy("name_partenaire")->get();
-        $listservices = Service::where("id","<>",1)->orderBy("name_service")->get();
+        $listservices = Service::where("id","<>",1)->where("display",1)->orderBy("name_service")->get();
 
         $result = Carbon::parse($endDate)->gte(Carbon::parse($startDate));
         if ($result==false){

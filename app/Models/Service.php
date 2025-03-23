@@ -18,6 +18,7 @@ class Service extends Model
         'logo_service',
         'created_by',
         'updated_by',
+        'display'
     ];
 
     public function typeService()

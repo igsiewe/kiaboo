@@ -21,6 +21,7 @@ return new class extends Migration
             $table->foreignId("type_service_id")->references("id")->on("type_services");
             $table->foreignId("created_by")->references("id")->on("users");
             $table->foreignId("updated_by")->references("id")->on("users");
+            $table->integer("display")->default(1)->comment("0 : Hidden, 1:Visible");
             $table->timestamps();
         });
     }
