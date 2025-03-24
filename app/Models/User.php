@@ -58,6 +58,7 @@ class User extends Authenticatable
         "application",
         'sum_payment',
         'sum_refund',
+        'version'
     ];
 
     public function ville()
