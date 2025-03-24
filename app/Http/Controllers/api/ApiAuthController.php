@@ -524,7 +524,7 @@ class ApiAuthController extends BaseController
             $send = new ApiSmsController();
             $message = "Le code de réinitialisation du mot de passe de votre compte KIABOO est ".$otpcode;
             $envoyersMS = $send->SendSMS($numero,utf8_decode($message));
-            return response()->json(['success' => true, 'message' => 'Un OTP a été envoyé par SMS. '.$envoyersMS,'otpcode'=>$otpcode], 200);
+            return response()->json(['success' => true, 'message' => $envoyersMS,'otpcode'=>$otpcode], 200);
         } else {
             return response()->json(['success' => false, 'message' => 'Numero non trouvé'], 404);
         }
