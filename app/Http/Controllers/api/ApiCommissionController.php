@@ -197,12 +197,12 @@ class ApiCommissionController extends BaseController
         $commission = DB::table('transactions')
             ->join("services","services.id","transactions.service_id")
             ->join("type_services", "type_services.id","services.type_service_id")
-            ->select("transactions.ref_remb_com_agent as reference", "transactions.commission_agent_rembourse_date as date_remboursement", "transactions.commission_agent as commission")
+            ->select("transactions.id as id","transactions.ref_remb_com_agent as reference", "transactions.commission_agent_rembourse_date as date_remboursement", "transactions.commission_agent as commission")
             ->where('transactions.source', Auth::user()->id)
             ->where("transactions.commission_agent_rembourse",1)
             ->whereNotIn("type_services.id", [TypeServiceEnum::APPROVISIONNEMENT->value,TypeServiceEnum::REMBOURSEMENT])
             ->where("transactions.fichier","agent")->where('transactions.status',1)
-            ->groupBy('transactions.ref_remb_com_agent','date_remboursement')
+
             ->get();
 
         if($commission->count() > 0) {
