@@ -191,6 +191,7 @@ class ApiCommissionController extends BaseController
             ->where("transactions.commission_agent_rembourse",1)
             ->whereNotIn("type_services.id", [TypeServiceEnum::APPROVISIONNEMENT->value,TypeServiceEnum::REMBOURSEMENT])
             ->where("transactions.fichier","agent")->where('transactions.status',1)
+            ->where("transactions.ref_remb_com_agent","!=",null)
             ->groupBy('transactions.ref_remb_com_agent','date_remboursement')
             ->get();
 
