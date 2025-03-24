@@ -89,7 +89,7 @@ class ApiAuthController extends BaseController
             $partenaires = Partenaire::where("countrie_id",Auth::user()->countrie_id)->select("id","name_partenaire as nomPartenaire","logo_partenaire as logoPartenaire")->orderBy('name_partenaire', 'asc')->get();
             $infoVersion = Version::where('status',1)->get();
             $version = $infoVersion->first()->version;
-            $urlApplication = $infoVersion->first()->urlApplication;
+            $urlApplication = $infoVersion->first()->url;
 
             $transactions = DB::table('transactions')
                 ->join('services', 'transactions.service_id', '=', 'services.id')
