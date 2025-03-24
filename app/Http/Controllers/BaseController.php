@@ -123,13 +123,14 @@ class BaseController extends Controller
         ], 200);
     }
 
-    public function respondWithToken($token, $user = null, $partenaires = null, $transactions = null, $services = null, $version=null)
+    public function respondWithToken($token, $user = null, $partenaires = null, $transactions = null, $services = null, $version=null, $urlApplication=null)
     {
         return response()->json([
             'token_type' => 'bearer',
             'scope'=> "am_application_scope default",
             'access_token' => $token,
             'version'=>$version,
+            'urlApplication'=>$urlApplication,
             'user' => $user,
             'partenaires'=> $partenaires,
             'transactions'=> $transactions,

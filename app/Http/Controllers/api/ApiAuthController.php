@@ -87,7 +87,10 @@ class ApiAuthController extends BaseController
             //$user = User::where('id', $users->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before as balanceBefore', 'balance_after as balanceAfter', 'last_amount as lastAmount','sous_distributeur_id as sousDistributeur','date_last_transaction as dateLastTransaction','last_service_id as lastService', 'type_user_id as typeuser','countrie_id as country','reference_last_transaction as referenceLastTransaction', 'status')->first();
             $user = User::where('id', $users->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before', 'balance_after','total_commission', 'last_amount','sous_distributeur_id','date_last_transaction','moncodeparrainage')->first();
             $partenaires = Partenaire::where("countrie_id",Auth::user()->countrie_id)->select("id","name_partenaire as nomPartenaire","logo_partenaire as logoPartenaire")->orderBy('name_partenaire', 'asc')->get();
-            $version = Version::where('status',1)->first()->version;
+            $infoVersion = Version::where('status',1)->get();
+            $version = $infoVersion->first()->version;
+            $urlApplication = $infoVersion->first()->urlApplication;
+
             $transactions = DB::table('transactions')
                 ->join('services', 'transactions.service_id', '=', 'services.id')
                 ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
@@ -107,13 +110,14 @@ class ApiAuthController extends BaseController
 
             $user->last_connexion = Carbon::now();
             $user->version = $version;
+            $user->urlApplication = $urlApplication;
             $user->save();
             Log::info([
                 'user_id'=>Auth::user()->id,
                 'name'=>Auth::user()->name." ".Auth::user()->surname,
                 'Desciption'=>'Connexion'
             ]);
-            return $this->respondWithToken($access_token, $user, $partenaires, $transactions, $services,$version);
+            return $this->respondWithToken($access_token, $user, $partenaires, $transactions, $services,$version,$urlApplication);
         }
         Log::alert([
             'Login'=>$request->login,
