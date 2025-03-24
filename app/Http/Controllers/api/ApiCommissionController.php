@@ -194,6 +194,17 @@ class ApiCommissionController extends BaseController
             ->groupBy('transactions.ref_remb_com_agent','date_remboursement')
             ->get();
 
+        $commission = DB::table('transactions')
+            ->join("services","services.id","transactions.service_id")
+            ->join("type_services", "type_services.id","services.type_service_id")
+            ->select("transactions.ref_remb_com_agent as reference", "DATE_FORMAT(transactions.commission_agent_rembourse_date,'%Y-%m-%d')  as date_remboursement", "transactions.commission_agent as commission")
+            ->where('transactions.source', Auth::user()->id)
+            ->where("transactions.commission_agent_rembourse",1)
+            ->whereNotIn("type_services.id", [TypeServiceEnum::APPROVISIONNEMENT->value,TypeServiceEnum::REMBOURSEMENT])
+            ->where("transactions.fichier","agent")->where('transactions.status',1)
+            ->groupBy('transactions.ref_remb_com_agent','date_remboursement')
+            ->get();
+
         if($commission->count() > 0) {
             return response()->json([
                 "status" => true,
