@@ -140,6 +140,7 @@ class ApiCheckController extends Controller
                 "place"=>$place,
                 "application"=>$application,
                 "marchand_transaction_id"=>$merchandTransactionId,
+                "version"=>Auth::user()->version,
             ]);
 
             if($Transaction) {
@@ -202,7 +203,8 @@ class ApiCheckController extends Controller
                 'device_notification'=>$device,
                 'latitude'=>$latitude,
                 'longitude'=>$longitude,
-                'place'=>$place
+                'place'=>$place,
+                "version"=>Auth::user()->version,
             ]);
 
             if($Transaction) {
@@ -266,7 +268,8 @@ class ApiCheckController extends Controller
                 'latitude'=>"",
                 'longitude'=>"",
                 'place'=>"",
-                'application'=>$application
+                'application'=>$application,
+                "version"=>Auth::user()->version,
             ]);
 
             if($Transaction) {

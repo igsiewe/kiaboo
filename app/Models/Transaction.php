@@ -66,7 +66,8 @@ class Transaction extends Model
         'fees_kiaboo',
         'fees_partenaire_service',
         'marchand_amount',
-        'application'
+        'application',
+        'version',
 
     ];
 

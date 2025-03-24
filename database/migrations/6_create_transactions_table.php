@@ -71,7 +71,7 @@ return new class extends Migration
             $table->double('fees_kiaboo')->default(0);
             $table->double('fees_partenaire_service')->default(0);
             $table->double('marchand_amount')->default(0);
-
+            $table->string("version")->nullable();
 
             $table->timestamps();
         });
