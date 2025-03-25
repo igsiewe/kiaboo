@@ -484,7 +484,8 @@ class ApiAuthController extends BaseController
 
 
         #Match The Old Password
-        if(!Hash::check($request->old_password, auth()->user()->password)){
+        $check = Hash::check($request->old_password, auth()->user()->password);
+        if($check !=1){
             return response()->json([
                 'status' => 'error',
                 'message' => 'Old Password Doesn\'t match!'
@@ -500,7 +501,7 @@ class ApiAuthController extends BaseController
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Password changed successfully! = '.Hash::check($request->old_password, auth()->user()->password)
+            'message' => 'Password changed successfully! = '
         ], 200);
 
     }
