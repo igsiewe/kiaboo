@@ -500,7 +500,7 @@ class ApiAuthController extends BaseController
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Password changed successfully!'
+            'message' => 'Password changed successfully! = '.Hash::check($request->old_password, auth()->user()->password)
         ], 200);
 
     }
