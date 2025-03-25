@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\BaseController;
 
 use App\Http\Enums\UserRolesEnum;
+use App\Models\Notification;
 use App\Models\Partenaire;
 use App\Models\recrutement;
 use App\Models\Service;
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Mockery\Matcher\Not;
 
 class ApiAuthController extends BaseController
 {
@@ -90,7 +92,7 @@ class ApiAuthController extends BaseController
             $infoVersion = Version::where('status',1)->get();
             $version = $infoVersion->first()->version;
             $urlApplication = $infoVersion->first()->url;
-
+            $notification = Notification::where("status",1)->get();
             $transactions = DB::table('transactions')
                 ->join('services', 'transactions.service_id', '=', 'services.id')
                 ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
@@ -117,7 +119,7 @@ class ApiAuthController extends BaseController
                 'name'=>Auth::user()->name." ".Auth::user()->surname,
                 'Desciption'=>'Connexion'
             ]);
-            return $this->respondWithToken($access_token, $user, $partenaires, $transactions, $services,$version,$urlApplication);
+            return $this->respondWithToken($access_token, $user, $partenaires, $transactions, $services,$version,$urlApplication, $notification);
         }
         Log::alert([
             'Login'=>$request->login,
