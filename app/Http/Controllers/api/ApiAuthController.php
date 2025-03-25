@@ -488,7 +488,7 @@ class ApiAuthController extends BaseController
         if($check !=1){
             return response()->json([
                 'status' => 'error',
-                'message' => 'Old Password Doesn\'t match!'
+                'message' => 'Old Password doesn\'t match !'
             ], 404);
 
         }
