@@ -489,7 +489,7 @@ class ApiAuthController extends BaseController
             return response()->json([
                 'status' => 'error',
                 'message' => 'Old Password Doesn\'t match!'
-            ], 401);
+            ], 404);
 
         }
 
