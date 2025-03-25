@@ -501,7 +501,7 @@ class ApiAuthController extends BaseController
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Password changed successfully! = '
+            'message' => 'Password changed successfully !'
         ], 200);
 
     }
