@@ -632,7 +632,7 @@ class ApiAuthController extends BaseController
 
     public function changePasswordSwagger(Request $request)
     {
-        dd("hi");
+
         $validator = Validator::make($request->all(), [
             'old_password' => 'required|string|min:6|max:255',
             'new_password' => 'required|string|min:6|max:255',
