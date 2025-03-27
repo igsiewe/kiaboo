@@ -56,19 +56,19 @@ class ApiProdOrangeMoneyController extends Controller
 
             ->withBody('grant_type=client_credentials', 'application/x-www-form-urlencoded')
             ->Post('https://omdeveloper.orange.cm/oauth2/token');
-//        Log::info([
-//            'function' => "OM_GetTokenAccess",
-//            'url'=>"https://omdeveloper.orange.cm/oauth2/token",
-//            'request'=>[
-//                'header'=>[
-//                "Authorization"=>"Basic ".$this->auth
-//                ],
-//                'body'=>'grant_type=client_credentials',
-//                'type'=>'application/x-www-form-urlencoded',
-//            ],
-//            'response'=>$response->body(),
-//            'statusCode'=>$response->status(),
-//        ]);
+        Log::info([
+            'function' => "OM_GetTokenAccess",
+            'url'=>"https://omdeveloper.orange.cm/oauth2/token",
+            'request'=>[
+                'header'=>[
+                "Authorization"=>"Basic ".$this->auth
+                ],
+                'body'=>'grant_type=client_credentials',
+                'type'=>'application/x-www-form-urlencoded',
+            ],
+            'response'=>$response->body(),
+            'statusCode'=>$response->status(),
+        ]);
         if($response->status()==200){
             return response()->json($response->json());
         }
