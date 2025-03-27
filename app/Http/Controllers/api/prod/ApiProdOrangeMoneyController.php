@@ -38,6 +38,7 @@ class ApiProdOrangeMoneyController extends Controller
         $this->channel="656805492";
         $this->pin="2222";
         $getTokenResponse = $this->OM_GetTokenAccess();
+        dd($getTokenResponse);
         if($getTokenResponse->status()==200){
             $dataToken = json_decode($getTokenResponse->content());
             $this->token = $dataToken->access_token;
