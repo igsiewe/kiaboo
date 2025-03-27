@@ -468,7 +468,7 @@ class WebCommissionController extends Controller
             ->where("status",1)
             ->first();
 
-        dd($commissionExist);
+        dd($commissionExist. " ".$request->all());
 
         if($commissionExist){
             return redirect()->back()->with('error', 'Une commission existe déjà pour cette borne');
@@ -483,8 +483,8 @@ class WebCommissionController extends Controller
             "taux"=>$request->typecommission=="taux"?$request->commission:0,
             "amount"=>$request->typecommission=="borne"?$request->commission:0,
             "part_agent"=>0.5,
-            "part_distributeur"=>0.25,
-            "part_kiaboo"=>0.25,
+            "part_distributeur"=>0,
+            "part_kiaboo"=>0.5,
             "status"=>1,
             "created_by"=>Auth::user()->id,
             "created_at"=>Carbon::now(),
