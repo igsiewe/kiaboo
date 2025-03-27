@@ -467,9 +467,6 @@ class WebCommissionController extends Controller
             ->where("borne_max",'>=',$request->commission)
             ->where("status",1)
             ->first();
-
-        dd($commissionExist,$request);
-
         if($commissionExist){
             return redirect()->back()->with('error', 'Une commission existe déjà pour cette borne');
         }
