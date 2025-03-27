@@ -468,7 +468,7 @@ class WebCommissionController extends Controller
             ->where("status",1)
             ->first();
 
-        dd($commissionExist, $request->all());
+       // dd($commissionExist, $request->all());
         if($commissionExist){
             return redirect()->back()->with('error', 'Une commission existe déjà pour cette borne');
         }
