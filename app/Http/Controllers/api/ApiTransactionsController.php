@@ -229,7 +229,7 @@ class ApiTransactionsController extends BaseController
         if($transactionsEnAttente->count()==0 || $transactionsEnAttente->isEmpty()){
             return response()->json([
                 'status' => 'false',
-                'message' => 'You have no pending transactions'
+                'message' => "Vous n'avez aucune transaction en attente. Toutes vos transactions ont été traitées."
             ], 404);
         }else{
             return response()->json([
