@@ -34,8 +34,8 @@ class ApiProdOrangeMoneyController extends Controller
         $this->token="";
         $this->auth="cEZJWTF5Wl9pR0hMRzBiZzBlOEJDUDhlOUxzYTpuRGppWTJ6UDZPY0Q2cktkVFg5RmE0eXoxYW9h"; //Utiliser pour générer le token
         $this->auth_x_token ="bHluZS1jbGF1ZGUua29tYm91QGtpYWJvby5uZXQ6MjQwNjExOTdhMzI4ZTBlOWNmZGZmNGQ3Zjc=";//base64_encode("lyne-claude.kombou@kiaboo.net:24061197a328e0e9cfdff4d7f7") ;//
-        //$this->channel="691301143";
-        $this->channel="656805492";
+        $this->channel="691301143";
+        //$this->channel="656805492";
         $this->pin="2222";
         $getTokenResponse = $this->OM_GetTokenAccess();
 
@@ -822,7 +822,7 @@ class ApiProdOrangeMoneyController extends Controller
     }
 
     public function OM_getCashInPayToken(){
-dd($this->token);
+
         $url = "https://omdeveloper-gateway.orange.cm/omapi/1.0.2/cashin/init";
         $response = Http::withOptions(['verify' => false,])
             ->withHeaders([
