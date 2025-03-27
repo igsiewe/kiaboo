@@ -1077,6 +1077,7 @@ class ApiProdOrangeMoneyController extends Controller
         //Référence de la transaction :On génère le payToken
         $dataPayTokenResponse = $this->OM_getCashInPayToken();
         $dataPayToken = json_decode($dataPayTokenResponse->content());
+        dd($dataPayToken);
         if($dataPayTokenResponse->status()!=200){
             return response()->json(
                 [
