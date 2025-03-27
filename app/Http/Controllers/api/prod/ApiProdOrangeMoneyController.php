@@ -822,7 +822,7 @@ class ApiProdOrangeMoneyController extends Controller
     }
 
     public function OM_getCashInPayToken(){
-
+dd($this->token);
         $url = "https://omdeveloper-gateway.orange.cm/omapi/1.0.2/cashin/init";
         $response = Http::withOptions(['verify' => false,])
             ->withHeaders([
