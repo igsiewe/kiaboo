@@ -834,7 +834,7 @@ class ApiProdOrangeMoneyController extends Controller
             ->Post($url);
 
         log::info([
-            "function"=>"OM_getPayToken.",
+            "function"=>"OM_getCashInPayToken",
             "response"=>$response->body(),
             "statusCode"=>$response->status(),
             "data"=>$response->json(),
