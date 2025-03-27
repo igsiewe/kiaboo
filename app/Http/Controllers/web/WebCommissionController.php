@@ -463,10 +463,12 @@ class WebCommissionController extends Controller
         ]);
         //On vérifie si l'interval de commission n'existe pas déjà
         $commissionExist = Commission::where("service_id",$request->service)
-            ->where("borne_min",'<=',$request->commission)
-            ->where("borne_max",'>=',$request->commission)
+            ->where("borne_min",'<=',$request->bornemin)
+            ->where("borne_max",'>=',$request->bornemax)
             ->where("status",1)
             ->first();
+
+        dd($commissionExist, $request->all());
         if($commissionExist){
             return redirect()->back()->with('error', 'Une commission existe déjà pour cette borne');
         }
