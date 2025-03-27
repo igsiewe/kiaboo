@@ -960,8 +960,8 @@ class ApiProdOrangeMoneyController extends Controller
 
         $service = ServiceEnum::DEPOT_OM->value;
         $user = User::where("telephone",$request->agentNumber)->where('type_user_id', UserRolesEnum::AGENT->value)->get();
-        $amount=$request->data["amount"];
-        $customer=$request->data["phone"];
+        $amount=$request->amount;
+        $customer=$request->phone;
 
         // Vérifie si l'utilisateur est autorisé à faire cette opération
 
