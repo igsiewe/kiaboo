@@ -431,6 +431,7 @@ class WebCommissionController extends Controller
         $grilleCommission = Commission::join("services","services.id","commissions.service_id")
             ->join("partenaires","partenaires.id","services.partenaire_id")
             ->select("commissions.id","commissions.borne_min","commissions.borne_max","commissions.taux","commissions.amount","commissions.type_commission","commissions.status","commissions.created_at","commissions.updated_at","services.name_service","services.type_service_id","services.partenaire_id","partenaires.name_partenaire")
+            ->orderBy("partenaires.name_partenaire")
             ->orderBy("services.name_service")
             ->orderBy("commissions.borne_min")
             ->get();

@@ -101,19 +101,19 @@
                                                         <td nowrap align="center">{{$c->updated_at}}</td>
                                                         @if($c->status==0)
                                                             <td align="center" title="Non valide">
-                                                                <a type="button" class="btn" style="border: none;" title="Non active"><i class="fa fa-thumbs-down" style="color: black"></i></a>
+                                                                <a type="button" class="btn" style="border: none;" title="Non active"><i class="fa fa-thumbs-down" style="color: red"></i></a>
                                                             </td>
                                                             <td align="center" title="Non valide">
                                                                 <a type="button" class="btn" style="border: none;" title="Non valide"><i class="fa fa-trash" style="color: black"></i></a>
                                                             </td>
                                                         @else
                                                             <td align="center" title="Valide">
-                                                                <a type="button" class="btn" style="border: none;" title="Active"><i class="fa fa-thumbs-up" style="color:red;"></i></a>
+                                                                <a type="button" class="btn" style="border: none;" title="Active"><i class="fa fa-thumbs-up" style="color:black;"></i></a>
                                                             </td>
                                                             <td align="center">
                                                                 <form action="{{route("deleteCommission",[$c->id])}}" id="frmDelete{{$c->id}}" name="frmDelete{{$c->id}}">
                                                                     @csrf
-                                                                    <a type="button" class="btn" style="border: none;" title="Cliquez pour supprimer" onclick="javascript:document.getElementById('frmDelete{{$c->id}}').submit();"><i class="fa fa-trash" style="color: red"></i></a>
+                                                                    <a type="button" class="btn" style="border: none;" title="Cliquez pour supprimer" onclick="javascript:document.getElementById('frmDelete{{$c->id}}').submit();"><i class="fa fa-trash" style="color: black"></i></a>
                                                                 </form>
                                                             </td>
 
