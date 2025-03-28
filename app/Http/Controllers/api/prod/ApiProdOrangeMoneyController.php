@@ -1116,7 +1116,7 @@ class ApiProdOrangeMoneyController extends Controller
 
         try{
             $curl = curl_init();
-            $result= curl_setopt_array($curl, array(
+             curl_setopt_array($curl, array(
                 CURLOPT_URL => $url,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
@@ -1143,9 +1143,9 @@ class ApiProdOrangeMoneyController extends Controller
                 ),
             ));
 
-            dd($result);
-
             $response = curl_exec($curl);
+
+            dd($response->body());
             $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
             curl_close($curl);
