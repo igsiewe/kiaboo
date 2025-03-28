@@ -1104,8 +1104,8 @@ class ApiProdOrangeMoneyController extends Controller
         $description ="Transaction cashin initiate by ".$user->first()->telephone. " de ".$partenaire;
         $data = [
             "channelUserMsisdn"=> $this->channel,
-            "amount"=> "$amount",
-            "subscriberMsisdn"=> "$customer",
+            "amount"=> $amount,
+            "subscriberMsisdn"=> $customer,
             "pin"=> $this->pin,
             "orderId"=> $request->marchandTransactionId,
             "description"=>$description,
