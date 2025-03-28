@@ -1139,14 +1139,13 @@ class ApiProdOrangeMoneyController extends Controller
                     'accept: application/json',
                     'X-AUTH-TOKEN: '.$this->auth_x_token,
                     'Content-Type: application/json',
-                    'WSO2-Authorization: Bearer '.$this->token,
-                    'Cookie: 90172f9a61281d25f6dbdf1a5564f031=bf070161f093e553682ea80b8694a3f2'
+                    'WSO2-Authorization: Bearer '.$this->token
                 ),
             ));
 
             $response = curl_exec($curl);
             $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-dd($response);
+
             curl_close($curl);
 
             $dataResponse = json_decode($response->body());
