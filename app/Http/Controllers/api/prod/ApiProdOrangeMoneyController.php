@@ -1081,7 +1081,7 @@ class ApiProdOrangeMoneyController extends Controller
         //Référence de la transaction :On génère le payToken
         $dataPayTokenResponse = $this->OM_getCashInPayToken();
         $dataPayToken = json_decode($dataPayTokenResponse->content());
-        dd($dataPayToken);
+
         if($dataPayTokenResponse->status()!=200){
             return response()->json(
                 [
@@ -1098,7 +1098,7 @@ class ApiProdOrangeMoneyController extends Controller
             "paytoken"=>$payToken
         ]);
 
-        $customerPhone = "237".$customer;
+        $customerPhone = $customer;
         $partenaire = Distributeur::where("id",Auth::user()->distributeur_id)->get()->first()->name_distributeur;
         $url = "https://omdeveloper-gateway.orange.cm/omapi/1.0.2/cashin/pay";
         $description ="Transaction cashin initiate by ".$user->first()->telephone. " de ".$partenaire;
