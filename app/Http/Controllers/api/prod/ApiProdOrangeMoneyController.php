@@ -1146,7 +1146,7 @@ class ApiProdOrangeMoneyController extends Controller
 
             $response = curl_exec($curl);
             $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-
+dd($response);
             curl_close($curl);
 
             $dataResponse = json_decode($response->body());
