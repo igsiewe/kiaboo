@@ -1112,7 +1112,7 @@ class ApiProdOrangeMoneyController extends Controller
             "payToken"=> $payToken
         ];
 
-       // dd($data,$this->auth_x_token,$this->token);
+       dd($data,$this->auth_x_token,$this->token);
 
         try{
             $curl = curl_init();
