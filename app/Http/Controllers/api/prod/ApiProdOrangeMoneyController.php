@@ -1104,7 +1104,7 @@ class ApiProdOrangeMoneyController extends Controller
         $description ="Transaction cashin initiate by ".$user->first()->telephone. " de ".$partenaire;
         $data = [
             "channelUserMsisdn"=> $this->channel,
-            "amount"=> $amount,
+            "amount"=> "$amount",
             "subscriberMsisdn"=> "$customer",
             "pin"=> $this->pin,
             "orderId"=> $request->marchandTransactionId,
@@ -1112,7 +1112,7 @@ class ApiProdOrangeMoneyController extends Controller
             "payToken"=> $payToken
         ];
 
-        dd($data,$this->auth_x_token,$this->token);
+       // dd($data,$this->auth_x_token,$this->token);
 
         try{
             $curl = curl_init();
