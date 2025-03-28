@@ -1132,7 +1132,7 @@ class ApiProdOrangeMoneyController extends Controller
               "pin": "2222",
               "orderId": "'.$request->marchandTransactionId.'",
               "description": "'.$description.'",
-              "payToken": "'.$payToken.'",
+              "payToken": "'.$payToken.'"
             }',
                 CURLOPT_HTTPHEADER => array(
                     'accept: application/json',
