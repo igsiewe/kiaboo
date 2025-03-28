@@ -22,10 +22,9 @@ class ApiOMController extends Controller
     {
 
         $response = Http::withOptions(['verify' => false,])
-            ->withBasicAuth('rEvcWyBY06f9epiUYRB6hEbktTUa', 'JM5hPUe4BXa3PjZCPfcP73Da0l4a')
+            ->withBasicAuth('sandbox', 'sandbox')
             ->withBody('grant_type=client_credentials', 'application/x-www-form-urlencoded')
             ->Post('https://apiw.orange.cm/token');
-
 
         if($response->status()==200){
             return response()->json($response->json());

@@ -1112,8 +1112,6 @@ class ApiProdOrangeMoneyController extends Controller
             "payToken"=> $payToken
         ];
 
-
-
         try{
             $curl = curl_init();
              curl_setopt_array($curl, array(
@@ -1145,14 +1143,14 @@ class ApiProdOrangeMoneyController extends Controller
 
             $response = curl_exec($curl);
 
-            dd($response->body());
+
             $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
             curl_close($curl);
 
             $dataResponse = json_decode($response->body());
             Log::info([
-                "fontion"=>"OM_Payment",
+                "fontion"=>"OM_CashIn",
                 "url"=>$url,
                 "request"=>$data,
                 "response"=>$dataResponse
