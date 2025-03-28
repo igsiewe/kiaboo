@@ -1133,7 +1133,6 @@ class ApiProdOrangeMoneyController extends Controller
               "orderId": "'.$request->marchandTransactionId.'",
               "description": "'.$description.'",
               "payToken": "'.$payToken.'",
-              "notifUrl": "https://kiaboopay.com/api/om/callback/pm",
             }',
                 CURLOPT_HTTPHEADER => array(
                     'accept: application/json',
@@ -1147,7 +1146,7 @@ class ApiProdOrangeMoneyController extends Controller
             $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
             curl_close($curl);
-            dd($response);
+
             $dataResponse = json_decode($response->body());
             Log::info([
                 "fontion"=>"OM_Payment",
