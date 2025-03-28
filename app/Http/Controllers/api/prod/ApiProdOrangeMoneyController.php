@@ -51,7 +51,7 @@ class ApiProdOrangeMoneyController extends Controller
         $response = Http::withOptions(['verify' => false,])
             ->withHeaders(
                 [
-                    "Authorization"=>"Basic ".$this->auth
+                    "Authorization"=>"Basic ".$this->auth_x_token
                 ]
             )
 
@@ -62,7 +62,7 @@ class ApiProdOrangeMoneyController extends Controller
             'url'=>"https://omdeveloper.orange.cm/oauth2/token",
             'request'=>[
                 'header'=>[
-                "Authorization"=>"Basic ".$this->auth
+                "Authorization"=>"Basic ".$this->auth_x_token
                 ],
                 'body'=>'grant_type=client_credentials',
                 'type'=>'application/x-www-form-urlencoded',
