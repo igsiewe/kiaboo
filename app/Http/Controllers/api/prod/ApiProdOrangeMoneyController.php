@@ -1101,7 +1101,7 @@ class ApiProdOrangeMoneyController extends Controller
         $customerPhone = $customer;
         $partenaire = Distributeur::where("id",Auth::user()->distributeur_id)->get()->first()->name_distributeur;
         $url = "https://omdeveloper-gateway.orange.cm/omapi/1.0.2/cashin/pay";
-        $description ="Transaction cashin initiate by ".$user->first()->telephone. " de ".$partenaire;
+        $description ="test";//"Transaction cashin initiate by ".$user->first()->telephone. " de ".$partenaire;
         $data = [
             "channelUserMsisdn"=> $this->channel,
             "amount"=> $amount,
@@ -1116,7 +1116,7 @@ class ApiProdOrangeMoneyController extends Controller
 
         try{
             $curl = curl_init();
-            curl_setopt_array($curl, array(
+            $result= curl_setopt_array($curl, array(
                 CURLOPT_URL => $url,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
@@ -1129,10 +1129,11 @@ class ApiProdOrangeMoneyController extends Controller
               "channelUserMsisdn": "'.$this->channel.'",
               "amount": "'.$amount.'",
               "subscriberMsisdn": "'.$customer.'",
-              "pin": "2222",
+              "pin": "'.$this->pin.'",
               "orderId": "'.$request->marchandTransactionId.'",
               "description": "'.$description.'",
-              "payToken": "'.$payToken.'"
+              "payToken": "'.$payToken.'",
+              "notifUrl": "https://kiaboopay.com/api/om/callback/pm"
             }',
                 CURLOPT_HTTPHEADER => array(
                     'accept: application/json',
@@ -1141,6 +1142,8 @@ class ApiProdOrangeMoneyController extends Controller
                     'WSO2-Authorization: Bearer '.$this->token
                 ),
             ));
+
+            dd($result);
 
             $response = curl_exec($curl);
             $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
