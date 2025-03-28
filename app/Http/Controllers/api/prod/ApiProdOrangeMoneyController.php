@@ -70,7 +70,7 @@ class ApiProdOrangeMoneyController extends Controller
             'response'=>$response->body(),
             'statusCode'=>$response->status(),
         ]);
-        dd($response);
+        dd($response->body());
         if($response->status()==200){
             //return response()->json($response->json());
             return response()->json($response->json());
