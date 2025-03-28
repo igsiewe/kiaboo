@@ -33,7 +33,7 @@ class ApiProdOrangeMoneyController extends Controller
     {
         $this->token="";
         $this->auth="cEZJWTF5Wl9pR0hMRzBiZzBlOEJDUDhlOUxzYTpuRGppWTJ6UDZPY0Q2cktkVFg5RmE0eXoxYW9h"; //Utiliser pour générer le token
-        $this->auth_x_token ="bHluZS1jbGF1ZGUua29tYm91QGtpYWJvby5uZXQ6MjQwNjExOTdhMzI4ZTBlOWNmZGZmNGQ3Zjc=";//base64_encode("lyne-claude.kombou@kiaboo.net:24061197a328e0e9cfdff4d7f7") ;//
+        $this->auth_x_token ="c2FuZGJveDpzYW5kYm94";//"bHluZS1jbGF1ZGUua29tYm91QGtpYWJvby5uZXQ6MjQwNjExOTdhMzI4ZTBlOWNmZGZmNGQ3Zjc=";//base64_encode("lyne-claude.kombou@kiaboo.net:24061197a328e0e9cfdff4d7f7") ;//
         $this->channel="691301143";
         //$this->channel="656805492";
         $this->pin="2222";
@@ -51,7 +51,7 @@ class ApiProdOrangeMoneyController extends Controller
         $response = Http::withOptions(['verify' => false,])
             ->withHeaders(
                 [
-                    "Authorization"=>"Basic ".$this->auth_x_token
+                    "Authorization"=>"Basic ".$this->auth
                 ]
             )
 
@@ -62,7 +62,7 @@ class ApiProdOrangeMoneyController extends Controller
             'url'=>"https://omdeveloper.orange.cm/oauth2/token",
             'request'=>[
                 'header'=>[
-                "Authorization"=>"Basic ".$this->auth_x_token
+                "Authorization"=>"Basic ".$this->auth
                 ],
                 'body'=>'grant_type=client_credentials',
                 'type'=>'application/x-www-form-urlencoded',
