@@ -30,13 +30,13 @@ class ApiOMController extends Controller
             return response()->json($response->json());
         }
         else{
-            Log::error([
-                'user' => Auth::user()->id,
-                'code'=> $response->status(),
-                'function' => "OM_GetTokenAccess",
-                'response'=>$response->body(),
-
-            ]);
+//            Log::error([
+//                'user' => Auth::user()->id,
+//                'code'=> $response->status(),
+//                'function' => "OM_GetTokenAccess",
+//                'response'=>$response->body(),
+//
+//            ]);
             return response()->json([
                 'status'=>'error',
                 'message'=>"Erreur ".$response->status(). ' : Erreur lors de la connexion au serveur. Veuillez réessayer plus tard'

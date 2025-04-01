@@ -28,14 +28,15 @@ class ApiProdOrangeMoneyController extends Controller
     protected $auth_x_token;
     protected $channel;
     protected $pin;
+    protected $url;
 
     public function __construct()
     {
+        $this->url="https://omdeveloper-gateway.orange.cm/omapi/1.0.2";
         $this->token="";
         $this->auth="cEZJWTF5Wl9pR0hMRzBiZzBlOEJDUDhlOUxzYTpuRGppWTJ6UDZPY0Q2cktkVFg5RmE0eXoxYW9h"; //Utiliser pour générer le token
-        $this->auth_x_token ="c2FuZGJveDpzYW5kYm94";//"bHluZS1jbGF1ZGUua29tYm91QGtpYWJvby5uZXQ6MjQwNjExOTdhMzI4ZTBlOWNmZGZmNGQ3Zjc=";//base64_encode("lyne-claude.kombou@kiaboo.net:24061197a328e0e9cfdff4d7f7") ;//
+        $this->auth_x_token ="c2FuZGJveDpzYW5kYm94";
         $this->channel="691301143";
-        //$this->channel="656805492";
         $this->pin="2222";
         $getTokenResponse = $this->OM_GetTokenAccess();
 
@@ -57,23 +58,22 @@ class ApiProdOrangeMoneyController extends Controller
 
             ->withBody('grant_type=client_credentials', 'application/x-www-form-urlencoded')
             ->Post('https://omdeveloper.orange.cm/oauth2/token');
-        Log::info([
-            'function' => "OM_GetTokenAccess",
-            'url'=>"https://omdeveloper.orange.cm/oauth2/token",
-            'request'=>[
-                'header'=>[
-                "Authorization"=>"Basic ".$this->auth
+            Log::info([
+                'function' => "OM_GetTokenAccess",
+                'url'=>"https://omdeveloper.orange.cm/oauth2/token",
+                'request'=>[
+                    'header'=>[
+                    "Authorization"=>"Basic ".$this->auth
+                    ],
+                    'body'=>'grant_type=client_credentials',
+                    'type'=>'application/x-www-form-urlencoded',
                 ],
-                'body'=>'grant_type=client_credentials',
-                'type'=>'application/x-www-form-urlencoded',
-            ],
-            'response'=>$response->body(),
-            'statusCode'=>$response->status(),
-        ]);
-               if($response->status()==200){
-            //return response()->json($response->json());
-            return response()->json($response->json());
-        }
+                'response'=>$response->body(),
+                'statusCode'=>$response->status(),
+            ]);
+            if($response->status()==200){
+                 return response()->json($response->json());
+            }
         else{
             Log::error([
                 'function' => "OM_GetTokenAccess",
@@ -91,7 +91,7 @@ class ApiProdOrangeMoneyController extends Controller
 
     public function OM_getPMPayToken(){
 
-        $url = "https://omdeveloper-gateway.orange.cm/omapi/1.0.2/mp/init";
+        $url = $this->url."/mp/init";
         $response = Http::withOptions(['verify' => false,])
             ->withHeaders([
                     "X-AUTH-TOKEN"=>$this->auth_x_token,
@@ -355,7 +355,7 @@ class ApiProdOrangeMoneyController extends Controller
 
         $customerPhone = "237".$customer;
         $partenaire = Distributeur::where("id",Auth::user()->distributeur_id)->get()->first()->name_distributeur;
-        $url = "https://omdeveloper-gateway.orange.cm/omapi/1.0.2/mp/pay";
+        $url = $this->url."/mp/pay";
         $description ="Transaction initie by ".$user->first()->telephone. " de ".$partenaire;
         $data = [
             "notifUrl"=> "https://kiaboopay.com/api/om/callback/pm",
@@ -604,7 +604,7 @@ class ApiProdOrangeMoneyController extends Controller
         }
 
         $payToken = $transaction->first()->paytoken;
-        $http = "https://omdeveloper-gateway.orange.cm/omapi/1.0.2/mp/push/".$payToken;
+        $http = $this->url."/mp/push/".$payToken;
 
         $response = Http::withOptions(['verify' => false,])->withHeaders(
             [
@@ -764,7 +764,7 @@ class ApiProdOrangeMoneyController extends Controller
         }
 
         $payToken = $transaction->first()->paytoken;
-        $http = "https://omdeveloper-gateway.orange.cm/omapi/1.0.2/mp/paymentstatus/".$payToken;
+        $http = $this->url."/mp/paymentstatus/".$payToken;
 
         $response = Http::withOptions(['verify' => false,])->withHeaders(
             [
@@ -823,7 +823,7 @@ class ApiProdOrangeMoneyController extends Controller
 
     public function OM_getCashInPayToken(){
 
-        $url = "https://omdeveloper-gateway.orange.cm/omapi/1.0.2/cashin/init";
+        $url = $this->url."/cashin/init";
         $response = Http::withOptions(['verify' => false,])
             ->withHeaders([
                     "X-AUTH-TOKEN"=>$this->auth_x_token,
@@ -1100,7 +1100,7 @@ class ApiProdOrangeMoneyController extends Controller
 
         $customerPhone = $customer;
         $partenaire = Distributeur::where("id",Auth::user()->distributeur_id)->get()->first()->name_distributeur;
-        $url = "https://omdeveloper-gateway.orange.cm/omapi/1.0.2/cashin/pay";
+        $url = $this->url."/cashin/pay";
         $description ="test";//"Transaction cashin initiate by ".$user->first()->telephone. " de ".$partenaire;
         $data = [
             "channelUserMsisdn"=> $this->channel,
