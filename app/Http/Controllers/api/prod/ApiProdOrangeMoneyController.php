@@ -1296,7 +1296,7 @@ class ApiProdOrangeMoneyController extends Controller
                     "pin"=> $this->pin,
                     "channelMsisdn"=> $this->channel,
                 ]  );
-
+dd($response);
             if($response->status()==200){
                 $data = json_decode($response, false);
                 $firstName = $data->data->firstName;
