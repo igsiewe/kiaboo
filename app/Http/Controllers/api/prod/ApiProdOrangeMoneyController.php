@@ -1276,7 +1276,7 @@ class ApiProdOrangeMoneyController extends Controller
             return $responseToken;
         }
         $dataAcessToken = json_decode($responseToken->getContent());
-
+dd($dataAcessToken);
         try{
 
             $AccessToken = $dataAcessToken->access_token;
