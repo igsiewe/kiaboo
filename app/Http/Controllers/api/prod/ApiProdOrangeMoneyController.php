@@ -1296,7 +1296,7 @@ class ApiProdOrangeMoneyController extends Controller
                         ),
                     ])
 
-                ->Post($endpoint, [
+                ->Get($endpoint, [
                     "pin"=> $this->pin,
                     "channelMsisdn"=> $this->channel,
                 ]  );
