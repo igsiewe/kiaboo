@@ -63,7 +63,7 @@ class ApiOMController extends Controller
 
     }
 
-    public function OM_NameCustomer($customerNumber)
+    public function OM_CustomerName($customerNumber)
     {
 
         if (strlen($customerNumber) !=9){
