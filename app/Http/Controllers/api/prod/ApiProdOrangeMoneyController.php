@@ -1286,16 +1286,17 @@ class ApiProdOrangeMoneyController extends Controller
             $response = Http::withOptions(['verify' => false,])
                 ->withHeaders(
                     [
-                        'Authorization'=> 'Bearer '.$token,
-                        'Content-Type'=> 'application/json',
-                        'X-AUTH-TOKEN'=> $this->auth_x_token,
+                        'accept: application/json',
+                        'X-AUTH-TOKEN: '.$this->auth_x_token,
+                        'Content-Type: application/json',
+                        'WSO2-Authorization: Bearer '.$this->token
                     ])
 
                 ->Post($endpoint, [
                     "pin"=> $this->pin,
                     "channelMsisdn"=> $this->channel,
                 ]  );
-dd($response);
+
             if($response->status()==200){
                 $data = json_decode($response, false);
                 $firstName = $data->data->firstName;
