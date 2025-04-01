@@ -395,7 +395,6 @@ class ApiProdOrangeMoneyController extends Controller
                     'X-AUTH-TOKEN: '.$this->auth_x_token,
                     'Content-Type: application/json',
                     'WSO2-Authorization: Bearer '.$this->token,
-                    'Cookie: 90172f9a61281d25f6dbdf1a5564f031=bf070161f093e553682ea80b8694a3f2'
                 ),
             ));
 
@@ -1225,12 +1224,11 @@ class ApiProdOrangeMoneyController extends Controller
                 ],$e->getCode());
             }
         }else{
-            return response()->json(
-                [
-                    'status'=>$httpcode,
-                    'message'=>$response->body(),
-                ],$httpcode
-            );
+            $error_message = curl_error($curl);
+            return response()->json([
+                'code' => $httpcode,
+                'message'=>"Erreur ".$httpcode." : ".$error_message
+            ],$httpcode);
         }
     }
 
@@ -1289,19 +1287,19 @@ class ApiProdOrangeMoneyController extends Controller
 
                 }else{
 
-                    $body = json_decode($response);
+                    $error_message = curl_error($curl);
                     return response()->json([
                         'code' => $httpcode,
-                        'message'=>"Erreur ".$httpcode." : ".$body
-                    ],$response->status());
+                        'message'=>"Erreur ".$httpcode." : ".$error_message
+                    ],$httpcode);
                 }
-             }catch (Exception $e){
+        }catch (Exception $e){
                  return response()->json([
                      'code'=>$e->getCode(),
                      'status'=>'error',
                      'message'=>$e->getMessage()
                  ],$e->getCode());
-             }
+        }
 
 
 
