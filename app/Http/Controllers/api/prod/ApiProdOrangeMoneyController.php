@@ -963,7 +963,8 @@ class ApiProdOrangeMoneyController extends Controller
         $apiCheck = new ApiCheckController();
 
         $service = ServiceEnum::DEPOT_OM->value;
-        $user = User::where("telephone",$request->agentNumber)->where('type_user_id', UserRolesEnum::AGENT->value)->get();
+       // $user = User::where("telephone",$request->agentNumber)->where('type_user_id', UserRolesEnum::AGENT->value)->get();
+        $user = User::where("telephone",Auth::user()->telephone)->where('type_user_id', UserRolesEnum::AGENT->value)->get(); //On aurait pu s'en passer et utiliser Auth::user() directement
         $amount=$request->amount;
         $customer=$request->phone;
 
@@ -992,7 +993,7 @@ class ApiProdOrangeMoneyController extends Controller
             return response()->json([
                 'success'=>false,
                 'statusCode'=>'ERR-NOT-PERMISSION',
-                'message'=>"The agent used does not have the necessary permissions with your profil",
+                'message'=>"The agent used does not have the necessary permissions",
             ],403);
             // }
         }
