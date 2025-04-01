@@ -1276,7 +1276,7 @@ class ApiProdOrangeMoneyController extends Controller
             return $responseToken;
         }
         $dataAcessToken = json_decode($responseToken->getContent());
-dd($dataAcessToken);
+
         try{
 
             $AccessToken = $dataAcessToken->access_token;
@@ -1295,7 +1295,7 @@ dd($dataAcessToken);
                     "pin"=> $this->pin,
                     "channelMsisdn"=> $this->channel,
                 ]  );
-
+dd($response);
             if($response->status()==200){
                 $data = json_decode($response, false);
                 $firstName = $data->data->firstName;
