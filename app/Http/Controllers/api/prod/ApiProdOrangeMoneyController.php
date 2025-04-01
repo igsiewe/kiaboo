@@ -1148,7 +1148,7 @@ class ApiProdOrangeMoneyController extends Controller
 
             curl_close($curl);
 
-            $dataResponse = json_decode($response->body());
+            $dataResponse = json_decode($response);
             Log::info([
                 "fontion"=>"OM_CashIn",
                 "url"=>$url,
