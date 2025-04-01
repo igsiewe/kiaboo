@@ -74,18 +74,18 @@ class ApiProdOrangeMoneyController extends Controller
             if($response->status()==200){
                  return response()->json($response->json());
             }
-        else{
-            Log::error([
-                'function' => "OM_GetTokenAccess",
-                'code'=> $response->status(),
-                'response'=>$response->body(),
-            ]);
-            return response()->json([
-                'status'=>'error',
-                'message'=>"Erreur innattendue : ".$response->body()
-            ],$response->status());
+           else{
+                Log::error([
+                    'function' => "OM_GetTokenAccess",
+                    'code'=> $response->status(),
+                    'response'=>$response->body(),
+                ]);
+                return response()->json([
+                    'status'=>'error',
+                    'message'=>"Erreur innattendue : ".$response->body()
+                ],$response->status());
 
-        }
+            }
 
     }
 

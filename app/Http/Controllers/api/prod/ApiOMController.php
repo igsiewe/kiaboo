@@ -31,7 +31,7 @@ class ApiOMController extends Controller
     {
         $this->endpoint="https://omdeveloper-gateway.orange.cm/omapi/1.0.2";
        // $this->token="";
-       // $this->auth="cEZJWTF5Wl9pR0hMRzBiZzBlOEJDUDhlOUxzYTpuRGppWTJ6UDZPY0Q2cktkVFg5RmE0eXoxYW9h"; //Utiliser pour générer le token
+        $this->auth="cEZJWTF5Wl9pR0hMRzBiZzBlOEJDUDhlOUxzYTpuRGppWTJ6UDZPY0Q2cktkVFg5RmE0eXoxYW9h"; //Utiliser pour générer le token
         $this->auth_x_token ="c2FuZGJveDpzYW5kYm94";
         $this->channel="691301143";
         $this->pin="2222";
@@ -46,7 +46,12 @@ class ApiOMController extends Controller
     {
 
         $response = Http::withOptions(['verify' => false,])
-            ->withBasicAuth('rEvcWyBY06f9epiUYRB6hEbktTUa', 'JM5hPUe4BXa3PjZCPfcP73Da0l4a')
+            ->withHeaders(
+                [
+                    "Authorization"=>"Basic ".$this->auth
+                ]
+            )
+
             ->withBody('grant_type=client_credentials', 'application/x-www-form-urlencoded')
             ->Post('https://omdeveloper.orange.cm/oauth2/token');
 
@@ -54,9 +59,14 @@ class ApiOMController extends Controller
             return response()->json($response->json());
         }
         else{
+            Log::error([
+                'function' => "OM_GetTokenAccess",
+                'code'=> $response->status(),
+                'response'=>$response->body(),
+            ]);
             return response()->json([
                 'status'=>'error',
-                'message'=>"Erreur ".$response->status(). ' : Erreur lors de la connexion au serveur. Veuillez réessayer plus tard'
+                'message'=>"Erreur innattendue : ".$response->body()
             ],$response->status());
 
         }
