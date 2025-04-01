@@ -423,29 +423,29 @@ class ApiOMController extends Controller
             $title = "Kiaboo";
             $message = "Le dépôt OM de " . $montant . " F CFA a été effectué avec succès au ".$customerNumber;
             $subtitle ="Success";
-            $appNotification = new ApiNotification();
-            $envoiNotification = $appNotification->sendNotificationPushFireBase($idDevice, $title, $subtitle, $message);
-            if($envoiNotification->status()==200){
-                $resultNotification=json_decode($envoiNotification->getContent());
-                $responseNotification=$resultNotification->response ;
-                if($responseNotification->success==true){
-                    Log::info([
-                        'code'=> 200,
-                        'function' => "MOMO_Depot",
-                        'response'=>"Notification envoyée avec succès",
-                        'user' => Auth::user()->id,
-                        'request' => $request->all()
-                    ]);
-                }else{
-                    Log::error([
-                        'code'=> 500,
-                        'function' => "MOMO_Depot",
-                        'response'=>$resultNotification,
-                        'user' => Auth::user()->id,
-                        'request' => $request->all()
-                    ]);
-                }
-            }
+//            $appNotification = new ApiNotification();
+//            $envoiNotification = $appNotification->sendNotificationPushFireBase($idDevice, $title, $subtitle, $message);
+//            if($envoiNotification->status()==200){
+//                $resultNotification=json_decode($envoiNotification->getContent());
+//                $responseNotification=$resultNotification->response ;
+//                if($responseNotification->success==true){
+//                    Log::info([
+//                        'code'=> 200,
+//                        'function' => "MOMO_Depot",
+//                        'response'=>"Notification envoyée avec succès",
+//                        'user' => Auth::user()->id,
+//                        'request' => $request->all()
+//                    ]);
+//                }else{
+//                    Log::error([
+//                        'code'=> 500,
+//                        'function' => "MOMO_Depot",
+//                        'response'=>$resultNotification,
+//                        'user' => Auth::user()->id,
+//                        'request' => $request->all()
+//                    ]);
+//                }
+//            }
 
             return response()->json([
                 'success' => true,

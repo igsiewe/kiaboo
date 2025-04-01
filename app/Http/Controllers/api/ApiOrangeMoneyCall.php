@@ -244,10 +244,10 @@ class ApiOrangeMoneyCall extends Controller
             $title = 'Kiaboo';
             $subtitle = 'Kiaboo - Dépôt OM';
             $messageCallback = $message;
-            $PushSMS = new ApiSendNotificationPushController();
+           // $PushSMS = new ApiSendNotificationPushController();
 
-            $message = "Transaction terminée avec échec\n".$messageCallback;
-            $sendNotification = $PushSMS->sendNotificationPushFireBase($idDevice, $title, $subtitle, $message);
+          //  $message = "Transaction terminée avec échec\n".$messageCallback;
+          //  $sendNotification = $PushSMS->sendNotificationPushFireBase($idDevice, $title, $subtitle, $message);
         }
 
         if ($status == 'SUCCESSFULL') {
@@ -331,8 +331,8 @@ class ApiOrangeMoneyCall extends Controller
             $title = 'Kiaboo';
             $subtitle = 'Kiaboo - Dépôt OM';
 
-            $PushSMS = new ApiSendNotificationPushController();
-            $sendNotification = $PushSMS->sendNotificationPushFireBase($idDevice, $title, $subtitle, $message);
+            //$PushSMS = new ApiSendNotificationPushController();
+            //$sendNotification = $PushSMS->sendNotificationPushFireBase($idDevice, $title, $subtitle, $message);
         }
     }
 
