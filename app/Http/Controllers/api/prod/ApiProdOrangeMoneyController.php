@@ -1289,14 +1289,14 @@ class ApiProdOrangeMoneyController extends Controller
                         'accept: application/json',
                         'X-AUTH-TOKEN: '.$this->auth_x_token,
                         'Content-Type: application/json',
-                        'WSO2-Authorization: Bearer '.$this->token
+                        'WSO2-Authorization: Bearer '.$token
                     ])
 
                 ->Post($endpoint, [
                     "pin"=> $this->pin,
                     "channelMsisdn"=> $this->channel,
                 ]  );
-dd($response, $endpoint, $customerNumber);
+
             if($response->status()==200){
                 $data = json_decode($response, false);
                 $firstName = $data->data->firstName;
