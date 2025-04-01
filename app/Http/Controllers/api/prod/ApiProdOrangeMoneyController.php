@@ -1147,6 +1147,10 @@ class ApiProdOrangeMoneyController extends Controller
 
             $response = curl_exec($curl);
             $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+            $error_message = "";
+            if ($response === false) {
+                $error_message = curl_error($curl);
+            }
             curl_close($curl);
             $dataResponse = json_decode($response);
         }catch (Exception $e){
@@ -1224,7 +1228,7 @@ class ApiProdOrangeMoneyController extends Controller
                 ],$e->getCode());
             }
         }else{
-            $error_message = curl_error($curl);
+
             return response()->json([
                 'code' => $httpcode,
                 'message'=>"Erreur ".$httpcode." : ".$error_message
