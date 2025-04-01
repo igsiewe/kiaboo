@@ -973,7 +973,7 @@ class ApiProdOrangeMoneyController extends Controller
             return response()->json([
                 'success'=>false,
                 'statusCode'=>'ERR-AGENT-NOT-VALID',
-                'message'=>"The agent used is not found",
+                'message'=>"1. The agent used is not found",
             ],404);
         }
 
@@ -981,7 +981,7 @@ class ApiProdOrangeMoneyController extends Controller
             return response()->json([
                 'success'=>false,
                 'statusCode'=>'ERR-NOT-PERMISSION',
-                'message'=>"The agent used does not have the necessary permissions",
+                'message'=>"2. The agent used does not have the necessary permissions",
             ],403);
         }
 
@@ -992,7 +992,7 @@ class ApiProdOrangeMoneyController extends Controller
             return response()->json([
                 'success'=>false,
                 'statusCode'=>'ERR-NOT-PERMISSION',
-                'message'=>"The agent used does not have the necessary permissions",
+                'message'=>"3. The agent used does not have the necessary permissions",
             ],403);
             // }
         }
@@ -1032,7 +1032,7 @@ class ApiProdOrangeMoneyController extends Controller
             return response()->json([
                 'success'=>false,
                 'statusCode'=>"ERR-SERVICE-PARTNER-NOT-AVAILABLE",
-                'message'=>"Ce service n'est pas actif",
+                'message'=>"4. Ce service n'est pas actif",
             ],403);
         }
         // Vérifie si le solde de l'utilisateur lui permet d'effectuer cette opération
@@ -1040,7 +1040,7 @@ class ApiProdOrangeMoneyController extends Controller
             return response()->json([
                 'success'=>false,
                 'statusCode'=>'ERR-INSUFFICIENT-BALANCE',
-                'message'=>'Votre solde est insuffisant pour effectuer cette opération',
+                'message'=>'5. Votre solde est insuffisant pour effectuer cette opération',
             ],403);
         }
 
@@ -1050,7 +1050,7 @@ class ApiProdOrangeMoneyController extends Controller
             return response()->json([
                 'success'=>false,
                 'statusCode'=>'ERR-TRANSACTION-SIMILAR-FOUND',
-                'message'=>'Une transaction similaire a été faite il y\'a moins de 5 minutes',
+                'message'=>'6. Une transaction similaire a été faite il y\'a moins de 5 minutes',
             ],403);
         }
 
@@ -1060,7 +1060,7 @@ class ApiProdOrangeMoneyController extends Controller
         if($lacommission->getStatusCode()!=200){
             return response()->json([
                 'success' => false,
-                'message' => "Impossible de calculer la commission",
+                'message' => "7. Impossible de calculer la commission",
             ], 400);
         }
 
@@ -1074,7 +1074,7 @@ class ApiProdOrangeMoneyController extends Controller
             return response()->json([
                 'success'=>false,
                 'statusCode'=>'error',
-                'message'=>$dataTransactionInit->message,
+                'message'=>"8. ".$dataTransactionInit->message,
             ],$init_transaction->getStatusCode());
         }
         $idTransaction = $dataTransactionInit->transId; //Id de la transaction initiée
@@ -1089,7 +1089,7 @@ class ApiProdOrangeMoneyController extends Controller
                 [
                     'success'=>false,
                     'statusCode'=>$dataPayToken->statusCode,
-                    'message'=>$dataPayToken->message,
+                    'message'=>"9. ".$dataPayToken->message,
                 ],$dataPayTokenResponse->status()
             );
         }
@@ -1157,7 +1157,7 @@ class ApiProdOrangeMoneyController extends Controller
             return response()->json([
                 'code'=>$e->getCode(),
                 'status'=>'error',
-                'message'=>$e->getMessage()
+                'message'=>"10. ".$e->getMessage()
             ],$e->getCode());
         }
 
@@ -1231,7 +1231,7 @@ class ApiProdOrangeMoneyController extends Controller
 
             return response()->json([
                 'code' => $httpcode,
-                'message'=>"Erreur ".$httpcode." : ".$error_message
+                'message'=>"11. Erreur ".$httpcode." : ".$error_message
             ],$httpcode);
         }
     }
