@@ -176,7 +176,7 @@ Route::middleware('auth:api')->group(function () {
                     Route::get('payment/push/{transactionId}', 'OM_Payment_Push')->name("OM_Payment_Push");
                     Route::get('payment/status/{transactionId}', 'OM_Payment_Status')->name("OM_Payment_Status");
 
-                    Route::get('customer/name/{customerNumber}', 'OM_CustomerName')->name("OM_CustomerName");
+                    Route::get('customer/{customerNumber}', 'OM_CustomerName')->name("OM_CustomerName");
                     Route::post('cashin/pay', 'OM_CashIn')->name("OM_CashIn");
                 });
 
