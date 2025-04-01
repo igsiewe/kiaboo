@@ -1147,32 +1147,14 @@ class ApiProdOrangeMoneyController extends Controller
             ));
 
             $response = curl_exec($curl);
-
-
             $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-
             curl_close($curl);
-
             $dataResponse = json_decode($response);
-            Log::info([
-                "fontion"=>"OM_CashIn",
-                "url"=>$url,
-                "request"=>$data,
-                "response"=>$dataResponse
-            ]);
         }catch (Exception $e){
-            throw $e;
-            Log::error([
-                "fontion"=>"OM_Cashin",
-                "url"=>$url,
-                "request"=>$data,
-                "error"=>$e->getMessage()
-            ]);
             return response()->json([
-                "fontion"=>"OM_Cashin",
-                "url"=>$url,
-                "request"=>$data,
-                "response"=>$e->getMessage()
+                'code'=>$e->getCode(),
+                'status'=>'error',
+                'message'=>$e->getMessage()
             ],$e->getCode());
         }
 
@@ -1236,31 +1218,16 @@ class ApiProdOrangeMoneyController extends Controller
                     ],200
                 );
             }catch (Exception $e){
-                Log::error([
-                    'code'=> $httpcode,
-                    'function' => "OM_Cashin",
-                    'response'=>$response->body(),
-                    'user' => $user->first()->id,
-                    'request' => $request->all()
-                ]);
-                return response()->json(
-                    [
-                        'status'=>$response->status(),
-                        'message'=>$response->body(),
-                    ],$e->getCode()
-                );
+                return response()->json([
+                    'code'=>$e->getCode(),
+                    'status'=>'error',
+                    'message'=>$e->getMessage()
+                ],$e->getCode());
             }
         }else{
-            Log::error([
-                'code'=> $httpcode,
-                'function' => "OM_CashIn",
-                'response'=>$response,
-                'user' => $user->first()->id,
-                'request' => $request->all()
-            ]);
             return response()->json(
                 [
-                    'status'=>$response->status(),
+                    'status'=>$httpcode,
                     'message'=>$response->body(),
                 ],$httpcode
             );
@@ -1321,13 +1288,7 @@ class ApiProdOrangeMoneyController extends Controller
                     ],200);
 
                 }else{
-                    Log::error([
-                        'code'=> $httpcode,
-                        'function' => "OM_NameCustomer",
-                        'response'=>$response,
-                        'user' => Auth::user()->id,
-                        'customerPhone'=>$customerNumber,
-                    ]);
+
                     $body = json_decode($response);
                     return response()->json([
                         'code' => $httpcode,
@@ -1336,6 +1297,7 @@ class ApiProdOrangeMoneyController extends Controller
                 }
              }catch (Exception $e){
                  return response()->json([
+                     'code'=>$e->getCode(),
                      'status'=>'error',
                      'message'=>$e->getMessage()
                  ],$e->getCode());
