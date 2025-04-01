@@ -1291,12 +1291,10 @@ class ApiProdOrangeMoneyController extends Controller
                   "pin": "2222"
                 }',
                      CURLOPT_HTTPHEADER => array(
+                         'accept: application/json',
+                         'X-AUTH-TOKEN: '.$this->auth_x_token,
                          'Content-Type: application/json',
-                         'Accept: application/json',
-                         'X-AUTH-TOKEN: c2FuZGJveDpzYW5kYm94',
-                         'WSO2-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5ZTdjMzhjYS0xZjBlLTQ0MGUtYTMwZi1lMDBiYjg2YzVmNzEiLCJqdGkiOiJlNmIxYzA3NTEzMGQ3MDQwMzdlMmFlMTNmY2I3Y2E0Nzk2Nzc3ZmE0NmY5YWVjMzU4YzhkNGQ4ODcyMmUyNDE4OWU4ZmU5NGNkMzZkOTVhNSIsImlhdCI6MTc0MzUyOTYyNi44MDAwODksIm5iZiI6MTc0MzUyOTYyNi44MDAwOTIsImV4cCI6MTc0MzUzMzIyNi43ODkzODQsInN1YiI6IjE4Iiwic2NvcGVzIjpbXX0.DqaTF5QP8CWzgHgiQ_gyfHqy8UZGOzKahzKvgPLPhMGb3vneIS5mUEZ7lygoapnoNsvLzvlQQLj2CDYwMFx9TNCDx3cOMZLZ6UdW88yAtHSu0JxQy8SQZh7Tg6VuzpmDgzAssk9bRlccSa836bUui9qGcqjzk__4RHnAievTb6kgqNuSHhZAWWiukHjVSED1OR4lb9EiO9f0tJp9rzMj8WTNDdkDUAX7BnCVrs3AnOkR59GTA3zXtSbD2mVotyiulDfs02gFCl3KRiyi-4PW3seAyvmDi-svAcvaiFioUm694iBBhEfmt-mXtihFjtryxo8uWYZyGVO6NsWvlkPdJrBXdmtwwruuRPPOFRm3rVAt-Pz5HCeMd8dAvJKmUHaHvXXVcaoMc--b84zPAd_DVJm95AEm_G2cydiAg26mSo_GLGBhXxE4Dn39EMDtJc__Bl4tRnWCSHOguvG3666uCA-T0x6GEv46_QHJby23xMi6cpWsiE6UoBXueRrf46qL1-3RpTicoM6OUUNwl1Mj1qj2r3qA8GsL54u6lhp0Yfp7Xzqez22UIx6qQ8U1aGzfuOaq4xPIvgYdKFC5LoK93N_0rF4FFW9rj7pEdlvddWjtS90sUCa-a7s5TuJR2L5G5vL-oCK28E0d3UMwVF8sofeHlwXfLD7Z5sNTVpIjUO4',
-                         'Authorization: eyJ4NXQiOiJNakJoWWprNE1EUXlOV1kyWkRKbE1qRTJPV1poTVRNd09ETTJNelF3T1RJNFpqUmxOek5tWkRsa09ERTBOVEUyTXpJM016TXdPREUxTXpJME1EUmpPUSIsImtpZCI6Ik1qQmhZams0TURReU5XWTJaREpsTWpFMk9XWmhNVE13T0RNMk16UXdPVEk0WmpSbE56Tm1aRGxrT0RFME5URTJNekkzTXpNd09ERTFNekkwTURSak9RX1JTMjU2IiwidHlwIjoiYXQrand0IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJLSUFCT08iLCJhdXQiOiJBUFBMSUNBVElPTiIsImF1ZCI6InBGSVkxeVpfaUdITEcwYmcwZThCQ1A4ZTlMc2EiLCJuYmYiOjE3NDMxODc3MjEsImF6cCI6InBGSVkxeVpfaUdITEcwYmcwZThCQ1A4ZTlMc2EiLCJzY29wZSI6ImRlZmF1bHQiLCJpc3MiOiJodHRwczovL29tZGV2ZWxvcGVyLm9yYW5nZS5jbTo0NDMvb2F1dGgyL3Rva2VuIiwiZXhwIjoxNzQzMTkxMzIxLCJpYXQiOjE3NDMxODc3MjEsImp0aSI6IjBjZDlhZDI0LWRlNGItNGMxYi1hNzljLTlkMzMyMGFmZDNlYSIsImNsaWVudF9pZCI6InBGSVkxeVpfaUdITEcwYmcwZThCQ1A4ZTlMc2EifQ.b_mshOZaCRjNsZdKC72nEmJ5TVlbUYznRU4QYBlucwUO8DUwJT4se9JTdW-QwJvKImYfeRVRr3g6LUxO5gLKRWqcaM7LPls0kOP3EN-69aV6SJ5t1ggPGB391o-B8IPOdoetinSENftQGZfjNwpST1OAt1FkphNdaGbFnPhcADTbMo1M9FYvHj7r9StxcfnmsQpCdfJjNbDW4xrWyRn8FlyyViOiwvRgQqpJYXXMbd7XEh7tEiaBJ8gL0Ca8CATXrkDFYCrgVwsiVV5sf5fdvgnNuG1aDYKN3WslrCLB1ue7LT_TlUiBMNMNiuuv5eKtJQ0KhbvNAvDiFnuC_W24fg',
-                         'Cookie: 90172f9a61281d25f6dbdf1a5564f031=4defaa990352637d0ce8fef82e8fd1ec; route=1743528103.364.39513.313387'
+                         'WSO2-Authorization: Bearer '.$this->token
                      ),
                  ));
 
