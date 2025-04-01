@@ -1132,7 +1132,7 @@ class ApiProdOrangeMoneyController extends Controller
               "amount": "'.$amount.'",
               "subscriberMsisdn": "'.$customer.'",
               "pin": "'.$this->pin.'",
-              "orderId": "'.$reference.'",
+              "orderId": "10",
               "description": "'.$description.'",
               "payToken": "'.$payToken.'",
               "notifUrl": "https://kiaboopay.com/api/om/callback/pm"
