@@ -1319,9 +1319,9 @@ class ApiProdOrangeMoneyController extends Controller
 
                 }else{
                     Log::error([
-                        'code'=> $response->status(),
+                        'code'=> $httpcode,
                         'function' => "OM_NameCustomer",
-                        'response'=>$response->body(),
+                        'response'=>$response,
                         'user' => Auth::user()->id,
                         'customerPhone'=>$customerNumber,
                     ]);
