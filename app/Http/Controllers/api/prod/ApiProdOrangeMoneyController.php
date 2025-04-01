@@ -1287,8 +1287,8 @@ class ApiProdOrangeMoneyController extends Controller
                      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                      CURLOPT_CUSTOMREQUEST => 'POST',
                      CURLOPT_POSTFIELDS => '{
-                  "channelMsisdn": "691301143",
-                  "pin": "2222"
+                  "channelMsisdn": '.$this->channel.',
+                  "pin": '.$this->pin.'
                 }',
                      CURLOPT_HTTPHEADER => array(
                          'accept: application/json',
@@ -1301,8 +1301,8 @@ class ApiProdOrangeMoneyController extends Controller
                  $response = curl_exec($curl);
                  $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
                  curl_close($curl);
-
 dd($response);
+
                 if($httpcode==200){
 
                     $data = json_decode($response, false);
