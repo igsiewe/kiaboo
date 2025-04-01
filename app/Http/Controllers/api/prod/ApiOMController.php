@@ -128,7 +128,7 @@ class ApiOMController extends Controller
                 $body = json_decode($response->body());
                 return response()->json([
                     'code' => $response->status(),
-                    'message'=>"Erreur ".$response->status()." : ".$body->message
+                    'message'=>"Exception ".$response->status()." : ".$body->message
                 ],$response->status());
             }
         }catch (\Exception $e){
