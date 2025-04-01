@@ -1271,75 +1271,73 @@ class ApiProdOrangeMoneyController extends Controller
                 'message'=>'Le numéro de téléphone incorrect'
             ],404);
         }
-//        $responseToken = $this->OM_GetTokenAccess();
-//        if($responseToken->getStatusCode() !=200){
-//            return $responseToken;
-//        }
-//        $dataAcessToken = json_decode($responseToken->getContent());
 
+
+        $endpoint = $this->url."/infos/subscriber/customer/".$customerNumber;
         try{
+                 $curl = curl_init();
 
-           // $AccessToken = $dataAcessToken->access_token;
-          //  $token = $AccessToken;
+                 curl_setopt_array($curl, array(
+                     CURLOPT_URL => $endpoint,
+                     CURLOPT_RETURNTRANSFER => true,
+                     CURLOPT_ENCODING => '',
+                     CURLOPT_MAXREDIRS => 10,
+                     CURLOPT_TIMEOUT => 0,
+                     CURLOPT_FOLLOWLOCATION => true,
+                     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                     CURLOPT_CUSTOMREQUEST => 'POST',
+                     CURLOPT_POSTFIELDS => '{
+                      "channelMsisdn": "'.$this->channel.'",
+                      "pin": "'.$this->pin.'",
+                }',
+                     CURLOPT_HTTPHEADER => array(
+                         'accept: application/json',
+                         'X-AUTH-TOKEN: '.$this->auth_x_token,
+                         'Content-Type: application/json',
+                         'WSO2-Authorization: Bearer '.$this->token
+                     ),
+                 ));
 
-            $endpoint = $this->url."/infos/subscriber/customer/".$customerNumber;
-           // dd($token, $this->auth_x_token, $this->channel, $this->pin, $endpoint );
+                 $response = curl_exec($curl);
+                 $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+                 curl_close($curl);
 
-            $response = Http::withOptions(['verify' => false,])
-                ->withHeaders(
-                    [
-                        CURLOPT_HTTPHEADER => array(
-                            'accept: application/json',
-                            'X-AUTH-TOKEN: '.$this->auth_x_token,
-                            'Content-Type: application/json',
-                            'WSO2-Authorization: Bearer '.$this->token
-                        ),
-                    ])
+                dd($response);
+                if($httpcode==200){
 
-                ->Get($endpoint, [
-                    "pin"=> $this->pin,
-                    "channelMsisdn"=> $this->channel,
-                ]  );
-            dd($response);
-            if($response->status()==200){
-                $data = json_decode($response, false);
-                $firstName = $data->data->firstName;
-                $lastName = $data->data->lastName;
+                    $data = json_decode($response, false);
+                    $firstName = $data->data->firstName;
+                    $lastName = $data->data->lastName;
 
-                return response()->json([
-                    'status' => 'success',
-                    'firstName' => $firstName,
-                    'lastName' => $lastName,
-                ],200);
-                //  return response()->json($response->json());
-            }else{
-                Log::error([
-                    'code'=> $response->status(),
-                    'function' => "OM_NameCustomer",
-                    'response'=>$response->body(),
-                    'user' => Auth::user()->id,
-                    'customerPhone'=>$customerNumber,
-                ]);
-                $body = json_decode($response->body());
-                return response()->json([
-                    'code' => $response->status(),
-                    'message'=>"Erreur ".$response->status()." : ".$body->message
-                ],$response->status());
-            }
-        }catch (\Exception $e){
-            Log::error([
-                'user' => Auth::user()->id,
-                'code'=> $e->getCode(),
-                'function' => "OM_NameCustomer",
-                'response'=>$e->getMessage(),
-                'user' => Auth::user()->id,
-                'customerPhone'=>$customerNumber,
-            ]);
-            return response()->json([
-                //  'code' => $e->getCode(),
-                'message'=>$e->getMessage()
-            ],$e->getCode());
-        }
+                    return response()->json([
+                        'status' => 'success',
+                        'firstName' => $firstName,
+                        'lastName' => $lastName,
+                    ],200);
+
+                }else{
+                    Log::error([
+                        'code'=> $response->status(),
+                        'function' => "OM_NameCustomer",
+                        'response'=>$response->body(),
+                        'user' => Auth::user()->id,
+                        'customerPhone'=>$customerNumber,
+                    ]);
+                    $body = json_decode($response->body());
+                    return response()->json([
+                        'code' => $response->status(),
+                        'message'=>"Erreur ".$response->status()." : ".$body->message
+                    ],$response->status());
+                }
+             }catch (Exception $e){
+                 return response()->json([
+                     'status'=>'error',
+                     'message'=>$e->getMessage()
+                 ],$e->getCode());
+             }
+
+
+
 
     }
 }
