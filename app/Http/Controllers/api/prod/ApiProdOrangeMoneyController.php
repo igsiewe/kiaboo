@@ -1271,16 +1271,16 @@ class ApiProdOrangeMoneyController extends Controller
                 'message'=>'Le numéro de téléphone incorrect'
             ],404);
         }
-        $responseToken = $this->OM_GetTokenAccess();
-        if($responseToken->getStatusCode() !=200){
-            return $responseToken;
-        }
-        $dataAcessToken = json_decode($responseToken->getContent());
+//        $responseToken = $this->OM_GetTokenAccess();
+//        if($responseToken->getStatusCode() !=200){
+//            return $responseToken;
+//        }
+//        $dataAcessToken = json_decode($responseToken->getContent());
 
         try{
 
-            $AccessToken = $dataAcessToken->access_token;
-            $token = $AccessToken;
+           // $AccessToken = $dataAcessToken->access_token;
+          //  $token = $AccessToken;
 
             $endpoint = $this->url."/infos/subscriber/customer/".$customerNumber;
            // dd($token, $this->auth_x_token, $this->channel, $this->pin, $endpoint );
@@ -1288,10 +1288,12 @@ class ApiProdOrangeMoneyController extends Controller
             $response = Http::withOptions(['verify' => false,])
                 ->withHeaders(
                     [
-                        'accept: application/json',
-                        'X-AUTH-TOKEN: '.$this->auth_x_token,
-                        'Content-Type: application/json',
-                        'WSO2-Authorization: Bearer '.$token
+                        CURLOPT_HTTPHEADER => array(
+                            'accept: application/json',
+                            'X-AUTH-TOKEN: '.$this->auth_x_token,
+                            'Content-Type: application/json',
+                            'WSO2-Authorization: Bearer '.$this->token
+                        ),
                     ])
 
                 ->Post($endpoint, [
