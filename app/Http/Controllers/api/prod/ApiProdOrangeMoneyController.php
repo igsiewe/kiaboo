@@ -1304,7 +1304,7 @@ class ApiProdOrangeMoneyController extends Controller
                  $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
                  curl_close($curl);
 
-
+dd($response);
                 if($httpcode==200){
 
                     $data = json_decode($response, false);
