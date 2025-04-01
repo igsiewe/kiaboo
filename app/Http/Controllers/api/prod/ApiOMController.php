@@ -30,17 +30,17 @@ class ApiOMController extends Controller
     public function __construct()
     {
         $this->endpoint="https://omdeveloper-gateway.orange.cm/omapi/1.0.2";
-        $this->token="";
+       // $this->token="";
        // $this->auth="cEZJWTF5Wl9pR0hMRzBiZzBlOEJDUDhlOUxzYTpuRGppWTJ6UDZPY0Q2cktkVFg5RmE0eXoxYW9h"; //Utiliser pour générer le token
         $this->auth_x_token ="c2FuZGJveDpzYW5kYm94";
         $this->channel="691301143";
         $this->pin="2222";
-        $getTokenResponse = $this->OM_GetTokenAccess();
-
-        if($getTokenResponse->status()==200){
-            $dataToken = json_decode($getTokenResponse->content());
-            $this->token = $dataToken->access_token;
-        }
+//        $getTokenResponse = $this->OM_GetTokenAccess();
+//
+//        if($getTokenResponse->status()==200){
+//            $dataToken = json_decode($getTokenResponse->content());
+//            $this->token = $dataToken->access_token;
+//        }
     }
     public function OM_GetTokenAccess()
     {
@@ -72,16 +72,16 @@ class ApiOMController extends Controller
                 'message'=>'Le numéro de téléphone incorrect'
             ],404);
         }
-//        $responseToken = $this->OM_GetTokenAccess();
-//        if($responseToken->getStatusCode() !=200){
-//            return $responseToken;
-//        }
-//        $dataAcessToken = json_decode($responseToken->getContent());
+        $responseToken = $this->OM_GetTokenAccess();
+        if($responseToken->getStatusCode() !=200){
+            return $responseToken;
+        }
+        $dataAcessToken = json_decode($responseToken->getContent());
 
         try{
 
-          //  $AccessToken = $dataAcessToken->access_token;
-           // $token = $AccessToken;
+            $AccessToken = $dataAcessToken->access_token;
+            $token = $AccessToken;
 
             $endpoint = $this->endpoint.'/infos/subscriber/customer/'.$customerNumber;
             $response = Http::withOptions(['verify' => false,])
@@ -89,7 +89,7 @@ class ApiOMController extends Controller
                     [
                         'Content-Type'=> 'application/json',
                         'X-AUTH-TOKEN'=>$this->auth_x_token,
-                        'WSO2-Authorization'=>'Bearer '.$this->token
+                        'WSO2-Authorization'=>'Bearer '.$token
                     ])
 
                 ->Post($endpoint, [
@@ -145,7 +145,7 @@ class ApiOMController extends Controller
                 [
                     'Content-Type'=> 'application/json',
                     'X-AUTH-TOKEN'=>$this->auth_x_token,
-                    'WSO2-Authorization'=>'Bearer '.$this->token
+                    'WSO2-Authorization'=>'Bearer '.$token
                 ])
 
             ->Post($this->endpoint.'/cashin/init');
@@ -173,7 +173,7 @@ class ApiOMController extends Controller
                 [
                     'Content-Type'=> 'application/json',
                     'X-AUTH-TOKEN'=>$this->auth_x_token,
-                    'WSO2-Authorization'=>'Bearer '.$this->token
+                    'WSO2-Authorization'=>'Bearer '.$token
                 ])
 
             ->Post($this->endpoint.'/cashin/pay', [

@@ -130,11 +130,6 @@ Route::middleware('auth:api')->group(function () {
             Route::post('/commission/remboursement/execute', 'setRemboursementCommission')->name("setRemboursementCommission");
         });
 
-        //Orange Money
-        Route::controller(ApiOMControllerSave::class)->group(function () {
-          //  Route::get('om/custumer/name/{CustomerNumber}', 'OM_NameCustomer')->name("OM_NameCustomer");
-            Route::post('operation/om/depot', 'OM_Depot')->name("OM_Depot");
-        });
 
         //SandBox
         Route::group(['prefix' => 'sandbox'], function () {
@@ -177,7 +172,7 @@ Route::middleware('auth:api')->group(function () {
 
                 Route::controller(ApiOMController::class)->group(function () {
                     Route::get('customer/name/{customerNumber}', 'OM_CustomerName')->name("OM_CustomerName");
-                    Route::post('cashin/pay', 'OM_CashIn')->name("OM_CashIn");
+                    Route::post('cashin/pay', 'OM_Depot')->name("OM_Depot");
                 });
 
             });
