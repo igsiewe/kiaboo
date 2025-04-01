@@ -1283,6 +1283,7 @@ class ApiProdOrangeMoneyController extends Controller
             $token = $AccessToken;
 
             $endpoint = $this->url."/infos/subscriber/customer/".$customerNumber;
+            dd($token, $this->auth_x_token, $this->channel, $this->pin, $endpoint );
             $response = Http::withOptions(['verify' => false,])
                 ->withHeaders(
                     [
