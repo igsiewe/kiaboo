@@ -131,7 +131,7 @@ Route::middleware('auth:api')->group(function () {
 
         //Orange Money
         Route::controller(ApiOMController::class)->group(function () {
-            Route::get('om/custumer/name/{CustomerNumber}', 'OM_NameCustomer')->name("OM_NameCustomer");
+          //  Route::get('om/custumer/name/{CustomerNumber}', 'OM_NameCustomer')->name("OM_NameCustomer");
             Route::post('operation/om/depot', 'OM_Depot')->name("OM_Depot");
         });
 
@@ -176,8 +176,8 @@ Route::middleware('auth:api')->group(function () {
                     Route::get('payment/push/{transactionId}', 'OM_Payment_Push')->name("OM_Payment_Push");
                     Route::get('payment/status/{transactionId}', 'OM_Payment_Status')->name("OM_Payment_Status");
 
-                    Route::post('cashin', 'OM_CashIn')->name("OM_CashIn");
-
+                    Route::post('customer/name', 'OM_CustomerName')->name("OM_CustomerName");
+                    Route::post('cashin/pay', 'OM_CashIn')->name("OM_CashIn");
                 });
 
             });

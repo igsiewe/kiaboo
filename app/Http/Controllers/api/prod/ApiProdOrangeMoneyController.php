@@ -1261,4 +1261,80 @@ class ApiProdOrangeMoneyController extends Controller
             );
         }
     }
+
+    public function OM_NameCustomer($customerNumber)
+    {
+
+        if (strlen($customerNumber) !=9){
+            return response()->json([
+                'status'=>'error',
+                'message'=>'Le numéro de téléphone incorrect'
+            ],404);
+        }
+        $responseToken = $this->OM_GetTokenAccess();
+        if($responseToken->getStatusCode() !=200){
+            return $responseToken;
+        }
+        $dataAcessToken = json_decode($responseToken->getContent());
+
+        try{
+
+            $AccessToken = $dataAcessToken->access_token;
+            $token = $AccessToken;
+
+            $endpoint = $this->url.'/infos/subscriber/customer/'.$customerNumber;
+            $response = Http::withOptions(['verify' => false,])
+                ->withHeaders(
+                    [
+                        'Authorization'=> 'Bearer '.$token,
+                        'Content-Type'=> 'application/json',
+                        'X-AUTH-TOKEN'=> $this->auth_x_token,
+                    ])
+
+                ->Post($endpoint, [
+                    "pin"=> $this->pin,
+                    "channelMsisdn"=> $this->channel,
+                ]  );
+
+            if($response->status()==200){
+                $data = json_decode($response, false);
+                $firstName = $data->data->firstName;
+                $lastName = $data->data->lastName;
+
+                return response()->json([
+                    'status' => 'success',
+                    'firstName' => $firstName,
+                    'lastName' => $lastName,
+                ],200);
+                //  return response()->json($response->json());
+            }else{
+                Log::error([
+                    'code'=> $response->status(),
+                    'function' => "OM_NameCustomer",
+                    'response'=>$response->body(),
+                    'user' => Auth::user()->id,
+                    'customerPhone'=>$customerNumber,
+                ]);
+                $body = json_decode($response->body());
+                return response()->json([
+                    'code' => $response->status(),
+                    'message'=>"Erreur ".$response->status()." : ".$body->message
+                ],$response->status());
+            }
+        }catch (\Exception $e){
+            Log::error([
+                'user' => Auth::user()->id,
+                'code'=> $e->getCode(),
+                'function' => "OM_NameCustomer",
+                'response'=>$e->getMessage(),
+                'user' => Auth::user()->id,
+                'customerPhone'=>$customerNumber,
+            ]);
+            return response()->json([
+                //  'code' => $e->getCode(),
+                'message'=>$e->getMessage()
+            ],$e->getCode());
+        }
+
+    }
 }
