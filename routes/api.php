@@ -3,13 +3,14 @@
 use App\Http\Controllers\api\ApiApproDistributeurController;
 use App\Http\Controllers\api\ApiAuthController;
 use App\Http\Controllers\api\ApiCommissionController;
-use App\Http\Controllers\api\ApiOMController;
+use App\Http\Controllers\api\ApiOMControllerSave;
 use App\Http\Controllers\api\ApiOperationAgent;
 use App\Http\Controllers\api\ApiParrainageController;
 use App\Http\Controllers\api\ApiSmsController;
 use App\Http\Controllers\api\ApiTransactionsController;
 use App\Http\Controllers\api\ApiUserController;
 use App\Http\Controllers\api\ApiVersion;
+use App\Http\Controllers\api\prod\ApiOMController;
 use App\Http\Controllers\api\prod\ApiProdAuthController;
 use App\Http\Controllers\api\prod\ApiProdFactureEneoController;
 use App\Http\Controllers\api\prod\ApiProdMoMoMoneyController;
@@ -17,7 +18,7 @@ use App\Http\Controllers\api\prod\ApiProdM2UController;
 use App\Http\Controllers\api\prod\ApiProdOrangeMoneyController;
 use App\Http\Controllers\api\prod\ApiProdRemboursementPaymentController;
 use App\Http\Controllers\api\prod\ApiProdTransactionsController;
-use App\Http\Controllers\api\prod\ApiProduction_MoMo;
+//use App\Http\Controllers\api\prod\ApiProduction_MoMo;
 use App\Http\Controllers\api\prod\ApiProdYooMeeController;
 use Illuminate\Support\Facades\Route;
 
@@ -130,7 +131,7 @@ Route::middleware('auth:api')->group(function () {
         });
 
         //Orange Money
-        Route::controller(ApiOMController::class)->group(function () {
+        Route::controller(ApiOMControllerSave::class)->group(function () {
           //  Route::get('om/custumer/name/{CustomerNumber}', 'OM_NameCustomer')->name("OM_NameCustomer");
             Route::post('operation/om/depot', 'OM_Depot')->name("OM_Depot");
         });
@@ -166,16 +167,15 @@ Route::middleware('auth:api')->group(function () {
             Route::group(['prefix' => 'om'], function () {
                 Route::controller(ApiOperationAgent::class)->group(function () {
                    Route::post('retrait', 'setTransactionRetraitOM')->name("OM_retrait");
-                 //  Route::post('payment', 'OM_Payment')->name("OM_Payment");
-
                 });
-            });
-            Route::group(['prefix' => 'om'], function () {
+
                 Route::controller(ApiProdOrangeMoneyController::class)->group(function () {
                     Route::post('payment', 'OM_Payment')->name("OM_Payment");
                     Route::get('payment/push/{transactionId}', 'OM_Payment_Push')->name("OM_Payment_Push");
                     Route::get('payment/status/{transactionId}', 'OM_Payment_Status')->name("OM_Payment_Status");
+                });
 
+                Route::controller(ApiOMController::class)->group(function () {
                     Route::get('customer/name/{customerNumber}', 'OM_CustomerName')->name("OM_CustomerName");
                     Route::post('cashin/pay', 'OM_CashIn')->name("OM_CashIn");
                 });
