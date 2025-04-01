@@ -1001,32 +1001,32 @@ class ApiProdOrangeMoneyController extends Controller
 
         // $checkTransactionExternalId = Transaction::where('marchand_transaction_id',$request->marchandTransactionId)->select('source')->get(); // Je cherche s'l y'a une transaction avec ce numero merchand_id et je recupère tous les aagents qui l'ont fait
 
-        $distributeurAuquelAppartienAgent = $user->first()->distributeur_id;
-
-        $checkTransactionExternalId = DB::table('transactions')
-            ->join('users', 'transactions.source', '=', 'users.id')
-            ->select('transactions.*')
-            ->where('transactions.marchand_transaction_id', $request->marchandTransactionId)
-            ->where('users.distributeur_id', $distributeurAuquelAppartienAgent)
-            ->get();
-
-        if($checkTransactionExternalId->count()>0){
-            return response()->json([
-                'success'=>false,
-                'statusCode'=>"ERR-MERCHAND-TRANSACTION-ID-DUPLICATE",
-                'message' => "The merchand transaction ID used exists already : ".$request->marchandTransactionId,
-                'data'=>[
-                    'status' => $checkTransactionExternalId->first()->description,
-                    'transactionId'=>$checkTransactionExternalId->first()->reference,
-                    'dateTransaction'=>$checkTransactionExternalId->first()->date_transaction,
-                    'amount'=>$checkTransactionExternalId->first()->credit,
-                    'fees'=>$checkTransactionExternalId->first()->fees_collecte,
-                    'agent'=>$user->first()->telephone,
-                    'customer'=>$checkTransactionExternalId->first()->customer_phone,
-                    'marchandTransactionID'=>$checkTransactionExternalId->first()->marchand_transaction_id,
-                ]
-            ], 208);
-        }
+//        $distributeurAuquelAppartienAgent = $user->first()->distributeur_id;
+//
+//        $checkTransactionExternalId = DB::table('transactions')
+//            ->join('users', 'transactions.source', '=', 'users.id')
+//            ->select('transactions.*')
+//            ->where('transactions.marchand_transaction_id', $request->marchandTransactionId)
+//            ->where('users.distributeur_id', $distributeurAuquelAppartienAgent)
+//            ->get();
+//
+//        if($checkTransactionExternalId->count()>0){
+//            return response()->json([
+//                'success'=>false,
+//                'statusCode'=>"ERR-MERCHAND-TRANSACTION-ID-DUPLICATE",
+//                'message' => "The merchand transaction ID used exists already : ".$request->marchandTransactionId,
+//                'data'=>[
+//                    'status' => $checkTransactionExternalId->first()->description,
+//                    'transactionId'=>$checkTransactionExternalId->first()->reference,
+//                    'dateTransaction'=>$checkTransactionExternalId->first()->date_transaction,
+//                    'amount'=>$checkTransactionExternalId->first()->credit,
+//                    'fees'=>$checkTransactionExternalId->first()->fees_collecte,
+//                    'agent'=>$user->first()->telephone,
+//                    'customer'=>$checkTransactionExternalId->first()->customer_phone,
+//                    'marchandTransactionID'=>$checkTransactionExternalId->first()->marchand_transaction_id,
+//                ]
+//            ], 208);
+//        }
 
         // Vérifie si le service est actif
         if($apiCheck->checkStatusService($service)==false){
@@ -1066,7 +1066,9 @@ class ApiProdOrangeMoneyController extends Controller
         }
 
         //Initie la transaction
-        $init_transaction = $apiCheck->init_Depot($amount, $customer, $service, "","", "", "", "",2,$user->first()->id,$request->marchandTransactionId);
+       // $marchandTransactionId = $request->marchandTransactionId;
+        $marchandTransactionId = "Kiaboo";
+        $init_transaction = $apiCheck->init_Depot($amount, $customer, $service, "","", "", "", "",2,$user->first()->id,$marchandTransactionId);
         $dataTransactionInit = json_decode($init_transaction->getContent());
 
         if($init_transaction->getStatusCode() !=200){
@@ -1101,8 +1103,10 @@ class ApiProdOrangeMoneyController extends Controller
 
         $customerPhone = $customer;
         $partenaire = Distributeur::where("id",Auth::user()->distributeur_id)->get()->first()->name_distributeur;
+
+        //On envoie la requête à OM
         $url = $this->url."/cashin/pay";
-        $description ="test";//"Transaction cashin initiate by ".$user->first()->telephone. " de ".$partenaire;
+        $description ="Transaction cashin initiate by ".$user->first()->telephone. " de ".$partenaire;
         $data = [
             "channelUserMsisdn"=> $this->channel,
             "amount"=> $amount,
