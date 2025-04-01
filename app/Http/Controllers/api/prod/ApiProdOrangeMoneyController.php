@@ -1325,10 +1325,10 @@ class ApiProdOrangeMoneyController extends Controller
                         'user' => Auth::user()->id,
                         'customerPhone'=>$customerNumber,
                     ]);
-                    $body = json_decode($response->body());
+                    $body = json_decode($response);
                     return response()->json([
                         'code' => $response->status(),
-                        'message'=>"Erreur ".$response->status()." : ".$body->message
+                        'message'=>"Erreur ".$httpcode." : ".$body
                     ],$response->status());
                 }
              }catch (Exception $e){
