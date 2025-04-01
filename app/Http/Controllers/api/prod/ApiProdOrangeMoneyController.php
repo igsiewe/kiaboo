@@ -1283,7 +1283,8 @@ class ApiProdOrangeMoneyController extends Controller
             $token = $AccessToken;
 
             $endpoint = $this->url."/infos/subscriber/customer/".$customerNumber;
-            dd($token, $this->auth_x_token, $this->channel, $this->pin, $endpoint );
+           // dd($token, $this->auth_x_token, $this->channel, $this->pin, $endpoint );
+
             $response = Http::withOptions(['verify' => false,])
                 ->withHeaders(
                     [
@@ -1297,7 +1298,7 @@ class ApiProdOrangeMoneyController extends Controller
                     "pin"=> $this->pin,
                     "channelMsisdn"=> $this->channel,
                 ]  );
-
+            dd($response);
             if($response->status()==200){
                 $data = json_decode($response, false);
                 $firstName = $data->data->firstName;
