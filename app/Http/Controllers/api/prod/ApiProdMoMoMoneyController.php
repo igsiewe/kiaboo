@@ -812,7 +812,7 @@ class ApiProdMoMoMoneyController extends Controller
                     "partyIdType" => "MSISDN",
                     "partyId" => $customerPhone
                 ],
-                "payerMessage" => "Transaction initiée par lagent N".Auth::user()->id." le ".Carbon::now()." vers le client ".$request->customerPhone,
+                "payerMessage" => "Transaction initiée par lagent N".Auth::user()->telephone,
             ]);
 
 
@@ -820,7 +820,7 @@ class ApiProdMoMoMoneyController extends Controller
                 "Service"=>ServiceEnum::RETRAIT_MOMO->name,
                 "url"=>"https://proxy.momoapi.mtn.com/collection/v1_0/requesttowithdraw",
                 "requete"=>[
-                    "payeeNote" => "Transaction initiée par lagent N".Auth::user()->id." le ".Carbon::now()." vers le client ".$request->customerPhone,
+                    "payeeNote" => "Transaction initiée par lagent N".Auth::user()->telephone,
                     "externalId" => $idTransaction,
                     "amount" => $request->amount,
                     "currency" => "XAF",
@@ -828,7 +828,7 @@ class ApiProdMoMoMoneyController extends Controller
                         "partyIdType" => "MSISDN",
                         "partyId" => $customerPhone
                     ],
-                    "payerMessage" => "Transaction initiée par lagent N".Auth::user()->id." le ".Carbon::now()." vers le client ".$request->customerPhone,
+                    "payerMessage" => "Transaction initiée par lagent N".Auth::user()->telephone,
                 ],
                 "reponse"=>json_decode($response->status()),
             ]);
@@ -849,7 +849,7 @@ class ApiProdMoMoMoneyController extends Controller
                 'paytoken'=>$referenceID,
                 'date_end_trans'=>Carbon::now(),
                 'description'=>'PENDING',
-                'message'=>"Transaction initiée par l'agent N°".Auth::user()->id." le ".Carbon::now()." vers le client ".$request->customerPhone." En attente confirmation du client",
+                'message'=>"Transaction initiée par l'agent N°".Auth::user()->telephone,
                 'commission'=>$commission->commission_globale,
                 'commission_filiale'=>$commissionFiliale,
                 'commission_agent'=>$commissionAgent,
