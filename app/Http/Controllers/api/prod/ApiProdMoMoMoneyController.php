@@ -258,11 +258,11 @@ class ApiProdMoMoMoneyController extends Controller
             ]);
 
             $saveResponse = Transaction::where('id',$idTransaction)->update([
-                'api_response'=>$response->body(),
+                'api_response'=>$response->json(),
             ]);
             Log::info([
                 'responseMoMoDepot'=>$response,
-                'body'=>$response->body(),
+                'body'=>$response->json(),
                 'saveResponse'=>$saveResponse,
 
             ]);
@@ -819,7 +819,7 @@ class ApiProdMoMoMoneyController extends Controller
                 'commission_filiale'=>$commissionFiliale,
                 'commission_agent'=>$commissionAgent,
                 'commission_distributeur'=>$commissionDistributeur,
-                'api_response'=>$response->body(),
+                'api_response'=>$response->json(),
                 'application'=>1,
             ]);
 
@@ -1178,8 +1178,8 @@ class ApiProdMoMoMoneyController extends Controller
                         $title = "Kiaboo";
                         $message = "Le retrait MOMO de " . $montant . " F CFA a été effectué avec succès au ".$phoneCustomer;
                         $subtitle ="Success";
-                        $appNotification = new ApiNotification();
-                        $envoiNotification = $appNotification->sendNotificationPushFireBase($device_notification, $title, $subtitle, $message);
+                       // $appNotification = new ApiNotification();
+                      //  $envoiNotification = $appNotification->sendNotificationPushFireBase($device_notification, $title, $subtitle, $message);
                     }catch(\Exception $e){
                         DB::rollBack();
                         Log::error([
