@@ -308,9 +308,9 @@ class ApiProdMoMoMoneyController extends Controller
                 $title = "Kiaboo";
                 $message = "Le dépôt MOMO de " . $montant . " F CFA a été effectué avec succès au ".$customerNumber;
                 $subtitle ="Success";
-                $appNotification = new ApiNotification();
+                //$appNotification = new ApiNotification();
 
-                $envoiNotification = $appNotification->sendNotificationPushFireBase($idDevice, $title, $subtitle, $message); //Push notification sur le telephone de l'agent
+               // $envoiNotification = $appNotification->sendNotificationPushFireBase($idDevice, $title, $subtitle, $message); //Push notification sur le telephone de l'agent
                 $services = Service::all();
                 return response()->json([
                     'success' => true,
