@@ -258,7 +258,7 @@ class ApiProdMoMoMoneyController extends Controller
             ]);
 
             $saveResponse = Transaction::where('id',$idTransaction)->update([
-                'api_response'=>$response,
+                'api_response'=>$response->status(),
             ]);
             Log::info([
                 'responseMoMoDepot'=>$response,
@@ -819,7 +819,7 @@ class ApiProdMoMoMoneyController extends Controller
                 'commission_filiale'=>$commissionFiliale,
                 'commission_agent'=>$commissionAgent,
                 'commission_distributeur'=>$commissionDistributeur,
-                'api_response'=>$response,
+                'api_response'=>$response->status(),
                 'application'=>1,
             ]);
 
