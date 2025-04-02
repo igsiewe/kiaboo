@@ -599,7 +599,7 @@ class ApiOMController extends Controller
             $dataRetrait= json_decode($responseTraiteRetraitOM->getContent());
             return response()->json([
                 "result"=>false,
-                "message"=>"Exception ".$responseTraiteRetraitOM->getStatusCode()."\n".$dataRetrait->message."\n".$dataRetrait->data->inittxnmessage
+                "message"=>"Exception ".$responseTraiteRetraitOM->getStatusCode()."\n".$dataRetrait->message
             ], $responseTraiteRetraitOM->getStatusCode());
         }
 
