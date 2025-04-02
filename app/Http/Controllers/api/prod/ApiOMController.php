@@ -627,12 +627,25 @@ class ApiOMController extends Controller
         //Le solde du compte de l'agent ne sera mis à jour qu'après confirmation de l'agent : Opération traitée dans le callback
 
         //On recupère toutes les transactions en attente
+        $userRefresh = User::where('id', Auth::user()->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before', 'balance_after','total_commission', 'last_amount','sous_distributeur_id','date_last_transaction')->first();
+        $transactionsRefresh = DB::table('transactions')
+            ->join('services', 'transactions.service_id', '=', 'services.id')
+            ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
+            ->select('transactions.id','transactions.reference as reference','transactions.reference_partenaire','transactions.date_transaction','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.commission_agent as commission','transactions.balance_before','transactions.balance_after' ,'transactions.status','transactions.service_id','services.name_service','services.logo_service','type_services.name_type_service','type_services.id as type_service_id','transactions.date_operation', 'transactions.heure_operation','transactions.commission_agent_rembourse as commission_agent')
+            ->where("fichier","agent")
+            ->where("source",Auth::user()->id)
+            ->where('transactions.status',1)
+            ->orderBy('transactions.date_transaction', 'desc')
+            ->limit(5)
+            ->get();
 
         return response()->json(
             [
                 'status'=>200,
                 'message'=>$dataRetrait->message."\n".$dataRetrait->data->status." | ".$dataRetrait->data->inittxnmessage,
                 'paytoken'=>$payToken,
+                'user'=>$userRefresh,
+                'transactions'=>$transactionsRefresh,
             ],200
         );
 
