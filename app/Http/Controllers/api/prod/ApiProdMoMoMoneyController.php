@@ -257,23 +257,11 @@ class ApiProdMoMoMoneyController extends Controller
                 "payeeNote" => "Agent : ".Auth::user()->telephone
             ]);
 
-        Log::info([
-            "Service"=>ServiceEnum::DEPOT_MOMO->name,
-            "url"=>"https://proxy.momoapi.mtn.com/disbursement/v1_0/transfer",
-            "requete"=>[
-                "amount" => $montant,
-                "currency" => "XAF",
-                "externalId" => $idTransaction,
-                "payee" => [
-                    "partyIdType" => "MSISDN",
-                    "partyId" => $customerPhone,
-                ],
-                "payerMessage" => "Agent :".Auth::user()->telephone,
-                "payeeNote" => "Agent : ".Auth::user()->telephone
-            ],
-            "reponseStatus"=>json_decode($response->status()),
-            "reponseBody"=>json_decode($response->body()),
+        $saveUID = Transaction::where('id',$idTransaction)->update([
+            'api_response'=>$response->body(),
         ]);
+
+
         if($response->status()==202){
 
             $checkStatus = $this->MOMO_Depot_Status( $accessToken, $subcriptionKey, $referenceID);
@@ -331,12 +319,6 @@ class ApiProdMoMoMoneyController extends Controller
 
             }catch (\Exception $e) {
                 DB::rollback();
-                Log::error([
-                    'code'=> $response->status(),
-                    'function' => "MOMO_Depot",
-                    'response'=>$e->getMessage(),
-                    'user' => Auth::user()->id,
-                ]);
                 return response()->json([
                     'success' => false,
                     'message' => "Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste", //'Une erreur innatendue s\est produite. Si le problème persiste, veuillez contacter votre support.',
@@ -344,12 +326,6 @@ class ApiProdMoMoMoneyController extends Controller
             }
 
         }else{
-            Log::error([
-                'code'=> $response->status(),
-                'function' => "MOMO_Depot",
-                'response'=>$response->body(),
-                'user' => Auth::user()->id,
-            ]);
             return response()->json(
                 [
                     'status'=>$response->status(),
@@ -816,23 +792,6 @@ class ApiProdMoMoMoneyController extends Controller
             ]);
 
 
-            Log::info([
-                "Service"=>ServiceEnum::RETRAIT_MOMO->name,
-                "url"=>"https://proxy.momoapi.mtn.com/collection/v1_0/requesttowithdraw",
-                "requete"=>[
-                    "payeeNote" => "Transaction initiée par lagent N".Auth::user()->telephone,
-                    "externalId" => $idTransaction,
-                    "amount" => $request->amount,
-                    "currency" => "XAF",
-                    "payer" => [
-                        "partyIdType" => "MSISDN",
-                        "partyId" => $customerPhone
-                    ],
-                    "payerMessage" => "Transaction initiée par lagent N".Auth::user()->telephone,
-                ],
-                "reponse"=>json_decode($response->status()),
-            ]);
-
 
         if($response->status()==202){
             //Le client a été notifié. Donc on reste en attente de sa confirmation (Saisie de son code secret)
@@ -854,6 +813,7 @@ class ApiProdMoMoMoneyController extends Controller
                 'commission_filiale'=>$commissionFiliale,
                 'commission_agent'=>$commissionAgent,
                 'commission_distributeur'=>$commissionDistributeur,
+                'api_response'=>$response->body(),
             ]);
 
             //Le solde du compte de l'agent ne sera mis à jour qu'après confirmation de l'agent : Opération traitée dans le callback

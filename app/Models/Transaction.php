@@ -68,7 +68,7 @@ class Transaction extends Model
         'marchand_amount',
         'application',
         'version',
-        'json_response',
+        'api_response',
 
     ];
 
