@@ -476,34 +476,41 @@ class ApiOMController extends Controller
         //On execute le retrait
         $description = "Retrait initié par ".Auth::user()->telephone;
 
-        $response = Http::withOptions(['verify' => false,])
-            ->withHeaders(
-                [
-                    'Content-Type'=> 'application/json',
-                    'X-AUTH-TOKEN'=>$this->auth_x_token,
-                    'WSO2-Authorization'=>'Bearer '.$token
-                ])
+        try{
+            $response = Http::withOptions(['verify' => false,])
+                ->withHeaders(
+                    [
+                        'Content-Type'=> 'application/json',
+                        'X-AUTH-TOKEN'=>$this->auth_x_token,
+                        'WSO2-Authorization'=>'Bearer '.$token
+                    ])
 
-            ->Post($this->endpoint.'/cashout/pay', [
-                "notifUrl"=> $this->callbackUrl,
-                "channelUserMsisdn"=> $this->channel,
-                "amount"=> $montant,
-                "subscriberMsisdn"=> $beneficiaire,
-                "pin"=> $this->pin,
-                "orderId"=> str_replace(".","",$transId),
-                "description"=> $description,
-                "payToken"=> $payToken
-            ]);
+                ->Post($this->endpoint.'/cashout/pay', [
+                    "notifUrl"=> $this->callbackUrl,
+                    "channelUserMsisdn"=> $this->channel,
+                    "amount"=> $montant,
+                    "subscriberMsisdn"=> $beneficiaire,
+                    "pin"=> $this->pin,
+                    "orderId"=> str_replace(".","",$transId),
+                    "description"=> $description,
+                    "payToken"=> $payToken
+                ]);
 
-        if($response->status()==200){
-            return response()->json($response->json());
-        }
-        else{
+            if($response->status()==200){
+                return response()->json($response->json());
+            }
+            else{
+                return response()->json([
+                    'code' => $response->status(),
+                    'message'=>$response->body(),
+                ],$response->status());
+            }
+        }catch (\Exception $e){
             return response()->json([
-                'code' => $response->status(),
-                'message'=>$response->body(),
-            ],$response->status());
+                'message'=>$e->getMessage()
+            ],$e->getCode());
         }
+
     }
     public function OM_Retrait(Request $request){
 
