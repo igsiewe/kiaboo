@@ -26,11 +26,12 @@ class ApiOMController extends Controller
     protected $channel;
     protected $pin;
     protected $url;
+    protected $callbackUrl;
 
     public function __construct()
     {
         $this->endpoint="https://omdeveloper-gateway.orange.cm/omapi/1.0.2";
-       // $this->token="";
+        $this->callbackUrl="https://kiaboopay/api/callback/om";
         $this->auth="cEZJWTF5Wl9pR0hMRzBiZzBlOEJDUDhlOUxzYTpuRGppWTJ6UDZPY0Q2cktkVFg5RmE0eXoxYW9h"; //Utiliser pour générer le token
         $this->auth_x_token ="c2FuZGJveDpzYW5kYm94";
         $this->channel="691301143";
@@ -483,6 +484,7 @@ class ApiOMController extends Controller
                 ])
 
             ->Post($this->endpoint.'/cashout/pay', [
+                "notifUrl"=> $this->callbackUrl,
                 "channelUserMsisdn"=> $this->channel,
                 "amount"=> $montant,
                 "subscriberMsisdn"=> $beneficiaire,
