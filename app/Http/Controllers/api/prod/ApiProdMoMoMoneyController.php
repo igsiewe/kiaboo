@@ -257,9 +257,15 @@ class ApiProdMoMoMoneyController extends Controller
                 "payeeNote" => "Agent : ".Auth::user()->telephone
             ]);
 
-        $saveUID = Transaction::where('id',$idTransaction)->update([
-            'api_response'=>$response,
-        ]);
+            $saveResponse = Transaction::where('id',$idTransaction)->update([
+                'api_response'=>$response->body(),
+            ]);
+            Log::info([
+                'responseMoMoDepot'=>$response,
+                'body'=>$response->body(),
+                'saveResponse'=>$saveResponse,
+
+            ]);
 
 
         if($response->status()==202){
