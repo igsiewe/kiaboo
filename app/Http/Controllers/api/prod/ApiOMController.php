@@ -128,7 +128,7 @@ class ApiOMController extends Controller
                 $body = json_decode($response->body());
                 return response()->json([
                     'code' => $response->status(),
-                    'message'=>"Exception ".$response->status()." : ".$body->message
+                    'message'=>"Exception ".$response->status()."\n".$body->message
                 ],$response->status());
             }
         }catch (\Exception $e){
@@ -203,7 +203,7 @@ class ApiOMController extends Controller
             return response()->json([
                 'code' => $response->status(),
                 'message'=>$response->body(),
-            ]);
+            ],$response->status());
         }
     }
 
@@ -297,7 +297,7 @@ class ApiOMController extends Controller
             ]);
             return response()->json([
                 "result"=>false,
-                "message"=>"Exception : Une exception a été déclenché au moment de la génération du token"
+                "message"=>"Exception 401\nUne exception a été déclenché au moment de la génération du token"
             ], 401);
         }
         $dataAcessToken = json_decode($responseToken->getContent());
@@ -317,7 +317,7 @@ class ApiOMController extends Controller
             ]);
             return response()->json([
                 "result"=>false,
-                "message"=>"Exception : Une exception a été déclenché au moment de l'initialisation de la transaction"
+                "message"=>"Exception 401\nUne exception a été déclenché au moment de l'initialisation de la transaction"
             ], 401);
         }
 
@@ -343,7 +343,7 @@ class ApiOMController extends Controller
             ]);
             return response()->json([
                 "result"=>false,
-                "message"=>"Exception : Une exception a été déclenchée au moment du traitement du dépôt"
+                "message"=>"Exception 401\nUne exception a été déclenchée au moment du traitement du dépôt"
             ], 401);
         }
 
@@ -357,7 +357,7 @@ class ApiOMController extends Controller
                 $data =json_decode($result["message"]);
                 return response()->json([
                     'success' => false,
-                    'message' => $data->message,
+                    'message' => "Exception ".$result["code"]."\n".$data->message,
                 ], $result["code"]);
             }
 
@@ -463,8 +463,8 @@ class ApiOMController extends Controller
             DB::rollback();
             return response()->json([
                 'success' => false,
-                'message' => "Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste", //'Une erreur innatendue s\est produite. Si le problème persiste, veuillez contacter votre support.',
-            ], 400);
+                'message' => "Exception ".$e->getCode()."\nUne exception a été détectée, veuillez contacter votre superviseur si le problème persiste", //'Une erreur innatendue s\est produite. Si le problème persiste, veuillez contacter votre support.',
+            ], $e->getCode());
         }
     }
 }
