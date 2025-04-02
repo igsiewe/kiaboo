@@ -820,6 +820,7 @@ class ApiProdMoMoMoneyController extends Controller
                 'commission_agent'=>$commissionAgent,
                 'commission_distributeur'=>$commissionDistributeur,
                 'api_response'=>$response->body(),
+                'application'=>1,
             ]);
 
             //Le solde du compte de l'agent ne sera mis à jour qu'après confirmation de l'agent : Opération traitée dans le callback
