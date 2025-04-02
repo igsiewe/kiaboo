@@ -284,17 +284,10 @@ class ApiOMController extends Controller
         $idTransaction = $dataInit->transId; //Id de la transaction initiée
         $reference = $dataInit->reference; //Référence de la transaction initiée
 
-        //On genere le PayToken du depot
+        //On genere le token
         $responseToken = $this->OM_GetTokenAccess();
 
         if($responseToken->getStatusCode() !=200){
-            Log::error([
-                "Resultat"=>false,
-                "Code"=>$responseToken->getStatusCode(),
-                "message"=>$responseToken->getContent(),
-                "user"=>Auth::user()->id,
-                "function"=>"OM_Depot",
-            ]);
             return response()->json([
                 "result"=>false,
                 "message"=>"Exception 401\nUne exception a été déclenché au moment de la génération du token"
@@ -308,13 +301,6 @@ class ApiOMController extends Controller
 
         $responseInitDepot = $this->OM_Depot_init($token);
         if($responseInitDepot->getStatusCode() !=200){
-            Log::error([
-                "Resultat"=>false,
-                "Code"=>$responseInitDepot->getStatusCode(),
-                "message"=>$responseInitDepot->getContent(),
-                "user"=>Auth::user()->id,
-                "function"=>"OM_Depot",
-            ]);
             return response()->json([
                 "result"=>false,
                 "message"=>"Exception 401\nUne exception a été déclenché au moment de l'initialisation de la transaction"
@@ -322,25 +308,15 @@ class ApiOMController extends Controller
         }
 
         $dataInitDepot= json_decode($responseInitDepot->getContent());
-
         //    $reference = $dataInitDepot->transId;
         $payToken =$dataInitDepot->data->payToken;
-
         //    $description = $dataInitDepot->data->description;
-
         $updateTransactionTableWithPayToken = Transaction::where("id", $idTransaction)->update([
             "payToken"=>$payToken,
         ]);
 
         $responseTraiteDepotOM = $this->OM_Depot_execute($token, $payToken, $customerNumber, $montant, $idTransaction);
         if($responseTraiteDepotOM->getStatusCode() !=200){
-            Log::error([
-                "Resultat"=>false,
-                "Code"=>$responseTraiteDepotOM->getStatusCode(),
-                "message"=>$responseTraiteDepotOM->getContent(),
-                "user"=>Auth::user()->id,
-                "function"=>"OM_Depot",
-            ]);
             return response()->json([
                 "result"=>false,
                 "message"=>"Exception 401\nUne exception a été déclenchée au moment du traitement du dépôt"
@@ -466,5 +442,197 @@ class ApiOMController extends Controller
                 'message' => "Exception ".$e->getCode()."\nUne exception a été détectée, veuillez contacter votre superviseur si le problème persiste", //'Une erreur innatendue s\est produite. Si le problème persiste, veuillez contacter votre support.',
             ], $e->getCode());
         }
+    }
+
+    public function OM_Retrait_init($token)
+    {
+        $response = Http::withOptions(['verify' => false,])
+            ->withHeaders(
+                [
+                    'Content-Type'=> 'application/json',
+                    'X-AUTH-TOKEN'=>$this->auth_x_token,
+                    'WSO2-Authorization'=>'Bearer '.$token
+                ])
+
+            ->Post($this->endpoint.'/cashout/init');
+
+        if($response->status()==200){
+            return response()->json($response->json());
+        }
+        else{
+            return response()->json([
+                'code' => $response->status(),
+                'message'=>$response->body(),
+            ]);
+        }
+
+    }
+
+    public function OM_Retrait_execute($token, $payToken, $beneficiaire, $montant, $transId)
+    {
+
+        //On execute le retrait
+        $description = "Retrait initié par ".Auth::user()->telephone;
+
+        $response = Http::withOptions(['verify' => false,])
+            ->withHeaders(
+                [
+                    'Content-Type'=> 'application/json',
+                    'X-AUTH-TOKEN'=>$this->auth_x_token,
+                    'WSO2-Authorization'=>'Bearer '.$token
+                ])
+
+            ->Post($this->endpoint.'/cashout/pay', [
+                "channelUserMsisdn"=> $this->channel,
+                "amount"=> $montant,
+                "subscriberMsisdn"=> $beneficiaire,
+                "pin"=> $this->pin,
+                "orderId"=> str_replace(".","",$transId),
+                "description"=> $description,
+                "payToken"=> $payToken
+            ]);
+
+        if($response->status()==200){
+            return response()->json($response->json());
+        }
+        else{
+            return response()->json([
+                'code' => $response->status(),
+                'message'=>$response->body(),
+            ],$response->status());
+        }
+    }
+    public function OM_Retrait(Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'customerPhone' => 'required|numeric|digits:9',
+            'amount' => 'required|numeric|min:500|max:500000',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first(),
+            ], 400);
+        }
+
+        $apiCheck = new ApiCheckController();
+
+        $service = ServiceEnum::RETRAIT_OM->value;
+
+        // Vérifie si l'utilisateur est autorisé à faire cette opération
+        if(!$apiCheck->checkUserValidity()){
+            return response()->json([
+                'status'=>'error',
+                'message'=>'Votre compte est désactivé. Veuillez contacter votre distributeur',
+            ],401);
+        }
+
+        // On vérifie si les commissions sont paramétrées
+        $functionCommission = new ApiCommissionController();
+        $lacommission =$functionCommission->getCommissionByService($service,$request->amount);
+        if($lacommission->getStatusCode()!=200){
+            return response()->json([
+                'success' => false,
+                'message' => "Impossible de calculer la commission",
+            ], 400);
+        }
+        $commission=json_decode($lacommission->getContent());
+
+        $commissionFiliale = doubleval($commission->commission_kiaboo);
+        $commissionDistributeur=doubleval($commission->commission_distributeur);
+        $commissionAgent=doubleval($commission->commission_agent);
+
+        //Initie la transaction
+        $device = $request->deviceId;
+        $latitude = $request->latitude;
+        $longitude = $request->longitude;
+        $place = $request->place;
+        $init_transaction = $apiCheck->init_Retrait($request->amount, $request->customerPhone, $service,"", $device,$latitude,$longitude,$place);
+
+        $dataTransactionInit = json_decode($init_transaction->getContent());
+
+        if($init_transaction->getStatusCode() !=200){
+            return response()->json([
+                'status'=>'error',
+                'message'=>$dataTransactionInit->message,
+            ],$init_transaction->getStatusCode());
+        }
+        $idTransaction = $dataTransactionInit->transId; //Id de la transaction initiée
+        $reference = $dataTransactionInit->reference; //Référence de la transaction initiée
+        //On génère le token de la transation
+
+        $responseToken = $this->OM_GetTokenAccess();
+
+        if($responseToken->getStatusCode() !=200){
+            return response()->json([
+                "result"=>false,
+                "message"=>"Exception 401\nUne exception a été déclenché au moment de la génération du token"
+            ], 401);
+        }
+        $dataAcessToken = json_decode($responseToken->getContent());
+        $AccessToken = $dataAcessToken->access_token;
+
+        $customerPhone = "237".$request->customerPhone;
+
+        //On initie le retrait (Obtention du PayToken)
+        $responseInitRetrait = $this->OM_Retrait_init($AccessToken);
+        if($responseInitRetrait->getStatusCode() !=200){
+            return response()->json([
+                "result"=>false,
+                "message"=>"Exception 401\nUne exception a été déclenché au moment de l'initialisation de la transaction"
+            ], 401);
+        }
+        $dataInitRetrait= json_decode($responseInitRetrait->getContent());
+        //    $reference = $dataInitDepot->transId;
+        $payToken =$dataInitRetrait->data->payToken;
+        //    $description = $dataInitDepot->data->description;
+        $updateTransactionTableWithPayToken = Transaction::where("id", $idTransaction)->update([
+            "payToken"=>$payToken,
+        ]);
+
+
+        $responseTraiteRetraitOM = $this->OM_Retrait_execute($AccessToken, $payToken, $customerPhone, $request->amount, $idTransaction);
+        if($responseTraiteRetraitOM->getStatusCode() !=200){
+            return response()->json([
+                "result"=>false,
+                "message"=>"Exception ".$responseTraiteRetraitOM->getStatusCode()."\n".$responseTraiteRetraitOM->getContent()
+            ], $responseTraiteRetraitOM->getStatusCode());
+        }
+
+        $dataRetrait= json_decode($responseTraiteRetraitOM->getContent());
+        //Le client a été notifié. Donc on reste en attente de sa confirmation (Saisie de son code secret)
+
+        //On change le statut de la transaction dans la base de donnée
+
+        $Transaction = Transaction::where('id',$idTransaction)->where('service_id',$service)->update([
+            'reference_partenaire'=>$dataRetrait->data->txnid,
+            'balance_before'=>0,
+            'balance_after'=>0,
+            'debit'=>0,
+            'credit'=>$request->amount,
+            'status'=>2, // Pending
+            'paytoken'=>$payToken,
+            'date_end_trans'=>Carbon::now(),
+            'description'=>$dataRetrait->data->status,
+            'message'=>"Transaction initiée par l'agent N°".Auth::user()->telephone." - ".$dataRetrait->message." | ".$dataRetrait->data->status." | ".$dataRetrait->data->inittxnmessage,
+            'commission'=>$commission->commission_globale,
+            'commission_filiale'=>$commissionFiliale,
+            'commission_agent'=>$commissionAgent,
+            'commission_distributeur'=>$commissionDistributeur,
+            'json_response'=>$responseTraiteRetraitOM->getContent(),
+        ]);
+
+        //Le solde du compte de l'agent ne sera mis à jour qu'après confirmation de l'agent : Opération traitée dans le callback
+
+        //On recupère toutes les transactions en attente
+
+        return response()->json(
+            [
+                'status'=>200,
+                'message'=>$dataRetrait->message."\n".$dataRetrait->data->status." | ".$dataRetrait->data->inittxnmessage,
+                'paytoken'=>$payToken,
+            ],200
+        );
+
     }
 }

@@ -161,7 +161,7 @@ Route::middleware('auth:api')->group(function () {
             //ORANGE
             Route::group(['prefix' => 'om'], function () {
                 Route::controller(ApiOperationAgent::class)->group(function () {
-                   Route::post('retrait', 'setTransactionRetraitOM')->name("OM_retrait");
+                  // Route::post('retrait', 'setTransactionRetraitOM')->name("OM_retrait");
                 });
 
                 Route::controller(ApiProdOrangeMoneyController::class)->group(function () {
@@ -173,6 +173,7 @@ Route::middleware('auth:api')->group(function () {
                 Route::controller(ApiOMController::class)->group(function () {
                     Route::get('customer/name/{customerNumber}', 'OM_CustomerName')->name("OM_CustomerName");
                     Route::post('cashin/pay', 'OM_Depot')->name("OM_Depot");
+                    Route::post('cashout/pay', 'OM_Retrait')->name("OM_Retrait");
                 });
 
             });
