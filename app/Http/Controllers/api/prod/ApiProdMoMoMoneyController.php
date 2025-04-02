@@ -260,13 +260,6 @@ class ApiProdMoMoMoneyController extends Controller
             $saveResponse = Transaction::where('id',$idTransaction)->update([
                 'api_response'=>$response->status(),
             ]);
-            Log::info([
-                'responseMoMoDepot'=>$response,
-                'body'=>$response->status(),
-                'saveResponse'=>$saveResponse,
-
-            ]);
-
 
         if($response->status()==202){
 
