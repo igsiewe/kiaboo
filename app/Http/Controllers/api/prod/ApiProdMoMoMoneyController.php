@@ -258,7 +258,7 @@ class ApiProdMoMoMoneyController extends Controller
             ]);
 
         $saveUID = Transaction::where('id',$idTransaction)->update([
-            'api_response'=>$response->body(),
+            'api_response'=>$response,
         ]);
 
 
