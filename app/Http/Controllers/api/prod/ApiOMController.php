@@ -596,7 +596,7 @@ class ApiOMController extends Controller
 
         $responseTraiteRetraitOM = $this->OM_Retrait_execute($AccessToken, $payToken, $customerPhone, $request->amount, $idTransaction);
         if($responseTraiteRetraitOM->getStatusCode() !=200){
-            $dataRetrait= $responseTraiteRetraitOM->getContent();
+            $dataRetrait=json_encode($responseTraiteRetraitOM->getContent());
 
             return response()->json([
                 "result"=>false,
