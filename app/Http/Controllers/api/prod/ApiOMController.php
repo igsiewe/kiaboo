@@ -31,7 +31,7 @@ class ApiOMController extends Controller
     public function __construct()
     {
         $this->endpoint="https://omdeveloper-gateway.orange.cm/omapi/1.0.2";
-        $this->callbackUrl="https://kiaboopay/api/callback/om";
+        $this->callbackUrl="https://kiaboopay/api/om/callback/pm";
         $this->auth="cEZJWTF5Wl9pR0hMRzBiZzBlOEJDUDhlOUxzYTpuRGppWTJ6UDZPY0Q2cktkVFg5RmE0eXoxYW9h"; //Utiliser pour générer le token
         $this->auth_x_token ="c2FuZGJveDpzYW5kYm94";
         $this->channel="691301143";

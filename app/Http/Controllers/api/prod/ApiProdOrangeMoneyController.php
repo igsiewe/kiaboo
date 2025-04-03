@@ -809,16 +809,7 @@ class ApiProdOrangeMoneyController extends Controller
         }
 
     }
-    public function OMCallBack(Request $request)
-    {
-        header("Content-Type: application/json");
-        $OMcallBackResponse = file_get_contents('php://input');
-        $data = json_decode($OMcallBackResponse);
-        $element = json_decode($OMcallBackResponse, associative: true);
-        Log::info([
-            "responseOMCallBack" => $data,
-        ]);
-    }
+
 
     public function OM_getCashInPayToken(){
 
@@ -1311,9 +1302,6 @@ class ApiProdOrangeMoneyController extends Controller
                      'message'=>$e->getMessage()
                  ],$e->getCode());
         }
-
-
-
 
     }
 }

@@ -10,6 +10,7 @@ use App\Http\Controllers\api\ApiSmsController;
 use App\Http\Controllers\api\ApiTransactionsController;
 use App\Http\Controllers\api\ApiUserController;
 use App\Http\Controllers\api\ApiVersion;
+use App\Http\Controllers\api\prod\ApiOMCallBanckController;
 use App\Http\Controllers\api\prod\ApiOMController;
 use App\Http\Controllers\api\prod\ApiProdAuthController;
 use App\Http\Controllers\api\prod\ApiProdFactureEneoController;
@@ -40,8 +41,8 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::controller(ApiProdMoMoMoneyController::class)->group(function (){
         Route::post('momo/callback','MomoCallBack')->name("MoMoCallback");
     });
-    Route::controller(ApiProdOrangeMoneyController::class)->group(function (){
-        Route::get('om/callback/pm', 'OMCallBack')->name("OMCallBack");
+    Route::controller(ApiOMCallBanckController::class)->group(function (){
+        Route::get('om/callback', 'OMCallBackResponse')->name("OMCallBackResponse");
     });
 
     Route::controller(ApiVersion::class)->group(function (){
