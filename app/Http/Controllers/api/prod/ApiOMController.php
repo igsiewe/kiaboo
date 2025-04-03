@@ -782,12 +782,19 @@ class ApiOMController extends Controller
                     );
                 }
 
+                if($data->data->status=="PENDING"){
+                    return response()->json(
+                        [
+                            'status'=>402,
+                            'message'=>$data->data->status."\n".$data->data->inittxnmessage,
+                            'description'=>$data->data->status."\n".$data->message,
+                        ],402
+                    );
+                }
                 return response()->json(
                     [
                         'status'=>404,
-                        'message'=>$data->data->status."\n".$data->message,
-                        'description'=>$data->data->status."\n".$data->message,
-
+                        'message'=>$data->message,
                     ],404
                 );
             }else{
@@ -970,6 +977,15 @@ class ApiOMController extends Controller
 
                 }
 
+                if($data->data->status=="PENDING"){
+                    return response()->json(
+                        [
+                            'status'=>402,
+                            'message'=>$data->data->status."\n".$data->data->inittxnmessage,
+                            'description'=>$data->data->status."\n".$data->message,
+                        ],402
+                    );
+                }
                 return response()->json(
                     [
                         'status'=>404,
