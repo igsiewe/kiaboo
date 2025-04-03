@@ -686,7 +686,7 @@ class ApiOMController extends Controller
                         'X-AUTH-TOKEN'=>$this->auth_x_token,
                         'WSO2-Authorization'=>'Bearer '.$token
                     ])
-                ->Post($this->endpoint.'/cashin/paymentstatus/'.$referenceId);
+                ->get($this->endpoint.'/cashin/paymentstatus/'.$referenceId);
 
             $data = json_decode($response->getContent());
             if($response->status()==200){
@@ -851,7 +851,7 @@ class ApiOMController extends Controller
                         'X-AUTH-TOKEN'=>$this->auth_x_token,
                         'WSO2-Authorization'=>'Bearer '.$token
                     ])
-                ->Post($this->endpoint.'/cashout/paymentstatus/'.$referenceID);
+                ->get($this->endpoint.'/cashout/paymentstatus/'.$referenceID);
 
             $data = json_decode($response->body());
 
