@@ -688,7 +688,7 @@ class ApiOMController extends Controller
                     ])
                 ->get($this->endpoint.'/cashin/paymentstatus/'.$referenceId);
 
-            $data = json_decode($response->getContent());
+            $data = json_decode($response->body());
             if($response->status()==200){
                 //On vérifie si le dépôt a été effectué avec succès
                 if($data->data->status=="SUCCESSFULL"){
