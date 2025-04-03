@@ -979,6 +979,12 @@ class ApiOMController extends Controller
                 );
             }
         }catch (\Exception $e){
+            Log::error([
+                'user' => Auth::user()->id,
+                'code'=> $e->getCode(),
+                'function' => "OM_Retrait_Status",
+                'response'=>$e->getMessage(),
+            ]);
             return response()->json([
                 'status'=>500,
                 'message'=>$response->body(),
