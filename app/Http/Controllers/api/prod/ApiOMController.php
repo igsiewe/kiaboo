@@ -853,7 +853,7 @@ class ApiOMController extends Controller
                     ])
                 ->Post($this->endpoint.'/cashout/paymentstatus/'.$referenceID);
 
-            $data = json_decode($response->json());
+            $data = json_decode($response->body());
 
             $Transaction = Transaction::where('paytoken',$referenceID)->where('service_id',ServiceEnum::RETRAIT_OM->value);
             if($Transaction->count()==0){
