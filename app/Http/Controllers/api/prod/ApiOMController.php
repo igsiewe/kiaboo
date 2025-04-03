@@ -854,7 +854,14 @@ class ApiOMController extends Controller
                 ->get($this->endpoint.'/cashout/paymentstatus/'.$referenceID);
 
             $data = json_decode($response->body());
-
+            Log::info(
+                [
+                    'user' => Auth::user()->id,
+                    'code'=> $response->status(),
+                    'function' => "OM_Retrait_Status",
+                    'response'=>$data,
+                ]
+            );
             $Transaction = Transaction::where('paytoken',$referenceID)->where('service_id',ServiceEnum::RETRAIT_OM->value);
             if($Transaction->count()==0){
                 return response()->json(
