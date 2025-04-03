@@ -117,6 +117,7 @@ Route::middleware('auth:api')->group(function () {
             Route::post('transactions/list', 'getTransaction')->name("getTransaction");
             Route::get('transactions/{id}', 'getTransactionId')->name("getTransactionId");
             Route::get('transactions/user/pending/all', 'getTransactionPending')->name("getTransactionPending");
+            Route::get('transactions/user/fail/all', 'getTransactionFail')->name("getTransactionFail");
 
         });
         Route::controller(ApiParrainageController::class)->group(function () {
