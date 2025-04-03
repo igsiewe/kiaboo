@@ -800,6 +800,12 @@ class ApiOMController extends Controller
                 );
             }
          }catch (\Exception $e){
+            Log::error([
+                'user' => Auth::user()->id,
+                'code'=> $e->getCode(),
+                'function' => "OM_Depot_Status",
+                'response'=>$e->getMessage(),
+            ]);
             return response()->json([
             'status'=>500,
             'message'=>$response->body(),
@@ -847,7 +853,8 @@ class ApiOMController extends Controller
                     ])
                 ->Post($this->endpoint.'/cashout/paymentstatus/'.$referenceID);
 
-            $data = json_decode($response->getContent());
+            $data = json_decode($response->json());
+
             $Transaction = Transaction::where('paytoken',$referenceID)->where('service_id',ServiceEnum::RETRAIT_OM->value);
             if($Transaction->count()==0){
                 return response()->json(
