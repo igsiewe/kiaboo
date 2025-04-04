@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\prod;
 use App\Http\Controllers\api\ApiCheckController;
 use App\Http\Controllers\api\ApiCommissionController;
 use App\Http\Controllers\api\ApiNotification;
+use App\Http\Controllers\ApiLog;
 use App\Http\Controllers\Controller;
 use App\Http\Enums\ServiceEnum;
 use App\Http\Enums\TypeServiceEnum;
@@ -62,12 +63,10 @@ class ApiProdMoMoMoneyController extends Controller
         if($response->status()==200){
             return response()->json($response->json());
         }else{
-            Log::error([
-                'code'=> $response->status(),
-                'function' => "MOMO_Depot",
-                'response'=>$response->body(),
-                'user' => Auth::user()->id,
-            ]);
+
+            $alerte = new ApiLog();
+            $alerte->logError($response->status(), "MOMO_Disbursement_GetTokenAccess", null, $response->body());
+
             return response()->json(
                 [
                     'status'=>$response->status(),
@@ -116,13 +115,8 @@ class ApiProdMoMoMoneyController extends Controller
                 ],200
             );
         }else{
-            Log::error([
-                'code'=> $response->status(),
-                'response'=>$response->body(),
-                'user' => Auth::user()->id,
-                'customerPhone' => $customerPhone,
-                'function' => "MOMO_CustomerName",
-            ]);
+            $alerte = new ApiLog();
+            $alerte->logError($response->status(), "MOMO_CustomerName", null, $response->body());
 
             return response()->json(
                 [
@@ -260,7 +254,8 @@ class ApiProdMoMoMoneyController extends Controller
             $saveResponse = Transaction::where('id',$idTransaction)->update([
                 'api_response'=>$response->status(),
             ]);
-
+        $alerte = new ApiLog();
+        $alerte->logInfo($response->status(), "MOMO_Depot", null, $response->body());
         if($response->status()==202){
 
             $checkStatus = $this->MOMO_Depot_Status( $accessToken, $subcriptionKey, $referenceID);
@@ -297,13 +292,6 @@ class ApiProdMoMoMoneyController extends Controller
                     ->limit(5)
                     ->get();
 
-                $idDevice = $device;
-                $title = "Kiaboo";
-                $message = "Le dépôt MOMO de " . $montant . " F CFA a été effectué avec succès au ".$customerNumber;
-                $subtitle ="Success";
-                //$appNotification = new ApiNotification();
-
-               // $envoiNotification = $appNotification->sendNotificationPushFireBase($idDevice, $title, $subtitle, $message); //Push notification sur le telephone de l'agent
                 $services = Service::all();
                 return response()->json([
                     'success' => true,
@@ -318,6 +306,8 @@ class ApiProdMoMoMoneyController extends Controller
 
             }catch (\Exception $e) {
                 DB::rollback();
+                $alerte = new ApiLog();
+                $alerte->logError($response->status(), "MOMO_Depot", null, $e->getMessage());
                 return response()->json([
                     'success' => false,
                     'message' => "Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste", //'Une erreur innatendue s\est produite. Si le problème persiste, veuillez contacter votre support.',
@@ -325,6 +315,8 @@ class ApiProdMoMoMoneyController extends Controller
             }
 
         }else{
+            $alerte = new ApiLog();
+            $alerte->logError($response->status(), "MOMO_Depot", null, $response->body());
             return response()->json(
                 [
                     'status'=>$response->status(),
@@ -349,9 +341,8 @@ class ApiProdMoMoMoneyController extends Controller
 
         $data = json_decode($response->body());
         $element = json_decode($response, associative: true);
-        Log::info([
-            'responseMoMoDepotStatus'=>$data,
-        ]);
+        $alerte = new ApiLog();
+        $alerte->logInfo($response->status(), "MOMO_Depot_Status", null, $response->body());
         if($response->status()==200){
             if($data->status=="SUCCESSFUL"){
                 return response()->json(
@@ -416,13 +407,8 @@ class ApiProdMoMoMoneyController extends Controller
                 ],404
             );
         }else{
-            Log::error([
-                'code'=> $response->status(),
-                'function' => "MOMO_Depot",
-                'response'=>$response->body(),
-                'user' => Auth::user()->id,
-
-            ]);
+            $alerte = new ApiLog();
+            $alerte->logError($response->status(), "MOMO_Depot_Status", null, $response->body());
             return response()->json(
                 [
                     'status'=>$response->status(),
@@ -462,9 +448,9 @@ class ApiProdMoMoMoneyController extends Controller
             ->Get($http);
 
         $data = json_decode($response->body());
-        Log::info([
-            'responseMoMoDepotStatus'=>$response,
-        ]);
+
+        $alerte = new ApiLog();
+        $alerte->logInfo($response->status(), "MOMO_Depot_Status_Api", null, $response->body());
 
         if($data==null){
             return response()->json(
@@ -545,12 +531,11 @@ class ApiProdMoMoMoneyController extends Controller
                         $functionCommission = new ApiCommissionController();
                         $lacommission = $functionCommission->getCommissionByService($service, $montant);
                         if ($lacommission->getStatusCode() != 200) {
-                            Log::info([
+                                                        $alerte->logError($lacommission->getStatusCode(), "MOMO_Depot_Status_Api", null, $lacommission->getContent());
+                            return response()->json([
                                 'success' => false,
                                 'message' => "Impossible de calculer la commission",
-                                'service' => $service,
-                                'montant' => $montant,
-                            ]);
+                            ], 400);
                         }
                         //On Calcule la commission
                         $commission = json_decode($lacommission->getContent());
@@ -624,6 +609,7 @@ class ApiProdMoMoMoneyController extends Controller
                 );
             }
 
+            $alerte->logError($response->status(), "MOMO_Depot_Status_Api", null, $response->body());
             return response()->json(
                 [
                     'status'=>404,
@@ -635,13 +621,8 @@ class ApiProdMoMoMoneyController extends Controller
                 ],404
             );
         }else{
-            Log::error([
-                'code'=> $response->status(),
-                'function' => "MOMO_Depot_Status",
-                'response'=>$response,
-                'user' => Auth::user()->id,
 
-            ]);
+            $alerte->logError($response->status(), "MOMO_Depot_Status_Api", null, $response->body());
             return response()->json(
                 [
                     'status'=>$response->status(),
@@ -962,19 +943,7 @@ class ApiProdMoMoMoneyController extends Controller
                         ->get();
 
                     DB::commit();
-                    $title = "Kiaboo";
-                    $message = "Le retrait MOMO de " . $montant . " F CFA a été effectué avec succès au ".$customer_phone;
-                    $subtitle ="Success";
-                  //  $appNotification = new ApiNotification();
-                  //  $envoiNotification = $appNotification->sendNotificationPushFireBase($device_notification, $title, $subtitle, $message);
-                    Log::info([
-                        'Service'=> ServiceEnum::RETRAIT_MOMO->name,
-                        'url' => $http,
-                        'function'=> "MOMO_Retrait_Status",
-                        'response'=>$response->body(),
-                        'user' => Auth::user()->id,
-                        'referenceID' => $referenceID,
-                    ]);
+
                     return response()->json(
                         [
                             'status'=>200,
