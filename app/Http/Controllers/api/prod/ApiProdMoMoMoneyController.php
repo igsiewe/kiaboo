@@ -778,7 +778,7 @@ class ApiProdMoMoMoneyController extends Controller
             ])
             ->Post('https://proxy.momoapi.mtn.com/collection/v1_0/requesttowithdraw', [
 
-                "payeeNote" => "Transaction initiée par l'agent'".Auth::user()->telephone,
+                "payeeNote" => "Transaction initiée par lagent'".Auth::user()->telephone,
                 "externalId" => $idTransaction,
                 "amount" => $request->amount,
                 "currency" => "XAF",
@@ -786,7 +786,7 @@ class ApiProdMoMoMoneyController extends Controller
                     "partyIdType" => "MSISDN",
                     "partyId" => $customerPhone
                 ],
-                "payerMessage" => "Transaction initiée par l'agent N".Auth::user()->telephone,
+                "payerMessage" => "Transaction initiée par lagent N".Auth::user()->telephone,
             ]);
 
         $data = [
