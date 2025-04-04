@@ -12,7 +12,7 @@ class ApiLog extends Controller
 
         Log::error('API Error', [
             'status' => $status,
-            'service'=> $service,
+            'function'=> $service,
             'request' => $requete,
             'response' => $response,
             'user' => Auth::user()->id,
@@ -23,7 +23,7 @@ class ApiLog extends Controller
     {
         Log::info('API Info', [
             'status' => $status,
-            'service'=> $service,
+            'function'=> $service,
             'request' => $requete,
             'response' => $response,
             'user' => Auth::user()->id,
@@ -34,7 +34,7 @@ class ApiLog extends Controller
     {
         Log::warning('API Warning', [
             'status' => $status,
-            'service'=> $service,
+            'function'=> $service,
             'request' => $requete,
             'response' => $response,
             'user' => Auth::user()->id,

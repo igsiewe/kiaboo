@@ -116,7 +116,7 @@ class ApiProdMoMoMoneyController extends Controller
             );
         }else{
             $alerte = new ApiLog();
-            $alerte->logError($response->status(), "MOMO_CustomerName", null, $response->body());
+            $alerte->logError($response->status(), "MOMO_CustomerName", $customerPhone, json_decode($response->body()));
 
             return response()->json(
                 [
