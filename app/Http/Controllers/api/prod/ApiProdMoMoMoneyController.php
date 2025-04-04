@@ -1101,11 +1101,10 @@ class ApiProdMoMoMoneyController extends Controller
         $momocallBackResponse = file_get_contents('php://input');
         $data = json_decode($momocallBackResponse);
         $element = json_decode($momocallBackResponse, associative: true);
-        $alerte = new ApiLog();
-        $alerte->logInfo(null, "MOMO_CallBack", $data, $momocallBackResponse);
-        if($data==null){
-            $alerte->logError(null, "MOMO_CallBack", null, $momocallBackResponse);
-        }
+        Log::info("MoMoCallBack", [
+            'data' => $data,
+            'element' => $element,
+        ]);
         $externalId = $data->externalId;
         //On se rassure que la transaction est bien en status en attente
         $Transaction = Transaction::where('id',$externalId);
@@ -1164,8 +1163,14 @@ class ApiProdMoMoMoneyController extends Controller
 
                     }catch(\Exception $e){
                         DB::rollBack();
-                        $alerte = new ApiLog();
-                        $alerte->logError($e->getCode(), "MoMoCallBack", $reference, $e->getMessage());
+                        Log::error(
+                            'Error updating MoMo transaction',
+                            [
+                                'error' => $e->getMessage(),
+                                'transaction_id' => $Transaction->first()->id,
+                                'data' => $data,
+                            ]
+                        );
 
                     }
 
