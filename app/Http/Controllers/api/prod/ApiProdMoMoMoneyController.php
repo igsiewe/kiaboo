@@ -843,7 +843,7 @@ class ApiProdMoMoMoneyController extends Controller
 
         }else{
             $alerte = new ApiLog();
-            $alerte->logError($response->status(), "MOMO_Retrait", $data, json_decode($response->body()));
+            $alerte->logError($response->status(), "MOMO_Retrait", $data, $response);
 
             return response()->json(
                 [
