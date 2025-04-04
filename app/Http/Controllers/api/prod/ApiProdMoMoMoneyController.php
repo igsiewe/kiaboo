@@ -803,7 +803,7 @@ class ApiProdMoMoMoneyController extends Controller
         ];
 
         $alerte = new ApiLog();
-        $alerte->logInfo($response->status(), "MOMO_Retrait", $data, json_decode($response->body()));
+        $alerte->logInfo($response->status(), "MOMO_Retrait", $data, $response);
 
         if($response->status()==202){
             //Le client a été notifié. Donc on reste en attente de sa confirmation (Saisie de son code secret)
