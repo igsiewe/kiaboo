@@ -1102,9 +1102,9 @@ class ApiProdMoMoMoneyController extends Controller
         $data = json_decode($momocallBackResponse);
         $element = json_decode($momocallBackResponse, associative: true);
         $alerte = new ApiLog();
-        $alerte->logInfo($request->status(), "MOMO_CallBack", $data, $momocallBackResponse);
+        $alerte->logInfo(null, "MOMO_CallBack", $data, $momocallBackResponse);
         if($data==null){
-            $alerte->logError($request->status(), "MOMO_CallBack", null, $momocallBackResponse);
+            $alerte->logError(null, "MOMO_CallBack", null, $momocallBackResponse);
         }
         $externalId = $data->externalId;
         //On se rassure que la transaction est bien en status en attente
