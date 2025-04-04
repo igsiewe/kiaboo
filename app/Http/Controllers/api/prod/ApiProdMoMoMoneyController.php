@@ -1103,7 +1103,6 @@ class ApiProdMoMoMoneyController extends Controller
         $element = json_decode($momocallBackResponse, associative: true);
         Log::info("MoMoCallBack", [
             'data' => $data,
-            'element' => $element,
         ]);
         $externalId = $data->externalId;
         //On se rassure que la transaction est bien en status en attente
