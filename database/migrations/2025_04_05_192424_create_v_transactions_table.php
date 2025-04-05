@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('data', function (Blueprint $table) {
+        Schema::create('v_transactions', function (Blueprint $table) {
             $table->id();
             $table->string("reference",80)->index();
             $table->string("reference_partenaire",250)->nullable();
@@ -68,6 +68,7 @@ return new class extends Migration
             $table->double('fees_kiaboo')->default(0);
             $table->double('fees_partenaire_service')->default(0);
             $table->double('marchand_amount')->default(0);
+            $table->string("application")->nullable();
             $table->string("version")->nullable();
             $table->text("api_response")->nullable();
             $table->timestamps();
@@ -79,6 +80,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('data');
+        Schema::dropIfExists('v_transactions');
     }
 };

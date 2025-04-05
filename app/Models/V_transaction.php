@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Data extends Model
+class V_transaction extends Model
 {
     use HasFactory;
     protected $fillable = [
@@ -69,5 +69,4 @@ class Data extends Model
         'version',
         'api_response',
     ];
-
 }
