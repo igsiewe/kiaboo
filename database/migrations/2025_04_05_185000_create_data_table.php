@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('transactions', function (Blueprint $table) {
+        Schema::create('data', function (Blueprint $table) {
             $table->id();
             $table->string("reference",80)->index();
             $table->string("reference_partenaire",250)->nullable();
@@ -79,6 +79,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('transactions');
+        Schema::dropIfExists('data');
     }
 };

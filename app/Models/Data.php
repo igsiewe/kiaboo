@@ -5,10 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Transaction extends Model
+class Data extends Model
 {
     use HasFactory;
-
     protected $fillable = [
         'reference',
         'reference_partenaire',
@@ -71,27 +70,4 @@ class Transaction extends Model
         'api_response',
     ];
 
-    public function auteur(){
-        return $this->belongsTo(User::class, 'source', 'id');
-    }
-
-    public function agent()
-    {
-        return $this->belongsTo(User::class, 'agent_id', 'id');
-    }
-
-    public function service()
-    {
-        return $this->belongsTo(Service::class, 'service_id', 'id');
-    }
-
-    public function createdBy()
-    {
-        return $this->belongsTo(User::class, 'created_by', 'id');
-    }
-
-    public function distributeur()
-    {
-        return $this->belongsTo(Distributeur::class, 'distributeur_id', 'id');
-    }
 }
