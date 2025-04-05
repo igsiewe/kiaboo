@@ -123,9 +123,12 @@
             <li class="sidebar-title">
                 Opérations
             </li>
-
+            @if(Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::SUPADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::ADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::DISTRIBUTEUR->value)
             <li><a href="{{route("topupAgent")}}"><i data-feather="bell"></i>Recharge agent</a></li>
+            @endif
+            @if(Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::SUPADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::ADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::BACKOFFICE->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::FRONTOFFICE->value)
             <li><a href="{{route("getApproDistributor")}}"><i data-feather="credit-card"></i>Recharge distributeur</a>
+            @endif
             </li>
              <li class="sidebar-title">
                 Management
