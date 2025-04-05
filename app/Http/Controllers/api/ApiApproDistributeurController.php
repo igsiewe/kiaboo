@@ -223,6 +223,7 @@ class ApiApproDistributeurController extends BaseController
                         'heure_operation'=>date('H:i:s'),
                         'customer_phone'=>Auth::user()->telephone,
                         'date_end_trans'=>Carbon::now(),
+
                     ]);
                     DB::commit();
                     return $this->sendResponse($approDistributeur, 'Approvisionnement validated successfully');
@@ -247,7 +248,7 @@ class ApiApproDistributeurController extends BaseController
     public function approAgent(Request $request){
         $validator = Validator::make($request->all(), [
             'agent' => 'required|integer',
-            'amount' => 'required|integer|min:100000|max:10000000',
+            'amount' => 'required|integer|min:50000|max:10000000',
         ]);
         if(Auth::user()->status == 0){
             return $this->errorResponse('You cannot authorize to perform this operation', 404);
@@ -387,7 +388,7 @@ class ApiApproDistributeurController extends BaseController
     public function approAgentParCarte(Request $request){
         $validator = Validator::make($request->all(), [
             // 'agent' => 'required|integer',
-            'amount' => 'required|integer',
+            'amount' => 'required|integer|min:50000|max:10000000',
             'reference_trans_carte'=>'required|string',
         ]);
         if(Auth::user()->status == 0){

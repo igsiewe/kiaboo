@@ -24,7 +24,7 @@ class WebApproAgentController extends Controller
 
         $validator = Validator::make($request->all(), [
             'agent' => 'required|integer',
-            'amount' => 'required|integer|min:500|max:5000000',
+            'amount' => 'required|integer|min:50000|max:1000000',
         ]);
         if(Auth::user()->status == 0){
             return redirect()->back()->withErrors('You cannot authorize to perform this operation');

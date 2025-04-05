@@ -86,7 +86,7 @@ class ApiApproSousDistributeurController extends BaseController
     public function approSousDistributeur(Request $request){
         $validator = Validator::make($request->all(), [
             'sousdistributeur' => 'required|integer',
-            'amount' => 'required|integer|min:100000|max:10000000',
+            'amount' => 'required|integer|min:50000|max:10000000',
         ]);
         if(Auth::user()->status == 0){
             return $this->errorResponse('You cannot authorize to perform this operation', 404);
@@ -201,7 +201,7 @@ class ApiApproSousDistributeurController extends BaseController
     public function approAgent(Request $request){
         $validator = Validator::make($request->all(), [
             'agent' => 'required|integer',
-            'amount' => 'required|integer|min:100000|max:10000000',
+            'amount' => 'required|integer|min:50000|max:10000000',
         ]);
         if(Auth::user()->status == 0){
             return $this->errorResponse('You cannot authorize to perform this operation', 404);
@@ -324,7 +324,7 @@ class ApiApproSousDistributeurController extends BaseController
     public function approAgentParCarte(Request $request){
         $validator = Validator::make($request->all(), [
            // 'agent' => 'required|integer',
-            'amount' => 'required|integer',
+            'amount' => 'required|integer|min:50000|max:10000000',
             'reference_trans_carte'=>'required|string',
         ]);
         if(Auth::user()->status == 0){
