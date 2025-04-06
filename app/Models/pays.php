@@ -5,15 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Countrie extends Model
+class pays extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name_country',
-        'short_name',
-        'phone_code',
+        'country',
+        'code',
+        'currency',
         'flag',
         'status',
+        'encours',
+        'start_date',
+        'end_date',
         'created_by',
         'updated_by',
     ];
