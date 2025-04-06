@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\BaseController;
 
 use App\Http\Enums\UserRolesEnum;
+use App\Models\monnaie;
 use App\Models\Notification;
 use App\Models\Partenaire;
 use App\Models\recrutement;
@@ -93,6 +94,7 @@ class ApiAuthController extends BaseController
             $version = $infoVersion->first()->version;
             $urlApplication = $infoVersion->first()->url;
             $notification = Notification::where("status",1)->get();
+            $monnaies = monnaie::where("status",1)->get();
             $transactions = DB::table('transactions')
                 ->join('services', 'transactions.service_id', '=', 'services.id')
                 ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
@@ -114,17 +116,10 @@ class ApiAuthController extends BaseController
             $user->version = $version;
             $user->urlApplication = $urlApplication;
             $user->save();
-            Log::info([
-                'user_id'=>Auth::user()->id,
-                'name'=>Auth::user()->name." ".Auth::user()->surname,
-                'Desciption'=>'Connexion'
-            ]);
-            return $this->respondWithToken($access_token, $user, $partenaires, $transactions, $services,$version,$urlApplication, $notification);
+
+            return $this->respondWithToken($access_token, $user, $partenaires, $transactions, $services,$version,$urlApplication, $notification, $monnaies);
         }
-        Log::alert([
-            'Login'=>$request->login,
-            'Desciption'=>'Connexion->echec'
-        ]);
+
         return response()->json([
             'message' => 'Invalid login details',
         ], 401);
