@@ -234,7 +234,7 @@ class ApiOMController extends Controller
             return response()->json([
                 'status'=>'error',
                 'message'=>"Ce service n'est pas actif",
-            ],401);
+            ],403);
         }
         // Vérifie si l'utilisateur est autorisé à faire cette opération
         if(!$apiCheck->checkUserValidity()){
@@ -249,7 +249,7 @@ class ApiOMController extends Controller
             return response()->json([
                 'status'=>'error',
                 'message'=>'Votre solde est insuffisant pour effectuer cette opération',
-            ],401);
+            ],403);
         }
 
         //Vérifie si l'utilisateur n'a pas initié une operation similaire dans les 5 dernières minutes
@@ -258,7 +258,7 @@ class ApiOMController extends Controller
             return response()->json([
                 'status'=>'error',
                 'message'=>'Une transaction similaire a été faite il y\'a moins de 5 minutes',
-            ],401);
+            ],403);
         }
 
         // On vérifie si les commissions sont paramétrées
@@ -268,7 +268,7 @@ class ApiOMController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => "Impossible de calculer la commission",
-            ], 400);
+            ], 403);
         }
 
         //Initie la transaction
@@ -291,8 +291,8 @@ class ApiOMController extends Controller
         if($responseToken->getStatusCode() !=200){
             return response()->json([
                 "result"=>false,
-                "message"=>"Exception 401\nUne exception a été déclenché au moment de la génération du token"
-            ], 401);
+                "message"=>"Exception ".$responseToken->getStatusCode()."\nUne exception a été déclenchée au moment de la génération du token"
+            ], $responseToken->getStatusCode());
         }
         $dataAcessToken = json_decode($responseToken->getContent());
         $AccessToken = $dataAcessToken->access_token;
@@ -304,8 +304,8 @@ class ApiOMController extends Controller
         if($responseInitDepot->getStatusCode() !=200){
             return response()->json([
                 "result"=>false,
-                "message"=>"Exception 401\nUne exception a été déclenché au moment de l'initialisation de la transaction"
-            ], 401);
+                "message"=>"Exception ".$responseInitDepot->getStatusCode()."\nUne exception a été déclenché au moment de l'initialisation de la transaction"
+            ], $responseInitDepot->getStatusCode());
         }
 
         $dataInitDepot= json_decode($responseInitDepot->getContent());
@@ -320,8 +320,8 @@ class ApiOMController extends Controller
         if($responseTraiteDepotOM->getStatusCode() !=200){
             return response()->json([
                 "result"=>false,
-                "message"=>"Exception 401\nUne exception a été déclenchée au moment du traitement du dépôt"
-            ], 401);
+                "message"=>"Exception ".$responseTraiteDepotOM->getStatusCode() ."\nUne exception a été déclenchée au moment du traitement du dépôt"
+            ], $responseTraiteDepotOM->getStatusCode() );
         }
 
         try{
@@ -536,7 +536,7 @@ class ApiOMController extends Controller
             return response()->json([
                 'status'=>'error',
                 'message'=>'Votre compte est désactivé. Veuillez contacter votre distributeur',
-            ],401);
+            ],403);
         }
 
         // On vérifie si les commissions sont paramétrées
@@ -546,7 +546,7 @@ class ApiOMController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => "Impossible de calculer la commission",
-            ], 400);
+            ], 403);
         }
         $commission=json_decode($lacommission->getContent());
 
@@ -578,8 +578,8 @@ class ApiOMController extends Controller
         if($responseToken->getStatusCode() !=200){
             return response()->json([
                 "result"=>false,
-                "message"=>"Exception 401\nUne exception a été déclenché au moment de la génération du token"
-            ], 401);
+                "message"=>"Exception ".$responseToken->getStatusCode()."\nUne exception a été déclenchée au moment de la génération du token"
+            ], $responseToken->getStatusCode());
         }
         $dataAcessToken = json_decode($responseToken->getContent());
         $AccessToken = $dataAcessToken->access_token;
@@ -591,8 +591,8 @@ class ApiOMController extends Controller
         if($responseInitRetrait->getStatusCode() !=200){
             return response()->json([
                 "result"=>false,
-                "message"=>"Exception 401\nUne exception a été déclenché au moment de l'initialisation de la transaction"
-            ], 401);
+                "message"=>"Exception ".$responseInitRetrait->getStatusCode()."\nUne exception a été déclenchée au moment de l'initialisation de la transaction"
+            ], $responseInitRetrait->getStatusCode());
         }
         $dataInitRetrait= json_decode($responseInitRetrait->getContent());
         //    $reference = $dataInitDepot->transId;
@@ -671,8 +671,8 @@ class ApiOMController extends Controller
         if($responseToken->getStatusCode() !=200){
             return response()->json([
                 "result"=>false,
-                "message"=>"Exception 401\nUne exception a été déclenché au moment de la génération du token"
-            ], 401);
+                "message"=>"Exception ".$responseToken->getStatusCode()."\nUne exception a été déclenchée au moment de la génération du token"
+            ], $responseToken->getStatusCode());
         }
         $dataAcessToken = json_decode($responseToken->getContent());
         $AccessToken = $dataAcessToken->access_token;
@@ -843,8 +843,8 @@ class ApiOMController extends Controller
         if($responseToken->getStatusCode() !=200){
             return response()->json([
                 "result"=>false,
-                "message"=>"Exception 401\nUne exception a été déclenché au moment de la génération du token"
-            ], 401);
+                "message"=>"Exception ".$responseToken->getStatusCode()."\nUne exception a été déclenchée au moment de la génération du token"
+            ], $responseToken->getStatusCode());
         }
         $dataAcessToken = json_decode($responseToken->getContent());
         $AccessToken = $dataAcessToken->access_token;

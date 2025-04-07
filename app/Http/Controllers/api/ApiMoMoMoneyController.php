@@ -178,7 +178,7 @@ class ApiMoMoMoneyController extends Controller
             return response()->json([
                 'status'=>'error',
                 'message'=>"Ce service n'est pas actif",
-            ],401);
+            ],403);
         }
 
         // Vérifie si l'utilisateur est autorisé à faire cette opération
@@ -186,7 +186,7 @@ class ApiMoMoMoneyController extends Controller
             return response()->json([
                 'status'=>'error',
                 'message'=>'Votre compte est désactivé. Veuillez contacter votre distributeur',
-            ],401);
+            ],403);
         }
 
         // Vérifie si le solde de l'utilisateur lui permet d'effectuer cette opération
@@ -194,7 +194,7 @@ class ApiMoMoMoneyController extends Controller
             return response()->json([
                 'status'=>'error',
                 'message'=>'Votre solde est insuffisant pour effectuer cette opération',
-            ],401);
+            ],403);
         }
 
         //Vérifie si l'utilisateur n'a pas initié une operation similaire dans les 5 dernières minutes
@@ -203,7 +203,7 @@ class ApiMoMoMoneyController extends Controller
             return response()->json([
                 'status'=>'error',
                 'message'=>'Une transaction similaire a été faite il y\'a moins de 5 minutes',
-            ],401);
+            ],403);
         }
 
         // On vérifie si les commissions sont paramétrées
@@ -213,7 +213,7 @@ class ApiMoMoMoneyController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => "Impossible de calculer la commission",
-            ], 400);
+            ], 403);
         }
 
         //Initie la transaction
@@ -513,7 +513,7 @@ class ApiMoMoMoneyController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => "Impossible de calculer la commission",
-            ], 400);
+            ], 403);
         }
         $commission=json_decode($lacommission->getContent());
 

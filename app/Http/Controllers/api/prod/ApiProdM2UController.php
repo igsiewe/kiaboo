@@ -60,7 +60,7 @@ class ApiProdM2UController extends Controller
             return response()->json([
                 'status' => 'echec',
                 'message'=>'Aucun client trouvé',
-            ],401);
+            ],404);
         }
 
         if($response->status()==200){
@@ -210,14 +210,14 @@ class ApiProdM2UController extends Controller
         if($apiCheck->checkStatusService($service)==false){
             return response()->json([
                 'status'=>'error',
-                'message'=>"1. Exception 203 \nCe service n'est pas actif",
-            ],401);
+                'message'=>"1. Exception 403 \nCe service n'est pas actif",
+            ],403);
         }
         // Vérifie si l'utilisateur est autorisé à faire cette opération
         if(!$apiCheck->checkUserValidity()){
             return response()->json([
                 'status'=>'error',
-                'message'=>"2. Exception 203 \nVotre compte est désactivé. Veuillez contacter votre distributeur",
+                'message'=>"2. Exception 401 \nVotre compte est désactivé. Veuillez contacter votre distributeur",
             ],401);
         }
 
@@ -225,8 +225,8 @@ class ApiProdM2UController extends Controller
         if(!$apiCheck->checkUserBalance($montant)){
             return response()->json([
                 'status'=>'error',
-                'message'=>"3. Exception 203 \nVotre solde est insuffisant pour effectuer cette opération",
-            ],401);
+                'message'=>"3. Exception 403 \nVotre solde est insuffisant pour effectuer cette opération",
+            ],403);
         }
 
         //Vérifie si l'utilisateur n'a pas initié une operation similaire dans les 5 dernières minutes
@@ -234,8 +234,8 @@ class ApiProdM2UController extends Controller
         if($apiCheck->checkFiveLastTransaction($customerNumber, $montant, $service)){
             return response()->json([
                 'status'=>'error',
-                'message'=>"4. Exception 203 \nUne transaction similaire a été faite il y'a moins de 5 minutes",
-            ],401);
+                'message'=>"4. Exception 403 \nUne transaction similaire a été faite il y'a moins de 5 minutes",
+            ],403);
         }
 
         // On vérifie si les commissions sont paramétrées
@@ -244,8 +244,8 @@ class ApiProdM2UController extends Controller
         if($lacommission->getStatusCode()!=200){
             return response()->json([
                 "success" => false,
-                "message" => "5. Exception 400 \nImpossible de calculer la commission",
-            ], 400);
+                "message" => "5. Exception ".$lacommission->getStatusCode()." \nImpossible de calculer la commission",
+            ], $lacommission->getStatusCode());
         }
         $commission=json_decode($lacommission->getContent());
 
@@ -313,8 +313,8 @@ class ApiProdM2UController extends Controller
                     );
                     return response()->json([
                         'status'=>'error',
-                        'message'=>"8. Exception 401 \nLe solde du compte M2U est insuffisant pour effectuer cette opération",
-                    ],401);
+                        'message'=>"8. Exception 403 \nLe solde du compte M2U est insuffisant pour effectuer cette opération",
+                    ],403);
                 }
             }
 
@@ -570,25 +570,25 @@ class ApiProdM2UController extends Controller
                         return response()->json([
                             'success' => false,
                             'message' =>"1. Exception ".$data->OK."(".$data->ReturnCode.")\n".$data->Description,// "Wrong voucher number or security code",
-                        ], 401);
+                        ], 403);
                     }
                     if($data->ReturnCode=="1"){
                         return response()->json([
                             'success' => false,
                             'message' => "2. Exception ".$data->OK."(".$data->ReturnCode.")\n".$data->Description,//"This voucher is already used",
-                        ], 401);
+                        ], 403);
                     }
                     if($data->ReturnCode=="2"){
                         return response()->json([
                             'success' => false,
                             'message' => "3. Exception ".$data->OK."(".$data->ReturnCode.")\n".$data->Description,//"This transfer number is for another country",
-                        ], 401);
+                        ], 403);
                     }
                     if($data->ReturnCode=="3"){
                         return response()->json([
                             'success' => false,
                             'message' => "4. Exception ".$data->OK."(".$data->ReturnCode.")\n".$data->Description,//"This voucher has been cancelled by the originator",
-                        ], 401);
+                        ], 403);
                     }
                     if($data->ReturnCode=="0"){
 
@@ -614,14 +614,14 @@ class ApiProdM2UController extends Controller
                     }else{
                         return response()->json([
                             'success' => false,
-                            'message' => "5. Exception 401 \nUne erreur inatendue s'est produite, veuillez contacter votre superviseur si le problème persiste",
-                        ], 401);
+                            'message' => "5. Exception 403 \nUne erreur inatendue s'est produite, veuillez contacter votre superviseur si le problème persiste",
+                        ], 403);
                     }
 
                 } else {
                     return response()->json([
                         'success' => false,
-                        'message' => "6. Exception 200\nUne erreur inatendue s'est produite, veuillez contacter votre superviseur si le problème persiste",
+                        'message' => "6. Exception 403\nUne erreur inatendue s'est produite, veuillez contacter votre superviseur si le problème persiste",
                     ], $data->OK);
                 }
             }
@@ -668,8 +668,8 @@ class ApiProdM2UController extends Controller
         if($apiCheck->checkUserValidity()==false){
             return response()->json([
                 'status'=>'error',
-                'message'=>"1. Exception 204 \nVotre compte est désactivé. Veuillez contacter votre distributeur",
-            ],401);
+                'message'=>"1. Exception 403 \nVotre compte est désactivé. Veuillez contacter votre distributeur",
+            ],403);
         }
 
 
@@ -679,8 +679,8 @@ class ApiProdM2UController extends Controller
         if($lacommission->getStatusCode()!=200){
             return response()->json([
                 'success' => false,
-                'message' => "2. Exception 400\nImpossible de calculer la commission",
-            ], 400);
+                'message' => "2. Exception 403\nImpossible de calculer la commission",
+            ], 403);
         }
         $commission=json_decode($lacommission->getContent());
 
@@ -922,8 +922,8 @@ class ApiProdM2UController extends Controller
         if($lacommission->getStatusCode()!=200){
             return response()->json([
                 'success' => false,
-                'message' => "2. Exception 400\nImpossible de calculer la commission",
-            ], 400);
+                'message' => "2. Exception 403\nImpossible de calculer la commission",
+            ], 403);
         }
         $commission=json_decode($lacommission->getContent());
 
@@ -1339,7 +1339,7 @@ class ApiProdM2UController extends Controller
             return response()->json([
                 'status' => 'echec',
                 'message'=>'Aucun client trouvé',
-            ],401);
+            ],404);
         }
 
         if($response->status()==200){

@@ -112,14 +112,14 @@ class ApiProdOrangeMoneyController extends Controller
                     "success"=>false,
                     "statusCode"=>$data->message,
                     "message"=>$data->description,
-                ], 401);
+                ], 403);
         }
         if($response->status()!=200){
             return response()->json([
                 "success"=>false,
                 "statusCode"=>$response->status(),
                 "message"=>$response->body(),
-            ], 400);
+            ], 404);
         }
         $dataResponse = json_decode($response);
         $payToken = $dataResponse->data->payToken;
@@ -835,14 +835,14 @@ class ApiProdOrangeMoneyController extends Controller
                 "success"=>false,
                 "statusCode"=>$data->message,
                 "message"=>$data->description,
-            ], 401);
+            ], 403);
         }
         if($response->status()!=200){
             return response()->json([
                 "success"=>false,
                 "statusCode"=>$response->status(),
                 "message"=>$response->body(),
-            ], 400);
+            ], 403);
         }
         $dataResponse = json_decode($response);
         $payToken = $dataResponse->data->payToken;
