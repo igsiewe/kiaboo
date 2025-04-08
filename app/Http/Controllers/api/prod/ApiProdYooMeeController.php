@@ -279,6 +279,8 @@ class ApiProdYooMeeController extends Controller
                     'commission_filiale'=>$commissionFiliale,
                     'commission_agent'=>$commissionAgent,
                     'commission_distributeur'=>$commissionDistributeur,
+                    'api_response'=>$response->body(),
+                    'application'=>1,
                 ]);
 
                 //on met à jour le solde de l'utilisateur
@@ -487,6 +489,8 @@ class ApiProdYooMeeController extends Controller
                 'commission_filiale'=>$commissionFiliale,
                 'commission_agent'=>$commissionAgent,
                 'commission_distributeur'=>$commissionDistributeur,
+                'api_response'=>$response->body(),
+                'application'=>1
             ]);
 
             //Le solde du compte de l'agent ne sera mis à jour qu'après confirmation de l'agent : Opération traitée dans le callback
