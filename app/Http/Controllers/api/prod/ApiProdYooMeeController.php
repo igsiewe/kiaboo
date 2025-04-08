@@ -39,7 +39,7 @@ class ApiProdYooMeeController extends Controller
             "Service"=>"YOOMEE_USERINFO",
             "url"=>$endpoint,
             "reponseStatus"=>json_decode($response->status()),
-            "reponseBody"=>json_decode($response->body()),
+            "reponse"=>json_decode($response->body()),
         ]);
 
         $customerPhone="";
