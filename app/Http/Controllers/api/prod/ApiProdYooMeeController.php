@@ -56,7 +56,7 @@ class ApiProdYooMeeController extends Controller
                 'customerAccount' => $customerAccount,
                 'message'=>$response->code,
                 'response'=>$response,
-            ],401);
+            ],404);
         }
         if($response->body()==null || $response->body()=="[]"){ //On teste si l'utilisateur existe
             return response()->json([
