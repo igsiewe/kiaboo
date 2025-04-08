@@ -31,15 +31,15 @@ class ApiProdYooMeeController extends Controller
             ], 400);
         }
         $url="https://yoomeemoney.cm/api/";
-        $endpoint = $url."users?keywords=$customerPhone";
-        $response = Http::withOptions(['verify' => false,])->withBasicAuth("kiabooMerchant", "Ki@@buu$2025")
+        $endpoint = $url."users?keywords=$customerPhone&roles=member&statuses=active";
+        $response = Http::withOptions(['verify' => false,])->withBasicAuth("kiabooProd2024", "Ki@@boo#@2024")
             ->Get($endpoint);
 
         Log::info([
             "Service"=>"YOOMEE_USERINFO",
             "url"=>$endpoint,
             "reponseStatus"=>json_decode($response->status()),
-            "reponse"=>json_decode($response->body()),
+            "reponseBody"=>json_decode($response->body()),
         ]);
 
         $customerPhone="";

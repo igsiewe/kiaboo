@@ -141,6 +141,7 @@ class ApiStripe extends Controller
 
         $validator = Validator::make($request->all(), [
             'amount' => 'required|numeric|min:50|max:500000',
+            'reference'=> 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -165,11 +166,11 @@ class ApiStripe extends Controller
             ], 404);
         }
 
-        $reference = "AP".Carbon::now()->format('ymd').".".Carbon::now()->format('His').".I".$this->GenereRang();
+       // $reference = "AP".Carbon::now()->format('ymd').".".Carbon::now()->format('His').".I".$this->GenereRang();
         try {
             DB::beginTransaction();
             $approDistributeur = new ApproDistributeur();
-            $approDistributeur->reference = $reference;
+            $approDistributeur->reference = $request->reference;
             $approDistributeur->date_operation = Carbon::now();
             $approDistributeur->distributeur_id = 1;//KIABOO $request->distributeur;
             $approDistributeur->amount = $request->amount;
@@ -180,10 +181,12 @@ class ApiStripe extends Controller
             $approDistributeur->countrie_id = 1;//
             $approDistributeur->save();
             DB::commit();
+            $appro = ApproDistributeur::where("reference",$request->reference)->select("id","reference","date_operation","description","amount")->first();
             return response()->json([
                 'success' => true,
                 'code' => 200,
-                'reference' => $reference,
+                'reference' => $request->reference,
+                'aprovisionnement'=>$appro,
             ],  200);
 
         } catch (\Throwable $e) {
