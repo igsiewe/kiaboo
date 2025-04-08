@@ -32,7 +32,7 @@ class ApiProdYooMeeController extends Controller
         }
         $url="https://yoomeemoney.cm/api/";
         $endpoint = $url."users?keywords=$customerPhone&roles=member&statuses=active";
-        $response = Http::withOptions(['verify' => false,])->withBasicAuth("kiabooProd2024", "Ki@@boo#@2024")
+        $response = Http::withOptions(['verify' => false,])->withBasicAuth("kiabooMerchant", "Ki@@buu$2025")
             ->Get($endpoint);
 
         Log::info([
