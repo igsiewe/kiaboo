@@ -82,6 +82,7 @@ class ApiAuthController extends BaseController
             'status' => 1,
             'status_delete'=>0,
             'application'=>1,
+            'view'=>1,
             'type_user_id' => UserRolesEnum::AGENT->value
         ];
 

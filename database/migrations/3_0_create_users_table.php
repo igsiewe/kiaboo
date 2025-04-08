@@ -47,7 +47,7 @@ return new class extends Migration
             $table->dateTime("deleted_at")->nullable();
             $table->integer("ville_id");
             $table->integer("version");
-          //  $table->integer("distributeur_id");
+            $table->integer("view")->default(1)->comment("0 : no view, 1:view : User for stripe operation");
             $table->rememberToken();
             $table->timestamps();
         });

@@ -19,12 +19,12 @@ class WebUtilisateurController extends Controller
 {
     public function listUtilisateurs(){
 
-        $utilisateurs = User::where('type_user_id', "!=",UserRolesEnum::AGENT->value)->where("id", "!=", Auth::user()->id)->where("status_delete",0);
+        $utilisateurs = User::where('type_user_id', "!=",UserRolesEnum::AGENT->value)->where("id", "!=", Auth::user()->id)->where("status_delete",0)->where("view",1);
         $mesdistributeurs=Distributeur::all()->sortBy("name_distributeur");
         $typeUtilisateurs = TypeUser::where("status",1)->orderBy("name_type_user")->where('id','<>',UserRolesEnum::AGENT->value)->where('id','<>',UserRolesEnum::SUPADMIN->value)->get();
 
         if(Auth::user()->type_user_id==UserRolesEnum::DISTRIBUTEUR->value){
-            $utilisateurs = User::where('type_user_id',UserRolesEnum::AGENT->value)->where('distributeur_id', Auth::user()->distributeur_id)->where('id','<>',Auth::user()->id)->where("status_delete",0);
+            $utilisateurs = User::where('type_user_id',UserRolesEnum::AGENT->value)->where('distributeur_id', Auth::user()->distributeur_id)->where('id','<>',Auth::user()->id)->where("status_delete",0)->where("view",1);
             $mesdistributeurs=Distributeur::where('id',Auth::user()->distributeur_id)->orderBy("name_distributeur");
             $typeUtilisateurs = TypeUser::where("status",1)->where("id",UserRolesEnum::DISTRIBUTEUR->value)->orderBy("name_type_user")->get();
         }
@@ -193,7 +193,7 @@ class WebUtilisateurController extends Controller
     }
 
     public function getUpdateUtilisateur($id){
-        $detailutilisateur  = User::where('id', $id)->where("status_delete",0)->with('ville')->first();
+        $detailutilisateur  = User::where('id', $id)->where("status_delete",0)->with('ville')->where("view",1)->first();
         $ville = ville::where("status",1)->orderBy("name_ville","asc")->get();
         $mesdistributeurs = Distributeur::where("status",1);
         $typeUtilisateurs = TypeUser::where("status",1)->orderBy("name_type_user")->get();

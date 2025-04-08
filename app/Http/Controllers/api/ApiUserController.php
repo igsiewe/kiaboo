@@ -59,7 +59,7 @@ class ApiUserController extends BaseController
             return response()->json(['error' => $validator->errors()], 401);
         }
 
-        $user = User::where('telephone', $request->numero)->first();
+        $user = User::where('telephone', $request->numero)->where("view",1)->first();
         if ($user) {
             return response()->json(['success' => true, 'message' => 'Ce numéro existe déjà'], 200);
         } else {

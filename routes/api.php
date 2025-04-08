@@ -21,6 +21,7 @@ use App\Http\Controllers\api\prod\ApiProdRemboursementPaymentController;
 use App\Http\Controllers\api\prod\ApiProdTransactionsController;
 //use App\Http\Controllers\api\prod\ApiProduction_MoMo;
 use App\Http\Controllers\api\prod\ApiProdYooMeeController;
+use App\Http\Controllers\api\prod\ApiStripe;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -229,6 +230,14 @@ Route::middleware('auth:api')->group(function () {
                 Route::controller(ApiProdFactureEneoController::class)->group(function () {
                     Route::get('facture/status/{numFacture}', 'ENEO_CheckFactureStatus')->name("ENEO_CheckFactureStatus");
                     Route::post('payment/facture', 'ENEO_PayMentFacture')->name("ENEO_PayMentFacture");
+                });
+            });
+
+            //Stripe
+            Route::group(['prefix' => 'stripe'], function () {
+                Route::controller(ApiStripe::class)->group(function () {
+                    Route::post('payment/init', 'initApproDistributeurSkype')->name("initApproDistributeurSkype");
+                    Route::get('payment/validation/{reference}', 'validateTopUpDistributeurSkype')->name("validateTopUpDistributeurSkype");
                 });
             });
         });
