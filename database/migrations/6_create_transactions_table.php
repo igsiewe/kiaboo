@@ -21,6 +21,7 @@ return new class extends Migration
             $table->dateTime("date_end_trans")->nullable();
             $table->bigInteger("service_id");
             $table->double("balance_before")->default(0);
+            $table->double("charge")->default(0)->comment("Ce charge de service facturée par KIABOO");
             $table->double("debit")->default(0);
             $table->double("credit")->default(0);
             $table->double("balance_after")->default(0);

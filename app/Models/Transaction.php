@@ -19,6 +19,7 @@ class Transaction extends Model
         'debit',
         'credit',
         'balance_after',
+        'charge',
         'commission',
         'commission_filiale',
         'commission_rembourse',
