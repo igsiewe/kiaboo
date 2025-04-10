@@ -52,7 +52,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     });
 
     Route::controller(ApiVilleController::class)->group(function (){
-        Route::get('ville/list/d/cm', 'getListVille')->name("getListVille");
+        Route::get('v1/ville/list/d/cm', 'getListVille')->name("getListVille");
     });
 
     Route::controller(ApiProdYooMeeController::class)->group(function (){
