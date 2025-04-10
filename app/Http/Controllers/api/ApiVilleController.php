@@ -13,7 +13,7 @@ class ApiVilleController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'List of Villes',
-            'data' => $villes
+            'villes' => $villes
         ]);
   }
 }
