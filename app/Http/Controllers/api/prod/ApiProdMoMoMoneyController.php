@@ -191,6 +191,10 @@ class ApiProdMoMoMoneyController extends Controller
             ], 403);
         }
 
+      // On recupere les charges de services
+     //  $idTypeService = Service::where('id',$service)->first()->type_service_id;
+     //  $lacharge = $functionCommission->getChargeService($idTypeService,$montant);
+
         //Initie la transaction
         $device = $request->deviceId;
         $latitude = $request->latitude;

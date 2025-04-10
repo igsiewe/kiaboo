@@ -10,6 +10,7 @@ use App\Http\Controllers\api\ApiSmsController;
 use App\Http\Controllers\api\ApiTransactionsController;
 use App\Http\Controllers\api\ApiUserController;
 use App\Http\Controllers\api\ApiVersion;
+use App\Http\Controllers\api\ApiVilleController;
 use App\Http\Controllers\api\prod\ApiOMCallBanckController;
 use App\Http\Controllers\api\prod\ApiOMController;
 use App\Http\Controllers\api\prod\ApiProdAuthController;
@@ -50,6 +51,9 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::get('version/upload/new', 'getVersion')->name("getVersion");
     });
 
+    Route::controller(ApiVilleController::class)->group(function (){
+        Route::get('ville/list/d/cm', 'getListVille')->name("getListVille");
+    });
 
     Route::controller(ApiProdYooMeeController::class)->group(function (){
         Route::post('yoomee/callback','YooMeeCallback')->name("YooMeeCallback");

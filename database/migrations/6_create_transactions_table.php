@@ -39,6 +39,23 @@ return new class extends Migration
             $table->date("commission_distributeur_rembourse_date")->nullable();
             $table->string("ref_remb_com_agent",80)->nullable();
             $table->string("ref_remb_com_distributeur",80)->nullable();
+
+            $table->double("charge")->default(0)->comment("Charge de service facturée par KIABOO");
+            $table->double("charge_kiaboo")->default(0)->comment("Par charge kiaboo");
+            $table->double("charge_distributeur")->default(0)->comment("Part charge attribuée au distributeur");
+            $table->double("charge_agent")->default(0)->comment("Par charge attribuée à l'agent");
+            $table->double("charge_rembourse")->default(0)->comment("0 = Encaissée, 1 = non encaissée");
+            $table->double("charge_distributeur_rembourse")->default(0)->comment("0 = Encaissée, 1 = non encaissée");
+            $table->double("charge_agent_rembourse")->default(0)->comment("0 = Encaissée, 1 = non encaissée");
+            $table->date("charge_agent_rembourse_date")->nullable();
+            $table->date("charge_distributeur_rembourse_date")->nullable();
+            $table->string("ref_remb_charge_agent",80)->nullable();
+            $table->string("ref_remb_charge_distributeur",80)->nullable();
+
+
+
+
+
             $table->integer("status")->default(1)->comment("0 : INITIATED, 1:VALIDATED OR SUCCESSFUL");
             $table->string("description",255)->nullable();
             $table->string("paytoken",255)->nullable();

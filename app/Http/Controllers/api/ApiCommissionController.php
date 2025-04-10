@@ -140,6 +140,46 @@ class ApiCommissionController extends BaseController
 
     }
 
+    public function getChargeService($idTypeService, $montant)
+    {
+        $charge=0;
+
+        $takeValue = Charge::where('type_service_id', $idTypeService)->where("status",1)->where('borne_min','<=', $montant)->where('borne_max','>=',$montant)->get();
+        if($takeValue->count() > 0){
+            if($takeValue->first()->type_charge== 'taux') {
+                $commission= ($takeValue->first()->taux) * $montant;
+                $com_agent=$commission * $takeValue->first()->part_agent;
+                $com_distributeur=$commission * $takeValue->first()->part_distributeur;
+                $com_kiaboo=$commission * $takeValue->first()->part_kiaboo;
+
+            }else{
+                $commission = $takeValue->first()->amount;
+                $com_agent=$commission * $takeValue->first()->part_agent;
+                $com_distributeur=$commission * $takeValue->first()->part_distributeur;
+                $com_kiaboo=$commission * $takeValue->first()->part_kiaboo;
+            }
+            if(doubleval($commission) <=0){
+                return response()->json([
+                    "status"=>false,
+                    "message"=>"Aucune commission n'est définie pour ce montant"
+                ],404);
+            } else {
+                return response()->json([
+                    "status" => true,
+                    "commission_globale" => $commission,
+                    "commission_agent" => $com_agent,
+                    "commission_distributeur" => $com_distributeur,
+                    "commission_kiaboo" => $com_kiaboo,
+                ],200);
+            }
+        }else{
+            return response()->json([
+                "status"=>false,
+                "message"=>"Aucune commission n'est définie pour ce montant"
+            ],404);
+        }
+
+    }
     public function getFeesByService($idService, $montant)
     {
         $fees_global=0;

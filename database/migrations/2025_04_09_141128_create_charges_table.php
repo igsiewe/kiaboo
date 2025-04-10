@@ -13,8 +13,14 @@ return new class extends Migration
     {
         Schema::create('charges', function (Blueprint $table) {
             $table->id();
+            $table->double("borne_min");
+            $table->double("borne_max");
             $table->double("amount",60)->comment("Charge supplementaire que KIABOO facture aux clients");
             $table->foreignId("type_service_id")->references("id")->on("type_services");
+            $table->string("type_charge")->comment("Type de charge : 1:taux, 2:borne");
+            $table->double('part_agent')->default(0);
+            $table->double('part_distributeur')->default(0);
+            $table->double('part_kiaboo')->default(0);
             $table->foreignId("created_by")->references("id")->on("users");
             $table->foreignId("updated_by")->references("id")->on("users");
             $table->integer("status")->default(1)->comment("0 : Deactivated, 1:Activated");
