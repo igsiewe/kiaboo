@@ -41,7 +41,7 @@ class ApiProspectController extends Controller
                 }
                 $statutcodeparraisange = true;
             }
-            $user = new User();
+            $user = new prospect();
             $user->name =strtoupper($request->name);
             $user->surname = strtoupper($request->surname);
             $user->email = $request->email;
