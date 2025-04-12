@@ -567,7 +567,8 @@ class ApiAuthController extends BaseController
             return response()->json(['success' => false, 'message' => 'Ce numéro de téléphone est déjà enregistré'], 202);
         }
         //On vérifie dans la tables des recrutements
-        $recrutement = prospect::where('telephone', $request->numero)->first();
+        $numero = $request->dial_code.$request->numero;
+        $recrutement = prospect::where('phone', $numero)->first();
         if ($recrutement) {
             return response()->json(['success' => false, 'message' => 'Ce numéro de téléphone est déjà enregistré'], 202);
         }
