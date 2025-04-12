@@ -578,7 +578,7 @@ class ApiAuthController extends BaseController
         $numero = str_replace("+","",$numero);
         $send = new ApiSmsController();
         $message = "Votre code OTP est le ".$otpcode;
-        $envoyersMS = $send->SendSMS($numero,utf8_decode($message));
+       // $envoyersMS = $send->SendSMS($numero,utf8_decode($message));
         return response()->json(['success' => true, 'message' => 'Un OTP a été envoyé par SMS. ','otpcode'=>$otpcode], 200);
 
     }
