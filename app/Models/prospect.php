@@ -18,6 +18,7 @@ class prospect extends Model
         'quartier_id',
         'type_piece',
         'numero_piece',
+        'date_validite',
         'ville_piece_id',
         'adresse',
         'photo_verso',

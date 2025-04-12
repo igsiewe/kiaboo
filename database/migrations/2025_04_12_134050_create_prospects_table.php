@@ -22,6 +22,7 @@ return new class extends Migration
             $table->foreignId('quartier_id')->constrained('quartiers');
             $table->string('type_piece');
             $table->string('numero_piece')->unique();
+            $table->date('date_validite')->nullable();
             $table->foreignId('ville_piece_id')->constrained('villes');
             $table->string('adresse');
             $table->boolean('optin')->default(0);
