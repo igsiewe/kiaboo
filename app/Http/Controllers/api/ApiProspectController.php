@@ -69,6 +69,7 @@ class ApiProspectController extends Controller
             $user->type_piece =$request->type_piece;
             $user->optin = $request->optin;
             $user->ville_piece_id =$request->ville_piece;
+            $user->numero_piece = $request->numero_piece;
             $user->adresse = $request->adresse;
             $user->code_parrainage = $request->code_parrainage;
             $user->photo_verso = $request->photo_verso;
