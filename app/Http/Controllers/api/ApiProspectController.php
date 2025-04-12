@@ -22,7 +22,7 @@ class ApiProspectController extends Controller
             'password' => 'required|string|min:12',
         ]);
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 401);
+            return response()->json(['error' => $validator->errors()->first()], 401);
         }
 
 
