@@ -27,7 +27,6 @@ class ApiProspectController extends Controller
 
         try {
             DB::beginTransaction();
-            $statutcodeparraisange = false;
             $checkUser = prospect::where('phone', $request->phone)->first();
             if($checkUser){
                 DB::rollBack();
@@ -43,8 +42,6 @@ class ApiProspectController extends Controller
                 $statutcodeparraisange = true;
             }
             $user = new User();
-            $newPassword = $this->genererChaineAleatoire(8);
-
             $user->name =strtoupper($request->name);
             $user->surname = strtoupper($request->surname);
             $user->email = $request->email;
@@ -60,8 +57,6 @@ class ApiProspectController extends Controller
             $user->photo_verso = $request->photo_verso;
             $user->photo_recto = $request->photo_recto;
             $user->status = 0;
-
-
             $result = $user->save();
             if ($result) {
                 DB::commit();
