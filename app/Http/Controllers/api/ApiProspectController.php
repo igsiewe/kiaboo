@@ -38,7 +38,7 @@ class ApiProspectController extends Controller
                 $parrainageCheck = User::where('codeparrainage', $request->codeParrainage)->first();
                 if(!$parrainageCheck){
                     DB::rollBack();
-                    return $this->errorResponse("Ce code de parrainage n'est pas valide", 403);
+                    return $this->errorResponse("Ce code de parrainage n'est pas valide", 404);
                 }
                 $statutcodeparraisange = true;
             }
@@ -68,7 +68,7 @@ class ApiProspectController extends Controller
                 return $this->sendResponse($user, 'Votre compte a été créé avec succès. Vous devez confirmer votre adresse email en cliquant sur le lien que nous venons de vous envoyer par email.');
             } else {
                 DB::rollBack();
-                return $this->errorResponse('User don\t added', 404);
+                return $this->errorResponse('User don\t added', 403);
             }
         } catch (\Exception $e) {
             DB::rollBack();
