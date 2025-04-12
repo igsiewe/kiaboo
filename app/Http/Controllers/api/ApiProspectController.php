@@ -97,7 +97,7 @@ class ApiProspectController extends Controller
                 [
                     'success' => false,
                     'message' => $message
-                ], $e->getCode());
+                ], 500);
 
 
         }
