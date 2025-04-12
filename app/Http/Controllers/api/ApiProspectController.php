@@ -13,7 +13,7 @@ class ApiProspectController extends Controller
 {
     public function setNewProspect(Request $request)
     {
-        dd($request->all());
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:3|string|max:255',
             'surname' => 'required|string|max:255',
@@ -24,7 +24,7 @@ class ApiProspectController extends Controller
         if ($validator->fails()) {
             return $this->errorResponse($validator->errors(), 404);
         }
-
+        dd($request->all());
 
         try {
             DB::beginTransaction();
