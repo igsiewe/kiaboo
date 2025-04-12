@@ -83,7 +83,7 @@ class ApiProspectController extends Controller
                     [
                         'success' => true,
                         'message' => "Votre compte a été créé avec succès. Vous devez confirmer votre adresse email en cliquant sur le lien que nous venons de vous envoyer par email."
-                    ], 202);
+                    ], 200);
                 } else {
                 DB::rollBack();
                 return response()->json(
