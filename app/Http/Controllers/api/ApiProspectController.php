@@ -38,7 +38,7 @@ class ApiProspectController extends Controller
                 $parrainageCheck = User::where('codeparrainage', $request->codeParrainage)->first();
                 if(!$parrainageCheck){
                     DB::rollBack();
-                    return $this->errorResponse("Ce code de parrainage n'est pas valide", 404);
+                    return $this->errorResponse("Ce code de parrainage n'est pas valide", 403);
                 }
                 $statutcodeparraisange = true;
             }
@@ -54,12 +54,13 @@ class ApiProspectController extends Controller
             $user->quartier_id = $request->quartier;
             $user->type_piece =$request->type_piece;
             $user->optin = $request->optin;
-            $user->ville_piece_id =$request->ville_piece_id;
+            $user->ville_piece_id =$request->ville_piece;
             $user->adresse = $request->adresse;
+            $user->code_parrainage = $request->code_parrainage;
             $user->photo_verso = $request->photo_verso;
             $user->photo_recto = $request->photo_recto;
             $user->status = 0;
-            $user->code_parrainage = $request->code_parrainage;
+
 
             $result = $user->save();
             if ($result) {
