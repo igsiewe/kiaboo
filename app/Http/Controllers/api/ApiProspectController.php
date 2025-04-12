@@ -21,7 +21,7 @@ class ApiProspectController extends Controller
             'password' => 'required|string|min:12',
         ]);
         if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), 403);
+            return $this->errorResponse($validator->errors(), 404);
         }
 
 
@@ -37,7 +37,7 @@ class ApiProspectController extends Controller
                 $parrainageCheck = User::where('codeparrainage', $request->codeParrainage)->first();
                 if(!$parrainageCheck){
                     DB::rollBack();
-                    return $this->errorResponse("Ce code de parrainage n'est pas valide", 404);
+                    return $this->errorResponse("Ce code de parrainage n'est pas valide", 403);
                 }
                 $statutcodeparraisange = true;
             }
