@@ -73,7 +73,7 @@ class ApiProspectController extends Controller
             $user->code_parrainage = $request->code_parrainage;
             $user->photo_verso = $request->photo_verso;
             $user->photo_recto = $request->photo_recto;
-            $user->status = 0;
+            $user->status = "0";
             $result = $user->save();
             if ($result) {
                 DB::commit();
