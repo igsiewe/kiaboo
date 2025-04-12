@@ -24,7 +24,7 @@ class ApiProspectController extends Controller
             return $this->errorResponse($validator->errors(), 404);
         }
 
-
+dd($validator);
         try {
             DB::beginTransaction();
             $checkUser = prospect::where('phone', $request->phone)->first();
