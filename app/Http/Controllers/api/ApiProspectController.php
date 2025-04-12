@@ -13,6 +13,7 @@ class ApiProspectController extends Controller
 {
     public function setNewProspect(Request $request)
     {
+        dd($request->all());
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:3|string|max:255',
             'surname' => 'required|string|max:255',
@@ -24,7 +25,7 @@ class ApiProspectController extends Controller
             return $this->errorResponse($validator->errors(), 404);
         }
 
-dd($validator);
+
         try {
             DB::beginTransaction();
             $checkUser = prospect::where('phone', $request->phone)->first();
@@ -39,7 +40,7 @@ dd($validator);
                     DB::rollBack();
                     return $this->errorResponse("Ce code de parrainage n'est pas valide", 403);
                 }
-                $statutcodeparraisange = true;
+
             }
             $user = new prospect();
             $user->name =strtoupper($request->name);
