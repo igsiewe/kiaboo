@@ -560,14 +560,15 @@ class ApiAuthController extends BaseController
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 401);
         }
-
+        $numero = $request->dial_code.$request->numero;
         //On vérifie dans la tables des utilisateurs
-        $user = User::where('login', $request->numero)->where('type_user_id',UserRolesEnum::AGENT->value)->first();
+
+        $user = User::where('login', $numero)->where('type_user_id',UserRolesEnum::AGENT->value)->first();
         if ($user) {
             return response()->json(['success' => false, 'message' => 'Ce numéro de téléphone est déjà enregistré'], 202);
         }
         //On vérifie dans la tables des recrutements
-        $numero = $request->dial_code.$request->numero;
+
         $recrutement = prospect::where('phone', $numero)->first();
         if ($recrutement) {
             return response()->json(['success' => false, 'message' => 'Ce numéro de téléphone est déjà enregistré'], 202);
