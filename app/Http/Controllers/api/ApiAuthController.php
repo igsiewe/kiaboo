@@ -574,7 +574,7 @@ class ApiAuthController extends BaseController
         }
 
         $otpcode = rand(100000, 999999);
-        $numero = str_replace("+","",$request->numero);
+        $numero = str_replace("+","",$numero);
         $send = new ApiSmsController();
         $message = "Le code de réinitialisation du mot de passe de votre compte KIABOO est ".$otpcode;
         $envoyersMS = $send->SendSMS($numero,utf8_decode($message));
