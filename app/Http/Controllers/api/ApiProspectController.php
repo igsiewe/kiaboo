@@ -22,14 +22,7 @@ class ApiProspectController extends Controller
             'password' => 'required|string|min:12',
         ]);
         if ($validator->fails()) {
-
-            return response(
-                [
-                    'success' => false,
-                    'statusCode' => 'ERR-ATTRIBUTES-INVALID',
-                    'message' => $validator->errors()->all()
-
-                ], 422);
+            return response()->json(['error' => $validator->errors()], 401);
         }
 
 
