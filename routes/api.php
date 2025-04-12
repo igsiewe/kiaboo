@@ -52,9 +52,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::get('version/upload/new', 'getVersion')->name("getVersion");
     });
 
-    Route::controller(ApiProspectController::class)->group(function (){
-        Route::post('prospect/new/po', 'setNewProspect')->name("setNewProspect");
-    });
+
 
     Route::controller(ApiVilleController::class)->group(function (){
         Route::get('v1/ville/list/d/cm', 'getListVille')->name("getListVille");
@@ -65,7 +63,9 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     });
 
     Route::group(['prefix' => 'v1'], function () {
-
+        Route::controller(ApiProspectController::class)->group(function (){
+            Route::post('prospect/new/po', 'setNewProspect')->name("setNewProspect");
+        });
          Route::controller(ApiAuthController::class)->group(function () {
             //Route::post('user/login', 'Login')->name("Login");
             Route::post('user/login', 'login');
