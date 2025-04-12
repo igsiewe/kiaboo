@@ -12,6 +12,7 @@ class prospect extends Model
         'name',
         'surname',
         'phone',
+        'phone_court',
         'email',
         'quartier_id',
         'type_piece',

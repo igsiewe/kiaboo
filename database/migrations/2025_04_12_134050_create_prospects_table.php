@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('surname');
             $table->string('phone')->unique();
+            $table->string('phone_court')->nullable();
             $table->string('email')->unique();
             $table->foreignId('quartier_id')->constrained('quartiers')->onDelete('cascade');
             $table->string('type_piece');
