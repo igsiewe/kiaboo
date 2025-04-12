@@ -6,6 +6,7 @@ use App\Http\Controllers\api\ApiCommissionController;
 use App\Http\Controllers\api\ApiOMControllerSave;
 use App\Http\Controllers\api\ApiOperationAgent;
 use App\Http\Controllers\api\ApiParrainageController;
+use App\Http\Controllers\api\ApiProspectController;
 use App\Http\Controllers\api\ApiSmsController;
 use App\Http\Controllers\api\ApiTransactionsController;
 use App\Http\Controllers\api\ApiUserController;
@@ -49,6 +50,10 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 
     Route::controller(ApiVersion::class)->group(function (){
         Route::get('version/upload/new', 'getVersion')->name("getVersion");
+    });
+
+    Route::controller(ApiProspectController::class)->group(function (){
+        Route::get('prospect/new/po', 'setNewProspect')->name("setNewProspect");
     });
 
     Route::controller(ApiVilleController::class)->group(function (){

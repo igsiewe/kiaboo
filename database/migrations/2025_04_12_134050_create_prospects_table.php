@@ -17,12 +17,15 @@ return new class extends Migration
             $table->string('surname');
             $table->string('phone')->unique();
             $table->string('phone_court')->nullable();
+            $table->string('password');
             $table->string('email')->unique();
             $table->foreignId('quartier_id')->constrained('quartiers')->onDelete('cascade');
             $table->string('type_piece');
             $table->string('numero_piece')->unique();
             $table->foreignId('ville_piece_id')->constrained('villes')->onDelete('cascade');
             $table->string('adresse');
+            $table->boolean('optin')->default(0);
+            $table->string('code_parrainage')->nullable();
             $table->string('photo_verso')->nullable();
             $table->string('photo_recto')->nullable();
             $table->boolean('status')->default(0);
