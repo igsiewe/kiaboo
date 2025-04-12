@@ -18,7 +18,7 @@ class ApiProspectController extends Controller
             'name' => 'required|min:3|string|max:255',
             'surname' => 'required|string|max:255',
             'phone' => 'required|string|unique:prospects',
-            'email' => 'required|string|email|unique:prospects',
+            'email' => 'required|string|email',
             'password' => 'required|string|min:12',
         ]);
         if ($validator->fails()) {
