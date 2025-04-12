@@ -551,7 +551,7 @@ class ApiAuthController extends BaseController
         }
     }
 
-    public function checkNumeroUserInscription(Request $request){
+    public function checkNumeroInscription(Request $request){
         $validator = Validator::make($request->all(), [
             'numero' => 'required',
             'dail_code'=>'required',
