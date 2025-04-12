@@ -59,13 +59,13 @@ class ApiProspectController extends Controller
             $user->phone_court = $request->phone_court;
             $user->password = bcrypt($request->password);
             $user->quartier_id = $request->quartier;
-            $user->type_piece =$request->type_piece;
+            $user->type_piece = $request->type_piece;
             $user->optin = $request->optin;
             $user->ville_piece_id =$request->ville_piece;
-            $user->numero_piece = $request->numero_piece;
+            $user->numero_piece = strtoupper($request->numero_piece);
             $user->date_validite= $request->date_validite;
             $user->adresse = $request->adresse;
-            $user->code_parrainage = $request->code_parrainage;
+            $user->code_parrainage = strtoupper($request->code_parrainage);
             $user->photo_verso = $request->photo_verso;
             $user->photo_recto = $request->photo_recto;
            // $user->status = "0";
