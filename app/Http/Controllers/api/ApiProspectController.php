@@ -22,7 +22,8 @@ class ApiProspectController extends Controller
             'password' => 'required|string|min:12',
         ]);
         if ($validator->fails()) {
-            return $this->errorResponse($validator->errors(), 404);
+            return response()->json(['success' => false, 'message' => $validator->errors()], 404);
+
         }
 
 
@@ -31,14 +32,14 @@ class ApiProspectController extends Controller
             $checkUser = prospect::where('phone', $request->phone)->first();
             if($checkUser){
                 DB::rollBack();
-                return $this->errorResponse('Ce numéro de téléphone existe déjà', 202);
+                return response()->json(['success' => false, 'message' => 'Ce numéro de téléphone existe déjà'], 202);
             }
             if($request->isCodeParrainage == true){
 
                 $parrainageCheck = User::where('codeparrainage', $request->codeParrainage)->first();
                 if(!$parrainageCheck){
                     DB::rollBack();
-                    return $this->errorResponse("Ce code de parrainage n'est pas valide", 403);
+                    return response()->json(['success' => false, 'message' => "Ce code de parrainage n'est pas valide"], 403);
                 }
 
             }
@@ -61,15 +62,16 @@ class ApiProspectController extends Controller
             $result = $user->save();
             if ($result) {
                 DB::commit();
-                return $this->sendResponse($user, 'Votre compte a été créé avec succès. Vous devez confirmer votre adresse email en cliquant sur le lien que nous venons de vous envoyer par email.');
-            } else {
+                return response()->json(['success' => true, 'message' => "Votre compte a été créé avec succès. Vous devez confirmer votre adresse email en cliquant sur le lien que nous venons de vous envoyer par email."], 202);
+                } else {
                 DB::rollBack();
-                return $this->errorResponse('User don\t added', 403);
+                return response()->json(['success' => false, 'message' => 'User don\t added'], 403);
             }
         } catch (\Exception $e) {
             DB::rollBack();
             $message = $e->getMessage();
-            return $this->errorResponse($message, $e->getMessage());
+            return response()->json(['success' => false, 'message' => $message], $e->getCode());
+
 
         }
 
