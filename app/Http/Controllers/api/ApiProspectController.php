@@ -74,7 +74,7 @@ class ApiProspectController extends Controller
                 DB::commit();
                 $numero = str_replace("+","",$request->phone);
                 $send = new ApiSmsController();
-                $message = "Bonjour ".$request->name.",\n\nMerci de vous être inscrit sur notre plateforme. Votre compte a été créé avec succès.\n\nPour activer votre compte, veuillez cliquer sur le lien ci-dessous :\n\nhttps://www.kiaboo.com/activation/".$user->id."\n\nNous vous remercions de votre confiance et restons à votre disposition pour toute question.\n\nCordialement,\nL'équipe Kiaboo";
+                $message = "Bonjour ".$request->name.",\n\nMerci de vous être inscrit sur notre plateforme. Un commercial vous contactera dans un délai de 48h pour finaliser le processus et activer votre compte.\n\nNous vous remercions de votre confiance et restons à votre disposition pour toute question.\n\nCordialement,\nL'équipe Kiaboo";
                 $envoyersMS = $send->SendSMS($numero,utf8_decode($message));
                 return response()->json(
                     [
