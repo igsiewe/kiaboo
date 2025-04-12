@@ -67,6 +67,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
             Route::post('user/login/recrutement', 'loginRecrutement');
             Route::post('user/register', 'registerUser')->name("registerUser");
             Route::post('/user/phone/verify', 'checkNumeroUser')->name("checkNumeroUser");
+             Route::post('/user/phone/verify/inscription', 'checkNumeroInscription')->name("checkNumeroInscription");
             Route::post('/agent/phone/verify', 'checkNumeroAgent')->name("checkNumeroAgent");
             Route::post('/user/verify/update/password', 'updateUserPassword')->name("updateUserPassword");
            // Route::post('authenticate/auth','loginSwagger')->name("loginSwagger");

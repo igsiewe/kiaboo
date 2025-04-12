@@ -8,6 +8,7 @@ use App\Http\Enums\UserRolesEnum;
 use App\Models\monnaie;
 use App\Models\Notification;
 use App\Models\Partenaire;
+use App\Models\prospect;
 use App\Models\recrutement;
 use App\Models\Service;
 use App\Models\User;
@@ -550,6 +551,35 @@ class ApiAuthController extends BaseController
         }
     }
 
+    public function checkNumeroUserInscription(Request $request){
+        $validator = Validator::make($request->all(), [
+            'numero' => 'required',
+            'dail_code'=>'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 401);
+        }
+
+        //On vérifie dans la tables des utilisateurs
+        $user = User::where('login', $request->numero)->where('type_user_id',UserRolesEnum::AGENT->value)->first();
+        if ($user) {
+            return response()->json(['success' => false, 'message' => 'Ce numéro de téléphone est déjà enregistré'], 202);
+        }
+        //On vérifie dans la tables des recrutements
+        $recrutement = prospect::where('telephone', $request->numero)->first();
+        if ($recrutement) {
+            return response()->json(['success' => false, 'message' => 'Ce numéro de téléphone est déjà enregistré'], 202);
+        }
+
+        $otpcode = rand(100000, 999999);
+        $numero = str_replace("+","",$request->numero);
+        $send = new ApiSmsController();
+        $message = "Le code de réinitialisation du mot de passe de votre compte KIABOO est ".$otpcode;
+        $envoyersMS = $send->SendSMS($numero,utf8_decode($message));
+        return response()->json(['success' => true, 'message' => 'Un OTP a été envoyé par SMS. ','otpcode'=>$otpcode], 200);
+
+    }
     public function updateUserPassword(Request $request)
     {
         # Validation
