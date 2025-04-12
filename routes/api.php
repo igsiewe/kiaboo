@@ -53,7 +53,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     });
 
     Route::controller(ApiProspectController::class)->group(function (){
-        Route::get('prospect/new/po', 'setNewProspect')->name("setNewProspect");
+        Route::post('prospect/new/po', 'setNewProspect')->name("setNewProspect");
     });
 
     Route::controller(ApiVilleController::class)->group(function (){
