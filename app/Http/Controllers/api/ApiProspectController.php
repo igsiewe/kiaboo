@@ -69,7 +69,8 @@ class ApiProspectController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             $message = $e->getMessage();
-            return $this->error($message,$e);
+            return $this->errorResponse($message, $e->getMessage());
+
         }
 
     }
