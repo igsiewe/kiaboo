@@ -17,14 +17,14 @@ class ApiProspectController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:3|string|max:255',
             'surname' => 'required|string|max:255',
-            'phone' => 'required|string|unique:users',
-            'email' => 'required|string|email|unique:users',
+            'phone' => 'required|string|unique:prospects',
+            'email' => 'required|string|email|unique:prospects',
             'password' => 'required|string|min:12',
         ]);
         if ($validator->fails()) {
             return $this->errorResponse($validator->errors(), 404);
         }
-        dd($request->all());
+
 
         try {
             DB::beginTransaction();
