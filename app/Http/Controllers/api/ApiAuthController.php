@@ -737,5 +737,27 @@ class ApiAuthController extends BaseController
 
     }
 
+    public function updateEmail(Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+        ]);
+
+        $user = User::find(Auth::user()->id);
+        $user->update([ $user->email = $request->email,]);
+        $user->save();
+
+        $user = DB::table("users")->join("quartiers", "users.quartier_id", "=", "quartiers.id")
+            ->join("villes", "quartiers.ville_id", "=", "villes.id")
+            ->where('users.id', Auth::user()->id)
+            ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id')->first();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Modifié avec succès',
+            'user' => $user,
+        ],200);
+    }
+
 
 }

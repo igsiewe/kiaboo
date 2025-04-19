@@ -115,6 +115,7 @@ Route::middleware('auth:api')->group(function () {
             Route::post('user/update/', 'updateUser')->name("updateUser");
             Route::post('user/update/password', 'updatePassword')->name("updatePassword");
             Route::post('/agent/recrutement', 'recrutement')->name("recrutement");
+            Route::post('/agent/update/email', 'updateEmail')->name("updateEmail");
         });
 
         Route::controller(ApiApproDistributeurController::class)->group(function () {
