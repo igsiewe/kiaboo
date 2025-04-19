@@ -737,14 +737,20 @@ class ApiAuthController extends BaseController
 
     }
 
-    public function updateEmail(Request $request){
+    public function updateUserInfo(Request $request){
 
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
+            'donnee' => 'required|email',
         ]);
 
         $user = User::find(Auth::user()->id);
+        if($request->champ="EMAIL") {
         $user->update([ $user->email = $request->email,]);
+        }else if($request->champ="ADRESSE") {
+            $user->update([ $user->adresse = $request->adresse,]);
+        }else if($request->champ="QUARTIER") {
+            $user->update([ $user->quartier_id = $request->quartier,]);
+        }
         $user->save();
 
         $user = DB::table("users")->join("quartiers", "users.quartier_id", "=", "quartiers.id")
