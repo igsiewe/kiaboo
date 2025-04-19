@@ -751,7 +751,7 @@ class ApiAuthController extends BaseController
         }else if($request->champ="QUARTIER") {
             $user->update([ $user->quartier_id = $request->quartier,]);
         }
-        $user->save();
+
 
         $user = DB::table("users")->join("quartiers", "users.quartier_id", "=", "quartiers.id")
             ->join("villes", "quartiers.ville_id", "=", "villes.id")
