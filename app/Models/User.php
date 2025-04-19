@@ -46,7 +46,8 @@ class User extends Authenticatable
         "reference_last_transaction",
         "last_service_id",
         "countrie",
-        "ville_id",
+        "ville_id", //Va etre enlever
+        "quartier_id",
         'quartier',
         'adresse',
         "last_connexion",

@@ -36,7 +36,7 @@ return new class extends Migration
             $table->integer("seuilapprovisionnement")->default(0);
             $table->date("date_last_transaction")->default(now());
             $table->string('countrie');
-            $table->string('quartier')->nullable();
+            $table->string('quartier')->nullable(); //Va etre enlevé. Quartier migre deja dans cette table
             $table->string('adresse')->nullable();
             $table->boolean('optin');
             $table->foreignId("updated_by")->references("id")->on("users");
@@ -45,7 +45,8 @@ return new class extends Migration
             $table->integer("last_service_id")->nullable();
             $table->integer("status_delete")->nullable()->default(0)->comment("0 : no deleted, 1:deleted");;
             $table->dateTime("deleted_at")->nullable();
-            $table->integer("ville_id");
+            $table->integer("ville_id"); //Va etre enleve, il y'a une relation entre ville et quartier
+            $table->integer("quartier_id");
             $table->integer("version");
             $table->integer("view")->default(1)->comment("0 : no view, 1:view : User for stripe operation");
             $table->rememberToken();
