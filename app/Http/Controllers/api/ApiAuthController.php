@@ -746,11 +746,11 @@ class ApiAuthController extends BaseController
         $user = User::find(Auth::user()->id);
         if($request->champ="EMAIL") {
 
-        $user->update([ 'email'=> $request->email,]);
+        $user->update([ 'email'=> $request->donnee,]);
         }else if($request->champ="ADRESSE") {
-            $user->update([ "adresse"=> $request->adresse,]);
+            $user->update([ "adresse"=> $request->donnee,]);
         }else if($request->champ="QUARTIER") {
-            $user->update([ "quartier_id" => $request->quartier,]);
+            $user->update([ "quartier_id" => $request->donnee,]);
         }
 
 
