@@ -1,6 +1,6 @@
 <?php
 
-use Exception;
+
 use Google\Auth\ApplicationDefaultCredentials;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
@@ -29,7 +29,7 @@ trait PushNotification
            ]);
            return $response->json();
 
-       }catch (Exception $e){
+       }catch (\Exception $e){
            Log::error('Error sending push notification to '.$token.' : '. $e->getMessage());
            return false;
        }
