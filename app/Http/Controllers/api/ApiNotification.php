@@ -60,6 +60,7 @@ class ApiNotification extends Controller
             'key2' => 'value2',
         ];
         $response = $this->sendNotification($deviceToken, $title, $body, $data);
+        dd($response);
         if($response->status()==200){
             return response()->json([
                 "success"=>true,
