@@ -46,6 +46,7 @@ class ApiNotification extends Controller
         $scopes = ['https://www.googleapis.com/auth/firebase.messaging'];
         $credentials = ApplicationDefaultCredentials::getCredentials($scopes);
         $token = $credentials->fetchAuthToken();
+        dd($token['access_token']);
         return $token['access_token'] ?? null;
     }
 
