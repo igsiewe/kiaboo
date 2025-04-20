@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="f91fca3f-e4da-40b0-9457-5f63c3b5d882" name="Changes" comment="">
       <change afterPath="$PROJECT_DIR$/.env" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/app/Console/Kernel.php" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/app/Exceptions/Handler.php" afterDir="false" />
@@ -354,7 +353,6 @@
       <change afterPath="$PROJECT_DIR$/resources/views/vendor/l5-swagger/.gitkeep" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/resources/views/vendor/l5-swagger/index.blade.php" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/resources/views/welcome.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/routes/channels.php" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/routes/console.php" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
@@ -13332,6 +13330,7 @@
       <change afterPath="$PROJECT_DIR$/vendor/zircote/swagger-php/src/Serializer.php" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/vendor/zircote/swagger-php/src/Util.php" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/vite.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kiaboo/node_modules/core-js/proposals/well-formed-stringify.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/kiaboo/node_modules/core-js/proposals/well-formed-unicode-strings.js" beforeDir="false" />
     </list>
@@ -13557,7 +13556,7 @@
       <workItem from="1744675903928" duration="2688000" />
       <workItem from="1744822802835" duration="11848000" />
       <workItem from="1745089302106" duration="6936000" />
-      <workItem from="1745142798044" duration="9111000" />
+      <workItem from="1745142798044" duration="9934000" />
     </task>
     <servers />
   </component>
