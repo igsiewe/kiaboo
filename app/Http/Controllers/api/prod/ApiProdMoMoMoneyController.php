@@ -1166,7 +1166,7 @@ class ApiProdMoMoMoneyController extends Controller
                         ]);
 
                         $title = "Kiaboo";
-                        $message = "Le retrait de " . $montant . " F CFA a été effectué avec succès au ".$customer_phone;
+                        $message = "Le retrait de " . $montant . " F CFA a été effectué avec succès au ".$customer_phone." (".$reference_partenaire.")";
                         $appNotification = new ApiNotification();
                         $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
                         Log::info($envoiNotification);
@@ -1243,7 +1243,7 @@ class ApiProdMoMoMoneyController extends Controller
                     $commissionFiliale = doubleval($commission->commission_kiaboo);
                     $commissionDistributeur=doubleval($commission->commission_distributeur);
                     $commissionAgent=doubleval($commission->commission_agent);
-
+                    $reference_partenaire = $data->financialTransactionId;
                     $user = User::where('id', $agent);
                     $balanceBeforeAgent = $user->get()->first()->balance_after;
                     $balanceAfterAgent = floatval($balanceBeforeAgent) - floatval($montant);
@@ -1288,7 +1288,7 @@ class ApiProdMoMoMoneyController extends Controller
                     ]);
 
                     $title = "Kiaboo";
-                    $message = "Le dépôt de " . $montant . " F CFA a été effectué avec succès au ".$customer_phone;
+                    $message = "Le dépôt de " . $montant . " F CFA a été effectué avec succès au ".$customer_phone." (".$reference_partenaire.")";
                     $appNotification = new ApiNotification();
                     $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
                     Log::info($envoiNotification);
