@@ -1292,7 +1292,6 @@ class ApiProdMoMoMoneyController extends Controller
                     $appNotification = new ApiNotification();
                     $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
                     Log::info($envoiNotification);
-                    Log::info($envoiNotification);
                     DB::commit();
                 }
             }
