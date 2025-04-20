@@ -404,7 +404,7 @@ class ApiOMController extends Controller
             $message = "Le dépôt OM de " . $montant . " F CFA a été effectué avec succès au ".$customerNumber;
             $subtitle ="Success";
 //            $appNotification = new ApiNotification();
-//            $envoiNotification = $appNotification->sendNotificationPushFireBase($idDevice, $title, $subtitle, $message);
+//            $envoiNotification = $appNotification->SendPushNotification($idDevice, $title,  $message);
 //            if($envoiNotification->status()==200){
 //                $resultNotification=json_decode($envoiNotification->getContent());
 //                $responseNotification=$resultNotification->response ;
@@ -946,7 +946,7 @@ class ApiOMController extends Controller
                         $message = "Le retrait MOMO de " . $montant . " F CFA a été effectué avec succès au ".$customer_phone;
                         $subtitle ="Success";
                         //  $appNotification = new ApiNotification();
-                        //  $envoiNotification = $appNotification->sendNotificationPushFireBase($device_notification, $title, $subtitle, $message);
+                        //  $envoiNotification = $appNotification->SendPushNotification($device_notification, $title,  $message);
 
                         return response()->json(
                             [

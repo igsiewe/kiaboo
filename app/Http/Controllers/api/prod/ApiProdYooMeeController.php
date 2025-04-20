@@ -294,7 +294,7 @@ class ApiProdYooMeeController extends Controller
                 $subtitle ="Success";
                 $appNotification = new ApiNotification();
 
-                $envoiNotification = $appNotification->sendNotificationPushFireBase($idDevice, $title, $subtitle, $message); //Push notification sur le telephone de l'agent
+                $envoiNotification = $appNotification->SendPushNotification($idDevice, $title,  $message); //Push notification sur le telephone de l'agent
                 $services = Service::all();
                 return response()->json([
                     'success' => true,
@@ -584,7 +584,7 @@ class ApiProdYooMeeController extends Controller
                     $message = "Le retrait YOOMEE de " . $montant . " F CFA a été effectué avec succès au ".$customer_phone;
                     $subtitle ="Success";
                     $appNotification = new ApiNotification();
-                    $envoiNotification = $appNotification->sendNotificationPushFireBase($device_notification, $title, $subtitle, $message);
+                    $envoiNotification = $appNotification->SendPushNotification($device_notification, $title,  $message);
 
                     return response()->json(
                         [
