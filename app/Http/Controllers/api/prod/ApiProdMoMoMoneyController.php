@@ -1167,9 +1167,8 @@ class ApiProdMoMoMoneyController extends Controller
 
                         $title = "Kiaboo";
                         $message = "Le retrait de " . $montant . " F CFA a été effectué avec succès au ".$customer_phone;
-                        $subtitle ="Success";
                         $appNotification = new ApiNotification();
-                        $envoiNotification = $appNotification->sendNotificationPushFireBase($device_notification, $title, $subtitle, $message);
+                        $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
                         Log::info($envoiNotification);
                         DB::commit();
 
@@ -1290,9 +1289,9 @@ class ApiProdMoMoMoneyController extends Controller
 
                     $title = "Kiaboo";
                     $message = "Le dépôt de " . $montant . " F CFA a été effectué avec succès au ".$customer_phone;
-                    $subtitle ="Success";
                     $appNotification = new ApiNotification();
-                    $envoiNotification = $appNotification->sendNotificationPushFireBase($device_notification, $title, $subtitle, $message);
+                    $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
+                    Log::info($envoiNotification);
                     Log::info($envoiNotification);
                     DB::commit();
                 }

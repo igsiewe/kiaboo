@@ -32,7 +32,7 @@ class ApiNotification extends Controller
             ])->post($fcmurl, [
                 'message' => $notification,
             ]);
-            dd($response);
+
             return $response->json();
 
         }catch (\Exception $e) {
@@ -55,6 +55,20 @@ class ApiNotification extends Controller
         $deviceToken = $request->device_token;
         $title = $request->title;
         $body = $request->body;
+
+        $data =  [
+            'key1' => 'value1',
+            'key2' => 'value2',
+        ];
+        $response = $this->sendNotification($deviceToken, $title, $body, $data);
+        return response()->json([
+            "success"=>true,
+            "response"=>$response
+        ]);
+    }
+
+    public function SendPushNotificationCallBack($deviceToken, $title, $body)
+    {
 
         $data =  [
             'key1' => 'value1',
