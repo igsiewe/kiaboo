@@ -1,0 +1,2424 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "KIABOO API Documentation",
+        "description": "KIABOO API Documentation for partners",
+        "contact": {
+            "email": "devops@kiaboo.net"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "https://kiaboopay.com",
+            "description": "API Server"
+        }
+    ],
+    "paths": {
+        "/api/v1/user/login": {},
+        "/api/v1/authenticate/auth": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login  user",
+                "description": "Login user",
+                "operationId": "566699014f064532f9a9ef12bebd2dc1",
+                "requestBody": {
+                    "description": "user informations",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "login",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "login": {
+                                        "type": "email",
+                                        "format": "email",
+                                        "example": "devops@kiaboo.net"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "oLpIKO521@12"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "login credentials are invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-CREDENTIALS-INVALID"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "login credentials are invalid"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "attribute invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-ATTRIBUTES-INVALID"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "attribute not valid"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "successful login user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "LOGIN-SUCCESS"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "successful login user"
+                                        },
+                                        "access_token": {
+                                            "type": "string",
+                                            "example": "xxxxxxxxxxxxxxxxxxxx"
+                                        },
+                                        "user": {
+                                            "properties": {
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "houvre"
+                                                },
+                                                "surname": {
+                                                    "type": "string",
+                                                    "example": "autre"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "an error occurred",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-UNAVAILABLE"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "an error occurred"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/authenticate/changepassword": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Change password user",
+                "description": "Change password user",
+                "operationId": "6a5c68c2f0230b1e765aef40fa51a65a",
+                "requestBody": {
+                    "description": "change password user connected",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "old_password",
+                                    "new_password",
+                                    "confirm_password"
+                                ],
+                                "properties": {
+                                    "old_password": {
+                                        "type": "string",
+                                        "example": "pasKio@_#85l24"
+                                    },
+                                    "new_password": {
+                                        "type": "string",
+                                        "example": "NFt@_#85lop24"
+                                    },
+                                    "confirm_password": {
+                                        "type": "string",
+                                        "example": "NFt@_#85lop24"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "old password are invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-OLD_PASSWORD-INVALID"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "old password are invalid"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "attribute invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-ATTRIBUTES-INVALID"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "attribute not valid"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "password changed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "PASSWORD-CHANGED-SUCCESSFULLY"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "password changed successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "an error occurred",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-UNAVAILABLE"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "an error occurred"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/agent/add": {
+            "post": {
+                "tags": [
+                    "Agent"
+                ],
+                "summary": "Add new agent",
+                "description": "Create a new agent to carry out the transaction",
+                "operationId": "5f85ed6d53d47011c8199dda474f0204",
+                "requestBody": {
+                    "description": "Data of new agent",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "surname",
+                                    "telephone",
+                                    "email"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "DUPONT"
+                                    },
+                                    "surname": {
+                                        "type": "string",
+                                        "example": "Henry"
+                                    },
+                                    "telephone": {
+                                        "type": "string",
+                                        "example": "659657424"
+                                    },
+                                    "email": {
+                                        "type": "email",
+                                        "example": "devops@kiaboo.net"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "422": {
+                        "description": "attribute invalid or mistyped",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-ATTRIBUTES-INVALID"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "attribute not valid"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "Agent created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "AGENT-CREATED-SUCCESSFULLY"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Agent created successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "an error occurred",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-UNAVAILABLE"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "an error occurred"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/agent/list": {
+            "get": {
+                "tags": [
+                    "Agent"
+                ],
+                "summary": "list of all agents",
+                "description": "list of all agents",
+                "operationId": "c9fb9257e03129dc02e54676d84ea2ec",
+                "responses": {
+                    "200": {
+                        "description": "agent list successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "SUCCESS-LIST-AGENT"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "agent list successful"
+                                        },
+                                        "number": {
+                                            "type": "string",
+                                            "example": "number of agent found"
+                                        },
+                                        "totalBalance": {
+                                            "type": "integer",
+                                            "example": "balance"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "example": "list of agents"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "agent not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-AGENT-NOT-FOUND"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "agent not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "an error occurred",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-UNAVAILABLE"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "an error occurred"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/agent/block/{phone}": {
+            "put": {
+                "tags": [
+                    "Agent"
+                ],
+                "summary": "Blocked an agent ",
+                "description": "Blocked an agent  ",
+                "operationId": "b1e8d4ea03a250edd45a716ae05e8a20",
+                "parameters": [
+                    {
+                        "name": "phone",
+                        "in": "path",
+                        "description": "Login or phone number of agent",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Agent blocked successfuly",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "SUCCESS-AGENT-BLOCKED"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "user successfuly delete"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Agent is already blocked",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-AGENT-ALREADY-BLOCKED"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "This agent is already blocked"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "you do not have the necessary permissions",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-NOT-PERMISSION"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "you do not have the necessary permissions"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "agent not found ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-AGENT-NOT-FOUND"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "agent not found "
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "an error occurred",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-UNAVAILABLE"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "an error occurred"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/agent/unblock/{phone}": {
+            "put": {
+                "tags": [
+                    "Agent"
+                ],
+                "summary": "Unblocked an agent ",
+                "description": "Unblocked an agent  ",
+                "operationId": "17c2d099772043768cc981acdc415f37",
+                "parameters": [
+                    {
+                        "name": "phone",
+                        "in": "path",
+                        "description": "Login or phone number of agent",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Agent unblocked successfuly",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "SUCCESS-AGENT-UNBLOCKED"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "user successfuly delete"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Agent is already unblocked",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-AGENT-ALREADY-UNBLOCKED"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "This agent is already unblocked"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "you do not have the necessary permissions",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-NOT-PERMISSION"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "you do not have the necessary permissions"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "agent not found ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-AGENT-NOT-FOUND"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "agent not found "
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "an error occurred",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-UNAVAILABLE"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "an error occurred"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/prod/momo/payment": {
+            "post": {
+                "tags": [
+                    "Merchant payment"
+                ],
+                "summary": "Request to make a payment MOMO",
+                "description": "This operation is used to request a payment from a consumer (Payer). The payer will be asked to authorize the payment. The transaction will be executed once the payer has authorized the payment. The requesttopay will be in status PENDING until the transaction is authorized or declined by the payer or it is timed out by the system. Status of the transaction can be validated by using the GET api/v1/prod/momo/payment/<resourceId>",
+                "operationId": "21f48c7733bf9d2ac480eace792843b8",
+                "requestBody": {
+                    "description": "Request to make a payment MOMO",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "agentNumber",
+                                    "marchandTransactionId",
+                                    "phone",
+                                    "amount"
+                                ],
+                                "properties": {
+                                    "agentNumber": {
+                                        "type": "string",
+                                        "example": "679962015"
+                                    },
+                                    "marchandTransactionId": {
+                                        "type": "string",
+                                        "example": "12354"
+                                    },
+                                    "data": {
+                                        "properties": {
+                                            "phone": {
+                                                "type": "number",
+                                                "example": "679962015"
+                                            },
+                                            "amount": {
+                                                "type": "number",
+                                                "example": "200"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-INVALID-DATA-SEND"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Bad request, invalid data was sent in the request"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "you do not have the necessary permissions",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-NOT-PERMISSION"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "you do not have the necessary permissions"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "attribute invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-ATTRIBUTES-INVALID"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "attribute not valid"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "202": {
+                        "description": "Payment initiated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "PAYMENT INITIATED"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "payment initiate successfully"
+                                        },
+                                        "paytoken": {
+                                            "type": "string",
+                                            "example": "Payment token"
+                                        },
+                                        "transactionId": {
+                                            "type": "string",
+                                            "example": "Reference transaction for any request"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "208": {
+                        "description": "you do not have the necessary permissions",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-MERCHAND-TRANSACTION-ID-DUPLICATE"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The transaction ID used by the merchant already exists"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "Transaction status"
+                                                },
+                                                "transactionId": {
+                                                    "type": "string",
+                                                    "example": "transacton id database"
+                                                },
+                                                "dateTransaction": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "Date transaction"
+                                                },
+                                                "amount": {
+                                                    "type": "number",
+                                                    "example": "amount of transaction"
+                                                },
+                                                "fees": {
+                                                    "type": "number",
+                                                    "example": "transaction fees"
+                                                },
+                                                "agent": {
+                                                    "type": "string",
+                                                    "example": "agent who initiate transaction"
+                                                },
+                                                "customer": {
+                                                    "type": "number",
+                                                    "example": "customer phone number"
+                                                },
+                                                "marchandTransactionID": {
+                                                    "type": "number",
+                                                    "example": "id transaction of partner"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "an error occurred",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-UNAVAILABLE"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "an error occurred"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/prod/momo/status/{transactionId}": {
+            "get": {
+                "tags": [
+                    "Merchant payment"
+                ],
+                "summary": "Check MoMo transaction status",
+                "description": "This operation is used to get the status of a request to momo pay. TransactionId that was passed in the post is used as reference to the request",
+                "operationId": "9fe89777c2b4d4291a18b573ac9f0b6e",
+                "parameters": [
+                    {
+                        "name": "transactionId",
+                        "in": "path",
+                        "description": "reference of transaction",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Transaction found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "SUCCESSFULL"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Transaction found"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "Transaction status"
+                                                },
+                                                "transactionId": {
+                                                    "type": "string",
+                                                    "example": "transacton id database"
+                                                },
+                                                "dateTransaction": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "Date transaction"
+                                                },
+                                                "currency": {
+                                                    "type": "number",
+                                                    "example": "XAF"
+                                                },
+                                                "amount": {
+                                                    "type": "number",
+                                                    "example": "amount of transaction"
+                                                },
+                                                "fees": {
+                                                    "type": "number",
+                                                    "example": "transaction fees"
+                                                },
+                                                "agent": {
+                                                    "type": "string",
+                                                    "example": "agent who initiate transaction"
+                                                },
+                                                "customer": {
+                                                    "type": "number",
+                                                    "example": "customer phone number"
+                                                },
+                                                "marchandTransactionID": {
+                                                    "type": "number",
+                                                    "example": "id transaction of partner"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "202": {
+                        "description": "Transaction pending",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "PENDING"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Transaction pending"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "Transaction status"
+                                                },
+                                                "transactionId": {
+                                                    "type": "string",
+                                                    "example": "transacton id database"
+                                                },
+                                                "dateTransaction": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "Date transaction"
+                                                },
+                                                "currency": {
+                                                    "type": "number",
+                                                    "example": "XAF"
+                                                },
+                                                "amount": {
+                                                    "type": "number",
+                                                    "example": "amount of transaction"
+                                                },
+                                                "fees": {
+                                                    "type": "number",
+                                                    "example": "transaction fees"
+                                                },
+                                                "agent": {
+                                                    "type": "string",
+                                                    "example": "agent who initiate transaction"
+                                                },
+                                                "customer": {
+                                                    "type": "number",
+                                                    "example": "customer phone number"
+                                                },
+                                                "marchandTransactionID": {
+                                                    "type": "number",
+                                                    "example": "id transaction of partner"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "402": {
+                        "description": "Transaction failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "false": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "FAILED"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Transaction failed"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "you do not have the necessary permissions",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-NOT-PERMISSION"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "you do not have the necessary permissions"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "transaction not found ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-TRANSACTION-NOT-FOUND"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Transaction not found "
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "an error occurred",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-UNAVAILABLE"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "an error occurred"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/prod/om/payment": {
+            "post": {
+                "tags": [
+                    "Merchant payment"
+                ],
+                "summary": "Request to make a OM payment",
+                "description": "This operation is used to request a payment from a consumer (Payer). The payer will be asked to authorize the payment. The transaction will be executed once the payer has authorized the payment. The requesttopay will be in status PENDING until the transaction is authorized or declined by the payer or it is timed out by the system. Status of the transaction can be validated by using the GET api/v1/prod/om/payment/<resourceId>",
+                "operationId": "10ade267001bd627fda7105e5dca7e47",
+                "requestBody": {
+                    "description": "Request to make a OM payment",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "agentNumber",
+                                    "marchandTransactionId",
+                                    "phone",
+                                    "amount"
+                                ],
+                                "properties": {
+                                    "agentNumber": {
+                                        "type": "string",
+                                        "example": "659657424"
+                                    },
+                                    "marchandTransactionId": {
+                                        "type": "string",
+                                        "example": "12354"
+                                    },
+                                    "data": {
+                                        "properties": {
+                                            "phone": {
+                                                "type": "string",
+                                                "example": "659657424"
+                                            },
+                                            "amount": {
+                                                "type": "string",
+                                                "example": "200"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-INVALID-DATA-SEND"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Bad request, invalid data was sent in the request"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "you do not have the necessary permissions",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-NOT-PERMISSION"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "you do not have the necessary permissions"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "attribute invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-ATTRIBUTES-INVALID"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "attribute not valid"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "202": {
+                        "description": "Payment initiated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "PAYMENT INITIATED"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "payment initiate successfully"
+                                        },
+                                        "paytoken": {
+                                            "type": "string",
+                                            "example": "Payment token"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "Transaction status"
+                                                },
+                                                "transactionId": {
+                                                    "type": "string",
+                                                    "example": "transacton id database"
+                                                },
+                                                "dateTransaction": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "Date transaction"
+                                                },
+                                                "amount": {
+                                                    "type": "number",
+                                                    "example": "amount of transaction"
+                                                },
+                                                "fees": {
+                                                    "type": "number",
+                                                    "example": "transaction fees"
+                                                },
+                                                "agent": {
+                                                    "type": "string",
+                                                    "example": "agent who initiate transaction"
+                                                },
+                                                "customer": {
+                                                    "type": "number",
+                                                    "example": "customer phone number"
+                                                },
+                                                "marchandTransactionID": {
+                                                    "type": "number",
+                                                    "example": "id transaction of partner"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "208": {
+                        "description": "you do not have the necessary permissions",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-MERCHAND-TRANSACTION-ID-DUPLICATE"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The transaction ID used by the merchant already exists"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "Transaction status"
+                                                },
+                                                "transactionId": {
+                                                    "type": "string",
+                                                    "example": "transacton id database"
+                                                },
+                                                "dateTransaction": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "Date transaction"
+                                                },
+                                                "amount": {
+                                                    "type": "number",
+                                                    "example": "amount of transaction"
+                                                },
+                                                "fees": {
+                                                    "type": "number",
+                                                    "example": "transaction fees"
+                                                },
+                                                "agent": {
+                                                    "type": "string",
+                                                    "example": "agent who initiate transaction"
+                                                },
+                                                "customer": {
+                                                    "type": "number",
+                                                    "example": "customer phone number"
+                                                },
+                                                "marchandTransactionID": {
+                                                    "type": "number",
+                                                    "example": "id transaction of partner"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "an error occurred",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-UNAVAILABLE"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "an error occurred"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/prod/om/payment/push/{transactionId}": {
+            "get": {
+                "tags": [
+                    "Merchant payment"
+                ],
+                "summary": "Perform the OM Payment confirmation transaction",
+                "description": "Open a prompt to the user to perform the OM Payment confirmation transaction",
+                "operationId": "dff02b9f11357db8c88741b430959d0a",
+                "parameters": [
+                    {
+                        "name": "transactionId",
+                        "in": "path",
+                        "description": "reference of transaction",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "SUCCESSFULL"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Successful operation"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "Transaction status"
+                                                },
+                                                "transactionId": {
+                                                    "type": "string",
+                                                    "example": "transacton id database"
+                                                },
+                                                "dateTransaction": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "Date transaction"
+                                                },
+                                                "currency": {
+                                                    "type": "number",
+                                                    "example": "XAF"
+                                                },
+                                                "amount": {
+                                                    "type": "number",
+                                                    "example": "amount of transaction"
+                                                },
+                                                "fees": {
+                                                    "type": "number",
+                                                    "example": "transaction fees"
+                                                },
+                                                "agent": {
+                                                    "type": "string",
+                                                    "example": "agent who initiate transaction"
+                                                },
+                                                "customer": {
+                                                    "type": "number",
+                                                    "example": "customer phone number"
+                                                },
+                                                "marchandTransactionID": {
+                                                    "type": "number",
+                                                    "example": "id transaction of partner"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid PayToken supplied",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-INVALIDE-PAYOKEN"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid payToken supplied"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No mp found for input pay token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-NO-MP-PAYTOKEN-FOUND"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No mp found for input pay token"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "an error occurred",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-UNAVAILABLE"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "an error occurred"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/prod/om/payment/status/{transactionId}": {
+            "get": {
+                "tags": [
+                    "Merchant payment"
+                ],
+                "summary": "Check OM transaction status",
+                "description": "This operation is used to get the status of a request to momo pay. TransactionId that was passed in the post is used as reference to the request",
+                "operationId": "ad9247a1ba1c14f18f8514461de54e8a",
+                "parameters": [
+                    {
+                        "name": "transactionId",
+                        "in": "path",
+                        "description": "reference of transaction",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Transaction found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "SUCCESSFULL"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Transaction found"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "Transaction status"
+                                                },
+                                                "transactionId": {
+                                                    "type": "string",
+                                                    "example": "transacton id database"
+                                                },
+                                                "dateTransaction": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "Date transaction"
+                                                },
+                                                "currency": {
+                                                    "type": "number",
+                                                    "example": "XAF"
+                                                },
+                                                "amount": {
+                                                    "type": "number",
+                                                    "example": "amount of transaction"
+                                                },
+                                                "customer": {
+                                                    "type": "number",
+                                                    "example": "customer phone number"
+                                                },
+                                                "marchandTransactionID": {
+                                                    "type": "number",
+                                                    "example": "id transaction of partner"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "402": {
+                        "description": "Transaction failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "false": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "FAILED"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Transaction failed"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "you do not have the necessary permissions",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-NOT-PERMISSION"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "you do not have the necessary permissions"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "transaction not found ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-TRANSACTION-NOT-FOUND"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Transaction not found "
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "an error occurred",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-UNAVAILABLE"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "an error occurred"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/prod/om/cashin": {
+            "post": {
+                "tags": [
+                    "Cashin"
+                ],
+                "summary": "Request to make a OM deposit",
+                "description": "This request is used to deposit money into a customer's account using the OM service",
+                "operationId": "a2f33db834a6f1b0e437e80d478e101e",
+                "requestBody": {
+                    "description": "Request to make a OM payment",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "agentNumber",
+                                    "marchandTransactionId",
+                                    "phone",
+                                    "amount"
+                                ],
+                                "properties": {
+                                    "agentNumber": {
+                                        "type": "string",
+                                        "example": "659657424"
+                                    },
+                                    "marchandTransactionId": {
+                                        "type": "string",
+                                        "example": "12354"
+                                    },
+                                    "data": {
+                                        "properties": {
+                                            "phone": {
+                                                "type": "number",
+                                                "example": "659657424"
+                                            },
+                                            "amount": {
+                                                "type": "number",
+                                                "example": "200"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Payment initiated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "PAYMENT INITIATED"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "payment initiate successfully"
+                                        },
+                                        "paytoken": {
+                                            "type": "string",
+                                            "example": "Payment token"
+                                        },
+                                        "transactionId": {
+                                            "type": "string",
+                                            "example": "Reference transaction for any request"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "208": {
+                        "description": "you do not have the necessary permissions",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-MERCHAND-TRANSACTION-ID-DUPLICATE"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The transaction ID used by the merchant already exists"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "Transaction status"
+                                                },
+                                                "transactionId": {
+                                                    "type": "string",
+                                                    "example": "transacton id database"
+                                                },
+                                                "dateTransaction": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "Date transaction"
+                                                },
+                                                "amount": {
+                                                    "type": "number",
+                                                    "example": "amount of transaction"
+                                                },
+                                                "fees": {
+                                                    "type": "number",
+                                                    "example": "transaction fees"
+                                                },
+                                                "agent": {
+                                                    "type": "string",
+                                                    "example": "agent who initiate transaction"
+                                                },
+                                                "customer": {
+                                                    "type": "number",
+                                                    "example": "customer phone number"
+                                                },
+                                                "marchandTransactionID": {
+                                                    "type": "number",
+                                                    "example": "id transaction of partner"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-INVALID-DATA-SEND"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Bad request, invalid data was sent in the request"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "you do not have the necessary permissions",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-NOT-PERMISSION"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "you do not have the necessary permissions"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "attribute invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-ATTRIBUTES-INVALID"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "attribute not valid"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "an error occurred",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-UNAVAILABLE"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "an error occurred"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/prod/transactions": {
+            "post": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "get list of transactions",
+                "description": "This request provides a list of the last five transactions carried out by a partner. If you want to filter by agent, enter the partner's agent reference {agentId}.",
+                "operationId": "a7207742540a997a4e736081e980449c",
+                "requestBody": {
+                    "description": "Request to get transaction",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "startDate",
+                                    "endDate"
+                                ],
+                                "properties": {
+                                    "agentId": {
+                                        "type": "string",
+                                        "example": "679962015"
+                                    },
+                                    "startDate": {
+                                        "format": "date",
+                                        "example": "2024-01-01"
+                                    },
+                                    "endDate": {
+                                        "format": "date",
+                                        "example": "2024-01-31"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Transaction found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "SUCCESS"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Transaction found"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "transactionsId": {
+                                                    "type": "string",
+                                                    "example": "transactionId"
+                                                },
+                                                "dateTransaction": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "Date transaction"
+                                                },
+                                                "serviceName": {
+                                                    "type": "string",
+                                                    "example": "Name service"
+                                                },
+                                                "amount": {
+                                                    "type": "number",
+                                                    "example": "amount of transaction"
+                                                },
+                                                "fees": {
+                                                    "type": "number",
+                                                    "example": "transaction fees"
+                                                },
+                                                "merchand_amount": {
+                                                    "type": "number",
+                                                    "example": "Amount reimbursed to merchant"
+                                                },
+                                                "agent": {
+                                                    "type": "string",
+                                                    "example": "agent who initiate transaction"
+                                                },
+                                                "customer": {
+                                                    "type": "number",
+                                                    "example": "customer phone number"
+                                                },
+                                                "marchandTransactionID": {
+                                                    "type": "number",
+                                                    "example": "id transaction of partner"
+                                                },
+                                                "dateEndTransaction": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "Date end transaction"
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "Transaction status"
+                                                },
+                                                "logoService": {
+                                                    "type": "string",
+                                                    "example": "Service logo name"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "transaction not found ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-TRANSACTION-NOT-FOUND"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Transaction not found "
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "attribute invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-ATTRIBUTES-INVALID"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "attribute not valid"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "an error occurred",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "false"
+                                        },
+                                        "statusCode": {
+                                            "type": "string",
+                                            "example": "ERR-UNAVAILABLE"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "an error occurred"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        }
+    }
+}
