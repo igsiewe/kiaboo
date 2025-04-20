@@ -1168,7 +1168,7 @@ class ApiProdMoMoMoneyController extends Controller
                         $title = "Kiaboo";
                         $message = "Le retrait de " . $montant . " F CFA a été effectué avec succès au ".$customer_phone;
                         $appNotification = new ApiNotification();
-                        $envoiNotification = $appNotification->SendPushNotification($device_notification, $title, $message);
+                        $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
                         Log::info($envoiNotification);
                         DB::commit();
 

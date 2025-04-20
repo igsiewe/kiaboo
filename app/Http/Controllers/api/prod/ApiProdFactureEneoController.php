@@ -274,7 +274,7 @@ class ApiProdFactureEneoController extends Controller
                 $subtitle ="Success";
                 $appNotification = new ApiNotification();
 
-                $envoiNotification = $appNotification->SendPushNotification($idDevice, $title, $message); //Push notification sur le telephone de l'agent
+                $envoiNotification = $appNotification->SendPushNotificationCallBack($idDevice, $title, $message); //Push notification sur le telephone de l'agent
                 $services = Service::all();
                 return response()->json([
                     'success' => true,

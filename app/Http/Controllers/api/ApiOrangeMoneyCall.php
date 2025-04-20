@@ -154,7 +154,7 @@ class ApiOrangeMoneyCall extends Controller
 //                $PushSMS = new ApiSendNotificationPushController();
 //
 //                $message = "Transaction terminée avec échec\n".$messageCallback;
-//                $sendNotification = $PushSMS->SendPushNotification($idDevice, $title, $message);
+//                $sendNotification = $PushSMS->SendPushNotificationCallBack($idDevice, $title, $message);
             }
 
             if ($request->status == 'SUCCESSFULL') {
@@ -215,7 +215,7 @@ class ApiOrangeMoneyCall extends Controller
 //                $message = "Transaction terminée avec succès \nID Transaction : ".$checkPayToken->first()->reference_partenaire."\nTéléphone : ".$checkPayToken->first()->customer_number."\nMontant : ".$checkPayToken->first()->amount." F CFA\n\n".$messageCallBack;
 //
 //                $PushSMS = new ApiSendNotificationPushController();
-//                $sendNotification = $PushSMS->SendPushNotification($idDevice, $title,  $message);
+//                $sendNotification = $PushSMS->SendPushNotificationCallBack($idDevice, $title,  $message);
             }
         } else {
             return response()->json([
@@ -247,7 +247,7 @@ class ApiOrangeMoneyCall extends Controller
            // $PushSMS = new ApiSendNotificationPushController();
 
           //  $message = "Transaction terminée avec échec\n".$messageCallback;
-          //  $sendNotification = $PushSMS->SendPushNotification($idDevice, $title,  $message);
+          //  $sendNotification = $PushSMS->SendPushNotificationCallBack($idDevice, $title,  $message);
         }
 
         if ($status == 'SUCCESSFULL') {
@@ -332,7 +332,7 @@ class ApiOrangeMoneyCall extends Controller
             $subtitle = 'Kiaboo - Dépôt OM';
 
             //$PushSMS = new ApiSendNotificationPushController();
-            //$sendNotification = $PushSMS->SendPushNotification($idDevice, $title, $message);
+            //$sendNotification = $PushSMS->SendPushNotificationCallBack($idDevice, $title, $message);
         }
     }
 

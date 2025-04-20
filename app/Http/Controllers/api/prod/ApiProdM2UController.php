@@ -440,7 +440,7 @@ class ApiProdM2UController extends Controller
                     $message = "Votre dépôt M2U Money de " . $montant . " F CFA a été effectué avec succès au ".$customerNumber;
                     $subtitle ="Success";
                     $appNotification = new ApiNotification();
-                    $envoiNotification = $appNotification->SendPushNotification($idDevice, $title,  $message);
+                    $envoiNotification = $appNotification->SendPushNotificationCallBack($idDevice, $title,  $message);
 
                     return response()->json([
                         'success' => true,
@@ -830,7 +830,7 @@ class ApiProdM2UController extends Controller
                     $message = "Le retrait M2U Money de " . $request->Amount . " F CFA a été effectué avec succès au ".$request->TargetPhoneNumber;
                     $subtitle ="Success";
                     $appNotification = new ApiNotification();
-                    $envoiNotification = $appNotification->SendPushNotification($idDevice, $title,  $message);
+                    $envoiNotification = $appNotification->SendPushNotificationCallBack($idDevice, $title,  $message);
 
                     return response()->json([
                         'success' => true,
@@ -1066,7 +1066,7 @@ class ApiProdM2UController extends Controller
                                 $message = "Le retrait M2U Money de " . $request->Amount . " F CFA a été effectué avec succès au ".$request->TargetPhoneNumber;
                                 $subtitle ="Success";
                                 $appNotification = new ApiNotification();
-                                $envoiNotification = $appNotification->SendPushNotification($idDevice, $title,  $message);
+                                $envoiNotification = $appNotification->SendPushNotificationCallBack($idDevice, $title,  $message);
                                 if($envoiNotification->status()==200){
                                     $resultNotification=json_decode($envoiNotification->getContent());
                                     $responseNotification=$resultNotification->response ;

@@ -346,7 +346,7 @@ class ApiMoMoMoneyController extends Controller
                 $message = "Le dépôt MOMO de " . $montant . " F CFA a été effectué avec succès au ".$customerNumber;
                 $subtitle ="Success";
                 $appNotification = new ApiNotification();
-                $envoiNotification = $appNotification->SendPushNotification($idDevice, $title,  $message);
+                $envoiNotification = $appNotification->SendPushNotificationCallBack($idDevice, $title,  $message);
                 if($envoiNotification->status()==200){
                     $resultNotification=json_decode($envoiNotification->getContent());
                     $responseNotification=$resultNotification->response ;
@@ -747,7 +747,7 @@ class ApiMoMoMoneyController extends Controller
                     $message = "Le retrait MOMO de " . $montant . " F CFA a été effectué avec succès au ".$customer_phone;
                     $subtitle ="Success";
                     $appNotification = new ApiNotification();
-                    $envoiNotification = $appNotification->SendPushNotification($device_notification, $title,  $message);
+                    $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title,  $message);
                     if($envoiNotification->status()==200){
                         $resultNotification=json_decode($envoiNotification->getContent());
                         $responseNotification=$resultNotification->response ;
