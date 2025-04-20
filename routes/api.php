@@ -146,7 +146,7 @@ Route::middleware('auth:api')->group(function () {
         });
 
         Route::controller(ApiNotification::class)->group(function () {
-            Route::post('send/notification/', 'SendPushNotification')->name("SendPushNotification");
+            Route::post('send/notification', 'SendPushNotification')->name("SendPushNotification");
         });
 
         //SandBox

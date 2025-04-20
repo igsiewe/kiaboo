@@ -43,4 +43,5 @@ trait PushNotification
         $token = $credentials->fetchAuthToken();
         return $token['access_token'] ?? null;
     }
+
 }
