@@ -129,7 +129,7 @@ class ApiAuthController extends BaseController
                 ->where('users.id', $users->id)
                 ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id')->first();
 
-            $questions = question::where("status",1)->orderBy('ordre', 'asc')->select('id','question','message')->get();
+            $questions = question::where("status",1)->orderBy('ordre', 'asc')->select('id','question','reponse')->get();
             $configurations = configuration::where("status",1)->select('id','lien_politique', 'lien_cgu', 'lien_mention', 'lien_appstore','lien_playstore', 'telephone_support', 'email_support', 'message_parrainage')->get();
 
             return $this->respondWithToken($access_token, $user, $partenaires, $transactions, $services,$version,$urlApplication, $notification, $monnaies, $questions, $configurations);
