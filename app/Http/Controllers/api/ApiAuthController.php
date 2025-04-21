@@ -499,8 +499,8 @@ class ApiAuthController extends BaseController
     {
         # Validation
         $request->validate([
-            'old_password' => 'required|string|min:12|max:50',
-            'new_password' => 'required|confirmed',
+            'old_password' => 'required|string|max:50',
+            'new_password' => 'required|min:12|max:50|confirmed',
         ]);
 
 
@@ -509,7 +509,7 @@ class ApiAuthController extends BaseController
         if($check !=1){
             return response()->json([
                 'status' => 'error',
-                'message' => 'Old Password doesn\'t match !'
+                'message' => 'Votre mot de passe est incorrect'
             ], 404);
 
         }
@@ -522,7 +522,7 @@ class ApiAuthController extends BaseController
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Password changed successfully !'
+            'message' => 'Votre mot de passe a été changé avec succès!'
         ], 200);
 
     }
