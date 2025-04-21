@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->text('question');
             $table->text('reponse');
+            $table->text('detail');
             $table->integer('status');
             $table->integer('ordre');
             $table->timestamps();
