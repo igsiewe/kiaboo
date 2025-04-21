@@ -69,7 +69,6 @@ class ApiNotification extends Controller
 
     public function SendPushNotificationCallBack($deviceToken, $title, $body)
     {
-
         $data =  [
             'key1' => 'value1',
             'key2' => 'value2',
