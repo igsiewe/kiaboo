@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Enums\TypeServiceEnum;
+use App\Http\Enums\UserRolesEnum;
 use App\Models\prospect;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -40,7 +42,7 @@ class ApiProspectController extends Controller
             }
             if($request->isCodeParrainage == true){
 
-                $parrainageCheck = User::where('codeparrainage', $request->codeParrainage)->first();
+                $parrainageCheck = User::where('codeparrainage', $request->codeParrainage)->where("statut_code_parrainage",1)->where("type_user_id", UserRolesEnum::AGENT->value)->first();
                 if(!$parrainageCheck){
                     DB::rollBack();
                     return response()->json(

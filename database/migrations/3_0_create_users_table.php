@@ -48,6 +48,7 @@ return new class extends Migration
             $table->integer("ville_id"); //Va etre enleve, il y'a une relation entre ville et quartier
             $table->integer("quartier_id");
             $table->integer("version");
+            $table->integer('statut_code_parrainage')->default(1);
             $table->integer("view")->default(1)->comment("0 : no view, 1:view : User for stripe operation");
             $table->rememberToken();
             $table->timestamps();
