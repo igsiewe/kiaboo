@@ -17,6 +17,7 @@ class ApiProspectController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
+            'genre' => 'required',
             'name' => 'required|min:3|string|max:255',
             'surname' => 'required|string|max:255',
             'phone' => 'required|string|unique:prospects',
@@ -54,6 +55,7 @@ class ApiProspectController extends Controller
 
             }
             $user = new prospect();
+            $user->genre =$request->genre;
             $user->name =strtoupper($request->name);
             $user->surname = strtoupper($request->surname);
             $user->email = $request->email;

@@ -10,6 +10,7 @@ class prospect extends Model
 {
     use HasFactory, Notifiable;
     protected $fillable = [
+        'genre',
         'name',
         'surname',
         'phone',

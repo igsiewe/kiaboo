@@ -22,6 +22,7 @@
       <change beforePath="$PROJECT_DIR$/app/Models/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/User.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Models/question.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/question.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Traits/PushNotification.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2025_04_12_134050_create_prospects_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2025_04_12_134050_create_prospects_table.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/database/migrations/2025_04_21_085228_create_questions_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2025_04_21_085228_create_questions_table.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/database/migrations/3_0_create_users_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/3_0_create_users_table.php" afterDir="false" />
     </list>
@@ -246,7 +247,7 @@
       <workItem from="1744675903928" duration="2688000" />
       <workItem from="1744822802835" duration="11848000" />
       <workItem from="1745089302106" duration="6936000" />
-      <workItem from="1745142798044" duration="35231000" />
+      <workItem from="1745142798044" duration="37974000" />
     </task>
     <servers />
   </component>
