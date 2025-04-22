@@ -1,4 +1,4 @@
-{{dd($editProspect)}}
+
 @isset($editProspect)
 
     <form action="{{route("editProspect",[$editProspect->id])}}" id="frmUpdateProspect" name="frmUpdateProspect">
