@@ -51,19 +51,19 @@ class ApiProspectController extends Controller
 //                        'message' => 'Cette adresse email est déjà enregistrée de téléphone existe déjà'
 //                    ], 202);
 //            }
-            if($request->isCodeParrainage == true){
-
-                $parrainageCheck = User::where('codeparrainage', $request->codeParrainage)->where("statut_code_parrainage",1)->where("type_user_id", UserRolesEnum::AGENT->value)->first();
-                if(!$parrainageCheck){
-                    DB::rollBack();
-                    return response()->json(
-                        [
-                            'success' => false,
-                            'message' => "Ce code de parrainage n'est pas valide"
-                        ], 202);
-                }
-
-            }
+//            if($request->isCodeParrainage == true){
+//
+//                $parrainageCheck = User::where('codeparrainage', $request->codeParrainage)->where("statut_code_parrainage",1)->where("type_user_id", UserRolesEnum::AGENT->value)->first();
+//                if(!$parrainageCheck){
+//                    DB::rollBack();
+//                    return response()->json(
+//                        [
+//                            'success' => false,
+//                            'message' => "Ce code de parrainage n'est pas valide"
+//                        ], 202);
+//                }
+//
+//            }
             $user = new prospect();
             $user->genre =$request->genre;
             $user->name =strtoupper($request->name);
