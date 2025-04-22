@@ -21,7 +21,7 @@ class ApiProspectController extends Controller
             'name' => 'required|min:3|string|max:255',
             'surname' => 'required|string|max:255',
             'phone' => 'required|string|unique:prospects',
-            'email' => 'required|string',
+            'email' => 'required|string|unique:prospects',
             'password' => 'required|string|min:12',
         ]);
         if ($validator->fails()) {
@@ -41,6 +41,16 @@ class ApiProspectController extends Controller
                         'message' => 'Ce numéro de téléphone existe déjà'
                     ], 202);
             }
+
+//            $checkEmail = prospect::where("email",$request->email)->first();
+//            if($checkEmail){
+//                DB::rollBack();
+//                return response()->json(
+//                    [
+//                        'success' => false,
+//                        'message' => 'Cette adresse email est déjà enregistrée de téléphone existe déjà'
+//                    ], 202);
+//            }
             if($request->isCodeParrainage == true){
 
                 $parrainageCheck = User::where('codeparrainage', $request->codeParrainage)->where("statut_code_parrainage",1)->where("type_user_id", UserRolesEnum::AGENT->value)->first();
