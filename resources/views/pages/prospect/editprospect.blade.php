@@ -128,15 +128,18 @@
                     </form>
 
                     <form action="{{route("rejectedProspect",[$editProspect->id])}}" id="frmRejeteProspect" name="frmRejeteProspect">
-                        <button type="button" class="btn btn-danger" onclick="javascript:rejeterFormulaire();">Rejeter</button>
+
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#rejetModal">
+                            Rejeter
+                        </button>
                     </form>
                 @endif
                 <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Fermer</button>
             </div>
 
 
-    <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+    <div class="modal fade" id="confirmationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-2" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="confirmationModalLabel">Confirmation</h5>
@@ -148,6 +151,24 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non</button>
                     <button type="button" class="btn btn-success" onclick="validerFormulaire()">Oui</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="rejetModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-3" aria-labelledby="rejetModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="rejetModalLabel">Rejet</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    Voulez-vous valider le passage de ce prospect en agent ?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non</button>
+                    <button type="button" class="btn btn-success" onclick="rejeterFormulaire()">Oui</button>
                 </div>
             </div>
         </div>
