@@ -48,7 +48,7 @@
                     <label class="form-label">Type pièce</label>
                     <div class="input-group mb-12">
                         <span class="input-group-text"><i class="fa fa-id-card"></i></span>
-                        <input type="texte" id="typepiece"  name="typepiece" disabled class="form-control" placeholder="Type pièce value="{{$editProspect->type_piece}}" aria-label="Type pièce" required>
+                        <input type="texte" id="typepiece"  name="typepiece" disabled class="form-control" placeholder="Type pièce" value="{{$editProspect->type_piece}}" aria-label="Type pièce" required>
                     </div>
                 </div>
                 <div class="col-md-12 col-lg-6">
