@@ -20,6 +20,7 @@
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/prod/ApiProdM2UController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/prod/ApiProdM2UController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/prod/ApiProdMoMoMoneyController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/prod/ApiProdMoMoMoneyController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/prod/ApiProdYooMeeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/prod/ApiProdYooMeeController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/web/WebProspectontroller.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/web/WebProspectontroller.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Models/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/User.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Models/prospect.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/prospect.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Models/quartier.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/quartier.php" afterDir="false" />
@@ -254,7 +255,7 @@
       <workItem from="1744675903928" duration="2688000" />
       <workItem from="1744822802835" duration="11848000" />
       <workItem from="1745089302106" duration="6936000" />
-      <workItem from="1745142798044" duration="43476000" />
+      <workItem from="1745142798044" duration="43783000" />
     </task>
     <servers />
   </component>

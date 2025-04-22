@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class WebProspectontroller extends Controller
 {
    public function getListProspect(){
-       $listProspect = prospect::with('quartier.ville', 'quartier', 'ville_piece')->orderBy('id', 'DESC')->get();
+       $listProspect = prospect::with( 'quartier', 'ville_piece')->orderBy('id', 'DESC')->get();
        return view('pages.prospect.listprospect', compact('listProspect'));
    }
 
@@ -18,7 +18,7 @@ class WebProspectontroller extends Controller
    }
 
     public function editProspect($id){
-        $editProspect = prospect::with('quartier.ville', 'quartier', 'ville_piece')->where('id', $id)->first();
+        $editProspect = prospect::with('quartier', 'ville_piece')->where('id', $id)->first();
         return view('pages.prospect.editprospect', compact('editProspect'));
     }
 
