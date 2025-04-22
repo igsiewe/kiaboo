@@ -109,10 +109,34 @@
                 </div>
                 <div class="col-md-12 col-lg-6">
                     <div class="row">
-                        <img src="data:image/png;base64,{{$editProspect->photo_verso}}" alt="Pièce verso">
+                        <iframe
+                                src='data:text/html;charset=utf-8,
+                                    <html>
+                                      <body style="margin:0">
+                                        <img src="data:image/png;base64,{{$editProspect->photo_verso}}"
+                                        style="width:100%; height:auto;" />
+                                      </body>
+                                    </html>'
+                                width="150"
+                                height="150"
+                                frameborder="0">
+                        </iframe>
                     </div>
                     <div class="row">
-                        <img src="data:image/png;base64,{{$editProspect->photo_recto}}" alt="Pièce recto">
+
+
+                        <iframe
+                                src='data:text/html;charset=utf-8,
+                                    <html>
+                                      <body style="margin:0">
+                                        <img src="data:image/png;base64,{{$editProspect->photo_recto}}"
+                                        style="width:100%; height:auto;" />
+                                      </body>
+                                    </html>'
+                                width="150"
+                                height="150"
+                                frameborder="0">
+                        </iframe>
                     </div>
                 </div>
             </div>
