@@ -102,7 +102,7 @@
                             <label class="form-label">Adresse</label>
                             <div class="input-group mb-12">
                                 <span class="input-group-text"><i class="fa fa-address-card"></i></span>
-                                <textarea type="text" id="adresse" name="adresse" disabled maxlength="150" class="form-control" placeholder="Adresse" aria-label="Adresse" required>{{$editProspect->adresse}}</textarea>
+                                <input type="text" id="adresse" name="adresse" disabled maxlength="150" class="form-control" placeholder="Adresse" aria-label="Adresse" required value="{{$editProspect->adresse}}">
                             </div>
                         </div>
                     </div>
