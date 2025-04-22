@@ -122,15 +122,55 @@
             <div class="modal-footer">
                 @if($editProspect->status==0)
                     <form action="{{route("valideProspect",[$editProspect->id])}}" id="frmValidateProspect" name="frmValidateProspect">
-                        <button type="submit" class="btn btn-success">Valider</button>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmationModal">
+                            Valider
+                        </button>
                     </form>
+
                     <form action="{{route("rejectedProspect",[$editProspect->id])}}" id="frmRejeteProspect" name="frmRejeteProspect">
-                        <button type="submit" class="btn btn-danger">Rejeter</button>
+                        <button type="button" class="btn btn-danger" onclick="javascript:rejeterFormulaire();">Rejeter</button>
                     </form>
                 @endif
                 <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Fermer</button>
             </div>
 
 
+    <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmationModalLabel">Confirmation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    Voulez-vous valider le passage de ce prospect en agent ?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non</button>
+                    <button type="button" class="btn btn-success" onclick="validerFormulaire()">Oui</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function validerFormulaire() {
+            // Fermer la modale
+            const modal = bootstrap.Modal.getInstance(document.getElementById('confirmationModal'));
+            modal.hide();
+
+            // Soumettre le formulaire
+            document.getElementById('frmValidateProspect').submit();
+        }
+
+        function rejeterFormulaire() {
+            // Fermer la modale
+            const modal = bootstrap.Modal.getInstance(document.getElementById('confirmationModal'));
+            modal.hide();
+
+            // Soumettre le formulaire
+            document.getElementById('frmRejeteProspect').submit();
+        }
+    </script>
 
 @endisset
