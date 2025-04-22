@@ -10,7 +10,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-12 col-lg-6">
+                <div class="col-md-12 col-lg-8">
                     <div class="row">
                         <div class="col-md-12 col-lg-6">
                             <label class="form-label">Nom *</label>
@@ -107,8 +107,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12 col-lg-6" style="align-content: center">
-
+                <div class="col-md-12 col-lg-4" style="align-content: center">
                     <div class="row">
                         <img src="data:image/png;base64,{{$editProspect->photo_recto}}" alt="Pièce recto" width="150px" height="220px">
                     </div>
@@ -116,7 +115,6 @@
                     <div class="row">
                         <img src="data:image/png;base64,{{$editProspect->photo_verso}}" alt="Pièce verso" width="150px" height="220px">
                     </div>
-
                 </div>
             </div>
             <p></p>
