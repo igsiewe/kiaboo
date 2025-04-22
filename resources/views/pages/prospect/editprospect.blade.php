@@ -109,14 +109,13 @@
                 </div>
                 <div class="col-md-12 col-lg-6">
 
-                        <div class="row">
-                            <img src="data:image/png;base64,{{$editProspect->photo_recto}}" alt="Pièce recto" width="207px" height="266px">
-                        </div>
-
-
-                        <div class="row">
-                            <img src="data:image/png;base64,{{$editProspect->photo_verso}}" alt="Pièce verso" width="207px" height="266px">
-                        </div>
+                    <div class="row">
+                        <img src="data:image/png;base64,{{$editProspect->photo_recto}}" alt="Pièce recto" width="200px" height="250px">
+                    </div>
+                     <p></p>
+                    <div class="row">
+                        <img src="data:image/png;base64,{{$editProspect->photo_verso}}" alt="Pièce verso" width="200px" height="220px">
+                    </div>
 
                 </div>
             </div>
