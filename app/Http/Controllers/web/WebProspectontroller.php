@@ -61,7 +61,7 @@ class WebProspectontroller extends Controller
                    $newAgent->numcni = $prospect->numero_piece;
                    $newAgent->datecni = $prospect->date_validite;
                    $newAgent->seuilapprovisionnement="100000";
-                   $newAgent->moncodeparrainage = "KI".$codeparrainage->genererChaineAleatoire(8);
+                   $newAgent->moncodeparrainage = strtoupper("KI".$codeparrainage->genererChaineAleatoire(8));
                    $newAgent->save();
 
                    //On informe le client par SMS que son profil a été validé
@@ -72,7 +72,7 @@ class WebProspectontroller extends Controller
                    $msgInfo = "Ne tardez plus, vous pouvez commencer à effectuer les transactions mobiles money et profiter de nombreux avantages.";
                    $envoyerSMS = $sms->SendSMS($tel,utf8_decode($msgInfo));
                    DB::commit();
-                   return redirect()->back()->with('success', 'Prospect validated successfully');
+                   return redirect()->back()->with('success', 'Prospect validated successfully - '.$envoyerSMS);
                }else{
                    DB::rollBack();
                    return redirect()->back()->withInput()->withErrors(['error' => 'Ce prospect a déjà été traité']);
@@ -105,7 +105,7 @@ class WebProspectontroller extends Controller
                $msgInfo = "Bonjour ".$prospect->surname."\nAprès analyse des éléments soumis via l'application KIABOO, nous n'avons pas été en mésure de valider votre compte KIABOO.\nMerci de vous rapprocher de l'agence KIABOO la plus proche";
                $envoyerSMS = $sms->SendSMS($tel,utf8_decode($msgInfo));
 
-               return redirect()->back()->with('success', 'Prospect rejeted successfully');
+               return redirect()->back()->with('success', 'Prospect rejeted successfully - '.$envoyerSMS);
            }else{
                return redirect()->back()->withInput()->withErrors(['error' => 'Ce prospect a déjà été traité']);
            }
