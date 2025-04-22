@@ -1,5 +1,6 @@
+{{$editProspect}}
 @isset($editProspect)
-    {{$editProspect}}
+
     <form action="{{route("editProspect",[$editProspect->id])}}" id="frmUpdateProspect" name="frmUpdateProspect">
         @csrf
         <div class="modal-body">
