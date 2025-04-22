@@ -120,8 +120,11 @@
             <p></p>
 
             <div class="modal-footer">
+                @if($editProspect->status==0)
                 <button type="submit" class="btn btn-success">Valider</button>
+                @else
                 <button type="submit" class="btn btn-danger">Rejeter</button>
+                @endif
                 <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Fermer</button>
             </div>
     </form>
