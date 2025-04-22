@@ -118,7 +118,7 @@
                                       </body>
                                     </html>'
                                 width="150"
-                                height="150"
+                                height="300"
                                 frameborder="0">
                         </iframe>
                     </div>
@@ -134,7 +134,7 @@
                                       </body>
                                     </html>'
                                 width="150"
-                                height="150"
+                                height="300"
                                 frameborder="0">
                         </iframe>
                     </div>
