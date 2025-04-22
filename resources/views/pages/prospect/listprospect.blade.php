@@ -88,9 +88,13 @@
                                                             <td align="center" title="En attente de validation">
                                                               <a type="button" class="btn" style="border: none;" title="En attente de validation"><i class="fa fa-user-alt-slash" style="color: black"></i></a>
                                                             </td>
-                                                        @else
+                                                        @elseif($c->status==1)
                                                             <td align="center" title="Validé">
-                                                                   <a type="button" class="btn" style="border: none;"   title="Prospect validé"><i class="fa fa-user" style="color:red;"></i></a>
+                                                                   <a type="button" class="btn" style="border: none;"   title="Prospect validé"><i class="fa fa-check-circle" style="color:green;"></i></a>
+                                                            </td>
+                                                        @else
+                                                            <td align="center" title="Rejeté">
+                                                                <a type="button" class="btn" style="border: none;"   title="Prospect rejeté"><i class="fa fa-close" style="color:red;"></i></a>
                                                             </td>
                                                         @endif
                                                         <td nowrap align="center">{{$c->created_at}}</td>
