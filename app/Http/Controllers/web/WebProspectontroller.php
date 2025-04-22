@@ -33,7 +33,7 @@ class WebProspectontroller extends Controller
            DB::beginTransaction();
            $user = user::find($id);
            if($user){
-               if($user->status == 0){
+               if($user->status == "0"){
                    //desctive dans la table des prospects
                    $codeparrainage = new WebUtilisateurController();
                    $user->status = 1;
