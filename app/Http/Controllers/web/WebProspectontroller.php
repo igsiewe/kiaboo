@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\DB;
 class WebProspectontroller extends Controller
 {
    public function getListProspect(){
-       if(Auth::user()->type_user_id !=UserRolesEnum::SUPADMIN->value || Auth::user()->type_user_id !=UserRolesEnum::ADMIN->value || Auth::user()->type_user_id !=UserRolesEnum::BACKOFFICE->value){
+       if(Auth::user()->type_user_id !=UserRolesEnum::SUPADMIN->value && Auth::user()->type_user_id !=UserRolesEnum::ADMIN->value && Auth::user()->type_user_id !=UserRolesEnum::BACKOFFICE->value){
            return redirect()->back()->withInput()->withErrors(['error' => "Vous n'êtes pas autorisés à acceder à cette page"]);
        }
        $listProspect = prospect::with( 'quartier', 'ville_piece')->orderBy('id', 'DESC')->get();
@@ -26,7 +26,7 @@ class WebProspectontroller extends Controller
    }
 
    public function valideProspect($id){
-       if(Auth::user()->type_user_id !=UserRolesEnum::SUPADMIN->value || Auth::user()->type_user_id !=UserRolesEnum::ADMIN->value || Auth::user()->type_user_id !=UserRolesEnum::BACKOFFICE->value){
+       if(Auth::user()->type_user_id !=UserRolesEnum::SUPADMIN->value && Auth::user()->type_user_id !=UserRolesEnum::ADMIN->value && Auth::user()->type_user_id !=UserRolesEnum::BACKOFFICE->value){
            return redirect()->back()->withInput()->withErrors(['error' => "Vous n'êtes pas autorisés à acceder à cette page"]);
        }
        try{
@@ -88,7 +88,7 @@ class WebProspectontroller extends Controller
    }
 
    public function rejectedProspect($id){
-       if(Auth::user()->type_user_id !=UserRolesEnum::SUPADMIN->value || Auth::user()->type_user_id !=UserRolesEnum::ADMIN->value || Auth::user()->type_user_id !=UserRolesEnum::BACKOFFICE->value){
+       if(Auth::user()->type_user_id !=UserRolesEnum::SUPADMIN->value && Auth::user()->type_user_id !=UserRolesEnum::ADMIN->value && Auth::user()->type_user_id !=UserRolesEnum::BACKOFFICE->value){
            return redirect()->back()->withInput()->withErrors(['error' => "Vous n'êtes pas autorisés à acceder à cette page"]);
        }
        $user = User::find($id);
@@ -114,7 +114,7 @@ class WebProspectontroller extends Controller
    }
 
     public function editProspect($id){
-        if(Auth::user()->type_user_id !=UserRolesEnum::SUPADMIN->value || Auth::user()->type_user_id !=UserRolesEnum::ADMIN->value || Auth::user()->type_user_id !=UserRolesEnum::BACKOFFICE->value){
+        if(Auth::user()->type_user_id !=UserRolesEnum::SUPADMIN->value && Auth::user()->type_user_id !=UserRolesEnum::ADMIN->value && Auth::user()->type_user_id !=UserRolesEnum::BACKOFFICE->value){
             return redirect()->back()->withInput()->withErrors(['error' => "Vous n'êtes pas autorisés à acceder à cette page"]);
         }
         $editProspect = prospect::with('quartier', 'ville_piece')->where('id', $id)->first();
