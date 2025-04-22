@@ -85,8 +85,7 @@
                         <input type="text" id="quartier" name="quartier" class="form-control" value="{{$editProspect->quartier->ville->name_ville}}" placeholder="Ville" aria-label="Ville" required>
                     </div>
                 </div>
-            </div>
-            <div class="row">
+
                 <div class="col-md-12 col-lg-6">
                     <label class="form-label">Quartier</label>
                     <div class="input-group mb-12">
@@ -95,7 +94,7 @@
                     </div>
                 </div>
             </div>
-
+            <p></p>
             <div class="row">
                 <div class="col-md-12 col-lg-12">
                     <label class="form-label">Adresse</label>
@@ -107,7 +106,7 @@
             </div>
             <p/>
 
-        </div>
+            <p></p>
 
         <div class="modal-footer">
             <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Fermer</button>
