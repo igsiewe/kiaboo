@@ -51,7 +51,7 @@ class ApiProspectController extends Controller
 //                        'message' => 'Cette adresse email est déjà enregistrée de téléphone existe déjà'
 //                    ], 202);
 //            }
-            if($request->isCodeParrainage == 1){
+            if($request->isCodeParrainage == true){
 
                 $parrainageCheck = User::where('codeparrainage', $request->codeParrainage)->where("statut_code_parrainage",1)->where("type_user_id", UserRolesEnum::AGENT->value)->first();
                 if(!$parrainageCheck){
