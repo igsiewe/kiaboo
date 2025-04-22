@@ -109,9 +109,9 @@
             <p></p>
 
         <div class="modal-footer">
-            <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Fermer</button>
             <button type="submit" class="btn btn-success">Valider</button>
-            <button type="submit" class="btn btn-done">Rejeter</button>
+            <button type="submit" class="btn btn-danger">Rejeter</button>
+            <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Fermer</button>
         </div>
     </form>
 @endisset
