@@ -67,7 +67,7 @@
                     <label class="form-label">Ville édition</label>
                     <div class="input-group mb-12">
                         <span class="input-group-text"><i class="fa fa-id-card"></i></span>
-                        <input type="text" id="villePiece"  name="villePiece" class="form-control" placeholder="Ville pièce" value="{{$editProspect->ville->name_ville}}" aria-label="Ville édition" required>
+                        <input type="text" id="villePiece"  name="villePiece" class="form-control" placeholder="Ville pièce" value="{{$editProspect->ville_piece->name_ville}}" aria-label="Ville édition" required>
                     </div>
                 </div>
             </div>
