@@ -94,7 +94,7 @@
                                                             </td>
                                                         @else
                                                             <td align="center" title="Rejeté">
-                                                                <a type="button" class="btn" style="border: none;"   title="Prospect rejeté"><i class="fa fa-close" style="color:red;"></i></a>
+                                                                <a type="button" class="btn" style="border: none;" title="Prospect rejeté"><i class="fa fa-closed-captioning" style="color:red;"></i></a>
                                                             </td>
                                                         @endif
                                                         <td nowrap align="center">{{$c->created_at}}</td>
