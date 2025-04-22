@@ -122,19 +122,19 @@
             <div class="modal-footer">
                 @if($editProspect->status==0)
                     <form action="{{route("valideProspect",[$editProspect->id])}}" id="frmValidateProspect" name="frmValidateProspect">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmationModal">
+                        <button type="button" class="btn btn-primary" id="1" data-bs-toggle="modal" data-bs-target="#confirmationModal">
                             Valider
                         </button>
                     </form>
 
                     <form action="{{route("rejectedProspect",[$editProspect->id])}}" id="frmRejeteProspect" name="frmRejeteProspect">
 
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#rejetModal">
+                        <button type="button" class="btn btn-danger" id="2" data-bs-toggle="modal" data-bs-target="#rejetModal">
                             Rejeter
                         </button>
                     </form>
                 @endif
-                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Fermer</button>
+                <button type="button" class="btn btn-outline-danger" id="7" data-bs-dismiss="modal">Fermer</button>
             </div>
 
 
@@ -149,8 +149,8 @@
                     Voulez-vous valider le passage de ce prospect en agent ?
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non</button>
-                    <button type="button" class="btn btn-success" onclick="validerFormulaire()">Oui</button>
+                    <button type="button" class="btn btn-secondary" id="3" data-bs-dismiss="modal">Non</button>
+                    <button type="button" class="btn btn-success" id="4" onclick="validerFormulaire()">Oui</button>
                 </div>
             </div>
         </div>
@@ -167,8 +167,8 @@
                     Voulez-vous valider le passage de ce prospect en agent ?
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non</button>
-                    <button type="button" class="btn btn-success" onclick="rejeterFormulaire()">Oui</button>
+                    <button type="button" class="btn btn-secondary" id="5" data-bs-dismiss="modal">Non</button>
+                    <button type="button" class="btn btn-success" id="6" onclick="rejeterFormulaire()">Oui</button>
                 </div>
             </div>
         </div>
