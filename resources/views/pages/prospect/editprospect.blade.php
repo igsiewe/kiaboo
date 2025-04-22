@@ -64,14 +64,14 @@
                 <div class="col-md-12 col-lg-6">
                     <label class="form-label">Date validité</label>
                     <div class="input-group mb-12">
-                        <span class="input-group-text"><i class="fa fa-id-card"></i></span>
+                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                         <input type="date" id="dateValidite"  name="dateValidite" disabled class="form-control" placeholder="Date validité" value="{{$editProspect->date_validite}}" aria-label="Date validité" required>
                     </div>
                 </div>
                 <div class="col-md-12 col-lg-6">
                     <label class="form-label">Ville édition</label>
                     <div class="input-group mb-12">
-                        <span class="input-group-text"><i class="fa fa-id-card"></i></span>
+                        <span class="input-group-text"><i class="fa fa-home"></i></span>
                         <input type="text" id="villePiece"  name="villePiece" disabled class="form-control" placeholder="Ville pièce" value="{{$editProspect->ville_piece->name_ville}}" aria-label="Ville édition" required>
                     </div>
                 </div>
@@ -81,7 +81,7 @@
                 <div class="col-md-12 col-lg-6">
                     <label class="form-label">Ville</label>
                     <div class="input-group mb-12">
-                        <span class="input-group-text"><i class="fa fa-city"></i></span>
+                        <span class="input-group-text"><i class="fa fa-home"></i></span>
                         <input type="text" id="quartier" name="quartier" disabled class="form-control" value="{{$editProspect->quartier->ville->name_ville}}" placeholder="Ville" aria-label="Ville" required>
                     </div>
                 </div>
