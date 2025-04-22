@@ -108,16 +108,16 @@
                     </div>
                 </div>
                 <div class="col-md-12 col-lg-6">
-                    <div class="card-body">
+
                         <div class="row">
-                            <img src="data:image/png;base64,{{$editProspect->photo_recto}}" alt="Pièce recto" width="30%" height="10%">
+                            <img src="data:image/png;base64,{{$editProspect->photo_recto}}" alt="Pièce recto" width="207px" height="266px">
                         </div>
-                    </div>
-                    <div class="card-body">
+
+
                         <div class="row">
-                            <img src="data:image/png;base64,{{$editProspect->photo_verso}}" alt="Pièce verso" width="30%" height="10%">
+                            <img src="data:image/png;base64,{{$editProspect->photo_verso}}" alt="Pièce verso" width="207px" height="266px">
                         </div>
-                    </div>
+
                 </div>
             </div>
             <p></p>
