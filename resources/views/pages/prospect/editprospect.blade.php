@@ -121,8 +121,12 @@
     </form>
             <div class="modal-footer">
                 @if($editProspect->status==0)
-                <button type="button" onclick="" class="btn btn-success">Valider</button>
-                <button type="button" class="btn btn-danger">Rejeter</button>
+                    <form action="{{route("valideProspect",[$editProspect->id])}}" id="frmValidateProspect" name="frmValidateProspect">
+                        <button type="button" class="btn btn-success">Valider</button>
+                    </form>
+                    <form action="{{route("rejectedProspect",[$editProspect->id])}}" id="frmRejeteProspect" name="frmRejeteProspect">
+                        <button type="button" class="btn btn-danger">Rejeter</button>
+                    </form>
                 @endif
                 <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Fermer</button>
             </div>
