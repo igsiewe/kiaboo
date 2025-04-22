@@ -99,7 +99,7 @@ class WebAgentController extends Controller
         $newAgent->numcni = $request->numcni;
         $newAgent->datecni = $request->datecni;
         $newAgent->seuilapprovisionnement=$request->seuil;
-        $newAgent->moncodeparrainage = "KIAB".$this->genererChaineAleatoire(8);
+        $newAgent->moncodeparrainage = "KI".$this->genererChaineAleatoire(8);
         $newAgent->save();
 
         $sms = new ApiSmsController();
