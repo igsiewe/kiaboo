@@ -61,6 +61,7 @@ class WebProspectontroller extends Controller
                    $newAgent->numcni = $prospect->numero_piece;
                    $newAgent->datecni = $prospect->date_validite;
                    $newAgent->seuilapprovisionnement="100000";
+                   $newAgent->optin=$prospect->optin;
                    $newAgent->moncodeparrainage = strtoupper("KI".$codeparrainage->genererChaineAleatoire(8));
                    $newAgent->save();
 
