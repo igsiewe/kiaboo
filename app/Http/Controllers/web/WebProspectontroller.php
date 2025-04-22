@@ -93,7 +93,7 @@ class WebProspectontroller extends Controller
        }
        $user = User::find($id);
        if($user){
-           dd($user->status);
+           dd($user);
            if($user->status == "0"){
                $user->status = 2;//rejete
                $user->validated_by = User::user()->id;
