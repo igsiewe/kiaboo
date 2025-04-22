@@ -140,7 +140,7 @@
 
     <div class="modal fade" id="confirmationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-2" aria-labelledby="confirmationModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
+            <div class="modal-content" style="background: grey">
                 <div class="modal-header">
                     <h5 class="modal-title" id="confirmationModalLabel">Confirmation</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
@@ -158,7 +158,7 @@
 
     <div class="modal fade" id="rejetModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-3" aria-labelledby="rejetModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
+            <div class="modal-content" style="background: grey">
                 <div class="modal-header">
                     <h5 class="modal-title" id="rejetModalLabel">Rejet</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
