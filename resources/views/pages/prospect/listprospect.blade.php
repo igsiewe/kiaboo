@@ -12,9 +12,9 @@
                 <div class="col-md-12 col-xl-12">
                     <div class="card-header stat-widget card-shadow-danger border-danger">
                             <span class="d-inline-block pr-2">
-                            <i class="fa fa-user-cog fa-2x"></i>
+                            <i class="fa fa-users fa-2x"></i>
                             </span>
-                        <span class="d-inline-block"><h4><b>&nbsp;&nbsp;GESTION DES PROPECTS</b></h4></span>
+                        <span class="d-inline-block"><h4><b>&nbsp;&nbsp;GESTION DES PROSPECTS</b></h4></span>
                     </div>
 
                 </div>
@@ -67,7 +67,7 @@
                                             <th scope="col">Ville</th>
                                             <th scope="col">Quartier</th>
                                             <th scope="col">Statut</th>
-                                            <th scope="col">Date de création</th>
+                                            <th scope="col">Date enregistrement</th>
 
                                             <th scope="col"></th>
                                         </tr>
