@@ -79,6 +79,7 @@
                                                     <tr>
                                                         <td>{{$loop->iteration}}</td>
                                                         <td nowrap>{{$c->genre}}</td>
+                                                        <td nowrap>{{$c->name." ".$c->surname}}</td>
                                                         <td nowrap>{{$c->phone}}</td>
                                                         <td nowrap>{{$c->quartier->ville->name_ville}}</td>
                                                         <td nowrap>{{$c->quartier->name_quartier}}</td>
