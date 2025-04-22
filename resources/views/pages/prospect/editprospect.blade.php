@@ -58,6 +58,9 @@
                         <input type="texte" id="numcni"  name="numcni" class="form-control" placeholder="Numéro CNI *" value="{{$editProspect->numero_piece}}" aria-label="Numéro pièce" required>
                     </div>
                 </div>
+            </div>
+            <p></p>
+            <div class="row">
                 <div class="col-md-12 col-lg-6">
                     <label class="form-label">Date validité</label>
                     <div class="input-group mb-12">
