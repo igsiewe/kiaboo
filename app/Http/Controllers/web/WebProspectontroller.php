@@ -33,7 +33,7 @@ class WebProspectontroller extends Controller
            DB::beginTransaction();
            $user = user::find($id);
            if($user){
-               if($user->status == "0"){
+               if($user->status == 0){
                    //desctive dans la table des prospects
                    $codeparrainage = new WebUtilisateurController();
                    $user->status = 1;
@@ -93,7 +93,7 @@ class WebProspectontroller extends Controller
        }
        $user = User::find($id);
        if($user){
-           if($user->status == 0){
+           if($user->status == "0"){
                $user->status = 2;//rejete
                $user->validated_by = User::user()->id;
                $user->validated_at = Carbon::now();
