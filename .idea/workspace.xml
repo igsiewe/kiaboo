@@ -5,6 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f91fca3f-e4da-40b0-9457-5f63c3b5d882" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/resources/views/pages/prospect/editprospect.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/pages/prospect/listprospect.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/BaseController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/BaseController.php" afterDir="false" />
@@ -20,11 +22,15 @@
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/prod/ApiProdMoMoMoneyController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/prod/ApiProdMoMoMoneyController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/prod/ApiProdYooMeeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/prod/ApiProdYooMeeController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Models/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/User.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/prospect.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/prospect.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/quartier.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/quartier.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Models/question.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/question.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Traits/PushNotification.php" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/database/migrations/2025_04_12_134050_create_prospects_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2025_04_12_134050_create_prospects_table.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/database/migrations/2025_04_21_085228_create_questions_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2025_04_21_085228_create_questions_table.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/database/migrations/3_0_create_users_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/3_0_create_users_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/base.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/base.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -213,7 +219,7 @@
     &quot;WebServerToolWindowPanel.toolwindow.show.permissions&quot;: &quot;false&quot;,
     &quot;WebServerToolWindowPanel.toolwindow.show.size&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/ignacesiewe/Documents/Projets/Kiaboo/web/kiaboo/public&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/ignacesiewe/Documents/Projets/Kiaboo/web/kiaboo/resources/views/pages/prospect&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -225,6 +231,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/resources/views/pages/prospect" />
       <recent name="$PROJECT_DIR$/public" />
     </key>
   </component>
@@ -247,7 +254,7 @@
       <workItem from="1744675903928" duration="2688000" />
       <workItem from="1744822802835" duration="11848000" />
       <workItem from="1745089302106" duration="6936000" />
-      <workItem from="1745142798044" duration="37974000" />
+      <workItem from="1745142798044" duration="43073000" />
     </task>
     <servers />
   </component>

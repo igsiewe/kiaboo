@@ -11,6 +11,7 @@ use App\Http\Controllers\web\WebCommissionController;
 use App\Http\Controllers\web\WebDashBoardController;
 use App\Http\Controllers\web\WebDistributeurController;
 use App\Http\Controllers\web\WebExportExcelController;
+use App\Http\Controllers\web\WebProspectontroller;
 use App\Http\Controllers\web\WebReconciliationController;
 use App\Http\Controllers\web\WebServiceController;
 use App\Http\Controllers\web\WebTransactionsController;
@@ -47,6 +48,14 @@ Route::middleware(['auth','checkStatus'])->group(function (){
         Auth::logout();
         return Redirect::to("https://kiaboo.net");
     })->name("siteweb");
+
+    Route::group(['prefix' => 'partenaires'], function () {
+        Route::controller(WebProspectontroller::class)->group(function () {
+            Route::any('list/prospect', 'getListProspect')->name('listProspect');
+            Route::any('prospect/validate/{id}', 'valideProspect')->name('valideProspect');
+            Route::any('propect/edit/{id}', 'editProspect')->name('editProspect');
+        });
+    });
 
     Route::group(['prefix' => 'approvisionnement'], function () {
         Route::controller(WebApproAgentController::class)->group(function () {

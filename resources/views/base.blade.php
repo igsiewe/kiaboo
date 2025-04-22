@@ -145,6 +145,9 @@
                     @if(Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::SUPADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::ADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::DISTRIBUTEUR->value)
                     <li><a href="{{route("listAgent")}}"><i class="fa fa-user-cog"></i>Agents</a></li>
                     @endif
+                    @if(Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::SUPADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::ADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::BACKOFFICE->value)
+                        <li><a href="{{route("listProspect")}}"><i class="fa fa-user-cog"></i>Prospects</a></li>
+                    @endif
                 </ul>
             </li>
             @if(Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::SUPADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::ADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::BACKOFFICE->value)

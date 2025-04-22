@@ -41,4 +41,12 @@ class prospect extends Model
         'password',
         'remember_token',
     ];
+
+    public function ville_piece(){
+        return $this->belongsTo(Ville::class, 'ville_piece_id');
+    }
+
+    public function quartier(){
+        return $this->belongsTo(quartier::class);
+    }
 }

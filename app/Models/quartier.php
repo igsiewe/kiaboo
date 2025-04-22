@@ -15,4 +15,12 @@ class quartier extends Model
         'created_by',
         'updated_by',
     ];
+
+    public function prospects(){
+        return $this->hasMany(prospect::class);
+    }
+
+    public function ville(){
+        return $this->belongsTo(ville::class);
+    }
 }
