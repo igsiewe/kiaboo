@@ -102,7 +102,8 @@ class WebProspectontroller extends Controller
 
                $sms = new ApiSmsController();
                $tel =$prospect->phone;
-               $msgInfo = "Bonjour ".$prospect->surname."\nAprès analyse des éléments soumis via l'application KIABOO, nous n'avons pas été en mésure de valider votre compte KIABOO.\nMerci de vous rapprocher de l'agence KIABOO la plus proche";
+               $msgInfo ="Bonjour ".$prospect->surname;
+                   // $msgInfo = "Bonjour ".$prospect->surname."\nAprès analyse des éléments soumis via l'application KIABOO, nous n'avons pas été en mésure de valider votre compte KIABOO.\nMerci de vous rapprocher de l'agence KIABOO la plus proche";
                $envoyerSMS = $sms->SendSMS($tel,utf8_decode($msgInfo));
 
                return redirect()->back()->with('success', 'Prospect rejeted successfully - '.$envoyerSMS);
