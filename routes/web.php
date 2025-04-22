@@ -53,7 +53,7 @@ Route::middleware(['auth','checkStatus'])->group(function (){
         Route::controller(WebProspectontroller::class)->group(function () {
             Route::any('list/prospect', 'getListProspect')->name('listProspect');
             Route::any('prospect/validate/{id}', 'valideProspect')->name('valideProspect');
-            Route::any('propect/edit/{id}', 'editProspect')->name('editProspect');
+            Route::any('prospect/edit/{id}', 'editProspect')->name('editProspect');
         });
     });
 

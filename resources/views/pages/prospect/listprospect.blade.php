@@ -135,7 +135,7 @@
     <script>
         function getUpdateProspect(id) {
             $.ajax({
-                url: "/propect/edit/"+id,
+                url: "/partenaires/prospect/edit/"+id,
                 type: "GET",
                 success: function (data) {
                     $("#updatePropect").html(data);
