@@ -150,7 +150,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" id="3" data-bs-dismiss="modal">Non</button>
-                    <button type="button" class="btn btn-success" id="4" onclick="validerFormulaire()">Oui</button>
+                    <button type="button" class="btn btn-success" id="4" onclick="Javascript:validerFormulaire()">Oui</button>
                 </div>
             </div>
         </div>
@@ -164,11 +164,11 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
                 </div>
                 <div class="modal-body">
-                    Voulez-vous valider le passage de ce prospect en agent ?
+                    Voulez-vous rejeter la demande de ce prospect. ?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" id="5" data-bs-dismiss="modal">Non</button>
-                    <button type="button" class="btn btn-success" id="6" onclick="rejeterFormulaire()">Oui</button>
+                    <button type="button" class="btn btn-success" id="6" onclick="Javascript:rejeterFormulaire()">Oui</button>
                 </div>
             </div>
         </div>
@@ -186,7 +186,7 @@
 
         function rejeterFormulaire() {
             // Fermer la modale
-            const modal = bootstrap.Modal.getInstance(document.getElementById('confirmationModal'));
+            const modal = bootstrap.Modal.getInstance(document.getElementById('rejetModal'));
             modal.hide();
 
             // Soumettre le formulaire
