@@ -107,7 +107,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12 col-lg-6 align-content-between align-items-center align-content-center">
+                <div class="col-md-12 col-lg-6" style="align-content: center">
 
                     <div class="row">
                         <img src="data:image/png;base64,{{$editProspect->photo_recto}}" alt="Pièce recto" width="150px" height="220px">
