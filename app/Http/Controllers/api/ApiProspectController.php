@@ -60,7 +60,7 @@ class ApiProspectController extends Controller
                         [
                             'success' => false,
                             'message' => "Ce code de parrainage n'est pas valide"
-                        ], 403);
+                        ], 202);
                 }
 
             }
