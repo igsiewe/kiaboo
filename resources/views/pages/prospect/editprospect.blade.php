@@ -110,11 +110,11 @@
                 <div class="col-md-12 col-lg-6 align-content-between align-items-center align-content-center">
 
                     <div class="row">
-                        <img src="data:image/png;base64,{{$editProspect->photo_recto}}" alt="Pièce recto" width="150px" height="250px">
+                        <img src="data:image/png;base64,{{$editProspect->photo_recto}}" alt="Pièce recto" width="207px" height="266px">
                     </div>
                      <p></p>
                     <div class="row">
-                        <img src="data:image/png;base64,{{$editProspect->photo_verso}}" alt="Pièce verso" width="150px" height="220px">
+                        <img src="data:image/png;base64,{{$editProspect->photo_verso}}" alt="Pièce verso" width="207px" height="266px">
                     </div>
 
                 </div>
