@@ -19,7 +19,7 @@ class WebProspectontroller extends Controller
 
     public function editProspect($id){
         $editProspect = prospect::with('quartier', 'ville_piece')->where('id', $id)->first();
-        dd($editProspect);
+     //   dd($editProspect);
         return view('pages.prospect.editprospect', compact('editProspect'));
     }
 
