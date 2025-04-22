@@ -86,7 +86,7 @@
 
                                                         @if($c->status==0)
                                                             <td align="center" title="En attente de validation">
-                                                              <a type="button" class="btn" style="border: none;" title="En attente de validation"><i class="fa fa-user-alt-slash" style="color: black"></i></a>
+                                                              <a type="button" class="btn" style="border: none;" title="En attente de validation"><i class="fa fa-hand-holding" style="color: black"></i></a>
                                                             </td>
                                                         @elseif($c->status==1)
                                                             <td align="center" title="Validé">
