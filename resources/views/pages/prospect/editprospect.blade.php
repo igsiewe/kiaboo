@@ -108,35 +108,15 @@
                     </div>
                 </div>
                 <div class="col-md-12 col-lg-6">
-                    <div class="row">
-                        <iframe
-                                src='data:text/html;charset=utf-8,
-                                    <html>
-                                      <body style="margin:0">
-                                        <img src="data:image/png;base64,{{$editProspect->photo_verso}}"
-                                        style="width:100%; height:auto;" />
-                                      </body>
-                                    </html>'
-                                width="150"
-                                height="300"
-                                frameborder="0">
-                        </iframe>
+                    <div class="card-body">
+                        <div class="row">
+                            <img src="data:image/png;base64,{{$editProspect->photo_verso}}" alt="Pièce verso" width="80%" height="40%">
+                        </div>
                     </div>
-                    <div class="row">
-
-
-                        <iframe
-                                src='data:text/html;charset=utf-8,
-                                    <html>
-                                      <body style="margin:0">
-                                        <img src="data:image/png;base64,{{$editProspect->photo_recto}}"
-                                        style="width:100%; height:auto;" />
-                                      </body>
-                                    </html>'
-                                width="150"
-                                height="300"
-                                frameborder="0">
-                        </iframe>
+                    <div class="card-body">
+                        <div class="row">
+                            <img src="data:image/png;base64,{{$editProspect->photo_recto}}" alt="Pièce recto">
+                        </div>
                     </div>
                 </div>
             </div>
