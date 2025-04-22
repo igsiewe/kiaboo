@@ -67,7 +67,7 @@ class WebProspectontroller extends Controller
                    //On informe le client par SMS que son profil a été validé
                    $sms = new ApiSmsController();
                    $tel =str_replace("+","",$prospect->phone);
-                   $msgBienvenue = "Bonjour ".$prospect->surname."\nVotre compte KIABOO a été activé avec succès.\nVous pouvez vous connecter dès à présent sur l'application KIABOO.\nMerci de changer votre mot de passe.";
+                   $msgBienvenue = "Bonjour ".$prospect->surname."\n\nVotre compte KIABOO a été activé avec succès.\n\nVous pouvez vous connecter dès à présent sur l'application KIABOO.\n\nMerci de changer votre mot de passe.";
                    $envoyerSMS = $sms->SendSMS($tel,utf8_decode($msgBienvenue));
                    $msgInfo = "Ne tardez plus, vous pouvez commencer à effectuer les transactions mobiles money et profiter de nombreux avantages.";
                    $envoyerSMS = $sms->SendSMS($tel,utf8_decode($msgInfo));
@@ -102,7 +102,7 @@ class WebProspectontroller extends Controller
 
                $sms = new ApiSmsController();
                $tel =str_replace("+","",$prospect->phone);
-               $msgInfo = "Bonjour ".$prospect->surname."\nAprès analyse des éléments soumis via l'application KIABOO, nous n'avons pas été en mésure de valider votre compte KIABOO.\nMerci de vous rapprocher de l'agence KIABOO la plus proche";
+               $msgInfo = "Bonjour ".$prospect->surname."\n\nAprès analyse des éléments soumis via l'application KIABOO, nous n'avons pas été en mésure de valider votre compte KIABOO.\n\nMerci de vous rapprocher de l'agence KIABOO la plus proche";
                $envoyerSMS = $sms->SendSMS($tel,utf8_decode($msgInfo));
 
                return redirect()->back()->with('success', 'Prospect rejeted successfully');
