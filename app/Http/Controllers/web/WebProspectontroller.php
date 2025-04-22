@@ -96,7 +96,7 @@ class WebProspectontroller extends Controller
 
            if($prospect->status == "0"){
                $prospect->status = 2;//rejete
-               $prospect->validated_by = User::user()->id;
+               $prospect->validated_by = Auth::user()->id;
                $prospect->validated_at = Carbon::now();
                $prospect->save();
 
