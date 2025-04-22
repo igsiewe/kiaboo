@@ -43,7 +43,7 @@ class prospect extends Model
     ];
 
     public function ville_piece(){
-        return $this->belongsTo(Ville::class, 'ville_piece_id');
+        return $this->belongsTo(Ville::class, 'ville_piece_id','id');
     }
 
     public function quartier(){
