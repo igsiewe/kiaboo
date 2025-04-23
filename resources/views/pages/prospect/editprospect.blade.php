@@ -109,11 +109,11 @@
                     </div>
                     <div class="col-md-12 col-lg-4" style="align-content: center">
                         <div class="row">
-                            <img src="storage/app/public/uploads/{{$editProspect->photo_recto}}" alt="Pièce recto" width="150px" height="220px">
+                            <img src="../../storage/app/public/uploads/{{$editProspect->photo_recto}}" alt="Pièce recto" width="150px" height="220px">
                         </div>
                          <p></p>
                         <div class="row">
-                            <img src="storage/app/public/uploads/{{$editProspect->photo_verso}}" alt="Pièce verso" width="150px" height="220px">
+                            <img src="../../storage/app/public/uploads/{{$editProspect->photo_verso}}" alt="Pièce verso" width="150px" height="220px">
                         </div>
                     </div>
                 </div>
