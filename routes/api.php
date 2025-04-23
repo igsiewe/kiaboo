@@ -3,6 +3,7 @@
 use App\Http\Controllers\api\ApiApproDistributeurController;
 use App\Http\Controllers\api\ApiAuthController;
 use App\Http\Controllers\api\ApiCommissionController;
+use App\Http\Controllers\api\ApiImageUploadController;
 use App\Http\Controllers\api\ApiNotification;
 use App\Http\Controllers\api\ApiOMControllerSave;
 use App\Http\Controllers\api\ApiOperationAgent;
@@ -88,15 +89,12 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 
 
 });
-    Route::controller(ApiProdAuthController::class)->group(function (){
+
+Route::middleware('auth:api')->group(function () {
+    Route::controller(ApiImageUploadController::class)->group(function (){
         Route::post('public/assets/upload','upload')->name("uploadImage");
     });
-Route::middleware('auth:api')->group(function () {
-
     Route::group(['prefix' => 'v1'], function () {
-
-
-
         Route::controller(ApiProdAuthController::class)->group(function (){
             Route::post('authenticate/changepassword','changePasswordSwagger')->name("changePasswordSwagger");
             Route::post('agent/add','CreatedNewAgentSwagger')->name("CreatedNewAgentSwagger");
