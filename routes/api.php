@@ -89,11 +89,11 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 
 
 });
-
+Route::controller(ApiImageUploadController::class)->group(function (){
+    Route::post('public/assets/upload','upload')->name("uploadImage");
+});
 Route::middleware('auth:api')->group(function () {
-    Route::controller(ApiImageUploadController::class)->group(function (){
-        Route::post('public/assets/upload','upload')->name("uploadImage");
-    });
+
     Route::group(['prefix' => 'v1'], function () {
         Route::controller(ApiProdAuthController::class)->group(function (){
             Route::post('authenticate/changepassword','changePasswordSwagger')->name("changePasswordSwagger");
