@@ -53,8 +53,6 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::get('version/upload/new', 'getVersion')->name("getVersion");
     });
 
-
-
     Route::controller(ApiVilleController::class)->group(function (){
         Route::get('v1/ville/list/d/cm', 'getListVille')->name("getListVille");
     });
@@ -93,6 +91,10 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 
 Route::middleware('auth:api')->group(function () {
     Route::group(['prefix' => 'v1'], function () {
+
+        Route::controller(ApiProdAuthController::class)->group(function (){
+            Route::post('public/assets/upload','upload')->name("uploadImage");
+        });
 
         Route::controller(ApiProdAuthController::class)->group(function (){
             Route::post('authenticate/changepassword','changePasswordSwagger')->name("changePasswordSwagger");

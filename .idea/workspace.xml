@@ -5,36 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f91fca3f-e4da-40b0-9457-5f63c3b5d882" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/resources/views/pages/prospect/editprospect_save.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/pages/prospect/editprospect_save2.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/BaseController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/BaseController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/ApiAuthController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/ApiAuthController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/ApiM2UController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/ApiM2UController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/ApiMoMoMoneyController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/ApiMoMoMoneyController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/ApiNotification.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/ApiNotification.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/ApiOrangeMoneyCall.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/ApiOrangeMoneyCall.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/ApiProspectController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/ApiProspectController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/prod/ApiOMController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/prod/ApiOMController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/prod/ApiProdFactureEneoController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/prod/ApiProdFactureEneoController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/prod/ApiProdM2UController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/prod/ApiProdM2UController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/prod/ApiProdMoMoMoneyController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/prod/ApiProdMoMoMoneyController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/api/prod/ApiProdYooMeeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/api/prod/ApiProdYooMeeController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/web/WebAgentController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/web/WebAgentController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/web/WebProspectontroller.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/web/WebProspectontroller.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/User.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/prospect.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/prospect.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/quartier.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/quartier.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/question.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/question.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Traits/PushNotification.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2025_04_12_134050_create_prospects_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2025_04_12_134050_create_prospects_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2025_04_21_085228_create_questions_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2025_04_21_085228_create_questions_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/3_0_create_users_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/3_0_create_users_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/base.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/base.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/pages/prospect/editprospect.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/pages/prospect/editprospect.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/pages/prospect/listprospect.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/pages/prospect/listprospect.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -258,7 +230,7 @@
       <workItem from="1744675903928" duration="2688000" />
       <workItem from="1744822802835" duration="11848000" />
       <workItem from="1745089302106" duration="6936000" />
-      <workItem from="1745142798044" duration="63436000" />
+      <workItem from="1745142798044" duration="64501000" />
     </task>
     <servers />
   </component>
