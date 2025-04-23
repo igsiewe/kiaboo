@@ -88,11 +88,11 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 
 
 });
-
-Route::middleware('auth:api')->group(function () {
     Route::controller(ApiProdAuthController::class)->group(function (){
         Route::post('public/assets/upload','upload')->name("uploadImage");
     });
+Route::middleware('auth:api')->group(function () {
+
     Route::group(['prefix' => 'v1'], function () {
 
 
