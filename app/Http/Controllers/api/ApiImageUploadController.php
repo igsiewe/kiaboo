@@ -14,12 +14,8 @@ class ApiImageUploadController extends Controller
             $file = $request->file('image');
             // Récupère le nom original du fichier (ex: "photo123.jpg")
             $originalName = $file->getClientOriginalName();
-
             // Stocke le fichier avec ce nom dans le dossier "uploads" du disque public
             $path = $file->storeAs('uploads', $originalName, 'public');
-
-            // Enregistre dans storage/app/public/uploads
-           // $path = $file->store('uploads', 'public');
 
             return response()->json([
                 'message' => 'Image envoyée avec succès',
