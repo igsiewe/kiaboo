@@ -1166,7 +1166,7 @@ class ApiProdMoMoMoneyController extends Controller
                         ]);
 
                         $title = "Kiaboo";
-                        $message = "Le retrait de " . $montant . " F CFA a été effectué avec succès au ".$customer_phone." (".$reference_partenaire.")";
+                        $message = "Le retrait MoMo de " . $montant . " F CFA a été effectué avec succès au ".$customer_phone." (ID : ".$reference_partenaire.") le ".Carbon::now()->format("d/m/Y H:i:s");
                         $appNotification = new ApiNotification();
                         $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
                         Log::info($envoiNotification);
@@ -1288,7 +1288,7 @@ class ApiProdMoMoMoneyController extends Controller
                     ]);
 
                     $title = "Kiaboo";
-                    $message = "Le dépôt de " . $montant . " F CFA a été effectué avec succès au ".$customer_phone." (".$reference_partenaire.")";
+                    $message = "Le dépôt MoMo de " . $montant . " F CFA a été effectué avec succès au ".$customer_phone." (ID : ".$reference_partenaire.") le ".Carbon::now()->format("d/m/Y H:i:s");
                     $appNotification = new ApiNotification();
                     $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
                     Log::info($envoiNotification);
