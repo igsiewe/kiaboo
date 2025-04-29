@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class ApiProdOrangeMoneyController extends Controller
+class ApiProdOrangeMoneyController_Save extends Controller
 {
 
     protected $token;

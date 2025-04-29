@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
-class ApiOMController extends Controller
+class ApiOMController_Save extends Controller
 {
     protected $token;
     protected $auth;
@@ -30,11 +30,11 @@ class ApiOMController extends Controller
 
     public function __construct()
     {
-        $this->endpoint="https://api-s1.orange.cm/omcoreapis/1.0.2";
-        $this->callbackUrl="https://www.kiaboopay.com/api/callback/om/cico";
-        $this->auth="RllkYW1SbVAwWWNSUTlNbHRvdkd2NFBjTjlNYTpiTVdoeXFSNUtfZExOZ2ZRaHUzdmh0aV9ZZEFh"; //consumer_key et consumer_secret convertis en base64
-        $this->auth_x_token ="S0lBQk9PU0FSTEFQSU9NUFJPRDI1OktJQEJfT1NBUkxAUCFPbV9QUk9fZDIwMjU=";//api_username et api_password convertis en base64
-        $this->channel="691566672";
+        $this->endpoint="https://omdeveloper-gateway.orange.cm/omapi/1.0.2";
+        $this->callbackUrl="https://kiaboopay/api/om/callback/pm";
+        $this->auth="cEZJWTF5Wl9pR0hMRzBiZzBlOEJDUDhlOUxzYTpuRGppWTJ6UDZPY0Q2cktkVFg5RmE0eXoxYW9h"; //Utiliser pour générer le token
+        $this->auth_x_token ="c2FuZGJveDpzYW5kYm94";
+        $this->channel="691301143";
         $this->pin="2222";
 //        $getTokenResponse = $this->OM_GetTokenAccess();
 //
@@ -45,22 +45,29 @@ class ApiOMController extends Controller
     }
     public function OM_GetTokenAccess()
     {
+
         $response = Http::withOptions(['verify' => false,])
             ->withHeaders(
                 [
                     "Authorization"=>"Basic ".$this->auth
                 ]
             )
+
             ->withBody('grant_type=client_credentials', 'application/x-www-form-urlencoded')
-            ->Post('https://api-s1.orange.cm/token');
+            ->Post('https://omdeveloper.orange.cm/oauth2/token');
 
         if($response->status()==200){
             return response()->json($response->json());
         }
         else{
+            Log::error([
+                'function' => "OM_GetTokenAccess",
+                'code'=> $response->status(),
+                'response'=>$response->body(),
+            ]);
             return response()->json([
                 'status'=>'error',
-                'message'=>$response->body()
+                'message'=>"Erreur innattendue : ".$response->body()
             ],$response->status());
 
         }
@@ -81,17 +88,21 @@ class ApiOMController extends Controller
             return $responseToken;
         }
         $dataAcessToken = json_decode($responseToken->getContent());
+
         try{
+
             $AccessToken = $dataAcessToken->access_token;
             $token = $AccessToken;
+
             $endpoint = $this->endpoint.'/infos/subscriber/customer/'.$customerNumber;
             $response = Http::withOptions(['verify' => false,])
                 ->withHeaders(
                     [
                         'Content-Type'=> 'application/json',
                         'X-AUTH-TOKEN'=>$this->auth_x_token,
-                        'Authorization'=>'Bearer '.$token
+                        'WSO2-Authorization'=>'Bearer '.$token
                     ])
+
                 ->Post($endpoint, [
                     "pin"=> $this->pin,
                     "channelMsisdn"=> $this->channel
@@ -108,7 +119,13 @@ class ApiOMController extends Controller
                     'lastName' => $lastName,
                 ],200);
             }else{
-
+                Log::error([
+                    'code'=> $response->status(),
+                    'function' => "OM_NameCustomer",
+                    'response'=>$response->body(),
+                    'user' => Auth::user()->id,
+                    'customerPhone'=>$customerNumber,
+                ]);
                 $body = json_decode($response->body());
                 return response()->json([
                     'code' => $response->status(),
@@ -116,7 +133,14 @@ class ApiOMController extends Controller
                 ],$response->status());
             }
         }catch (\Exception $e){
-
+            Log::error([
+                'user' => Auth::user()->id,
+                'code'=> $e->getCode(),
+                'function' => "OM_NameCustomer",
+                'response'=>$e->getMessage(),
+                'user' => Auth::user()->id,
+                'customerPhone'=>$customerNumber,
+            ]);
             return response()->json([
                 //  'code' => $e->getCode(),
                 'message'=>$e->getMessage()
@@ -132,9 +156,11 @@ class ApiOMController extends Controller
                 [
                     'Content-Type'=> 'application/json',
                     'X-AUTH-TOKEN'=>$this->auth_x_token,
-                    'Authorization'=>'Bearer '.$token
+                    'WSO2-Authorization'=>'Bearer '.$token
                 ])
+
             ->Post($this->endpoint.'/cashin/init');
+
         if($response->status()==200){
             return response()->json($response->json());
         }
@@ -144,19 +170,21 @@ class ApiOMController extends Controller
                 'message'=>$response->body(),
             ]);
         }
+
     }
 
     public function OM_Depot_execute($token, $payToken, $beneficiaire, $montant, $transId)
     {
+
         //On execute le depot
-        //$description = "Dépôt d'argent sur le compte Orange Money de ".$beneficiaire." par ".Auth::user()->telephone." d'un montant de ".$montant." FCFA";
-        $description = "Agent :".Auth::user()->telephone;
+        $description = "Dépôt d'argent sur le compte Orange Money de ".$beneficiaire." par ".Auth::user()->telephone." d'un montant de ".$montant." FCFA";
+
         $response = Http::withOptions(['verify' => false,])
             ->withHeaders(
                 [
                     'Content-Type'=> 'application/json',
                     'X-AUTH-TOKEN'=>$this->auth_x_token,
-                    'Authorization'=>'Bearer '.$token
+                    'WSO2-Authorization'=>'Bearer '.$token
                 ])
 
             ->Post($this->endpoint.'/cashin/pay', [
@@ -184,7 +212,7 @@ class ApiOMController extends Controller
 
         $validator = Validator::make($request->all(), [
             'phone' => 'required|numeric|digits:9',
-            'amount' => 'required|numeric|min:100|max:500000',
+            'amount' => 'required|numeric|min:500|max:500000',
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -284,12 +312,10 @@ class ApiOMController extends Controller
         //    $reference = $dataInitDepot->transId;
         $payToken =$dataInitDepot->data->payToken;
         //    $description = $dataInitDepot->data->description;
-
-        // On met à jour le payToken généré dans la table transaction
         $updateTransactionTableWithPayToken = Transaction::where("id", $idTransaction)->update([
             "payToken"=>$payToken,
         ]);
-        //On execute la dépôt OM
+
         $responseTraiteDepotOM = $this->OM_Depot_execute($token, $payToken, $customerNumber, $montant, $idTransaction);
         if($responseTraiteDepotOM->getStatusCode() !=200){
             return response()->json([
@@ -339,7 +365,7 @@ class ApiOMController extends Controller
                 'commission_agent'=>$commissionAgent,
                 'commission_distributeur'=>$commissionDistributeur,
                 'application'=>1,
-                'api_response'=>$responseTraiteDepotOM->getContent(),
+                   'api_response'=>$responseTraiteDepotOM->getContent(),
 
             ]);
 
@@ -373,10 +399,33 @@ class ApiOMController extends Controller
                 ->limit(5)
                 ->get();
 
+            $idDevice = $device;
             $title = "Kiaboo";
-            $message = "Le dépôt Orange Money de " . $montant . " F CFA a été effectué avec succès au ".$customerNumber." (ID : ".$resultat->data->payToken.") le ".Carbon::now()->format("d/m/Y H:i:s");
-            $appNotification = new ApiNotification();
-            $envoiNotification = $appNotification->SendPushNotificationCallBack($device, $title, $message);
+            $message = "Le dépôt OM de " . $montant . " F CFA a été effectué avec succès au ".$customerNumber;
+            $subtitle ="Success";
+//            $appNotification = new ApiNotification();
+//            $envoiNotification = $appNotification->SendPushNotificationCallBack($idDevice, $title,  $message);
+//            if($envoiNotification->status()==200){
+//                $resultNotification=json_decode($envoiNotification->getContent());
+//                $responseNotification=$resultNotification->response ;
+//                if($responseNotification->success==true){
+//                    Log::info([
+//                        'code'=> 200,
+//                        'function' => "MOMO_Depot",
+//                        'response'=>"Notification envoyée avec succès",
+//                        'user' => Auth::user()->id,
+//                        'request' => $request->all()
+//                    ]);
+//                }else{
+//                    Log::error([
+//                        'code'=> 500,
+//                        'function' => "MOMO_Depot",
+//                        'response'=>$resultNotification,
+//                        'user' => Auth::user()->id,
+//                        'request' => $request->all()
+//                    ]);
+//                }
+//            }
 
             return response()->json([
                 'success' => true,
@@ -398,156 +447,7 @@ class ApiOMController extends Controller
             ], $e->getCode());
         }
     }
-    public function OM_Depot_Status($referenceId){
 
-        //On génère le token de la transation
-        $responseToken = $this->OM_GetTokenAccess();
-        if($responseToken->getStatusCode() !=200){
-            return response()->json([
-                "result"=>false,
-                "message"=>"Exception ".$responseToken->getStatusCode()."\nUne exception a été déclenchée au moment de la génération du token"
-            ], $responseToken->getStatusCode());
-        }
-        $dataAcessToken = json_decode($responseToken->getContent());
-        $AccessToken = $dataAcessToken->access_token;
-        $token = $AccessToken;
-        // On initie le checkstatus
-        try{
-            $response = Http::withOptions(['verify' => false,])
-                ->withHeaders(
-                    [
-                        'Content-Type'=> 'application/json',
-                        'X-AUTH-TOKEN'=>$this->auth_x_token,
-                        'Authorization'=>'Bearer '.$token
-                    ])
-                ->get($this->endpoint.'/cashin/paymentstatus/'.$referenceId);
-
-            $data = json_decode($response->body());
-            if($response->status()==200){
-                //On vérifie si le dépôt a été effectué avec succès
-                if($data->data->status=="SUCCESSFULL"){
-                    $Transaction = Transaction::where('paytoken',$referenceId)->where('service_id',ServiceEnum::DEPOT_OM->value);
-                    if($Transaction->first()->status ==2) {
-                        $idTransaction = $Transaction->first()->id;
-                        $service = $Transaction->first()->service_id;
-                        $montant = $Transaction->first()->debit;
-                        $user = User::where('id', Auth::user()->id);
-                        $agent = $user->first()->id;
-                        $reference = $Transaction->first()->reference;
-
-                        // On vérifie si les commissions sont paramétrées
-                        $functionCommission = new ApiCommissionController();
-                        $lacommission = $functionCommission->getCommissionByService($service, $montant);
-                        if ($lacommission->getStatusCode() != 200) {
-
-                            return response()->json([
-                                'success' => false,
-                                'message' => "Impossible de calculer la commission",
-                            ], 400);
-                        }
-                        //On Calcule la commission
-                        $commission = json_decode($lacommission->getContent());
-                        $commissionFiliale = doubleval($commission->commission_kiaboo);
-                        $commissionDistributeur = doubleval($commission->commission_distributeur);
-                        $commissionAgent = doubleval($commission->commission_agent);
-
-                        $user = User::where('id', $agent);
-                        $balanceBeforeAgent = $user->get()->first()->balance_after;
-                        $balanceAfterAgent = floatval($balanceBeforeAgent) - floatval($montant);
-                        //on met à jour la table transaction
-
-                        $Transaction = Transaction::where('id', $idTransaction)->where('service_id', $service)->update([
-                            // 'reference_partenaire'=>$referenceID, //$financialTransactionId,
-                            'balance_before' => $balanceBeforeAgent,
-                            'balance_after' => $balanceAfterAgent,
-                            'debit' => $montant,
-                            'credit' => 0,
-                            'status' => 1, //End successfully
-                            'date_end_trans' => Carbon::now(),
-                            'description' => $data->data->status,
-                            'message' => 'Le dépôt a été effectué avec succès',
-                            'commission' => $commission->commission_globale,
-                            'commission_filiale' => $commissionFiliale,
-                            'commission_agent' => $commissionAgent,
-                            'commission_distributeur' => $commissionDistributeur,
-                            'reference_partenaire' => $data->data->txnid,
-                            'terminaison' => 'MANUAL',
-                            'api_response' => $response->getContent(),
-                        ]);
-
-                        //on met à jour le solde de l'utilisateur
-                        //La commmission de l'agent après chaque transaction
-
-                        $commission_agent = Transaction::where("status", 1)->where("fichier", "agent")->where("commission_agent_rembourse", 0)->where("source", $agent)->sum("commission_agent");
-
-                        $debitAgent = DB::table("users")->where("id", $agent)->update([
-                            'balance_after' => $balanceAfterAgent,
-                            'balance_before' => $balanceBeforeAgent,
-                            'last_amount' => $montant,
-                            'date_last_transaction' => Carbon::now(),
-                            'user_last_transaction_id' => $agent,
-                            'last_service_id' => ServiceEnum::DEPOT_OM->value,
-                            'reference_last_transaction' => $reference,
-                            'remember_token' => $reference,
-                            'total_commission' => $commission_agent,
-                        ]);
-                    }
-                    $userRefresh = User::where('id', Auth::user()->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email', 'balance_before', 'balance_after', 'total_commission', 'last_amount', 'sous_distributeur_id', 'date_last_transaction')->first();
-                    $transactionsRefresh = DB::table('transactions')
-                        ->join('services', 'transactions.service_id', '=', 'services.id')
-                        ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
-                        ->select('transactions.id', 'transactions.reference as reference','transactions.paytoken', 'transactions.reference_partenaire', 'transactions.date_transaction', 'transactions.debit', 'transactions.credit', 'transactions.customer_phone', 'transactions.commission_agent as commission', 'transactions.balance_before', 'transactions.balance_after', 'transactions.status', 'transactions.service_id', 'services.name_service', 'services.logo_service', 'type_services.name_type_service', 'type_services.id as type_service_id', 'transactions.date_operation', 'transactions.heure_operation', 'transactions.commission_agent_rembourse as commission_agent')
-                        ->where("fichier", "agent")
-                        ->where("source", Auth::user()->id)
-                        ->where('transactions.status', 1)
-                        ->orderBy('transactions.date_transaction', 'desc')
-                        ->limit(5)
-                        ->get();
-                    return response()->json(
-                        [
-                            'status'=>200,
-                            'amount'=>$data->amount,
-                            'message'=>$data->message,
-                            'description'=>$data->data->status,
-                            'response'=>$data,
-                            'user'=>$userRefresh,
-                            'transactions'=>$transactionsRefresh,
-                        ],200
-                    );
-                }
-
-                if($data->data->status=="PENDING"){
-                    return response()->json(
-                        [
-                            'status'=>402,
-                            'message'=>$data->data->status." - ".$data->data->inittxnmessage,
-                            'description'=>$data->data->status."\n".$data->message,
-                        ],402
-                    );
-                }
-                return response()->json(
-                    [
-                        'status'=>404,
-                        'message'=>$data->message,
-                    ],404
-                );
-            }else{
-
-                return response()->json(
-                    [
-                        'status'=>$response->status(),
-                        'message'=>$data->message,
-                    ],$response->status()
-                );
-            }
-        }catch (\Exception $e){
-            return response()->json([
-                'status'=>500,
-                'message'=>$response->body(),
-            ],500);
-        }
-
-    }
     public function OM_Retrait_init($token)
     {
         $response = Http::withOptions(['verify' => false,])
@@ -555,7 +455,7 @@ class ApiOMController extends Controller
                 [
                     'Content-Type'=> 'application/json',
                     'X-AUTH-TOKEN'=>$this->auth_x_token,
-                    'Authorization'=>'Bearer '.$token
+                    'WSO2-Authorization'=>'Bearer '.$token
                 ])
 
             ->Post($this->endpoint.'/cashout/init');
@@ -764,6 +664,163 @@ class ApiOMController extends Controller
 
     }
 
+    public function OM_Depot_Status($referenceId){
+
+        //On génère le token de la transation
+        $responseToken = $this->OM_GetTokenAccess();
+        if($responseToken->getStatusCode() !=200){
+            return response()->json([
+                "result"=>false,
+                "message"=>"Exception ".$responseToken->getStatusCode()."\nUne exception a été déclenchée au moment de la génération du token"
+            ], $responseToken->getStatusCode());
+        }
+        $dataAcessToken = json_decode($responseToken->getContent());
+        $AccessToken = $dataAcessToken->access_token;
+        $token = $AccessToken;
+        // On initie le checkstatus
+        try{
+            $response = Http::withOptions(['verify' => false,])
+                ->withHeaders(
+                    [
+                        'Content-Type'=> 'application/json',
+                        'X-AUTH-TOKEN'=>$this->auth_x_token,
+                        'WSO2-Authorization'=>'Bearer '.$token
+                    ])
+                ->get($this->endpoint.'/cashin/paymentstatus/'.$referenceId);
+
+            $data = json_decode($response->body());
+            if($response->status()==200){
+                //On vérifie si le dépôt a été effectué avec succès
+                if($data->data->status=="SUCCESSFULL"){
+                    $Transaction = Transaction::where('paytoken',$referenceId)->where('service_id',ServiceEnum::DEPOT_OM->value);
+                    if($Transaction->first()->status ==2) {
+                        $idTransaction = $Transaction->first()->id;
+                        $service = $Transaction->first()->service_id;
+                        $montant = $Transaction->first()->debit;
+                        $user = User::where('id', Auth::user()->id);
+                        $agent = $user->first()->id;
+                        $reference = $Transaction->first()->reference;
+
+                        // On vérifie si les commissions sont paramétrées
+                        $functionCommission = new ApiCommissionController();
+                        $lacommission = $functionCommission->getCommissionByService($service, $montant);
+                        if ($lacommission->getStatusCode() != 200) {
+
+                            return response()->json([
+                                'success' => false,
+                                'message' => "Impossible de calculer la commission",
+                            ], 400);
+                        }
+                        //On Calcule la commission
+                        $commission = json_decode($lacommission->getContent());
+                        $commissionFiliale = doubleval($commission->commission_kiaboo);
+                        $commissionDistributeur = doubleval($commission->commission_distributeur);
+                        $commissionAgent = doubleval($commission->commission_agent);
+
+                        $user = User::where('id', $agent);
+                        $balanceBeforeAgent = $user->get()->first()->balance_after;
+                        $balanceAfterAgent = floatval($balanceBeforeAgent) - floatval($montant);
+                        //on met à jour la table transaction
+
+                        $Transaction = Transaction::where('id', $idTransaction)->where('service_id', $service)->update([
+                            // 'reference_partenaire'=>$referenceID, //$financialTransactionId,
+                            'balance_before' => $balanceBeforeAgent,
+                            'balance_after' => $balanceAfterAgent,
+                            'debit' => $montant,
+                            'credit' => 0,
+                            'status' => 1, //End successfully
+                            'date_end_trans' => Carbon::now(),
+                            'description' => $data->data->status,
+                            'message' => 'Le dépôt a été effectué avec succès',
+                            'commission' => $commission->commission_globale,
+                            'commission_filiale' => $commissionFiliale,
+                            'commission_agent' => $commissionAgent,
+                            'commission_distributeur' => $commissionDistributeur,
+                            'reference_partenaire' => $data->data->txnid,
+                            'terminaison' => 'MANUAL',
+                            'api_response' => $response->getContent(),
+                        ]);
+
+                        //on met à jour le solde de l'utilisateur
+                        //La commmission de l'agent après chaque transaction
+
+                        $commission_agent = Transaction::where("status", 1)->where("fichier", "agent")->where("commission_agent_rembourse", 0)->where("source", $agent)->sum("commission_agent");
+
+                        $debitAgent = DB::table("users")->where("id", $agent)->update([
+                            'balance_after' => $balanceAfterAgent,
+                            'balance_before' => $balanceBeforeAgent,
+                            'last_amount' => $montant,
+                            'date_last_transaction' => Carbon::now(),
+                            'user_last_transaction_id' => $agent,
+                            'last_service_id' => ServiceEnum::DEPOT_OM->value,
+                            'reference_last_transaction' => $reference,
+                            'remember_token' => $reference,
+                            'total_commission' => $commission_agent,
+                        ]);
+                    }
+                    $userRefresh = User::where('id', Auth::user()->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email', 'balance_before', 'balance_after', 'total_commission', 'last_amount', 'sous_distributeur_id', 'date_last_transaction')->first();
+                    $transactionsRefresh = DB::table('transactions')
+                        ->join('services', 'transactions.service_id', '=', 'services.id')
+                        ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
+                        ->select('transactions.id', 'transactions.reference as reference','transactions.paytoken', 'transactions.reference_partenaire', 'transactions.date_transaction', 'transactions.debit', 'transactions.credit', 'transactions.customer_phone', 'transactions.commission_agent as commission', 'transactions.balance_before', 'transactions.balance_after', 'transactions.status', 'transactions.service_id', 'services.name_service', 'services.logo_service', 'type_services.name_type_service', 'type_services.id as type_service_id', 'transactions.date_operation', 'transactions.heure_operation', 'transactions.commission_agent_rembourse as commission_agent')
+                        ->where("fichier", "agent")
+                        ->where("source", Auth::user()->id)
+                        ->where('transactions.status', 1)
+                        ->orderBy('transactions.date_transaction', 'desc')
+                        ->limit(5)
+                        ->get();
+                    return response()->json(
+                        [
+                            'status'=>200,
+                            'amount'=>$data->amount,
+                            'message'=>$data->message,
+                            'description'=>$data->data->status,
+                            'response'=>$data,
+                            'user'=>$userRefresh,
+                            'transactions'=>$transactionsRefresh,
+                        ],200
+                    );
+                }
+
+                if($data->data->status=="PENDING"){
+                    return response()->json(
+                        [
+                            'status'=>402,
+                            'message'=>$data->data->status." - ".$data->data->inittxnmessage,
+                            'description'=>$data->data->status."\n".$data->message,
+                        ],402
+                    );
+                }
+                return response()->json(
+                    [
+                        'status'=>404,
+                        'message'=>$data->message,
+                    ],404
+                );
+            }else{
+
+                return response()->json(
+                    [
+                        'status'=>$response->status(),
+                        'message'=>$data->message,
+                    ],$response->status()
+                );
+            }
+         }catch (\Exception $e){
+            Log::error([
+                'user' => Auth::user()->id,
+                'code'=> $e->getCode(),
+                'function' => "OM_Depot_Status",
+                'response'=>$e->getMessage(),
+            ]);
+            return response()->json([
+            'status'=>500,
+            'message'=>$response->body(),
+            ],500);
+        }
+
+    }
+
     public function OM_Retrait_Status($referenceID){
 
         //On se rassure que la transaction est bien en status en attente
@@ -938,6 +995,12 @@ class ApiOMController extends Controller
                 );
             }
         }catch (\Exception $e){
+            Log::error([
+                'user' => Auth::user()->id,
+                'code'=> $e->getCode(),
+                'function' => "OM_Retrait_Status",
+                'response'=>$e->getMessage(),
+            ]);
             return response()->json([
                 'status'=>500,
                 'message'=>$response->body(),
