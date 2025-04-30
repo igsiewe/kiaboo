@@ -310,10 +310,9 @@ class ApiOMController extends Controller
             if (Arr::has($result, 'message')) {
                 Log::info("2");
                 $data =json_decode($result["message"]);
-                Log::info($data);
                 $updateTransactionTableWithPayToken = Transaction::where("id", $idTransaction)->update([
-                    "reference_partenaire"=>json_decode($result["data"])->txnid,
-                    "description"=>json_decode($result["data"])->status,
+                    "reference_partenaire"=>$data->data->txnid,
+                    "description"=>$data->data->status,
                     "status"=>3,
                     "date_end_trans"=>Carbon::now(),
                     "api_response"=>$responseTraiteDepotOM->getContent(),
