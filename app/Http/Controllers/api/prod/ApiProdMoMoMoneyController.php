@@ -1268,7 +1268,7 @@ class ApiProdMoMoMoneyController extends Controller
                         'api_response'=> $data
 
                     ]);
-
+                    Log::info($Transaction) ;
                     //on met à jour le solde de l'utilisateur
 
                     //La commmission de l'agent après chaque transaction
@@ -1287,11 +1287,11 @@ class ApiProdMoMoMoneyController extends Controller
                         'total_commission'=>$commission_agent,
                     ]);
 
-//                    $title = "Kiaboo";
-//                    $message = "Le dépôt MoMo de " . $montant . " F CFA a été effectué avec succès au ".$customer_phone." (ID : ".$reference_partenaire.") le ".Carbon::now()->format("d/m/Y H:i:s");
-//                    $appNotification = new ApiNotification();
-//                    $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
-//                    Log::info($envoiNotification);
+                    $title = "Kiaboo";
+                    $message = "Le dépôt MoMo de " . $montant . " F CFA a été effectué avec succès au ".$customer_phone." (ID : ".$reference_partenaire.") le ".Carbon::now()->format("d/m/Y H:i:s");
+                    $appNotification = new ApiNotification();
+                    $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
+                    Log::info($envoiNotification);
                     DB::commit();
                 }
             }
