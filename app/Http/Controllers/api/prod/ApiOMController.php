@@ -274,11 +274,9 @@ class ApiOMController extends Controller
 
         $responseInitDepot = $this->OM_Depot_init($token);
         if($responseInitDepot->getStatusCode() !=200){
-            $dataInitDepot= json_decode($responseInitDepot->getContent());
-            $message = $dataInitDepot->message;
             return response()->json([
                 "result"=>false,
-                "message"=>"Exception ".$responseInitDepot->getStatusCode()."\nUne exception a été déclenché au moment de l'initialisation de la transaction\n".$message
+                "message"=>"Exception ".$responseInitDepot->getStatusCode()."\nUne exception a été déclenché au moment de l'initialisation de la transaction"
             ], $responseInitDepot->getStatusCode());
         }
 
@@ -294,9 +292,11 @@ class ApiOMController extends Controller
         //On execute la dépôt OM
         $responseTraiteDepotOM = $this->OM_Depot_execute($token, $payToken, $customerNumber, $montant, $idTransaction);
         if($responseTraiteDepotOM->getStatusCode() !=200){
+            $dataInitDepot= json_decode($responseInitDepot->getContent());
+            $message = $dataInitDepot->message;
             return response()->json([
                 "result"=>false,
-                "message"=>"Exception ".$responseTraiteDepotOM->getStatusCode() ."\nUne exception a été déclenchée au moment du traitement du dépôt"
+                "message"=>"Exception ".$responseTraiteDepotOM->getStatusCode() ."\nUne exception a été déclenchée au moment du traitement du dépôt\n".$message
             ], $responseTraiteDepotOM->getStatusCode() );
         }
 
