@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 class ApiOMCallBanckController extends Controller
 {
 
-       public function OMCallBackResponse(Request $request)
+       public function OMCallBack(Request $request)
        {
            header("Content-Type: application/json");
            $OMcallBackResponse = file_get_contents('php://input');
