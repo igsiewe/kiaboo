@@ -313,7 +313,7 @@ class ApiOMController extends Controller
                     "description"=>$data->data->status,
                     "status"=>3,
                     "date_end_trans"=>Carbon::now(),
-                    "api_response"=>$resultat,
+                    "api_response"=>$responseTraiteDepotOM->getContent(),
                 ]);
                 return response()->json([
                     'success' => false,
@@ -325,7 +325,7 @@ class ApiOMController extends Controller
                     "description"=>"FAILED",
                     "status"=>3,
                     "date_end_trans"=>Carbon::now(),
-                    "api_response"=>$resultat,
+                    "api_response"=>$responseTraiteDepotOM->getContent(),
                 ]);
                 return response()->json([
                     "result"=>false,
@@ -339,6 +339,7 @@ class ApiOMController extends Controller
         try{
             DB::beginTransaction();
             $resultat = json_decode($responseTraiteDepotOM->getContent());
+
             //Dépassement de plafond côté Orange Money
             $result = (array)$resultat;
             if (Arr::has($result, 'code')) {
@@ -348,7 +349,7 @@ class ApiOMController extends Controller
                     "description"=>json_decode($result["data"])->status,
                     "status"=>3,
                     "date_end_trans"=>Carbon::now(),
-                    "api_response"=>$resultat,
+                    "api_response"=>$responseTraiteDepotOM->getContent(),
                 ]);
                 return response()->json([
                     'success' => false,
