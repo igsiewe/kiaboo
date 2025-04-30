@@ -306,29 +306,26 @@ class ApiOMController extends Controller
         if($responseTraiteDepotOM->getStatusCode() !=200){
             $resultat = json_decode($responseTraiteDepotOM->getContent());
             $result = (array)$resultat;
-            Log::info("1");
             if (Arr::has($result, 'message')) {
-                Log::info("2");
                 $data =json_decode($result["message"]);
                 $updateTransactionTableWithPayToken = Transaction::where("id", $idTransaction)->update([
                     "reference_partenaire"=>$data->data->txnid,
                     "description"=>$data->data->status,
                     "status"=>3,
                     "date_end_trans"=>Carbon::now(),
-                    "api_response"=>$responseTraiteDepotOM->getContent(),
+                    "api_response"=>$resultat,
                 ]);
                 return response()->json([
                     'success' => false,
                     'message' => "Exception ".$result["code"]."\n".$data->message,
                 ], $result["code"]);
             }else{
-                Log::info("3");
                 $updateTransactionTableWithPayToken = Transaction::where("id", $idTransaction)->update([
                     "payToken"=>$payToken,
                     "description"=>"FAILED",
                     "status"=>3,
                     "date_end_trans"=>Carbon::now(),
-                    "api_response"=>$responseTraiteDepotOM->getContent(),
+                    "api_response"=>$resultat,
                 ]);
                 return response()->json([
                     "result"=>false,
@@ -342,7 +339,6 @@ class ApiOMController extends Controller
         try{
             DB::beginTransaction();
             $resultat = json_decode($responseTraiteDepotOM->getContent());
-
             //Dépassement de plafond côté Orange Money
             $result = (array)$resultat;
             if (Arr::has($result, 'code')) {
@@ -352,7 +348,7 @@ class ApiOMController extends Controller
                     "description"=>json_decode($result["data"])->status,
                     "status"=>3,
                     "date_end_trans"=>Carbon::now(),
-                    "api_response"=>$responseTraiteDepotOM->getContent(),
+                    "api_response"=>$resultat,
                 ]);
                 return response()->json([
                     'success' => false,
