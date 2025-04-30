@@ -298,7 +298,7 @@ class ApiOMController extends Controller
             $message = $data->message;
             return response()->json([
                 "result"=>false,
-                "message"=>"Exception ".$responseTraiteDepotOM->getStatusCode() ."\nUne exception a été déclenchée au moment du traitement du dépôt\n".$message
+                "message"=>"Exception ".$responseTraiteDepotOM->getStatusCode() ."\nUne exception a été déclenchée au moment du traitement du dépôt\n\n".$message
             ], $responseTraiteDepotOM->getStatusCode() );
         }
 
