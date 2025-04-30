@@ -306,7 +306,9 @@ class ApiOMController extends Controller
         if($responseTraiteDepotOM->getStatusCode() !=200){
             $resultat = json_decode($responseTraiteDepotOM->getContent());
             $result = (array)$resultat;
+            Log::info("1");
             if (Arr::has($result, 'status')) {
+                Log::info("2");
                 $data =json_decode($result["message"]);
                 $updateTransactionTableWithPayToken = Transaction::where("id", $idTransaction)->update([
                     "reference_partenaire"=>json_decode($result["data"])->txnid,
@@ -320,6 +322,7 @@ class ApiOMController extends Controller
                     'message' => "Exception ".$result["code"]."\n".$data->message,
                 ], $result["code"]);
             }else{
+                Log::info("3");
                 $updateTransactionTableWithPayToken = Transaction::where("id", $idTransaction)->update([
                     "payToken"=>$payToken,
                     "description"=>"FAILED",
