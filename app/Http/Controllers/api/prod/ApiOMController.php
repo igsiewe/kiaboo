@@ -293,7 +293,9 @@ class ApiOMController extends Controller
         $responseTraiteDepotOM = $this->OM_Depot_execute($token, $payToken, $customerNumber, $montant, $idTransaction);
         if($responseTraiteDepotOM->getStatusCode() !=200){
             $resultat = json_decode($responseTraiteDepotOM->getContent());
-            $message = $resultat->message;
+            $result = (array)$resultat;
+            $data =json_decode($result["message"]);
+            $message = $data->message;
             return response()->json([
                 "result"=>false,
                 "message"=>"Exception ".$responseTraiteDepotOM->getStatusCode() ."\nUne exception a été déclenchée au moment du traitement du dépôt\n".$message
