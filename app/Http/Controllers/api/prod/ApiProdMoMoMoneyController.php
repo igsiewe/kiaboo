@@ -1265,7 +1265,7 @@ class ApiProdMoMoMoneyController extends Controller
                         'commission_distributeur'=>$commissionDistributeur,
                         'reference_partenaire'=>$data->financialTransactionId,
                         'terminaison'=>'CALLBACK',
-                        'api_response'=> $data
+                       // 'api_response'=> $data
 
                     ]);
                     Log::info($Transaction) ;
