@@ -35,7 +35,7 @@ class ApiOMController extends Controller
         $this->auth="RllkYW1SbVAwWWNSUTlNbHRvdkd2NFBjTjlNYTpiTVdoeXFSNUtfZExOZ2ZRaHUzdmh0aV9ZZEFh"; //consumer_key et consumer_secret convertis en base64
         $this->auth_x_token ="S0lBQk9PU0FSTEFQSU9NUFJPRDI1OktJQEJfT1NBUkxAUCFPbV9QUk9fZDIwMjU=";//api_username et api_password convertis en base64
         $this->channel="691566672";
-        $this->pin="2222";
+        $this->pin="2025";
 //        $getTokenResponse = $this->OM_GetTokenAccess();
 //
 //        if($getTokenResponse->status()==200){
