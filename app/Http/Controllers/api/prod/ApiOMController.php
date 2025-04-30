@@ -307,7 +307,7 @@ class ApiOMController extends Controller
             $resultat = json_decode($responseTraiteDepotOM->getContent());
             $result = (array)$resultat;
             Log::info("1");
-            if (Arr::has($result, 'status')) {
+            if (Arr::has($result, 'message')) {
                 Log::info("2");
                 $data =json_decode($result["message"]);
                 $updateTransactionTableWithPayToken = Transaction::where("id", $idTransaction)->update([
