@@ -63,10 +63,8 @@ class ApiProdMoMoMoneyController extends Controller
         if($response->status()==200){
             return response()->json($response->json());
         }else{
-
             $alerte = new ApiLog();
             $alerte->logError($response->status(), "MOMO_Disbursement_GetTokenAccess", null, json_decode($response->body()));
-
             return response()->json(
                 [
                     'status'=>$response->status(),
@@ -84,6 +82,7 @@ class ApiProdMoMoMoneyController extends Controller
         $AccessToken = $dataAcessToken->access_token;
 
         if($responseToken->status()!=200){
+
             return response()->json(
                 [
                     'status'=>$responseToken->status(),
@@ -1288,11 +1287,11 @@ class ApiProdMoMoMoneyController extends Controller
                         'total_commission'=>$commission_agent,
                     ]);
 
-                    $title = "Kiaboo";
-                    $message = "Le dépôt MoMo de " . $montant . " F CFA a été effectué avec succès au ".$customer_phone." (ID : ".$reference_partenaire.") le ".Carbon::now()->format("d/m/Y H:i:s");
-                    $appNotification = new ApiNotification();
-                    $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
-                    Log::info($envoiNotification);
+//                    $title = "Kiaboo";
+//                    $message = "Le dépôt MoMo de " . $montant . " F CFA a été effectué avec succès au ".$customer_phone." (ID : ".$reference_partenaire.") le ".Carbon::now()->format("d/m/Y H:i:s");
+//                    $appNotification = new ApiNotification();
+//                    $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
+//                    Log::info($envoiNotification);
                     DB::commit();
                 }
             }
