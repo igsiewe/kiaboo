@@ -83,6 +83,7 @@ class Transaction extends Model
         'application',
         'version',
         'api_response',
+
     ];
 
     public function auteur(){

@@ -1111,6 +1111,7 @@ class ApiProdMoMoMoneyController extends Controller
         //On se rassure que la transaction est bien en status en attente
         $Transaction = Transaction::where('id',$externalId);
         $customer_phone = $Transaction->first()->customer_phone;
+        $dateTransaction = $Transaction->first()->date_transaction;
         $device_notification = $Transaction->first()->device_notification;
         if($Transaction->count()>0){
             $status = $Transaction->first()->status;
@@ -1148,7 +1149,7 @@ class ApiProdMoMoMoneyController extends Controller
                             'description'=>$data->status,
                             'reference_partenaire'=>$reference_partenaire,
                             'terminaison'=>'CALLBACK',
-
+                            'callback_response'=>$data,
                         ]);
 
                         $commission_agent = Transaction::where("status",1)->where("fichier","agent")->where("commission_agent_rembourse",0)->where("source",$agent)->sum("commission_agent");
@@ -1165,10 +1166,13 @@ class ApiProdMoMoMoneyController extends Controller
                         ]);
 
                         $title = "Kiaboo";
-                        $message = "Le retrait MoMo de " . $montant . " F CFA a été effectué avec succès au ".$customer_phone." (ID : ".$reference_partenaire.") le ".Carbon::now()->format("d/m/Y H:i:s");
+                        $message = "Le retrait MoMo de " . $montant . " F CFA a été effectué avec succès au ".$customer_phone." (ID : ".$reference_partenaire.") le ".$dateTransaction;
                         $appNotification = new ApiNotification();
                         $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
-                        Log::info($envoiNotification);
+
+                        Log::info("MoMoCallBack.Notification.Retrait", [
+                            'Response' => $envoiNotification,
+                        ]);
                         DB::commit();
 
                     }catch(\Exception $e){
@@ -1265,7 +1269,7 @@ class ApiProdMoMoMoneyController extends Controller
                         'commission_distributeur'=>$commissionDistributeur,
                         'reference_partenaire'=>$data->financialTransactionId,
                         'terminaison'=>'CALLBACK',
-                       // 'api_response'=> $data
+                        'callback_response'=> $data
 
                     ]);
                     Log::info($Transaction) ;
@@ -1286,13 +1290,15 @@ class ApiProdMoMoMoneyController extends Controller
                         'remember_token'=>$reference,
                         'total_commission'=>$commission_agent,
                     ]);
-
+                    DB::commit();
                     $title = "Kiaboo";
-                    $message = "Le dépôt MoMo de " . $montant . " F CFA a été effectué avec succès au ".$customer_phone." (ID : ".$reference_partenaire.") le ".Carbon::now()->format("d/m/Y H:i:s");
+                    $message = "Le dépôt MoMo de " . $montant . " F CFA a été effectué avec succès au ".$customer_phone." (ID : ".$reference_partenaire.") le ".$dateTransaction;
                     $appNotification = new ApiNotification();
                     $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
-                    Log::info($envoiNotification);
-                    DB::commit();
+                    Log::info("MoMoCallBack.Notification.Depot", [
+                        'Response' => $envoiNotification,
+                    ]);
+
                 }
             }
         }

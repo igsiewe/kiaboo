@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\prod;
 use App\Http\Controllers\api\ApiCheckController;
 use App\Http\Controllers\api\ApiCommissionController;
 use App\Http\Controllers\api\ApiNotification;
+use App\Http\Controllers\ApiLog;
 use App\Http\Controllers\Controller;
 use App\Http\Enums\ServiceEnum;
 use App\Models\Transaction;
@@ -58,6 +59,8 @@ class ApiOMController extends Controller
             return response()->json($response->json());
         }
         else{
+            $alerte = new ApiLog();
+            $alerte->logError($response->status(), "OM_GetTokenAccess", null, json_decode($response->body()));
             return response()->json([
                 'status'=>'error',
                 'message'=>$response->body()
@@ -108,7 +111,8 @@ class ApiOMController extends Controller
                     'lastName' => $lastName,
                 ],200);
             }else{
-
+                $alerte = new ApiLog();
+                $alerte->logError($response->status(), "OM_CustomerName", null, json_decode($response->body()));
                 $body = json_decode($response->body());
                 return response()->json([
                     'code' => $response->status(),
@@ -116,7 +120,8 @@ class ApiOMController extends Controller
                 ],$response->status());
             }
         }catch (\Exception $e){
-
+            $alerte = new ApiLog();
+            $alerte->logError($e->getCode(), "OM_CustomerName", null, $e->getMessage());
             return response()->json([
                 //  'code' => $e->getCode(),
                 'message'=>$e->getMessage()
@@ -139,6 +144,8 @@ class ApiOMController extends Controller
             return response()->json($response->json());
         }
         else{
+            $alerte = new ApiLog();
+            $alerte->logError($response->status(), "OM_Depot_init", null, json_decode($response->body()));
             return response()->json([
                 'code' => $response->status(),
                 'message'=>$response->body(),
@@ -173,6 +180,8 @@ class ApiOMController extends Controller
             return response()->json($response->json());
         }
         else{
+            $alerte = new ApiLog();
+            $alerte->logError($response->status(), "OM_Depot_execute", null, json_decode($response->body()));
             return response()->json([
                 'code' => $response->status(),
                 'message'=>$response->body(),
@@ -288,10 +297,19 @@ class ApiOMController extends Controller
         // On met à jour le payToken généré dans la table transaction
         $updateTransactionTableWithPayToken = Transaction::where("id", $idTransaction)->update([
             "payToken"=>$payToken,
+            "description"=>"PENDING",
+            "status"=>2, //Contrairement à MTN où il ya une etape intermediaire entre (code 202 pour indiquer que le code est PENDING, Orange n'en a pas, raison pour laquelle, on place le status à 2 après création du PayToken
         ]);
         //On execute la dépôt OM
         $responseTraiteDepotOM = $this->OM_Depot_execute($token, $payToken, $customerNumber, $montant, $idTransaction);
         if($responseTraiteDepotOM->getStatusCode() !=200){
+            $updateTransactionTableWithPayToken = Transaction::where("id", $idTransaction)->update([
+                "payToken"=>$payToken,
+                "description"=>"FAILED",
+                "status"=>3,
+                "date_end_trans"=>Carbon::now(),
+                "api_response"=>$responseTraiteDepotOM->getContent(),
+                ]);
             return response()->json([
                 "result"=>false,
                 "message"=>"Exception ".$responseTraiteDepotOM->getStatusCode() ."\nUne exception a été déclenchée au moment du traitement du dépôt"
@@ -306,6 +324,13 @@ class ApiOMController extends Controller
             $result = (array)$resultat;
             if (Arr::has($result, 'code')) {
                 $data =json_decode($result["message"]);
+                $updateTransactionTableWithPayToken = Transaction::where("id", $idTransaction)->update([
+                    "payToken"=>json_decode($result["data"])->payToken,
+                    "description"=>json_decode($result["data"])->status,
+                    "status"=>3,
+                    "date_end_trans"=>Carbon::now(),
+                    "api_response"=>$responseTraiteDepotOM->getContent(),
+                ]);
                 return response()->json([
                     'success' => false,
                     'message' => "Exception ".$result["code"]."\n".$data->message,
@@ -388,10 +413,9 @@ class ApiOMController extends Controller
                 'transactions'=>$transactionsRefresh,
             ], 200);
 
-
-
         }catch (\Exception $e) {
-            DB::rollback();
+            $alerte = new ApiLog();
+            $alerte->logError($e->getCode(), "OM_Depot", null, $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => "Exception ".$e->getCode()."\nUne exception a été détectée, veuillez contacter votre superviseur si le problème persiste", //'Une erreur innatendue s\est produite. Si le problème persiste, veuillez contacter votre support.',
