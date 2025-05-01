@@ -49,7 +49,7 @@ class ApiKiabooController extends Controller
 
     public function setTransfert(Request $request){
         $validator = Validator::make($request->all(), [
-            'phoneAgent' => 'required|numeric|digits:9',
+            'compte' => 'required|numeric|digits:9',
             'amount' => 'required|numeric|min:15000|max:500000',
             'deviceId' => 'required|string',
         ]);
@@ -76,7 +76,7 @@ class ApiKiabooController extends Controller
             ],404);
         }
         //On vérifie que l'agent bénéficiaire est actif
-        $beneficiaire = User::where("type_user_id", UserRolesEnum::AGENT->value)->where("telephone", $request->phoneAgent)->where("status",1);
+        $beneficiaire = User::where("type_user_id", UserRolesEnum::AGENT->value)->where("telephone", $request->compte)->where("status",1);
         if(!$beneficiaire){
             return response()->json([
                 "code" => 404,
