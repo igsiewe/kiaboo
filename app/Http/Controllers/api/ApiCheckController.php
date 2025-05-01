@@ -320,4 +320,135 @@ class ApiCheckController extends Controller
         return true;
     }
 
+    function Execute_Transfert_Emetteur($montant, $beneficiaire, $service, $payToken="", $device="",$latitude="", $longitude="", $place="",$application=1, $user=0,$merchandTransactionId=""){
+
+        $reference = "TRE".Carbon::now()->format('ymd').".".Carbon::now()->format('His')."".$this->GenereRang();
+
+        try{
+            DB::beginTransaction();
+            $Transaction= Transaction::create([
+                'reference'=>$reference,
+                'paytoken'=>$reference,
+                'date_transaction'=>Carbon::now(),
+                'service_id'=>$service,
+                'balance_before'=>0,
+                'balance_after'=>0,
+                'debit'=>$montant,
+                'credit'=>0,
+                'status'=>0, //Initiate
+                'created_by'=>$user, //Auth::user()->id,
+                'created_at'=>Carbon::now(),
+                'countrie_id'=>Auth::user()->countrie_id,
+                'source'=>$user, //Auth::user()->id,
+                'fichier'=>"agent",
+                'updated_by'=>$user, //Auth::user()->id,
+                'customer_phone'=>$beneficiaire,
+                'description'=>'INITIATED',
+                'date_operation'=>date('Y-m-d'),
+                'heure_operation'=>date('H:i:s'),
+                'device_notification'=>$device,
+                'latitude'=>$latitude,
+                "longitude"=>$longitude,
+                "place"=>$place,
+                "application"=>$application,
+                "marchand_transaction_id"=>$merchandTransactionId,
+                "version"=>Auth::user()->version,
+            ]);
+
+            if($Transaction) {
+                DB::commit();
+                return response()->json([
+                    'success' => true,
+                    'transId'=>$Transaction->id,
+                    'reference'=>$reference,
+                ], 200);
+            }else{
+                DB::rollback();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Une erreur inattentue s\' est produite. Veuillez contacter votre support.',
+                ], 404);
+            }
+        }catch (\Exception $e){
+            DB::rollback();
+            Log::error([
+                'function' => 'init_Depot',
+                'user' => Auth::user()->id,
+                'Service'=>$service,
+                'erreur Message' => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' =>"Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
+            ], $e->getCode());
+        }
+
+
+    }
+    function Execute_Transfert_Beneficiaire($montant, $beneficiaire, $service, $payToken="", $device,$latitude, $longitude, $place){
+
+        $reference = "RT".Carbon::now()->format('ymd').".".Carbon::now()->format('His').".".$this->genererChaineAleatoire(1)."".$this->GenereRang();
+
+        try{
+            DB::beginTransaction();
+            $Transaction= Transaction::create([
+                'reference'=>$reference,
+                'paytoken'=>$payToken,
+                'date_transaction'=>Carbon::now(),
+                'service_id'=>$service,
+                'balance_before'=>0,
+                'balance_after'=>0,
+                'debit'=>0,
+                'credit'=>$montant,
+                'status'=>0, //Initiate
+                'created_by'=>Auth::user()->id,
+                'created_at'=>Carbon::now(),
+                'countrie_id'=>Auth::user()->countrie_id,
+                'source'=>Auth::user()->id,
+                'fichier'=>"agent",
+                'updated_by'=>Auth::user()->id,
+                'customer_phone'=>$beneficiaire,
+                'description'=>'INITIATED',
+                'date_operation'=>date('Y-m-d'),
+                'heure_operation'=>date('H:i:s'),
+                'device_notification'=>$device,
+                'latitude'=>$latitude,
+                'longitude'=>$longitude,
+                'place'=>$place,
+                "version"=>Auth::user()->version,
+            ]);
+
+            if($Transaction) {
+                DB::commit();
+                return response()->json([
+                    'success' => true,
+                    'transId'=>$Transaction->id,
+                    'reference'=>$reference,
+                ], 200);
+            }else{
+                DB::rollback();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Une erreur inattentue s\' est produite. Veuillez contacter votre support.',
+                ], 404);
+            }
+        }catch (\Exception $e){
+            DB::rollback();
+            Log::error([
+                'function' => 'init_Retrait',
+                'user' => Auth::user()->id,
+                'Service'=>$service,
+                'erreur Message' => $e->getMessage(),
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' =>"Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
+            ], $e->getCode());
+        }
+
+
+    }
+
+
 }
