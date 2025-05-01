@@ -161,6 +161,7 @@ Route::middleware('auth:api')->group(function () {
             Route::group(['prefix' => 'kiaboo'], function () {
                 Route::controller(ApiKiabooController::class)->group(function () {
                     Route::get('agent/info/{phone}', 'getAgentInfo')->name("getAgentInfo");
+                    Route::post('transfert/pay', 'setTransfert')->name("setTransfert");
                 });
             });
             //Transaction
