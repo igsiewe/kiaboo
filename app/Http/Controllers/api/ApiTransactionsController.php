@@ -157,9 +157,14 @@ class ApiTransactionsController extends BaseController
         $depot=$transactions->where( 'type_service_id', TypeServiceEnum::ENVOI->value)->sum("debit");
         $retrait=$transactions->where('type_service_id', TypeServiceEnum::RETRAIT->value)->sum("credit");
         $facture=$transactions->where('type_service_id', TypeServiceEnum::FACTURE->value)->sum("debit");
+        $payment=$transactions->where('type_service_id', TypeServiceEnum::PAYMENT->value)->sum("credit");
+        $transfert= $transactions->where('type_service_id', TypeServiceEnum::TRANSFERT->value)->get()
+            ->sum(function ($t) {
+                return $t->debit - $t->credit;
+            });
         $commission=$transactions->sum("commission");
 
-        $solde = $appro + $retrait-$depot-$facture;
+        $solde = $appro + $retrait-$depot-$facture+$payment-$transfert;
         return response()->json([
             'status'=>"true",
             'message'=> $transactions->count()." transactions trouvées",
@@ -167,6 +172,8 @@ class ApiTransactionsController extends BaseController
             'depot'=>$depot,
             'retrait'=>$retrait,
             'facture'=>$facture,
+            'transfert'=>$transfert,
+            'payment'=>$payment,
             'solde'=>$solde,
             'commission'=>$commission,
             'transactions'=> $transactions,
