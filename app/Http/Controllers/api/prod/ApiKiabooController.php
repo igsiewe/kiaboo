@@ -74,7 +74,7 @@ class ApiKiabooController extends Controller
         if(doubleval($emetteur->first()->balance_after)<doubleval($request->amount)){
             return response()->json([
                 "code" => 404,
-                "message" => "Votre solde est insuffisant pour cette action",
+                "message" => "Votre solde est insuffisant pour cette action".$emetteur->first()->balance_after." - ".$request->amount,
             ],404);
         }
         //On vérifie que l'agent bénéficiaire est actif
