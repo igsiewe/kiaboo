@@ -61,7 +61,7 @@ class ApiKiabooController extends Controller
             ], 400);
         }
 
-        $emetteur = User::where("type_user_id", UserRolesEnum::AGENT->value)->where("status",1);
+        $emetteur = User::where("id",Auth::user()->id)->where("type_user_id", UserRolesEnum::AGENT->value)->where("status",1);
         $service = ServiceEnum::TRANSFERT->value;
         //On se rassure que l'agent qui emet le transfert a un compte actif au moment du transfert
         if($emetteur->first()->status<>1){
