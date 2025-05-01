@@ -11,5 +11,6 @@ enum TypeServiceEnum:int
     case RETRAIT =5;
     case FACTURE = 6;
     case PAYMENT = 7;
+    case TRANSFERT = 8;
 
 }

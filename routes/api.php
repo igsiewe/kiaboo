@@ -14,6 +14,7 @@ use App\Http\Controllers\api\ApiTransactionsController;
 use App\Http\Controllers\api\ApiUserController;
 use App\Http\Controllers\api\ApiVersion;
 use App\Http\Controllers\api\ApiVilleController;
+use App\Http\Controllers\api\prod\ApiKiabooController;
 use App\Http\Controllers\api\prod\ApiOMCallBanckController;
 use App\Http\Controllers\api\prod\ApiOMController;
 use App\Http\Controllers\api\prod\ApiProdAuthController;
@@ -156,7 +157,12 @@ Route::middleware('auth:api')->group(function () {
         //Production
 
         Route::group(['prefix' => 'prod'], function () {
-
+            //Kiaboo
+            Route::group(['prefix' => 'kiaboo'], function () {
+                Route::controller(ApiKiabooController::class)->group(function () {
+                    Route::get('agent/{phone}', 'getAgentInfo')->name("getAgentInfo");
+                });
+            });
             //Transaction
 
             Route::group(['prefix' => 'transactions'], function () {

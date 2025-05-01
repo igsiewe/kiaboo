@@ -27,4 +27,6 @@ enum ServiceEnum:int
     case PAYMENT_M2U=19;
     case PAYMENT_YOOMEE = 20;
 
+    case TRANSFERT = 21;
+
 }
