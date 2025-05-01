@@ -119,7 +119,7 @@ class ApiAuthController extends BaseController
             $token = $user->createToken('kiaboo');
             $access_token = $token->accessToken;
             $chaine = new ApiCheckController();
-            $qr_code ="K".$chaine->genererChaineAleatoire(10)."-".Auth::user()->id."-".$chaine->genererChaineAleatoire(2);
+            $qr_code ="K".$chaine->genererChaineAleatoire(10)."-".Auth::user()->id."-".$chaine->genererChaineAleatoire(5);
             $user->last_connexion = Carbon::now();
             $user->version = $version;
             $user->urlApplication = $urlApplication;
