@@ -158,8 +158,7 @@ class ApiTransactionsController extends BaseController
         $retrait=$transactions->where('type_service_id', TypeServiceEnum::RETRAIT->value)->sum("credit");
         $facture=$transactions->where('type_service_id', TypeServiceEnum::FACTURE->value)->sum("debit");
         $payment=$transactions->where('type_service_id', TypeServiceEnum::PAYMENT->value)->sum("credit");
-        $transfert= $transactions->where('type_service_id', TypeServiceEnum::TRANSFERT->value)->get()
-            ->sum(function ($t) {
+        $transfert= $transactions->where('type_service_id', TypeServiceEnum::TRANSFERT->value)->sum(function ($t) {
                 return $t->debit - $t->credit;
             });
         $commission=$transactions->sum("commission");
