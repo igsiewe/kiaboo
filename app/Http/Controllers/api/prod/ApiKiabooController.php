@@ -61,6 +61,7 @@ class ApiKiabooController extends Controller
         }
 
         $emetteur = User::where("type_user_id", UserRolesEnum::AGENT->value);
+        $service = ServiceEnum::TRANSFERT->value;
         //On se rassure que l'agent qui emet le transfert a un compte actif au moment du transfert
         if($emetteur->first()->status<>1){
             return response()->json([
@@ -93,10 +94,8 @@ class ApiKiabooController extends Controller
                    $soldeEmetteur = $emetteur->first()->balance_after;
                    $newSoldeEmetteur = doubleval($soldeEmetteur)-doubleval($request->amount);
 
-                   //Je modifie le solde
-
+                   //Je débite le solde de l'agent emetteur
                     $commission_agent_emetteur = Transaction::where("status",1)->where("fichier","agent")->where("commission_agent_rembourse",0)->where("source",Auth::user()->id)->sum("commission_agent");
-
                     $debitAgentEmetteur = DB::table("users")->where("id", Auth::user()->id)->update([
                         'balance_after'=>$newSoldeEmetteur,
                         'balance_before'=>$soldeEmetteur ,
@@ -111,13 +110,42 @@ class ApiKiabooController extends Controller
 
             //2 - On crée la transaction de débit dans la table transaction
 
+                    $TransactionEmetteur= Transaction::create([
+                        'reference'=>$reference,
+                        'paytoken'=>$reference,
+                        'date_transaction'=>Carbon::now(),
+                        'service_id'=>$service,
+                        'balance_before'=>$soldeEmetteur,
+                        'balance_after'=>$newSoldeEmetteur,
+                        'debit'=>$request->amount,
+                        'credit'=>0,
+                        'status'=>1, //SUCCESSFUL
+                        'created_by'=>Auth::user()->id,
+                        'created_at'=>Carbon::now(),
+                        'countrie_id'=>Auth::user()->countrie_id,
+                        'source'=>Auth::user()->id,
+                        'fichier'=>"agent",
+                        'updated_by'=>Auth::user()->id,
+                        'customer_phone'=>$beneficiaire->first()->telephone,
+                        'description'=>'SUCCESSFUL',
+                        'date_operation'=>date('Y-m-d'),
+                        'heure_operation'=>date('H:i:s'),
+                        'device_notification'=>$request->deviceId,
+                        'latitude'=>$request->latitude,
+                        "longitude"=>$request->longitude,
+                        "place"=>$request->place,
+                        "application"=>1,
+                        "marchand_transaction_id"=>$request->merchandTransactionId,
+                        "version"=>Auth::user()->version,
+                        "message"=>"Transfert effectué avec succes au ".$beneficiaire->first()->telephone." - ".$beneficiaire->first()->name." ".$beneficiaire->first()->surname,
+                    ]);
+
             //3 - On crédite le compte de l'agent bénéficiaire
                     $soldeBeneficiaire = $beneficiaire->first()->balance_after;
                     $newSoldeBeneficiaire = doubleval($soldeBeneficiaire)+doubleval($request->amount);
                     $idBeneficiaire = $beneficiaire->first()->id;
                     //je credite le beneficiaire
                     $commission_agent_Beneficiaire = Transaction::where("status",1)->where("fichier","agent")->where("commission_agent_rembourse",0)->where("source",$idBeneficiaire)->sum("commission_agent");
-
                     $debitAgentBeneficiaire = DB::table("users")->where("id", $idBeneficiaire)->update([
                         'balance_after'=>$newSoldeBeneficiaire,
                         'balance_before'=>$soldeBeneficiaire ,
@@ -130,7 +158,35 @@ class ApiKiabooController extends Controller
                         'total_commission'=>$commission_agent_Beneficiaire,
                     ]);
             //4 - On crée la transaction de crédit dans la table des transactions
-
+                    $TransactionBeneficiaire= Transaction::create([
+                        'reference'=>$reference,
+                        'paytoken'=>$reference,
+                        'date_transaction'=>Carbon::now(),
+                        'service_id'=>$service,
+                        'balance_before'=>$soldeBeneficiaire,
+                        'balance_after'=>$newSoldeBeneficiaire,
+                        'debit'=>0,
+                        'credit'=>$request->amount,
+                        'status'=>1, //SUCCESSFUL
+                        'created_by'=>Auth::user()->id,
+                        'created_at'=>Carbon::now(),
+                        'countrie_id'=>Auth::user()->countrie_id,
+                        'source'=>$beneficiaire->first()->id,
+                        'fichier'=>"agent",
+                        'updated_by'=>Auth::user()->id,
+                        'customer_phone'=>$emetteur->first()->telephone,
+                        'description'=>'SUCCESSFUL',
+                        'date_operation'=>date('Y-m-d'),
+                        'heure_operation'=>date('H:i:s'),
+                        'device_notification'=>$request->deviceId,
+                        'latitude'=>$request->latitude,
+                        "longitude"=>$request->longitude,
+                        "place"=>$request->place,
+                        "application"=>1,
+                        "marchand_transaction_id"=>$request->merchandTransactionId,
+                        "version"=>Auth::user()->version,
+                        "message"=>"Transfert effectué avec succes par l'agent ".$emetteur->first()->telephone." - ".$emetteur->first()->name." ".$emetteur->first()->surname,
+                    ]);
             DB::commit();
         }catch (\Exception $e){
             DB::rollBack();
