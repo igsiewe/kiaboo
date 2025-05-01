@@ -28,7 +28,7 @@ class ApiKiabooController extends Controller
         if(strlen($phone)<>9){
             return response()->json([
                 "code" => 404,
-                "message" => "Agent not found",
+                "message" => "Compte agent inexistant ou non actif",
             ],404);
         }
         if(Auth::user()->telephone==$phone){
@@ -43,12 +43,12 @@ class ApiKiabooController extends Controller
         if(!$agent){
             return response()->json([
                 "code" => 404,
-                "message" => "Agent not found",
+                "message" => "Compte agent inexistant ou non actif",
             ],404);
         }
         return response()->json([
             "code" => 200,
-            "message" => "Agent found",
+            "message" => "Agent trouvé",
             "data" => $agent,
         ], 200);
     }
