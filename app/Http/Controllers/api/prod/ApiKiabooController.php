@@ -31,6 +31,12 @@ class ApiKiabooController extends Controller
                 "message" => "Agent not found",
             ],404);
         }
+        if(Auth::user()->telephone==$phone){
+            return response()->json([
+                "code" => 400,
+                "message" => "Vous ne pouvez pas faire un transfert vers votre propre compte",
+            ],400);
+        }
         $agent = User::where("type_user_id", UserRolesEnum::AGENT->value)->where("telephone", $phone)->where("status",1)
             ->select("name","surname")
             ->first();
