@@ -158,12 +158,11 @@ class ApiTransactionsController extends BaseController
         $retrait=$transactions->where('type_service_id', TypeServiceEnum::RETRAIT->value)->sum("credit");
         $facture=$transactions->where('type_service_id', TypeServiceEnum::FACTURE->value)->sum("debit");
         $payment=$transactions->where('type_service_id', TypeServiceEnum::PAYMENT->value)->sum("credit");
-        $transfert= $transactions->where('type_service_id', TypeServiceEnum::TRANSFERT->value)->sum(function ($t) {
-                return $t->debit - $t->credit;
-            });
+        $transfertEmis= $transactions->where('type_service_id', TypeServiceEnum::TRANSFERT->value)->sum("debit");
+        $transfertRecu= $transactions->where('type_service_id', TypeServiceEnum::TRANSFERT->value)->sum("credit");
         $commission=$transactions->sum("commission");
 
-        $solde = $appro + $retrait-$depot-$facture+$payment-$transfert;
+        $solde = $appro + $retrait-$depot-$facture+$payment-$transfertEmis+$transfertRecu;
         return response()->json([
             'status'=>"true",
             'message'=> $transactions->count()." transactions trouvées",
@@ -171,7 +170,8 @@ class ApiTransactionsController extends BaseController
             'depot'=>$depot,
             'retrait'=>$retrait,
             'facture'=>$facture,
-            'transfert'=>$transfert,
+            'transfertEmis'=>$transfertEmis,
+            'transfertRecu'=>$transfertRecu,
             'payment'=>$payment,
             'solde'=>$solde,
             'commission'=>$commission,
