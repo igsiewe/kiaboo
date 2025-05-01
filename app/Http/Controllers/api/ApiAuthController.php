@@ -118,10 +118,12 @@ class ApiAuthController extends BaseController
             DB::table('oauth_access_tokens')->where('user_id', $user->id)->delete();
             $token = $user->createToken('kiaboo');
             $access_token = $token->accessToken;
-
+            $chaine = new ApiCheckController();
+            $qr_code ="K".$chaine->genererChaineAleatoire(10)."-".Auth::user()->id."-".$chaine->genererChaineAleatoire(2);
             $user->last_connexion = Carbon::now();
             $user->version = $version;
             $user->urlApplication = $urlApplication;
+            $user->qr_code = $qr_code;
             $user->save();
 
             $user = DB::table("users")->join("quartiers", "users.quartier_id", "=", "quartiers.id")

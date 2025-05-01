@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('numcni',200)->nullable();
             $table->date("datecni");
             $table->string('login');
+            $table->string('qr_code',200)->nullable();
             $table->double("balance_before")->default(0);
             $table->double("balance_after")->default(0);
             $table->double("last_amount")->default(0);
