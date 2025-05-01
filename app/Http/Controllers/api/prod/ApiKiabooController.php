@@ -61,7 +61,7 @@ class ApiKiabooController extends Controller
             ], 400);
         }
 
-        $emetteur = User::where("id",Auth::user()->id)->where("type_user_id", UserRolesEnum::AGENT->value)->where("status",1);
+        $emetteur = User::where("id",Auth::user()->id)->where("type_user_id", UserRolesEnum::AGENT->value);
         $service = ServiceEnum::TRANSFERT->value;
         //On se rassure que l'agent qui emet le transfert a un compte actif au moment du transfert
         if($emetteur->first()->status<>1){
@@ -74,7 +74,7 @@ class ApiKiabooController extends Controller
         if(doubleval($emetteur->first()->balance_after)<doubleval($request->amount)){
             return response()->json([
                 "code" => 404,
-                "message" => "Votre solde est insuffisant pour cette action".$emetteur->first()->balance_after." - ".$request->amount,
+                "message" => "Votre solde est insuffisant pour cette action",
             ],404);
         }
         //On vérifie que l'agent bénéficiaire est actif
