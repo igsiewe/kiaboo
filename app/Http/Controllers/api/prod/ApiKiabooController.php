@@ -114,7 +114,9 @@ class ApiKiabooController extends Controller
                     $TransactionEmetteur= Transaction::create([
                         'reference'=>$reference,
                         'paytoken'=>$reference,
+                        'reference_partenaire'=>$reference,
                         'date_transaction'=>Carbon::now(),
+                        'date_end_trans'=>Carbon::now(),
                         'service_id'=>$service,
                         'balance_before'=>$soldeEmetteur,
                         'balance_after'=>$newSoldeEmetteur,
@@ -162,7 +164,9 @@ class ApiKiabooController extends Controller
                     $TransactionBeneficiaire= Transaction::create([
                         'reference'=>$reference,
                         'paytoken'=>$reference,
+                        'reference_partenaire'=>$reference,
                         'date_transaction'=>Carbon::now(),
+                        'date_end_trans'=>Carbon::now(),
                         'service_id'=>$service,
                         'balance_before'=>$soldeBeneficiaire,
                         'balance_after'=>$newSoldeBeneficiaire,
