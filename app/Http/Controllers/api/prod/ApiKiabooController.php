@@ -6,6 +6,7 @@ use App\Http\Controllers\api\ApiCheckController;
 use App\Http\Controllers\Controller;
 use App\Http\Enums\ServiceEnum;
 use App\Http\Enums\UserRolesEnum;
+use App\Models\Service;
 use App\Models\Transaction;
 use App\Models\User;
 use Carbon\Carbon;
@@ -187,6 +188,30 @@ class ApiKiabooController extends Controller
                         "version"=>Auth::user()->version,
                         "message"=>"Transfert effectué avec succes par l'agent ".$emetteur->first()->telephone." - ".$emetteur->first()->name." ".$emetteur->first()->surname,
                     ]);
+
+            $userRefresh = User::where('id', Auth::user()->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before', 'balance_after','total_commission', 'last_amount','sous_distributeur_id','date_last_transaction')->first();
+            $transactionsRefresh = DB::table('transactions')
+                ->join('services', 'transactions.service_id', '=', 'services.id')
+                ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
+                ->select('transactions.id','transactions.reference as reference','transactions.paytoken','transactions.reference_partenaire','transactions.date_transaction','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.commission_agent as commission','transactions.balance_before','transactions.balance_after' ,'transactions.status','transactions.service_id','services.name_service','services.logo_service','type_services.name_type_service','type_services.id as type_service_id','transactions.date_operation', 'transactions.heure_operation','transactions.commission_agent_rembourse as commission_agent')
+                ->where("fichier","agent")
+                ->where("source",Auth::user()->id)
+                ->where('transactions.status',1)
+                ->orderBy('transactions.date_transaction', 'desc')
+                ->limit(5)
+                ->get();
+
+            $services = Service::all();
+            return response()->json([
+                'success' => true,
+                'message' => "SUCCESSFULL", // $resultat->message,
+                'textmessage' =>"Le dépôt a été effectué avec succès", // $resultat->message,
+                'reference' => $reference,// $resultat->data->data->txnid,
+                'data' => [],// $resultat,
+                'user'=>$userRefresh,
+                'transactions'=>$transactionsRefresh,
+                'services'=>$services,
+            ], 200);
             DB::commit();
         }catch (\Exception $e){
             DB::rollBack();
