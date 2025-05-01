@@ -117,18 +117,11 @@ class ApiProdAuthController extends BaseController
 
             $user->last_connexion = Carbon::now();
             $user->save();
-            Log::info([
-                'user_id'=>Auth::user()->id,
-                'name'=>Auth::user()->name." ".Auth::user()->surname,
-                'Desciption'=>'Connexion'
-            ]);
+
             $delay=Carbon::parse($token->token->expires_at)->diffInSeconds(Carbon::now());
             return $this->respondWithTokenSwagger($access_token, $user,$delay);
         }
-        Log::alert([
-            'Login'=>$request->login,
-            'Desciption'=>'ERR-CREDENTIALS-INVALID'
-        ]);
+
         return response()->json([
             'success'=>false,
             'statusCode' => 'ERR-CREDENTIALS-INVALID', // 'ERR-CREDENTIALS-INVALID

@@ -45,17 +45,6 @@ class ApiProdM2UController extends Controller
                 "PhoneNumber"=>'237'.$customerNumber,
             ]  );
 
-        Log::info([
-            "Service"=>"M2U_NameCustomer",
-            "url"=>"https://apps.m2u.money/LocateUser",
-            "requete"=>[
-                "PhoneNumber" => '237'.$customerNumber,
-            ],
-            "reponse"=>[
-                "status"=>json_decode($response->status()),
-                "response"=>json_decode($response->body()),
-                ]
-        ]);
         if($response->status()==401){
             return response()->json([
                 'status' => 'echec',
@@ -100,13 +89,7 @@ class ApiProdM2UController extends Controller
             ],200);
             //  return response()->json($response->json());
         }else{
-            Log::error([
-                'code'=> $response->status(),
-                'function' => "M2U_NameCustomer",
-                'response'=>$response->body(),
-                'user' => Auth::user()->id,
-                'customerPhone'=>$customerNumber,
-            ]);
+
             //$body = json_decode($response->body());
             return response()->json([
                 'code' => $response->status(),
@@ -165,13 +148,6 @@ class ApiProdM2UController extends Controller
                 'token' => $LiveToken,
             ],200);
         }else{
-            Log::error([
-                'code'=> $response->status(),
-                'function' => "M2U_getToken",
-                'response'=>$response->body(),
-                'user' => Auth::user()->id,
-            ]);
-
             return response()->json([
                 'code' => $response->status(),
                 'message' =>"2. Exception ".$response->status()." Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
@@ -283,15 +259,7 @@ class ApiProdM2UController extends Controller
 
             $checkSolde = $this->M2U_CheckSoldeTeller($montant, $token);
             if($checkSolde->getStatusCode()!=200){
-                Log::error(
-                    [
-                        'code'=> $checkSolde->getStatusCode(),
-                        'function' => "M2U_CheckSoldeTeller",
-                        'response'=>$checkSolde->body(),
-                        'user' => Auth::user()->id,
-                        'montant' => $montant,
-                    ]
-                );
+
                 return response()->json([
                     'status'=>'error',
                     'message'=>"7. Exception ".$checkSolde->getStatusCode()."\nImpossible de vérifier le solde du wallet de l'agent",
@@ -301,16 +269,7 @@ class ApiProdM2UController extends Controller
                 $dataCheckSolde = json_decode($checkSolde->getContent());
 
                 if($dataCheckSolde->success==false){
-                    Log::error(
-                        [
-                            'code'=> $checkSolde->getStatusCode(),
-                            'function' => "M2U_CheckSoldeTeller",
-                            'response'=>$dataCheckSolde->message,
-                            'user' => Auth::user()->id,
-                            'montant' => $montant,
-                            'result'=>$dataCheckSolde,
-                        ]
-                    );
+
                     return response()->json([
                         'status'=>'error',
                         'message'=>"8. Exception 403 \nLe solde du compte M2U est insuffisant pour effectuer cette opération",
@@ -341,27 +300,7 @@ class ApiProdM2UController extends Controller
                     "UseDefaultWallet" => "No",
                     "OTP" => "SibSnfeSdksSji2023_@" //Le password du Teller
                 ]  );
-            Log::info([
-                "Service"=>ServiceEnum::DEPOT_M2U->name,
-                "url"=>"https://apps.m2u.money/CPAddMoney",
-                "requete"=>[
-                    "Amount" => $montant,
-                    "TargetType" => "50",
-                    "TargetCurrency" => "XAF",
-                    "SourceWallet" => "xxxxxxxx",
-                    "TargetWallet" => $accountNumber,
-                    "FirstName" => $firstName,
-                    "LastName" => $lastName,
-                    "PhoneNumber" => $customerNumber,
-                    "PartnerTellerID"=>Auth::user()->id,
-                    "UseDefaultWallet" => "No",
-                    "OTP" => "xxxxxxx"],
-                "reponse"=>[
-                    "status"=>json_decode($response->status()),
-                    "body"=>json_decode($response->body()),
-                    ]
 
-            ]);
             if($response->status()==200) {
 
                 $json = json_decode($response, false);
@@ -421,7 +360,13 @@ class ApiProdM2UController extends Controller
                         'total_commission' => $commission_agent,
                     ]);
                     DB::commit();
-                    $userRefresh = User::where('id', Auth::user()->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before', 'balance_after','total_commission', 'last_amount','sous_distributeur_id','date_last_transaction')->first();
+                   // $userRefresh = User::where('id', Auth::user()->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before', 'balance_after','total_commission', 'last_amount','sous_distributeur_id','date_last_transaction')->first();
+
+                    $userRefresh = DB::table("users")->join("quartiers", "users.quartier_id", "=", "quartiers.id")
+                        ->join("villes", "quartiers.ville_id", "=", "villes.id")
+                        ->where('users.id', Auth::user()->id)
+                        ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id','users.qr_code')->first();
+
                     $transactionsRefresh = DB::table('transactions')
                         ->join('services', 'transactions.service_id', '=', 'services.id')
                         ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
@@ -454,43 +399,19 @@ class ApiProdM2UController extends Controller
                     ], 200);
                 }catch (\Exception $e){
                     DB::rollBack();
-                    Log::error([
-                        'code'=> $e->getCode(),
-                        'function' => "depotM2U",
-                        'response'=>$e->getMessage(),
-                        'user' => Auth::user()->id,
-                        'customerPhone'=>$customerNumber,
-                    ]);
+
                     return response()->json([
                         'success' => false,
                         'message' =>"11. Exception ".$e->getCode()."\nUne exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
                     ],$e->getCode());
                 }
             }else{
-                Log::error([
-                    'code'=> $response->status(),
-                    'function' => "depotM2U",
-                    'response'=>$response->body(),
-                    'user' => Auth::user()->id,
-                    'customerPhone'=>$customerNumber,
-                    'montant'=>$montant,
-                ]);
-
                 return response()->json([
                     'code' => $response->status(),
                     'message' =>"12. Exception ".$response->status()."\nUne exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
                 ],$response->status());
             }
         }else{
-
-            Log::error([
-                'code'=> $getToken->getStatusCode(),
-                'function' => "depotM2U",
-                'response'=>$getToken->getContent(),
-                'user' => Auth::user()->id,
-                'customerPhone'=>$customerNumber,
-            ]);
-
             return response()->json([
                 'status'=>'error',
                 'message' =>"13. Exception ".$getToken->getStatusCode()."\nUne exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
@@ -560,13 +481,6 @@ class ApiProdM2UController extends Controller
 
                 if ($data->OK == "200") {
                     if($data->ReturnCode=="-1"){
-                        log::error(
-                            [
-                                "Partenaire"=>"M2U",
-                                "Service"=>"Retrait",
-                                "error"=>$data,
-                            ]
-                        );
                         return response()->json([
                             'success' => false,
                             'message' =>"1. Exception ".$data->OK."(".$data->ReturnCode.")\n".$data->Description,// "Wrong voucher number or security code",
@@ -626,17 +540,6 @@ class ApiProdM2UController extends Controller
                 }
             }
         }else{
-            Log::error(
-                [
-                    'code'=> $getToken->getStatusCode(),
-                    'function' => "getTransfertStatus",
-                    'response'=>$getToken->getContent(),
-                    'user' => Auth::user()->id,
-                    'customerPhone'=>$request->customerNumber,
-                    "SecurityCode" => $request->SecurityCode,
-                    "VoucherNumber" => $request->VoucherNumber,
-                ]
-            );
             return response()->json([
                 'success' => false,
                 'message' => "7. Exception ".$getToken->getStatusCode()."\nUne erreur inatendue s'est produite, veuillez contacter votre superviseur si le problème persiste",
@@ -813,7 +716,12 @@ class ApiProdM2UController extends Controller
                         'total_commission' => $commission_agent,
                     ]);
                     DB::commit();
-                    $userRefresh = User::where('id', Auth::user()->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before', 'balance_after','total_commission', 'last_amount','sous_distributeur_id','date_last_transaction')->first();
+                   // $userRefresh = User::where('id', Auth::user()->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before', 'balance_after','total_commission', 'last_amount','sous_distributeur_id','date_last_transaction')->first();
+                    $userRefresh = DB::table("users")->join("quartiers", "users.quartier_id", "=", "quartiers.id")
+                        ->join("villes", "quartiers.ville_id", "=", "villes.id")
+                        ->where('users.id', Auth::user()->id)
+                        ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id','users.qr_code')->first();
+
                     $transactionsRefresh = DB::table('transactions')
                         ->join('services', 'transactions.service_id', '=', 'services.id')
                         ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
@@ -843,42 +751,18 @@ class ApiProdM2UController extends Controller
                     ], 200);
                 }catch (\Exception $e){
                     DB::rollBack();
-                    Log::error([
-                        'code'=> $e->getCode(),
-                        'function' => "depotM2U",
-                        'response'=>$e->getMessage(),
-                        'user' => Auth::user()->id,
-                        'customerPhone'=>$request->TargetPhoneNumber,
-                    ]);
                     return response()->json([
                         'success' => false,
                         'message' =>"5. Exception ".$e->getCode()."\nUne exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
                     ],$e->getCode());
                 }
             }else{
-                Log::error([
-                    'code'=> $response->status(),
-                    'function' => "depotM2U",
-                    'response'=>$response->body(),
-                    'user' => Auth::user()->id,
-                    'customerPhone'=>$request->TargetPhoneNumber,
-                ]);
-
                 return response()->json([
                     'code' => $response->status(),
                     'message' =>"6. Exception ".$response->status()."\nUne exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
                 ],$response->status());
             }
         }else{
-
-            Log::error([
-                'code'=> $getToken->getStatusCode(),
-                'function' => "depotM2U",
-                'response'=>$getToken->getContent(),
-                'user' => Auth::user()->id,
-                'customerPhone'=>$request->TargetPhoneNumber,
-            ]);
-
             return response()->json([
                 'status'=>'error',
                 'message' =>"7. Exception ".$getToken->getContent()." Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
@@ -977,22 +861,6 @@ class ApiProdM2UController extends Controller
                     "PIN"=>"SibSnfeSdksSji2023_@",
                     "PartnerTellerID"=>Auth::user()->id,
                 ]  );
-
-            Log::info([
-                "Service"=>ServiceEnum::RETRAIT_M2U_CB->name,
-                "url"=>"https://apps.m2u.money/ExecuteCashBack",
-                "requete"=>[
-                    "TransactionNumber"=> $request->TransactionNumber,
-                    "WalletNumber"=>"XXXXXX",
-                    "OTP"=>$request->OTP,
-                    "PIN"=>"XXXXXXX",
-                    "PartnerTellerID"=>Auth::user()->id,],
-                    "reponse"=>[
-                        "status"=>json_decode($response->status()),
-                        "body"=>json_decode($response->body()),
-                    ]
-            ]);
-
             $json = json_decode($response, false);
             $dataResultat = collect($json)->first();
             $element = json_decode($response, associative: true);
@@ -1049,7 +917,12 @@ class ApiProdM2UController extends Controller
                                     'total_commission' => $commission_agent,
                                 ]);
                                 DB::commit();
-                                $userRefresh = User::where('id', Auth::user()->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before', 'balance_after','total_commission', 'last_amount','sous_distributeur_id','date_last_transaction')->first();
+                               // $userRefresh = User::where('id', Auth::user()->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before', 'balance_after','total_commission', 'last_amount','sous_distributeur_id','date_last_transaction')->first();
+                                $userRefresh = DB::table("users")->join("quartiers", "users.quartier_id", "=", "quartiers.id")
+                                    ->join("villes", "quartiers.ville_id", "=", "villes.id")
+                                    ->where('users.id', Auth::user()->id)
+                                    ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id','users.qr_code')->first();
+
                                 $transactionsRefresh = DB::table('transactions')
                                     ->join('services', 'transactions.service_id', '=', 'services.id')
                                     ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
@@ -1063,31 +936,11 @@ class ApiProdM2UController extends Controller
 
                                 $idDevice = $device;
                                 $title = "Kiaboo";
-                                $message = "Le retrait M2U Money de " . $request->Amount . " F CFA a été effectué avec succès au ".$request->TargetPhoneNumber;
+                                $message = "Le retrait M2U Money de " . $request->Amount . " F CFA a été effectué avec succès au ".$request->TargetPhoneNumber." (".$dataResultat->TransactionID.")";
                                 $subtitle ="Success";
                                 $appNotification = new ApiNotification();
                                 $envoiNotification = $appNotification->SendPushNotificationCallBack($idDevice, $title,  $message);
-                                if($envoiNotification->status()==200){
-                                    $resultNotification=json_decode($envoiNotification->getContent());
-                                    $responseNotification=$resultNotification->response ;
-                                    if($responseNotification->success==true){
-                                        Log::info([
-                                            'code'=> 200,
-                                            'function' => "M2U_RetraitCPPayCash",
-                                            'response'=>"Notification envoyée avec succès",
-                                            'user' => Auth::user()->id,
-                                            'request' => $request->all()
-                                        ]);
-                                    }else{
-                                        Log::error([
-                                            'code'=> 500,
-                                            'function' => "M2U_RetraitCPPayCash",
-                                            'response'=>$resultNotification,
-                                            'user' => Auth::user()->id,
-                                            'request' => $request->all()
-                                        ]);
-                                    }
-                                }
+
 
                                 return response()->json([
                                     'success' => true,
@@ -1099,14 +952,6 @@ class ApiProdM2UController extends Controller
                                 ], 200);
                             }catch (\Exception $e){
                                 DB::rollBack();
-                                Log::error([
-                                    'code'=> $e->getCode(),
-                                    'function' => "RetraitM2UCashBack",
-                                    'response'=>$e->getMessage(),
-                                    'user' => Auth::user()->id,
-                                    'CustomerPhoneNumber'=>$request->CustomerPhoneNumber,
-                                    'TransactionNumber'=>$request->TransactionNumber
-                                ]);
                                 return response()->json([
                                     'success' => false,
                                     'message' =>"5. Exception ".$e->getCode()."\nUne exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
@@ -1121,31 +966,13 @@ class ApiProdM2UController extends Controller
                     ], 404);
                 }
 
-
-
             }else{
-                Log::error([
-                    'code'=> $response->status(),
-                    'function' => "RetraitM2UCashBack",
-                    'response'=>$response->body(),
-                    'user' => Auth::user()->id,
-                    'CustomerPhoneNumber'=>$request->CustomerPhoneNumber,
-                    'TransactionNumber'=>$request->TransactionNumber
-                ]);
                 return response()->json([
                     'code' => $response->status(),
                     'message' =>"7. Exception ".$response->status()."\n".$dataResultat->Description,//"4. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
                 ],$response->status());
             }
         }else{
-            Log::error([
-                'code'=> $getToken->getStatusCode(),
-                'function' => "RetraitM2UCashBack",
-                'response'=>$getToken->getContent(),
-                'user' => Auth::user()->id,
-                'CustomerPhoneNumber'=>$request->CustomerPhoneNumber,
-                'TransactionNumber'=>$request->TransactionNumber
-            ]);
             return response()->json([
                 'status'=>'error',
                 'message' =>"8. Exception ".$getToken->getStatusCode()."\nUne exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
@@ -1243,26 +1070,14 @@ class ApiProdM2UController extends Controller
                     ], 404);
                 }
             }else{
-                Log::error(
-                    [
-                        'code'=> $response->status(),
-                        'function' => "M2U_CashBackStatus",
-                        'response'=>$response->body(),
-                    ]
-                );
+
                 return response()->json([
                     'success' => false,
                     'message' => "3. Exception ".$response->status()."\n".$data->Description,
                 ], $response->status());
             }
         }else{
-            Log::error(
-                [
-                    'code'=> $getToken->getStatusCode(),
-                    'function' => "M2U_CashBackStatus",
-                    'response'=>$getToken->getContent(),
-                ]
-            );
+
             return response()->json([
                 'success' => false,
                 'message' => "4. Exception ".$getToken->getStatusCode()."\nUne erreur inatendue s'est produite, veuillez contacter votre superviseur si le problème persiste. Code error : ".$getToken->getStatusCode(),
@@ -1356,7 +1171,6 @@ class ApiProdM2UController extends Controller
                     'message'=>'Ce numéro de client n\'existe pas',
                 ],404);
             }
-
             return response()->json([
                 'status' => 'success',
                 'firstName' => $firstName,
@@ -1366,13 +1180,6 @@ class ApiProdM2UController extends Controller
             ],200);
             //  return response()->json($response->json());
         }else{
-            Log::error([
-                'code'=> $response->status(),
-                'function' => "M2U_NameCustomer",
-                'response'=>$response->body(),
-                'user' => Auth::user()->id,
-                'customerPhone'=>$customerNumber,
-            ]);
             //$body = json_decode($response->body());
             return response()->json([
                 'code' => $response->status(),

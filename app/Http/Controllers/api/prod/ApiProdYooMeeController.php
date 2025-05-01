@@ -276,7 +276,12 @@ class ApiProdYooMeeController extends Controller
 
                 DB::commit();
 
-                $userRefresh = User::where('id', Auth::user()->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before', 'balance_after','total_commission', 'last_amount','sous_distributeur_id','date_last_transaction')->first();
+               // $userRefresh = User::where('id', Auth::user()->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before', 'balance_after','total_commission', 'last_amount','sous_distributeur_id','date_last_transaction')->first();
+                $userRefresh = DB::table("users")->join("quartiers", "users.quartier_id", "=", "quartiers.id")
+                    ->join("villes", "quartiers.ville_id", "=", "villes.id")
+                    ->where('users.id', Auth::user()->id)
+                    ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id','users.qr_code')->first();
+
                 $transactionsRefresh = DB::table('transactions')
                     ->join('services', 'transactions.service_id', '=', 'services.id')
                     ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
@@ -290,10 +295,9 @@ class ApiProdYooMeeController extends Controller
 
                 $idDevice = $device;
                 $title = "Kiaboo";
-                $message = "Le dépôt MOMO de " . $montant . " F CFA a été effectué avec succès au ".$customerNumber;
+                $message = "Le dépôt YOOMEE de " . $montant . " F CFA a été effectué avec succès au ".$customerNumber." (ID :".$referenceID.")";
                 $subtitle ="Success";
                 $appNotification = new ApiNotification();
-
                 $envoiNotification = $appNotification->SendPushNotificationCallBack($idDevice, $title,  $message); //Push notification sur le telephone de l'agent
                 $services = Service::all();
                 return response()->json([
@@ -567,7 +571,12 @@ class ApiProdYooMeeController extends Controller
                         'remember_token'=>$referenceID,
                         'total_commission'=>$commission_agent,
                     ]);
-                    $userRefresh = User::where('id', Auth::user()->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before', 'balance_after','total_commission', 'last_amount','sous_distributeur_id','date_last_transaction')->first();
+                   // $userRefresh = User::where('id', Auth::user()->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before', 'balance_after','total_commission', 'last_amount','sous_distributeur_id','date_last_transaction')->first();
+                    $userRefresh = DB::table("users")->join("quartiers", "users.quartier_id", "=", "quartiers.id")
+                        ->join("villes", "quartiers.ville_id", "=", "villes.id")
+                        ->where('users.id', Auth::user()->id)
+                        ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id','users.qr_code')->first();
+
                     $transactionsRefresh = DB::table('transactions')
                         ->join('services', 'transactions.service_id', '=', 'services.id')
                         ->join('type_services', 'services.type_service_id', '=', 'type_services.id')

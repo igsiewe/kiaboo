@@ -93,7 +93,7 @@ class ApiAuthController extends BaseController
         if (Auth::attempt($credentials)) {
             $users = Auth::user();
             //$user = User::where('id', $users->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before as balanceBefore', 'balance_after as balanceAfter', 'last_amount as lastAmount','sous_distributeur_id as sousDistributeur','date_last_transaction as dateLastTransaction','last_service_id as lastService', 'type_user_id as typeuser','countrie_id as country','reference_last_transaction as referenceLastTransaction', 'status')->first();
-            $user = User::where('id', $users->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before', 'balance_after','total_commission', 'last_amount','sous_distributeur_id','date_last_transaction','moncodeparrainage')->first();
+            $user = User::where('id', $users->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before', 'balance_after','total_commission', 'last_amount','sous_distributeur_id','date_last_transaction','moncodeparrainage','qr_code')->first();
 
 
             $partenaires = Partenaire::where("countrie_id",Auth::user()->countrie_id)->select("id","name_partenaire as nomPartenaire","logo_partenaire as logoPartenaire")->orderBy('name_partenaire', 'asc')->get();
@@ -129,7 +129,7 @@ class ApiAuthController extends BaseController
             $user = DB::table("users")->join("quartiers", "users.quartier_id", "=", "quartiers.id")
                 ->join("villes", "quartiers.ville_id", "=", "villes.id")
                 ->where('users.id', $users->id)
-                ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id')->first();
+                ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id','users.qr_code')->first();
 
             $questions = question::where("status",1)->orderBy('ordre', 'asc')->select('id','question','reponse','detail')->get();
             $configurations = configuration::where("status",1)->select('id','lien_politique', 'lien_cgu', 'lien_mention', 'lien_appstore','lien_playstore', 'telephone_support', 'email_support', 'message_parrainage')->get();
@@ -169,7 +169,7 @@ class ApiAuthController extends BaseController
             $user = DB::table("users")->join("quartiers", "users.quartier_id", "=", "quartiers.id")
                 ->join("villes", "quartiers.ville_id", "=", "villes.id")
                 ->where('users.id', $users->id)
-                ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id')->first();
+                ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id','users.qr_code')->first();
 
             DB::table('oauth_access_tokens')->where('user_id', $user->id)->delete();
             $token = $user->createToken('kiaboo');
@@ -363,7 +363,7 @@ class ApiAuthController extends BaseController
         $user = DB::table("users")->join("quartiers", "users.quartier_id", "=", "quartiers.id")
             ->join("villes", "quartiers.ville_id", "=", "villes.id")
             ->where('users.id',Auth::user()->id)
-            ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id')->first();
+            ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id','users.qr_code')->first();
 
         return $this->sendResponse($user, 'User data');
     }
@@ -476,7 +476,7 @@ class ApiAuthController extends BaseController
             $user = DB::table("users")->join("quartiers", "users.quartier_id", "=", "quartiers.id")
                 ->join("villes", "quartiers.ville_id", "=", "villes.id")
                 ->where('users.id',Auth::user()->id)
-                ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id')->first();
+                ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id','users.qr_code')->first();
 
             if ($updateUser) {
                 DB::commit();
@@ -671,7 +671,7 @@ class ApiAuthController extends BaseController
             $user = DB::table("users")->join("quartiers", "users.quartier_id", "=", "quartiers.id")
                 ->join("villes", "quartiers.ville_id", "=", "villes.id")
                 ->where('users.id', $id)
-                ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.ville_id','quartiers.ville_id')->first();
+                ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.ville_id','quartiers.ville_id','users.qr_code')->first();
 
             return response()->json([
                 'status' => 'success',
@@ -763,7 +763,7 @@ class ApiAuthController extends BaseController
         $user = DB::table("users")->join("quartiers", "users.quartier_id", "=", "quartiers.id")
             ->join("villes", "quartiers.ville_id", "=", "villes.id")
             ->where('users.id', Auth::user()->id)
-            ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id')->first();
+            ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id','users.qr_code')->first();
 
         return response()->json([
             'success' => true,
