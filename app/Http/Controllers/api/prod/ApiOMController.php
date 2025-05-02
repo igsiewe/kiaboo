@@ -1185,7 +1185,7 @@ class ApiOMController extends Controller
             'description'=>$dataPaiement->data->status,
             'message'=>"Transaction initiée par l'agent N°".Auth::user()->telephone." - ".$dataPaiement->message." | ".$dataPaiement->data->status." | ".$dataPaiement->data->inittxnmessage,
             'fees'=>$fees,
-            'fee_collecte'=>$fees,
+            'fees_collecte'=>$fees,
             'api_response'=>$responseTraitePaiementOM->getContent(),
             'application'=>1
         ]);
