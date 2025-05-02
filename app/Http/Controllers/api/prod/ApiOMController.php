@@ -1247,6 +1247,7 @@ class ApiOMController extends Controller
                 $reference = $Transaction->first()->reference;
                 $telephone = $Transaction->first()->customer_phone;
                 $dateTransaction = $Transaction->first()->date_transaction;
+                $device_notification= $Transaction->first()->device_notification;
                 try{
                     DB::beginTransaction();
                     $Transaction->update([
@@ -1275,7 +1276,7 @@ class ApiOMController extends Controller
                     $title = "Kiaboo";
                     $message = "Le paiement Orange Money de " . $montant . " F CFA a été effectué avec succès au ".$telephone." (ID : ".$reference_partenaire.") le ".$dateTransaction;
                     $appNotification = new ApiNotification();
-                    $envoiNotification = $appNotification->SendPushNotificationCallBack($Transaction->first()->device_notification, $title, $message);
+                    $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
                     DB::commit();
                 }catch (\Exception $e){
                     DB::rollback();
