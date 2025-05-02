@@ -1230,8 +1230,8 @@ class ApiOMController extends Controller
         $OMcallBackResponse = file_get_contents('php://input');
         $data = json_decode($OMcallBackResponse);
         $element = json_decode($OMcallBackResponse, associative: true);
-        Log::info([
-            "OMCallBack" => $data,
+        Log::info("OMCallBack", [
+            'data' => $data,
         ]);
     }
 }

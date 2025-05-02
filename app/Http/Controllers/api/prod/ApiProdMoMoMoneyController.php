@@ -339,12 +339,6 @@ class ApiProdMoMoMoneyController extends Controller
 
             }
 
-
-
-
-
-
-
         }else{
 
             $alerte->logError($response->status(), "MOMO_Depot", $dataRequete, json_decode($response->body()),"MOMO_Depot");
