@@ -7,34 +7,34 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 class ApiLog extends Controller
 {
-    public function logError($status = null, $service = null, $requete = null, $response=null)
+    public function logError($status = null, $service = null, $requete = null, $response=null, $fonction=null)
     {
 
-        Log::error('API Error', [
+        Log::error($service, [
             'status' => $status,
-            'function'=> $service,
+            'function'=> $fonction,
             'request' => $requete,
             'response' => $response,
             'user' => Auth::user()->id,
         ]);
     }
 
-    public function logInfo($status = null, $service = null, $requete = null, $response=null)
+    public function logInfo($status = null, $service = null, $requete = null, $response=null, $fonction=null )
     {
-        Log::info('API Info', [
+        Log::info($service, [
             'status' => $status,
-            'function'=> $service,
+            'function'=> $fonction,
             'request' => $requete,
             'response' => $response,
             'user' => Auth::user()->id,
         ]);
     }
 
-    public function logWarning($status = null, $service = null, $requete = null, $response=null)
+    public function logWarning($status = null, $service = null, $requete = null, $response=null, $fonction=null )
     {
-        Log::warning('API Warning', [
+        Log::warning($service, [
             'status' => $status,
-            'function'=> $service,
+            'function'=> $fonction,
             'request' => $requete,
             'response' => $response,
             'user' => Auth::user()->id,

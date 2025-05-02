@@ -64,7 +64,7 @@ class ApiProdMoMoMoneyController extends Controller
             return response()->json($response->json());
         }else{
             $alerte = new ApiLog();
-            $alerte->logError($response->status(), "MOMO_Disbursement_GetTokenAccess", null, json_decode($response->body()));
+            $alerte->logError($response->status(), "MOMO Token", null, json_decode($response->body()), "MOMO_Disbursement_GetTokenAccess");
             return response()->json(
                 [
                     'status'=>$response->status(),
@@ -115,7 +115,7 @@ class ApiProdMoMoMoneyController extends Controller
             );
         }else{
             $alerte = new ApiLog();
-            $alerte->logError($response->status(), "MOMO_CustomerName", $customerPhone, json_decode($response->body()));
+            $alerte->logError($response->status(), "MOMO_CustomerName", $customerPhone, json_decode($response->body()),"MOMO_CustomerName");
 
             return response()->json(
                 [
@@ -271,7 +271,7 @@ class ApiProdMoMoMoneyController extends Controller
             ]);
 
         $alerte = new ApiLog();
-        $alerte->logInfo($response->status(), "MOMO_Depot", $dataRequete, json_decode($response->body()));
+        $alerte->logInfo($response->status(), "MOMO_Depot", $dataRequete, json_decode($response->body()),"MOMO_Depot");
         if($response->status()==202){
 
             $checkStatus = $this->MOMO_Depot_Status( $accessToken, $subcriptionKey, $referenceID);
@@ -285,7 +285,7 @@ class ApiProdMoMoMoneyController extends Controller
                     'description'=>$datacheckStatus->description,
                     'message'=>$datacheckStatus->message." - Vérifier le status dans la liste des encours",
                 ]);
-                $alerte->logError($checkStatus->getStatusCode(), "MOMO_Depot", $dataRequete, $datacheckStatus->message);
+                $alerte->logError($checkStatus->getStatusCode(), "MOMO_Depot", $dataRequete, $datacheckStatus->message,"MOMO_Depot");
                 return response()->json([
                     'status'=>'error',
                     'message'=>$datacheckStatus->message,
@@ -327,17 +327,16 @@ class ApiProdMoMoMoneyController extends Controller
 
             }catch (\Exception $e) {
                 DB::rollback();
-
-                $alerte->logError($response->status(), "MOMO_Depot", $dataRequete, $e->getMessage());
+                $alerte->logError($response->status(), "MOMO_Depot", $dataRequete, $e->getMessage(),"MOMO_Depot");
                 return response()->json([
                     'success' => false,
                     'message' => "Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste", //'Une erreur innatendue s\est produite. Si le problème persiste, veuillez contacter votre support.',
-                ], 400);
+                ], $e->getCode());
             }
 
         }else{
 
-            $alerte->logError($response->status(), "MOMO_Depot", $dataRequete, json_decode($response->body()));
+            $alerte->logError($response->status(), "MOMO_Depot", $dataRequete, json_decode($response->body()),"MOMO_Depot");
             return response()->json(
                 [
                     'status'=>$response->status(),
@@ -363,7 +362,7 @@ class ApiProdMoMoMoneyController extends Controller
         $data = json_decode($response->body());
         $element = json_decode($response, associative: true);
         $alerte = new ApiLog();
-        $alerte->logInfo($response->status(), "MOMO_Depot_Status", $referenceId, $data);
+        $alerte->logInfo($response->status(), "MOMO_Depot_Status", $referenceId, $data,"MOMO_Depot_Status");
         if($response->status()==200){
             if($data->status=="SUCCESSFUL"){
                 return response()->json(
@@ -383,7 +382,7 @@ class ApiProdMoMoMoneyController extends Controller
                         'status'=>201,
                         'amount'=>$data->amount,
                         'externalId'=>$data->externalId,
-                        'message'=>"Le maximum de dépôt pour ce compte dans la semaine est atteint -> ",
+                        'message'=>"Le maximum de dépôt pour ce compte dans la semaine est atteint",
                         'description'=>$data->status,
                     ],201
                 );
@@ -393,7 +392,6 @@ class ApiProdMoMoMoneyController extends Controller
             if($data->status=="FAILED") {
                     if(Arr::has($element, "reason")) {
                         $reason = $data->reason;
-
                         if ($reason == "NOT_ENOUGH_FUNDS") {
                                 return response()->json(
                                     [
@@ -430,7 +428,7 @@ class ApiProdMoMoMoneyController extends Controller
             );
         }else{
 
-            $alerte->logError($response->status(), "MOMO_Depot_Status", $referenceId, $data);
+            $alerte->logError($response->status(), "MOMO_Depot_Status", $referenceId, $data, "MOMO_Depot_Status");
             return response()->json(
                 [
                     'status'=>$response->status(),
@@ -472,11 +470,11 @@ class ApiProdMoMoMoneyController extends Controller
         $data = json_decode($response->body());
 
         $alerte = new ApiLog();
-        $alerte->logInfo($response->status(), "MOMO_Depot_Status_Api", $referenceId, $data);
+        $alerte->logInfo($response->status(), "MOMO_Depot_Status_Api", $referenceId, $data,"MOMO_Depot_Status_Api");
 
         if($data==null){
 
-            $alerte->logError($response->status(), "MOMO_Depot_Status_Api", $referenceId, json_decode($response->body()));
+            $alerte->logError($response->status(), "MOMO_Depot_Status_Api", $referenceId, json_decode($response->body()),"MOMO_Depot_Status_Api");
             return response()->json(
                 [
                     'status'=>404,
@@ -634,7 +632,7 @@ class ApiProdMoMoMoneyController extends Controller
                 );
             }
 
-            $alerte->logError($response->status(), "MOMO_Depot_Status_Api", $data, json_decode($response->body()));
+            $alerte->logError($response->status(), "MOMO_Depot_Status_Api", $data, json_decode($response->body()),"MOMO_Depot_Status_Api");
             return response()->json(
                 [
                     'status'=>404,
@@ -670,20 +668,12 @@ class ApiProdMoMoMoneyController extends Controller
                 ],$response->status()
             );
 
-        } $validator = Validator::make($request->all(), [
-            'customerPhone' => 'required|numeric|digits:9',
-            'amount' => 'required|numeric|min:50|max:500000',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $validator->errors()->first(),
-            ], 400);
         }
+
     }
 
     public function MOMO_Payment_GetTokenAccess(){
+
         $response = Http::withOptions(['verify' => false,])->withHeaders(['Ocp-Apim-Subscription-Key'=> '886cc9e141ab492f80d9567b3c46d59c'])->withBasicAuth('748d8c40-bbe9-46e5-9d78-eb646c0de2af', '6ece0272f24745b7bedd0c3406abf3c9')
             ->Post('https://proxy.momoapi.mtn.com/collection/token/');
         if($response->status()==200){
@@ -696,17 +686,8 @@ class ApiProdMoMoMoneyController extends Controller
                 ],$response->status()
             );
 
-        } $validator = Validator::make($request->all(), [
-            'customerPhone' => 'required|numeric|digits:9',
-            'amount' => 'required|numeric|min:50|max:500000',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $validator->errors()->first(),
-            ], 400);
         }
+
     }
     public function MOMO_Retrait(Request $request){
         $apiCheck = new ApiCheckController();
@@ -811,7 +792,7 @@ class ApiProdMoMoMoneyController extends Controller
         ];
 
         $alerte = new ApiLog();
-        $alerte->logInfo($response->status(), "MOMO_Retrait", $data, $response);
+        $alerte->logInfo($response->status(), "MOMO_Retrait", $data, $response,"MOMO_Retrait");
 
         if($response->status()==202){
             //Le client a été notifié. Donc on reste en attente de sa confirmation (Saisie de son code secret)
@@ -851,7 +832,7 @@ class ApiProdMoMoMoneyController extends Controller
 
         }else{
             $alerte = new ApiLog();
-            $alerte->logError($response->status(), "MOMO_Retrait", $data, $response);
+            $alerte->logError($response->status(), "MOMO_Retrait", $data, $response,"MOMO_Retrait");
 
             return response()->json(
                 [
@@ -905,7 +886,7 @@ class ApiProdMoMoMoneyController extends Controller
 
         $data = json_decode($response->body());
         $alerte = new ApiLog();
-        $alerte->logInfo($response->status(), "MOMO_Retrait_Status", $referenceID, $data);
+        $alerte->logInfo($response->status(), "MOMO_Retrait_Status", $referenceID, $data,"MOMO_Retrait_Status");
 
         if($response->status()==200){
 
@@ -994,7 +975,7 @@ class ApiProdMoMoMoneyController extends Controller
                 }catch(\Exception $e){
                     DB::rollBack();
 
-                    $alerte->logError($response->status(), "MOMO_Retrait_CheckStatus", $referenceID, $e->getMessage());
+                    $alerte->logError($response->status(), "MOMO_Retrait_Status", $referenceID, $e->getMessage(),"MOMO_Retrait_Status");
 
                     return response()->json(
                         [
@@ -1006,7 +987,7 @@ class ApiProdMoMoMoneyController extends Controller
 
             }
 
-            $alerte->logError($response->status(), "MOMO_Retrait_Status", $referenceID, json_decode($response->body()));
+            $alerte->logError($response->status(), "MOMO_Retrait_Status", $referenceID, json_decode($response->body()),"MOMO_Retrait_Status");
 
             return response()->json(
                 [
@@ -1016,7 +997,7 @@ class ApiProdMoMoMoneyController extends Controller
             );
         }else{
 
-            $alerte->logError($response->status(), "MOMO_Retrait_Status", $referenceID, json_decode($response->body()));
+            $alerte->logError($response->status(), "MOMO_Retrait_Status", $referenceID, json_decode($response->body()),"MOMO_Retrait_Status");
 
             return response()->json(
                 [
@@ -1056,7 +1037,7 @@ class ApiProdMoMoMoneyController extends Controller
 
         $data = json_decode($response->body());
         $alerte = new ApiLog();
-        $alerte->logInfo($response->status(), "MOMO_Retrait_Status_Api", $referenceID, $data);
+        $alerte->logInfo($response->status(), "MOMO_Retrait_Status_Api", $referenceID, $data,"MOMO_Retrait_Status_Api");
 
         if($response->status()==200){
 
@@ -1092,7 +1073,7 @@ class ApiProdMoMoMoneyController extends Controller
 
         }else{
             $alerte = new ApiLog();
-            $alerte->logError($response->status(), "MOMO_Retrait_Status_Api", $referenceID, json_decode($response->body()));
+            $alerte->logError($response->status(), "MOMO_Retrait_Status_Api", $referenceID, json_decode($response->body()),"MOMO_Retrait_Status_Api");
             return response()->json(
                 [
                     'status'=>$response->status(),
@@ -1175,15 +1156,12 @@ class ApiProdMoMoMoneyController extends Controller
                         $appNotification = new ApiNotification();
                         $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
 
-                        Log::info("MoMoCallBack.Notification.Retrait", [
-                            'Response' => $envoiNotification,
-                        ]);
                         DB::commit();
 
                     }catch(\Exception $e){
                         DB::rollBack();
                         Log::error(
-                            'Error updating MoMo transaction',
+                            'MOMO CallBack',
                             [
                                 'error' => $e->getMessage(),
                                 'transaction_id' => $Transaction->first()->id,
@@ -1243,7 +1221,7 @@ class ApiProdMoMoMoneyController extends Controller
                     $lacommission =$functionCommission->getCommissionByService($service,$montant);
                     if($lacommission->getStatusCode()!=200){
                         $alerte = new ApiLog();
-                        $alerte->logError($lacommission->getStatusCode(), "MoMoCallBack", null, $lacommission->getContent());
+                        $alerte->logError($lacommission->getStatusCode(), "MoMoCallBack", null, $lacommission->getContent(),"getCommissionByService");
 
                     }
                     //On Calcule la commission
@@ -1277,7 +1255,7 @@ class ApiProdMoMoMoneyController extends Controller
                         'callback_response'=> $data
 
                     ]);
-                    Log::info($Transaction) ;
+
                     //on met à jour le solde de l'utilisateur
 
                     //La commmission de l'agent après chaque transaction
@@ -1300,9 +1278,6 @@ class ApiProdMoMoMoneyController extends Controller
                     $message = "Le dépôt MoMo de " . $montant . " F CFA a été effectué avec succès au ".$customer_phone." (ID : ".$reference_partenaire.") le ".$dateTransaction;
                     $appNotification = new ApiNotification();
                     $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
-                    Log::info("MoMoCallBack.Notification.Depot", [
-                        'Response' => $envoiNotification,
-                    ]);
 
                 }
             }
