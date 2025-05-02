@@ -790,7 +790,9 @@ class ApiProdMoMoMoneyController extends Controller
             ],
             "payerMessage" => "Transaction initiée par le compte ".Auth::user()->telephone,
         ];
-        Log::info($response);
+        Log::info("Kiaboo",[
+            "data"=>$data,
+        ]);
         $alerte = new ApiLog();
         $alerte->logInfo($response->status(), "MOMO_Retrait", $data, $response,"MOMO_Retrait");
 
