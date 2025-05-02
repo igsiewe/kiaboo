@@ -1208,7 +1208,9 @@ class ApiOMController extends Controller
             ->orderBy('transactions.date_transaction', 'desc')
             ->limit(5)
             ->get();
-
+        Log::info([
+            "OMPayment" => $dataPaiement,
+        ]);
         return response()->json(
             [
                 'status'=>200,
@@ -1219,5 +1221,16 @@ class ApiOMController extends Controller
             ],200
         );
 
+    }
+
+    public function OMCallBack(Request $request)
+    {
+        header("Content-Type: application/json");
+        $OMcallBackResponse = file_get_contents('php://input');
+        $data = json_decode($OMcallBackResponse);
+        $element = json_decode($OMcallBackResponse, associative: true);
+        Log::info([
+            "OMCallBack" => $data,
+        ]);
     }
 }

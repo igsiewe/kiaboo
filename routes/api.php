@@ -47,7 +47,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::controller(ApiProdMoMoMoneyController::class)->group(function (){
         Route::post('momo/callback','MomoCallBack')->name("MoMoCallback");
     });
-    Route::controller(ApiOMCallBanckController::class)->group(function (){
+    Route::controller(ApiOMController::class)->group(function (){
         Route::get('callback/om/cico', 'OMCallBack')->name("OMCallBack");
     });
 
