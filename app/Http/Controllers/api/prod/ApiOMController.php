@@ -1029,6 +1029,49 @@ class ApiOMController extends Controller
         }
 
     }
+
+    public function OM_Payment_execute($token, $payToken, $beneficiaire, $montant, $transId)
+    {
+
+        //On execute le retrait
+        $description = "Ordoné par ".Auth::user()->telephone;
+
+        try{
+            $response = Http::withOptions(['verify' => false,])
+                ->withHeaders(
+                    [
+                        'Content-Type'=> 'application/json',
+                        'X-AUTH-TOKEN'=>$this->auth_x_token,
+                        'WSO2-Authorization'=>'Bearer '.$token
+                    ])
+
+                ->Post($this->endpoint.'/mp/pay', [
+                    "notifUrl"=> $this->callbackUrl,
+                    "channelUserMsisdn"=> $this->channel,
+                    "amount"=> $montant,
+                    "subscriberMsisdn"=> $beneficiaire,
+                    "pin"=> $this->pin,
+                    "orderId"=> str_replace(".","",$transId),
+                    "description"=> $description,
+                    "payToken"=> $payToken
+                ]);
+
+            if($response->status()==200){
+                return response()->json($response->json());
+            }
+            else{
+                return response()->json([
+                    'code' => $response->status(),
+                    'message'=>$response->body(),
+                ],$response->status());
+            }
+        }catch (\Exception $e){
+            return response()->json([
+                'message'=>$e->getMessage()
+            ],$e->getCode());
+        }
+
+    }
     public function OM_Payment(Request $request){
 
         $validator = Validator::make($request->all(), [
@@ -1094,7 +1137,7 @@ class ApiOMController extends Controller
         }
         $dataAcessToken = json_decode($responseToken->getContent());
         $AccessToken = $dataAcessToken->access_token;
-
+        dd($AccessToken);
         $customerPhone = "237".$request->customerPhone;
 
         //On initie le paiement (Obtention du PayToken)
@@ -1114,7 +1157,7 @@ class ApiOMController extends Controller
         ]);
 
 
-        $responseTraitePaiementOM = $this->OM_Retrait_execute($AccessToken, $payToken, $customerPhone, $request->amount, $idTransaction);
+        $responseTraitePaiementOM = $this->OM_Payment_execute($AccessToken, $payToken, $customerPhone, $request->amount, $idTransaction);
         dd($responseTraitePaiementOM);
         if($responseTraitePaiementOM->getStatusCode() !=200){
             $dataRetrait=json_decode($responseTraitePaiementOM->getContent());
