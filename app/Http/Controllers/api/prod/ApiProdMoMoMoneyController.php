@@ -790,9 +790,7 @@ class ApiProdMoMoMoneyController extends Controller
             ],
             "payerMessage" => "Transaction initiée par le compte ".Auth::user()->telephone,
         ];
-        Log::info("Kiaboo",[
-            "retour"=>$response->status(),
-        ]);
+
         $alerte = new ApiLog();
         $alerte->logInfo($response->status(), "MOMO_Retrait", $data, $response,"MOMO_Retrait");
 
@@ -1137,7 +1135,7 @@ class ApiProdMoMoMoneyController extends Controller
                             'description'=>$data->status,
                             'reference_partenaire'=>$reference_partenaire,
                             'terminaison'=>'CALLBACK',
-                            'callback_response'=>$data,
+                           // 'callback_response'=>$data,
                         ]);
 
                         $commission_agent = Transaction::where("status",1)->where("fichier","agent")->where("commission_agent_rembourse",0)->where("source",$agent)->sum("commission_agent");
@@ -1254,7 +1252,7 @@ class ApiProdMoMoMoneyController extends Controller
                         'commission_distributeur'=>$commissionDistributeur,
                         'reference_partenaire'=>$data->financialTransactionId,
                         'terminaison'=>'CALLBACK',
-                        'callback_response'=> $data
+                      //  'callback_response'=> $data
 
                     ]);
 
