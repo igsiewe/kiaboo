@@ -273,22 +273,22 @@ class ApiProdMoMoMoneyController extends Controller
         $alerte = new ApiLog();
         $alerte->logInfo($response->status(), "MOMO_Depot", $dataRequete, json_decode($response->body()),"MOMO_Depot");
         if($response->status()==202){
-            //Le code 202 indique la transaction est pending
+            //Le code 202 indique que la transaction est pending
             $updateTransaction=Transaction::where("id",$idTransaction)->update([
                 'status'=>2, // Le dépôt n'a pas abouti, on passe en statut pending
                 //'reference_partenaire'=>$data->financialTransactionId,
                 'description'=>"PENDING",
-                'message'=>"La transaction est en statut PENDING",
+                'message'=>"La transaction est en statut en attente",
+                'api_response'=>$response->status(),
             ]);
+
             $checkStatus = $this->MOMO_Depot_Status( $accessToken, $subcriptionKey, $referenceID);
             $datacheckStatus = json_decode($checkStatus->getContent());
 
-            if($checkStatus->getStatusCode() ==200) {
-                //La transaction a réussi (On laisse le callback faire le reste)
-            }else{
+            if($checkStatus->getStatusCode() !=200) {
                 //La transaction est attente
-                $updateTransaction=Transaction::where("id",$idTransaction)->update([
-                    'status'=>2, // Le dépôt n'a pas abouti, on passe en statut pending
+                $updateTransaction=Transaction::where("id",$idTransaction)->where("status",2)->update([
+                    //'status'=>2, // Le dépôt n'a pas abouti, on passe en statut pending
                     //'reference_partenaire'=>$data->financialTransactionId,
                     //'date_end_trans'=>Carbon::now(),
                     'description'=>$datacheckStatus->description,
@@ -299,51 +299,51 @@ class ApiProdMoMoMoneyController extends Controller
                     'status'=>'error',
                     'message'=>$datacheckStatus->message,
                 ],$checkStatus->getStatusCode());
+            }else{
+                $transaction = Transaction::where("id",$idTransaction)->first();
+                if($transaction->status==1){
+                    //Ca veut dire que le callback est passé et a changé le statut à 1, ainsi que le solde de l'agent
+                    $userRefresh = DB::table("users")->join("quartiers", "users.quartier_id", "=", "quartiers.id")
+                        ->join("villes", "quartiers.ville_id", "=", "villes.id")
+                        ->where('users.id', Auth::user()->id)
+                        ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id','users.qr_code')->first();
+
+                    $transactionsRefresh = DB::table('transactions')
+                        ->join('services', 'transactions.service_id', '=', 'services.id')
+                        ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
+                        ->select('transactions.id','transactions.reference as reference','transactions.paytoken','transactions.reference_partenaire','transactions.date_transaction','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.commission_agent as commission','transactions.balance_before','transactions.balance_after' ,'transactions.status','transactions.service_id','services.name_service','services.logo_service','type_services.name_type_service','type_services.id as type_service_id','transactions.date_operation', 'transactions.heure_operation','transactions.commission_agent_rembourse as commission_agent')
+                        ->where("fichier","agent")
+                        ->where("source",Auth::user()->id)
+                        ->where('transactions.status',1)
+                        ->orderBy('transactions.date_transaction', 'desc')
+                        ->limit(5)
+                        ->get();
+
+                    $services = Service::all();
+                    return response()->json([
+                        'success' => true,
+                        'message' => "SUCCESSFULL", // $resultat->message,
+                        'textmessage' =>"Le dépôt a été effectué avec succès", // $resultat->message,
+                        'reference' => $reference,// $resultat->data->data->txnid,
+                        'data' => [],// $resultat,
+                        'user'=>$userRefresh,
+                        'transactions'=>$transactionsRefresh,
+                        'services'=>$services,
+                    ], 200);
+                }else{
+                    return response()->json([
+                        'status'=>'error',
+                        'message'=>$datacheckStatus->message,
+                    ],$checkStatus->getStatusCode());
+                }
+
             }
 
-            try {
-
-                DB::commit();
 
 
 
-               // $userRefresh = User::where('id', Auth::user()->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before', 'balance_after','total_commission', 'last_amount','sous_distributeur_id','date_last_transaction')->first();
-                $userRefresh = DB::table("users")->join("quartiers", "users.quartier_id", "=", "quartiers.id")
-                    ->join("villes", "quartiers.ville_id", "=", "villes.id")
-                    ->where('users.id', Auth::user()->id)
-                    ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id','users.qr_code')->first();
 
-                $transactionsRefresh = DB::table('transactions')
-                    ->join('services', 'transactions.service_id', '=', 'services.id')
-                    ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
-                    ->select('transactions.id','transactions.reference as reference','transactions.paytoken','transactions.reference_partenaire','transactions.date_transaction','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.commission_agent as commission','transactions.balance_before','transactions.balance_after' ,'transactions.status','transactions.service_id','services.name_service','services.logo_service','type_services.name_type_service','type_services.id as type_service_id','transactions.date_operation', 'transactions.heure_operation','transactions.commission_agent_rembourse as commission_agent')
-                    ->where("fichier","agent")
-                    ->where("source",Auth::user()->id)
-                    ->where('transactions.status',1)
-                    ->orderBy('transactions.date_transaction', 'desc')
-                    ->limit(5)
-                    ->get();
 
-                $services = Service::all();
-                return response()->json([
-                    'success' => true,
-                    'message' => "SUCCESSFULL", // $resultat->message,
-                    'textmessage' =>"Le dépôt a été effectué avec succès", // $resultat->message,
-                    'reference' => $reference,// $resultat->data->data->txnid,
-                    'data' => [],// $resultat,
-                    'user'=>$userRefresh,
-                    'transactions'=>$transactionsRefresh,
-                    'services'=>$services,
-                ], 200);
-
-            }catch (\Exception $e) {
-                DB::rollback();
-                $alerte->logError($response->status(), "MOMO_Depot", $dataRequete, $e->getMessage(),"MOMO_Depot");
-                return response()->json([
-                    'success' => false,
-                    'message' => "Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste", //'Une erreur innatendue s\est produite. Si le problème persiste, veuillez contacter votre support.',
-                ], $e->getCode());
-            }
 
         }else{
 
