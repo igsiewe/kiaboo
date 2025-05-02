@@ -1029,7 +1029,7 @@ class ApiOMController extends Controller
         }
 
     }
-    public function OM_Paiement(Request $request){
+    public function OM_Payment(Request $request){
 
         $validator = Validator::make($request->all(), [
             'customerPhone' => 'required|numeric|digits:9',
