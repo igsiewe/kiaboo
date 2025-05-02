@@ -1245,6 +1245,7 @@ class ApiOMController extends Controller
                 $reference_partenaire=$data->txnid;
                 $agent = $user->first()->id;
                 $reference = $Transaction->first()->reference;
+                $telephone = $Transaction->first()->customer_phone;
                 try{
                     DB::beginTransaction();
                     $Transaction->update([
@@ -1271,14 +1272,14 @@ class ApiOMController extends Controller
                     ]);
                     DB::commit();
                     $title = "Kiaboo";
-                    $message = "Le paiement Orange Money de " . $montant . " F CFA a été effectué avec succès au ".$Transaction->first()->customer_phone." (ID : ".$reference_partenaire.") le ".$Transaction->first()->date_transaction;
+                    $message = "Le paiement Orange Money de " . $montant . " F CFA a été effectué avec succès au ".$telephone." (ID : ".$reference_partenaire.") le ".$Transaction->first()->date_transaction;
                     $appNotification = new ApiNotification();
                     $envoiNotification = $appNotification->SendPushNotificationCallBack($Transaction->first()->device_notification, $title, $message);
                     DB::commit();
                 }catch (\Exception $e){
                     DB::rollback();
                     $alerte = new ApiLog();
-                    $alerte->logErrorCallBack($e->getCode(), "OMCallBack", $e->getMessage(), $data,"OMCallBack",$Transaction->first()->created_by);
+                    $alerte->logErrorCallBack($e->getCode(), "OMCallBack", $e->getMessage(), $data,"OMCallBack",$agent);
                 }
 
             }else{
