@@ -1212,7 +1212,7 @@ class ApiOMController extends Controller
         return response()->json(
             [
                 'status'=>200,
-                'message'=>$dataPaiement->message."\n".$dataPaiement->data->status." | ".$dataPaiement->data->inittxnmessage,
+                'message'=>$dataPaiement->message."\n\n".$dataPaiement->data->status."\n\n".$dataPaiement->data->inittxnmessage,
                 'paytoken'=>$payToken,
                 'user'=>$userRefresh,
                 'transactions'=>$transactionsRefresh,
