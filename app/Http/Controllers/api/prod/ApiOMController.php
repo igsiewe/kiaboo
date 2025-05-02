@@ -1076,7 +1076,7 @@ class ApiOMController extends Controller
 
         $validator = Validator::make($request->all(), [
             'customerPhone' => 'required|numeric|digits:9',
-            'amount' => 'required|numeric|min:500|max:500000',
+            'amount' => 'required|numeric|min:200|max:500000',
         ]);
         if ($validator->fails()) {
             return response()->json([
