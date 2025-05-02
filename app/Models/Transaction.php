@@ -16,6 +16,8 @@ class Transaction extends Model
         'type_transaction_id',
         'service_id',
         'balance_before',
+        'balance_after_payment',
+        'balance_before_payment',
         'debit',
         'credit',
         'balance_after',
