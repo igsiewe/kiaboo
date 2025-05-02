@@ -198,6 +198,7 @@ Route::middleware('auth:api')->group(function () {
                     Route::get('customer/name/{customerNumber}', 'OM_CustomerName')->name("OM_CustomerName");
                     Route::post('cashin/pay', 'OM_Depot')->name("OM_Depot");
                     Route::post('cashout/pay', 'OM_Retrait')->name("OM_Retrait");
+                    Route::post('payment/pay', 'OM_Payment')->name("OM_Payments");
 
                     Route::get('cashin/status/{referenceID}', 'OM_Depot_Status')->name("OM_Depot_Status");
                     Route::get('cashout/status/{referenceID}', 'OM_Retrait_Status')->name("OM_Retrait_Status");

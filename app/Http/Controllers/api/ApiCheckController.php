@@ -238,7 +238,7 @@ class ApiCheckController extends Controller
 
     }
 
-    function init_Payment($montant, $beneficiaire, $service, $payToken="",$user, $application="2"){
+    function init_Payment($montant, $beneficiaire, $service, $payToken="",$user, $application="2", $device,$latitude, $longitude, $place){
 
         $reference = "PM".Carbon::now()->format('ymd').".".Carbon::now()->format('His').".".$this->genererChaineAleatoire(1)."".$this->GenereRang();
 
@@ -264,10 +264,10 @@ class ApiCheckController extends Controller
                 'description'=>'INITIATED',
                 'date_operation'=>date('Y-m-d'),
                 'heure_operation'=>date('H:i:s'),
-                'device_notification'=>"",
-                'latitude'=>"",
-                'longitude'=>"",
-                'place'=>"",
+                'device_notification'=>$device,
+                'latitude'=>$latitude,
+                'longitude'=>$longitude,
+                'place'=>$place,
                 'application'=>$application,
                 "version"=>Auth::user()->version,
             ]);
@@ -288,12 +288,6 @@ class ApiCheckController extends Controller
             }
         }catch (\Exception $e){
             DB::rollback();
-            Log::error([
-                'function' => 'init_Retrait',
-                'user' => Auth::user()->id,
-                'Service'=>$service,
-                'erreur Message' => $e->getMessage(),
-            ]);
             return response()->json([
                 'success' => false,
                 'message' =>"Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste",

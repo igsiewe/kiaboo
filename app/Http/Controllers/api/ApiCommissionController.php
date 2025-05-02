@@ -182,16 +182,11 @@ class ApiCommissionController extends BaseController
     }
     public function getFeesByService($idService, $montant)
     {
-        $fees_global=0;
-        $fees_kiaboo=0;
-        $fees_partenaire=0;
-
+        $fees_global = 0;
         $takeValue = Commission::where('service_id', $idService)->where("status",1)->where('borne_min','<=', $montant)->where('borne_max','>=',$montant)->get();
         if($takeValue->count() > 0){
             if($takeValue->first()->type_commission == 'taux') {
                 $fees_global = ($takeValue->first()->taux) * $montant;
-                $fees_partenaire = $fees_global * $takeValue->first()->part_partenaire_service;
-                $fees_kiaboo = $fees_global * $takeValue->first()->part_kiaboo;
             }else{
                 return response()->json([
                     "status"=>false,
@@ -207,14 +202,12 @@ class ApiCommissionController extends BaseController
                 return response()->json([
                     "status" => true,
                     "fees_globale" => $fees_global,
-                    "fees_partenaire_service" => $fees_partenaire,
-                    "fees_kiaboo" => $fees_kiaboo,
                 ],200);
             }
         }else{
             return response()->json([
                 "status"=>false,
-                "message"=>"Aucune commission n'est définie pour ce montant"
+                "message"=>"Aucun frais de service n'est définie pour ce montant"
             ],404);
         }
 

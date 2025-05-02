@@ -1005,4 +1005,175 @@ class ApiOMController extends Controller
         }
 
     }
+
+    public function OM_Paiement_init($token)
+    {
+        $response = Http::withOptions(['verify' => false,])
+            ->withHeaders(
+                [
+                    'Content-Type'=> 'application/json',
+                    'X-AUTH-TOKEN'=>$this->auth_x_token,
+                    'Authorization'=>'Bearer '.$token
+                ])
+
+            ->Post($this->endpoint.'/mp/init');
+
+        if($response->status()==200){
+            return response()->json($response->json());
+        }
+        else{
+            return response()->json([
+                'code' => $response->status(),
+                'message'=>$response->body(),
+            ]);
+        }
+
+    }
+    public function OM_Paiement(Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'customerPhone' => 'required|numeric|digits:9',
+            'amount' => 'required|numeric|min:500|max:500000',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first(),
+            ], 400);
+        }
+
+        $apiCheck = new ApiCheckController();
+
+        $service = ServiceEnum::PAYMENT_OM->value;
+
+        // Vérifie si l'utilisateur est autorisé à faire cette opération
+        if(!$apiCheck->checkUserValidity()){
+            return response()->json([
+                'status'=>'error',
+                'message'=>'Votre compte est désactivé. Veuillez contacter votre distributeur',
+            ],403);
+        }
+
+        // On vérifie si les frais sont paramétrées
+        $functionFees = new ApiCommissionController();
+        $lesfees =$functionFees->getFeesByService($service,$request->amount);
+        if($lesfees->getStatusCode()!=200){
+            return response()->json([
+                'success' => false,
+                'message' => "Impossible de calculer la commission",
+            ], 403);
+        }
+        $fee=json_decode($lesfees->getContent());
+        $fees = doubleval($fee->fees_globale);
+
+        //Initie la transaction
+        $device = $request->deviceId;
+        $latitude = $request->latitude;
+        $longitude = $request->longitude;
+        $place = $request->place;
+        $init_transaction = $apiCheck->init_Payment($request->amount, $request->customerPhone, $service,"", Auth::user()->id,1, $device,$latitude,$longitude,$place);
+
+        $dataTransactionInit = json_decode($init_transaction->getContent());
+
+        if($init_transaction->getStatusCode() !=200){
+            return response()->json([
+                'status'=>'error',
+                'message'=>$dataTransactionInit->message,
+            ],$init_transaction->getStatusCode());
+        }
+        $idTransaction = $dataTransactionInit->transId; //Id de la transaction initiée
+        $reference = $dataTransactionInit->reference; //Référence de la transaction initiée
+        //On génère le token de la transation
+
+        $responseToken = $this->OM_GetTokenAccess();
+        if($responseToken->getStatusCode() !=200){
+            return response()->json([
+                "result"=>false,
+                "message"=>"Exception ".$responseToken->getStatusCode()."\nUne exception a été déclenchée au moment de la génération du token"
+            ], $responseToken->getStatusCode());
+        }
+        $dataAcessToken = json_decode($responseToken->getContent());
+        $AccessToken = $dataAcessToken->access_token;
+
+        $customerPhone = "237".$request->customerPhone;
+
+        //On initie le paiement (Obtention du PayToken)
+        $responseInitPaiement = $this->OM_Paiement_init($AccessToken);
+        if($responseInitPaiement->getStatusCode() !=200){
+            return response()->json([
+                "result"=>false,
+                "message"=>"Exception ".$responseInitPaiement->getStatusCode()."\nUne exception a été déclenchée au moment de l'initialisation de la transaction"
+            ], $responseInitPaiement->getStatusCode());
+        }
+        $dataInitPaiement= json_decode($responseInitPaiement->getContent());
+        //    $reference = $dataInitDepot->transId;
+        $payToken =$dataInitPaiement->data->payToken;
+        //    $description = $dataInitDepot->data->description;
+        $updateTransactionTableWithPayToken = Transaction::where("id", $idTransaction)->update([
+            "payToken"=>$payToken,
+        ]);
+
+
+        $responseTraitePaiementOM = $this->OM_Retrait_execute($AccessToken, $payToken, $customerPhone, $request->amount, $idTransaction);
+        if($responseTraitePaiementOM->getStatusCode() !=200){
+            $dataRetrait=json_decode($responseTraitePaiementOM->getContent());
+            $data =json_decode($dataRetrait->message);
+            return response()->json([
+                "result"=>false,
+                "message"=>"Exception ".$responseTraitePaiementOM->getStatusCode()."\n".$data->message
+            ], $responseTraitePaiementOM->getStatusCode());
+        }
+
+        $dataPaiement= json_decode($responseTraitePaiementOM->getContent());
+        //Le client a été notifié. Donc on reste en attente de sa confirmation (Saisie de son code secret)
+
+        //On change le statut de la transaction dans la base de donnée
+
+        $Transaction = Transaction::where('id',$idTransaction)->where('service_id',$service)->update([
+            'reference_partenaire'=>$dataPaiement->data->txnid,
+            'balance_before'=>0,
+            'balance_after'=>0,
+            'debit'=>0,
+            'credit'=>$request->amount,
+            'status'=>2, // Pending
+            'paytoken'=>$payToken,
+            'date_end_trans'=>Carbon::now(),
+            'description'=>$dataPaiement->data->status,
+            'message'=>"Transaction initiée par l'agent N°".Auth::user()->telephone." - ".$dataPaiement->message." | ".$dataPaiement->data->status." | ".$dataPaiement->data->inittxnmessage,
+            'fees'=>$fees,
+            'fee_collecte'=>$fees,
+            'api_response'=>$responseTraitePaiementOM->getContent(),
+            'application'=>1
+        ]);
+
+        //Le solde du compte de l'agent ne sera mis à jour qu'après confirmation de l'agent : Opération traitée dans le callback
+
+        //On recupère toutes les transactions en attente
+        $userRefresh = DB::table("users")->join("quartiers", "users.quartier_id", "=", "quartiers.id")
+            ->join("villes", "quartiers.ville_id", "=", "villes.id")
+            ->where('users.id', Auth::user()->id)
+            ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id','users.qr_code')->first();
+
+        $transactionsRefresh = DB::table('transactions')
+            ->join('services', 'transactions.service_id', '=', 'services.id')
+            ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
+            ->select('transactions.id','transactions.reference as reference','transactions.paytoken','transactions.reference_partenaire','transactions.date_transaction','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.commission_agent as commission','transactions.balance_before','transactions.balance_after' ,'transactions.status','transactions.service_id','services.name_service','services.logo_service','type_services.name_type_service','type_services.id as type_service_id','transactions.date_operation', 'transactions.heure_operation','transactions.commission_agent_rembourse as commission_agent')
+            ->where("fichier","agent")
+            ->where("source",Auth::user()->id)
+            ->where('transactions.status',1)
+            ->orderBy('transactions.date_transaction', 'desc')
+            ->limit(5)
+            ->get();
+
+        return response()->json(
+            [
+                'status'=>200,
+                'message'=>$dataPaiement->message."\n".$dataPaiement->data->status." | ".$dataPaiement->data->inittxnmessage,
+                'paytoken'=>$payToken,
+                'user'=>$userRefresh,
+                'transactions'=>$transactionsRefresh,
+            ],200
+        );
+
+    }
 }
