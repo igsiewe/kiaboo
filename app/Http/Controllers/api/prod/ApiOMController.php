@@ -1151,13 +1151,11 @@ class ApiOMController extends Controller
         $dataInitPaiement= json_decode($responseInitPaiement->getContent());
         //    $reference = $dataInitDepot->transId;
         $payToken =$dataInitPaiement->data->payToken;
-        dd($payToken);
+
         //    $description = $dataInitDepot->data->description;
         $updateTransactionTableWithPayToken = Transaction::where("id", $idTransaction)->update([
             "payToken"=>$payToken,
         ]);
-
-
         $responseTraitePaiementOM = $this->OM_Payment_execute($AccessToken, $payToken, $customerPhone, $request->amount, $idTransaction);
         dd($responseTraitePaiementOM);
         if($responseTraitePaiementOM->getStatusCode() !=200){
