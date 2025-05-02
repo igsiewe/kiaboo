@@ -63,6 +63,8 @@ class User extends Authenticatable
         'view',
         'statut_code_parrainage',
         'qr_code',
+        'balance_after_payment',
+        'balance_before_payment',
     ];
 
     public function ville()

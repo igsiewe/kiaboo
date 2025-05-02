@@ -29,6 +29,8 @@ return new class extends Migration
             $table->string('qr_code',200)->nullable();
             $table->double("balance_before")->default(0);
             $table->double("balance_after")->default(0);
+            $table->double("balance_after_payment")->default(0);
+            $table->double("balance_before_payment")->default(0);
             $table->double("last_amount")->default(0);
             $table->double("total_commission")->default(0);
             $table->integer("last_transaction_id")->default(0);

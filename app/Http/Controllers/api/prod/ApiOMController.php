@@ -1233,5 +1233,68 @@ class ApiOMController extends Controller
         Log::info("OMCallBack", [
             'data' => $data,
         ]);
+
+        $payToken = $data->payToken;
+        $Transaction = Transaction::where('payToken',$payToken)->where("status",2);
+        if($Transaction->count()>0){
+            if($data->status=="SUCCESSFULL"){
+                $montant = $Transaction->first()->credit;
+                $user = User::where('id', $Transaction->first()->created_by);
+                $balanceBeforeAgent = $user->get()->first()->balance_after_payment;
+                $balanceAfterAgent = floatval($balanceBeforeAgent) + floatval($montant);
+                $reference_partenaire=$data->txnid;
+                $agent = $user->first()->id;
+                $reference = $Transaction->first()->reference;
+                try{
+                    DB::beginTransaction();
+                    $Transaction->update([
+                        'status'=>1,
+                        'reference_partenaire'=>$data->txnid,
+                        'description'=>$data->status,
+                        'message'=>$data->message,
+                        'date_end_trans'=>Carbon::now(),
+                        'balance_after_payment'=>$balanceAfterAgent,
+                        'balance_before_payment'=>$balanceBeforeAgent,
+                        'terminaison'=>'CALLBACK',
+                    ]);
+                    //On met à jour le solde de l'agent
+
+                    $debitAgent = DB::table("users")->where("id", $agent)->update([
+                        'balance_after_payment'=>$balanceAfterAgent,
+                        'balance_before_payment'=>$balanceBeforeAgent,
+                        'last_amount'=>$montant,
+                        'date_last_transaction'=>Carbon::now(),
+                        'user_last_transaction_id'=>$agent,
+                        'last_service_id'=>ServiceEnum::PAYMENT_OM->value,
+                        'reference_last_transaction'=>$reference,
+                        'remember_token'=>$reference,
+
+                    ]);
+                    DB::commit();
+                    $title = "Kiaboo";
+                    $message = "Le paiement Orange Money de " . $montant . " F CFA a été effectué avec succès au ".$Transaction->first()->customer_phone." (ID : ".$reference_partenaire.") le ".$Transaction->first()->date_transaction;
+                    $appNotification = new ApiNotification();
+                    $envoiNotification = $appNotification->SendPushNotificationCallBack($Transaction->first()->device_notification, $title, $message);
+                    DB::commit();
+                }catch (\Exception $e){
+                    DB::rollback();
+                    $alerte = new ApiLog();
+                    $alerte->logError($e->getCode(), "OMCallBack", $e->getMessage(), $data,"OMCallBack");
+                }
+
+            }else{
+                $Transaction->update([
+                    'status'=>3,
+                    'reference_partenaire'=>$data->txnid,
+                    'description'=>$data->status,
+                    'message'=>$data->message,
+                    'date_end_trans'=>Carbon::now(),
+                    'terminaison'=>'CALLBACK',
+                ]);
+                $alerte = new ApiLog();
+                $alerte->logError(500, "OMCallBack", null, $data,"OMCallBack");
+            }
+
+        }
     }
 }
