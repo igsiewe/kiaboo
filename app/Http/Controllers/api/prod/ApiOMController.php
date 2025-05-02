@@ -1160,8 +1160,8 @@ class ApiOMController extends Controller
         $responseTraitePaiementOM = $this->OM_Payment_execute($AccessToken, $payToken, $request->customerPhone, $request->amount, $idTransaction);
 
         if($responseTraitePaiementOM->getStatusCode() !=200){
-            $dataRetrait=json_decode($responseTraitePaiementOM->getContent());
-            $data =json_decode($dataRetrait->message);
+            $dataPaiement=json_decode($responseTraitePaiementOM->getContent());
+            $data =json_decode($dataPaiement->message);
             return response()->json([
                 "result"=>false,
                 "message"=>"Exception ".$responseTraitePaiementOM->getStatusCode()."\n".$data->message
@@ -1208,13 +1208,14 @@ class ApiOMController extends Controller
             ->orderBy('transactions.date_transaction', 'desc')
             ->limit(5)
             ->get();
-        Log::info([
-            "OMPayment" => $dataPaiement,
-        ]);
+
+        $alerte = new ApiLog();
+        $alerte->logInfo($responseTraitePaiementOM->getStatusCode(), "OM_Payment", "", $dataPaiement,"OM_Payment");
+
         return response()->json(
             [
                 'status'=>200,
-                'message'=>$dataPaiement->message."\n\n".$dataPaiement->data->status,
+                'message'=>$dataPaiement->message."\n".$dataPaiement->data->status,
                 'paytoken'=>$payToken,
                 'user'=>$userRefresh,
                 'transactions'=>$transactionsRefresh,
