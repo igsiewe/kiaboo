@@ -1273,7 +1273,7 @@ class ApiProdMoMoMoneyController extends Controller
                         'last_amount'=>$montant,
                         'date_last_transaction'=>Carbon::now(),
                         'user_last_transaction_id'=>$agent,
-                        'last_service_id'=>ServiceEnum::DEPOT_OM->value,
+                        'last_service_id'=>ServiceEnum::DEPOT_MOMO->value,
                         'reference_last_transaction'=>$reference,
                         'remember_token'=>$reference,
                         'total_commission'=>$commission_agent,

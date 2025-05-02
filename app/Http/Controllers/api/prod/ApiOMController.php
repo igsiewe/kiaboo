@@ -1246,6 +1246,7 @@ class ApiOMController extends Controller
                 $agent = $user->first()->id;
                 $reference = $Transaction->first()->reference;
                 $telephone = $Transaction->first()->customer_phone;
+                $dateTransaction = $Transaction->first()->date_transaction;
                 try{
                     DB::beginTransaction();
                     $Transaction->update([
@@ -1272,7 +1273,7 @@ class ApiOMController extends Controller
                     ]);
                     DB::commit();
                     $title = "Kiaboo";
-                    $message = "Le paiement Orange Money de " . $montant . " F CFA a été effectué avec succès au ".$telephone." (ID : ".$reference_partenaire.") le ".$Transaction->first()->date_transaction;
+                    $message = "Le paiement Orange Money de " . $montant . " F CFA a été effectué avec succès au ".$telephone." (ID : ".$reference_partenaire.") le ".$dateTransaction;
                     $appNotification = new ApiNotification();
                     $envoiNotification = $appNotification->SendPushNotificationCallBack($Transaction->first()->device_notification, $title, $message);
                     DB::commit();
