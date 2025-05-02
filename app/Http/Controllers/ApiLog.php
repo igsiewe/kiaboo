@@ -19,6 +19,18 @@ class ApiLog extends Controller
         ]);
     }
 
+    public function logErrorCallBack($status = null, $service = null, $requete = null, $response=null, $fonction=null, $user=null)
+    {
+
+        Log::error($service, [
+            'status' => $status,
+            'function'=> $fonction,
+            'request' => $requete,
+            'response' => $response,
+            'user' => $user,
+        ]);
+    }
+
     public function logInfo($status = null, $service = null, $requete = null, $response=null, $fonction=null )
     {
         Log::info($service, [

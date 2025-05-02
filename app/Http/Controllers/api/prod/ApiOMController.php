@@ -1268,7 +1268,6 @@ class ApiOMController extends Controller
                         'last_service_id'=>ServiceEnum::PAYMENT_OM->value,
                         'reference_last_transaction'=>$reference,
                         'remember_token'=>$reference,
-
                     ]);
                     DB::commit();
                     $title = "Kiaboo";
@@ -1279,7 +1278,7 @@ class ApiOMController extends Controller
                 }catch (\Exception $e){
                     DB::rollback();
                     $alerte = new ApiLog();
-                    $alerte->logError($e->getCode(), "OMCallBack", $e->getMessage(), $data,"OMCallBack");
+                    $alerte->logErrorCallBack($e->getCode(), "OMCallBack", $e->getMessage(), $data,"OMCallBack",$Transaction->first()->created_by);
                 }
 
             }else{

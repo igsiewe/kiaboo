@@ -1226,7 +1226,7 @@ class ApiProdMoMoMoneyController extends Controller
                     $lacommission =$functionCommission->getCommissionByService($service,$montant);
                     if($lacommission->getStatusCode()!=200){
                         $alerte = new ApiLog();
-                        $alerte->logError($lacommission->getStatusCode(), "MoMoCallBack", null, $lacommission->getContent(),"getCommissionByService");
+                        $alerte->logErrorCallBack($lacommission->getStatusCode(), "MoMoCallBack", null, $lacommission->getContent(),"getCommissionByService",$Transaction->first()->created_by);
 
                     }
                     //On Calcule la commission
