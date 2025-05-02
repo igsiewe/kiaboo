@@ -1158,7 +1158,7 @@ class ApiOMController extends Controller
         ]);
 
         $responseTraitePaiementOM = $this->OM_Payment_execute($AccessToken, $payToken, $request->customerPhone, $request->amount, $idTransaction);
-        dd($responseTraitePaiementOM);
+
         if($responseTraitePaiementOM->getStatusCode() !=200){
             $dataRetrait=json_decode($responseTraitePaiementOM->getContent());
             $data =json_decode($dataRetrait->message);
