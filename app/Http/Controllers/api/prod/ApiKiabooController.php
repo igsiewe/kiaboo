@@ -222,10 +222,10 @@ class ApiKiabooController extends Controller
 
             $sms = new ApiSmsController();
             $telBeneficiaire ="237".$beneficiaire->first()->compte;
-            $msgBeneficiaire = "Vous avez recu ".$request->amount." F CFA de ".$emetteur->first()->name." ".$emetteur->first()->surname."(".$beneficiaire->first()->telephone.") sur votre compte KIABOO à ".Carbon::now()." Votre nouveau solde est ".$newSoldeBeneficiaire." FCFA. Id transaction :".$reference;
+            $msgBeneficiaire = "Vous avez recu ".$request->amount." F CFA de ".$emetteur->first()->name." ".$emetteur->first()->surname."(".$beneficiaire->first()->telephone.") sur votre compte KIABOO a ".Carbon::now()." Votre nouveau solde est ".$newSoldeBeneficiaire." F CFA. Id transaction :".$reference;
             $envoyerSMSBeneficiaire = $sms->SendSMS($telBeneficiaire,utf8_decode($msgBeneficiaire));
-            $msgEmetteur = "Vous, ".$emetteur->first()->name." ".$emetteur->first()->surname."(".$emetteur->first()->telephone.") avez effectue avec succes un transfert de ".$request->amount." FCFA au ".$beneficiaire->first()->name." ".$beneficiaire->first()->surname."(".$beneficiaire->first()->telephone.") le ".Carbon::now().". Votre nouveau solde est ".$newSoldeEmetteur.". Id transaction :".$reference;
-            $telEmetteur = "237".$beneficiaire->first()->telephone;
+            $msgEmetteur = "Vous, ".$emetteur->first()->name." ".$emetteur->first()->surname." (".$emetteur->first()->telephone.") avez effectue avec succes un transfert de ".$request->amount." F CFA a ".$beneficiaire->first()->name." ".$beneficiaire->first()->surname."(".$beneficiaire->first()->telephone.") le ".Carbon::now().". Votre nouveau solde est ".$newSoldeEmetteur.". Id transaction :".$reference;
+            $telEmetteur = "237".$emetteur->first()->telephone;
             $envoyerSMSEmetteur= $sms->SendSMS($telEmetteur,utf8_decode($msgEmetteur));
             return response()->json([
                 'success' => true,
