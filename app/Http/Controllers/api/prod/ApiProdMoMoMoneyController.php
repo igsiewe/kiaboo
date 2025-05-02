@@ -273,15 +273,24 @@ class ApiProdMoMoMoneyController extends Controller
         $alerte = new ApiLog();
         $alerte->logInfo($response->status(), "MOMO_Depot", $dataRequete, json_decode($response->body()),"MOMO_Depot");
         if($response->status()==202){
-
+            //Le code 202 indique la transaction est pending
+            $updateTransaction=Transaction::where("id",$idTransaction)->update([
+                'status'=>2, // Le dépôt n'a pas abouti, on passe en statut pending
+                //'reference_partenaire'=>$data->financialTransactionId,
+                'description'=>"PENDING",
+                'message'=>"La transaction est en statut PENDING",
+            ]);
             $checkStatus = $this->MOMO_Depot_Status( $accessToken, $subcriptionKey, $referenceID);
             $datacheckStatus = json_decode($checkStatus->getContent());
 
-            if($checkStatus->getStatusCode() !=200){
+            if($checkStatus->getStatusCode() ==200) {
+                //La transaction a réussi (On laisse le callback faire le reste)
+            }else{
+                //La transaction est attente
                 $updateTransaction=Transaction::where("id",$idTransaction)->update([
                     'status'=>2, // Le dépôt n'a pas abouti, on passe en statut pending
                     //'reference_partenaire'=>$data->financialTransactionId,
-                    'date_end_trans'=>Carbon::now(),
+                    //'date_end_trans'=>Carbon::now(),
                     'description'=>$datacheckStatus->description,
                     'message'=>$datacheckStatus->message." - Vérifier le status dans la liste des encours",
                 ]);
@@ -295,6 +304,8 @@ class ApiProdMoMoMoneyController extends Controller
             try {
 
                 DB::commit();
+
+
 
                // $userRefresh = User::where('id', Auth::user()->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before', 'balance_after','total_commission', 'last_amount','sous_distributeur_id','date_last_transaction')->first();
                 $userRefresh = DB::table("users")->join("quartiers", "users.quartier_id", "=", "quartiers.id")
