@@ -1042,7 +1042,7 @@ class ApiOMController extends Controller
                     [
                         'Content-Type'=> 'application/json',
                         'X-AUTH-TOKEN'=>$this->auth_x_token,
-                        'WSO2-Authorization'=>'Bearer '.$token
+                        'Authorization'=>'Bearer '.$token
                     ])
 
                 ->Post($this->endpoint.'/mp/pay', [
@@ -1156,6 +1156,7 @@ class ApiOMController extends Controller
         $updateTransactionTableWithPayToken = Transaction::where("id", $idTransaction)->update([
             "payToken"=>$payToken,
         ]);
+        dd($AccessToken, $payToken, $customerPhone, $request->amount, $idTransaction);
         $responseTraitePaiementOM = $this->OM_Payment_execute($AccessToken, $payToken, $customerPhone, $request->amount, $idTransaction);
         dd($responseTraitePaiementOM);
         if($responseTraitePaiementOM->getStatusCode() !=200){
