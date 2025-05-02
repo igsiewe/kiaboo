@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api\prod;
 
 use App\Http\Controllers\api\ApiCheckController;
+use App\Http\Controllers\api\ApiSmsController;
 use App\Http\Controllers\Controller;
 use App\Http\Enums\ServiceEnum;
 use App\Http\Enums\UserRolesEnum;
@@ -199,6 +200,7 @@ class ApiKiabooController extends Controller
                         "message"=>"Transfert effectué avec succes par l'agent ".$emetteur->first()->telephone." - ".$emetteur->first()->name." ".$emetteur->first()->surname,
                     ]);
             DB::commit();
+
            // $userRefresh = User::where('id', Auth::user()->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before', 'balance_after','total_commission', 'last_amount','sous_distributeur_id','date_last_transaction','qr_code')->first();
             $userRefresh = DB::table("users")->join("quartiers", "users.quartier_id", "=", "quartiers.id")
                 ->join("villes", "quartiers.ville_id", "=", "villes.id")
@@ -217,6 +219,14 @@ class ApiKiabooController extends Controller
                 ->get();
 
             $services = Service::all();
+
+            $sms = new ApiSmsController();
+            $telBeneficiaire ="237".$beneficiaire->first()->compte;
+            $msgBeneficiaire = "Vous avez recu ".$request->amount." F CFA de ".$emetteur->first()->name." ".$emetteur->first()->surname."(".$beneficiaire->first()->telephone.") sur votre compte KIABOO à ".Carbon::now()." Votre nouveau solde est ".$newSoldeBeneficiaire." FCFA. Id transaction :".$reference;
+            $envoyerSMSBeneficiaire = $sms->SendSMS($telBeneficiaire,utf8_decode($msgBeneficiaire));
+            $msgEmetteur = "Vous, ".$emetteur->first()->name." ".$emetteur->first()->surname."(".$emetteur->first()->telephone.") avez effectue avec succes un transfert de ".$request->amount." FCFA au ".$beneficiaire->first()->name." ".$beneficiaire->first()->surname."(".$beneficiaire->first()->telephone.") le ".Carbon::now().". Votre nouveau solde est ".$newSoldeEmetteur.". Id transaction :".$reference;
+            $telEmetteur = "237".$beneficiaire->first()->telephone;
+            $envoyerSMSEmetteur= $sms->SendSMS($telEmetteur,utf8_decode($msgEmetteur));
             return response()->json([
                 'success' => true,
                 'message' => "SUCCESSFULL", // $resultat->message,
