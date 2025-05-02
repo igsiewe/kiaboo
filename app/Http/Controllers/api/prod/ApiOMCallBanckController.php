@@ -16,7 +16,7 @@ class ApiOMCallBanckController extends Controller
            $data = json_decode($OMcallBackResponse);
            $element = json_decode($OMcallBackResponse, associative: true);
            Log::info([
-               "responseOMCallBack" => $data,
+               "OMCallBack" => $data,
            ]);
        }
 

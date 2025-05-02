@@ -1181,7 +1181,7 @@ class ApiOMController extends Controller
             'credit'=>$request->amount,
             'status'=>2, // Pending
             'paytoken'=>$payToken,
-            'date_end_trans'=>Carbon::now(),
+           // 'date_end_trans'=>Carbon::now(),
             'description'=>$dataPaiement->data->status,
             'message'=>"Transaction initiée par l'agent N°".Auth::user()->telephone." - ".$dataPaiement->message." | ".$dataPaiement->data->status." | ".$dataPaiement->data->inittxnmessage,
             'fees'=>$fees,
@@ -1212,7 +1212,7 @@ class ApiOMController extends Controller
         return response()->json(
             [
                 'status'=>200,
-                'message'=>$dataPaiement->message."\n\n".$dataPaiement->data->status."\n\n".$dataPaiement->data->inittxnmessage,
+                'message'=>$dataPaiement->message."\n\n".$dataPaiement->data->status,
                 'paytoken'=>$payToken,
                 'user'=>$userRefresh,
                 'transactions'=>$transactionsRefresh,
