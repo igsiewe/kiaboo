@@ -1137,7 +1137,7 @@ class ApiOMController extends Controller
         }
         $dataAcessToken = json_decode($responseToken->getContent());
         $AccessToken = $dataAcessToken->access_token;
-        dd($AccessToken);
+
         $customerPhone = "237".$request->customerPhone;
 
         //On initie le paiement (Obtention du PayToken)
@@ -1151,6 +1151,7 @@ class ApiOMController extends Controller
         $dataInitPaiement= json_decode($responseInitPaiement->getContent());
         //    $reference = $dataInitDepot->transId;
         $payToken =$dataInitPaiement->data->payToken;
+        dd($payToken);
         //    $description = $dataInitDepot->data->description;
         $updateTransactionTableWithPayToken = Transaction::where("id", $idTransaction)->update([
             "payToken"=>$payToken,
