@@ -240,7 +240,7 @@ class ApiCommissionController extends BaseController
             return response()->json([
                 "status" => false,
                 "total"=>0,
-                "message" => "Aucune commission trouvée",
+                "message" => "Aucune remboursement de commission trouvé",
                 "commissions"=>[]
             ],404);
         }
@@ -284,7 +284,7 @@ class ApiCommissionController extends BaseController
             return response()->json([
                 "status" => false,
                 "total"=>0,
-                "message" => "Aucune commission trouvée",
+                "message" => "Aucun remboursement de commission trouvée sur la période sélectionnée",
                 "commissio,s"=>[]
             ],404);
         }
@@ -384,12 +384,15 @@ class ApiCommissionController extends BaseController
                     ->groupBy('transactions.ref_remb_com_agent','date_remboursement')
                     ->get();
 
-                $user = User::where('id', Auth::user()->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before', 'balance_after','total_commission', 'last_amount','sous_distributeur_id','date_last_transaction','moncodeparrainage')->first();
+                $user = DB::table("users")->join("quartiers", "users.quartier_id", "=", "quartiers.id")
+                    ->join("villes", "quartiers.ville_id", "=", "villes.id")
+                    ->where('users.id', Auth::user()->id)
+                    ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id','users.qr_code')->first();
 
                 $transactions = DB::table('transactions')
                     ->join('services', 'transactions.service_id', '=', 'services.id')
                     ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
-                    ->select('transactions.id','transactions.reference as reference','transactions.date_transaction','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.commission_agent as commission','transactions.balance_before','transactions.balance_after' ,'transactions.status','transactions.service_id','services.name_service','services.logo_service','type_services.name_type_service','type_services.id as type_service_id','transactions.date_operation', 'transactions.heure_operation','transactions.commission_agent_rembourse as commission_agent')
+                    ->select('transactions.id','transactions.reference as reference','transactions.paytoken','transactions.reference_partenaire','transactions.date_transaction','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.commission_agent as commission','transactions.balance_before','transactions.balance_after' ,'transactions.status','transactions.service_id','services.name_service','services.logo_service','type_services.name_type_service','type_services.id as type_service_id','transactions.date_operation', 'transactions.heure_operation','transactions.commission_agent_rembourse as commission_agent','transactions.fees')
                     ->where("fichier","agent")
                     ->where("source",Auth::user()->id)
                     ->where('transactions.status',1)
@@ -413,13 +416,6 @@ class ApiCommissionController extends BaseController
 
             }catch (\Exception $e) {
                 DB::rollback();
-                Log::error([
-                    'erreur Message' => $e->getMessage(),
-                    'user' => Auth::user()->id,
-                    'service' => 'Remboursement commission agent',
-
-                ]);
-
                 return response()->json([
                     'success' => false,
                     'message' => "Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste", //'Une erreur innatendue s\est produite. Si le problème persiste, veuillez contacter votre support.',

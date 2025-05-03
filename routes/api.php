@@ -150,6 +150,7 @@ Route::middleware('auth:api')->group(function () {
         Route::controller(ApiPaiementRembourseController::class)->group(function () {
             Route::get('paiement/remboursement/agent', 'paiementAgentRembourse')->name("paiementAgentRembourse");
             Route::post('paiement/remboursement/agent/filtre', 'paiementAgentRembourseFiltre')->name("paiementAgentRembourseFiltre");
+            Route::post('/paiement/remboursement/execute', 'setRemboursementPaiement')->name("setRemboursementPaiement");
         });
 
         Route::controller(ApiNotification::class)->group(function () {

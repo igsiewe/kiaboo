@@ -29,4 +29,6 @@ enum ServiceEnum:int
 
     case TRANSFERT = 21;
 
+    case REMBOURSEMENT_PAIEMENT = 22;
+
 }
