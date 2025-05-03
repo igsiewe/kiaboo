@@ -74,7 +74,6 @@ class ApiPaiementRembourseController extends Controller
             ->groupBy('transactions.ref_remb_paiement_agent','date_remboursement')
             ->get();
 
-
         if($paiements->count() > 0) {
             return response()->json([
                 "status" => true,
@@ -88,7 +87,7 @@ class ApiPaiementRembourseController extends Controller
                 "status" => false,
                 "total"=>0,
                 "frais"=>0,
-                "message" => "Aucune paiement trouvé",
+                "message" => "Aucune remboursement n'a encore été éffectué",
                 "paiements"=>[]
             ],404);
         }
