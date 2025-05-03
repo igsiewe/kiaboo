@@ -71,7 +71,7 @@ class ApiPaiementRembourseController extends Controller
             ->where("type_services.id", TypeServiceEnum::PAYMENT->value)
             ->where("transactions.fichier","agent")->where('transactions.status',1)
             ->where("transactions.ref_remb_paiement_agent","!=",null)
-            ->groupBy('transactions.ref_paiement_com_agent','date_remboursement')
+            ->groupBy('transactions.ref_remb_paiement_agent','date_remboursement')
             ->get();
 
 
