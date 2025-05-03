@@ -412,7 +412,7 @@ class ApiOMController extends Controller
             $userRefresh = DB::table("users")->join("quartiers", "users.quartier_id", "=", "quartiers.id")
                 ->join("villes", "quartiers.ville_id", "=", "villes.id")
                 ->where('users.id', Auth::user()->id)
-                ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id','users.qr_code')->first();
+                ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id','users.qr_code','users.total_fees','users.total_paiement')->first();
 
             $transactionsRefresh = DB::table('transactions')
                 ->join('services', 'transactions.service_id', '=', 'services.id')
@@ -547,7 +547,7 @@ class ApiOMController extends Controller
                     $userRefresh = DB::table("users")->join("quartiers", "users.quartier_id", "=", "quartiers.id")
                         ->join("villes", "quartiers.ville_id", "=", "villes.id")
                         ->where('users.id', Auth::user()->id)
-                        ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id','users.qr_code')->first();
+                        ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id','users.qr_code','users.total_fees','users.total_paiement')->first();
 
                     $transactionsRefresh = DB::table('transactions')
                         ->join('services', 'transactions.service_id', '=', 'services.id')
@@ -932,7 +932,7 @@ class ApiOMController extends Controller
                         $userRefresh = DB::table("users")->join("quartiers", "users.quartier_id", "=", "quartiers.id")
                             ->join("villes", "quartiers.ville_id", "=", "villes.id")
                             ->where('users.id', Auth::user()->id)
-                            ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id','users.qr_code')->first();
+                            ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id','users.qr_code','users.total_fees','users.total_paiement')->first();
 
                         $transactionsRefresh = DB::table('transactions')
                             ->join('services', 'transactions.service_id', '=', 'services.id')
@@ -1196,7 +1196,7 @@ class ApiOMController extends Controller
         $userRefresh = DB::table("users")->join("quartiers", "users.quartier_id", "=", "quartiers.id")
             ->join("villes", "quartiers.ville_id", "=", "villes.id")
             ->where('users.id', Auth::user()->id)
-            ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id','users.qr_code')->first();
+            ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id','users.qr_code','users.total_fees','users.total_paiement')->first();
 
         $transactionsRefresh = DB::table('transactions')
             ->join('services', 'transactions.service_id', '=', 'services.id')
