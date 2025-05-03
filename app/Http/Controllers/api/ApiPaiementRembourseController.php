@@ -151,6 +151,7 @@ class ApiPaiementRembourseController extends Controller
                 //Mise à jour du solde de l'agent
                 $updateSoldeCommissionAgent = User::where("id",Auth::user()->id)->update([
                     "total_fees"=>0,
+                    "total_paiement"=>0,
                     "balance_after" =>$balanceAfter,
                     "last_amount"=>$montantArembourser,
                     "balance_before"=>$balanceBefore,

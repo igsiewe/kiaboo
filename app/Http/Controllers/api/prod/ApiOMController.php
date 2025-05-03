@@ -1244,6 +1244,8 @@ class ApiOMController extends Controller
                 $balanceAfterAgent = floatval($balanceBeforeAgent) + floatval($montant);
                 $reference_partenaire=$data->txnid;
                 $agent = $user->first()->id;
+                $total_fees = $agent->first()->total_fees + $Transaction->first()->fees;
+                $total_paiement = $agent->first()->total_paiement + $Transaction->first()->credit;
                 $reference = $Transaction->first()->reference;
                 $telephone = $Transaction->first()->customer_phone;
                 $dateTransaction = $Transaction->first()->date_transaction;
@@ -1261,16 +1263,12 @@ class ApiOMController extends Controller
                         'terminaison'=>'CALLBACK',
                     ]);
                     //On met à jour le solde de l'agent
-                    $total_fees =Transaction::where('source', $agent)->where("paiement_agent_rembourse",0)
-                        ->join("services","services.id","transactions.service_id")
-                        ->where('transactions.status',1)->where("transactions.fichier","agent")
-                        ->where("services.type_service_id",TypeServiceEnum::PAYMENT->value)->sum("fees");
-
                     $debitAgent = DB::table("users")->where("id", $agent)->update([
                         'balance_after_payment'=>$balanceAfterAgent,
                         'balance_before_payment'=>$balanceBeforeAgent,
                         'last_amount'=>$montant,
                         'total_fees'=>$total_fees,
+                        'total_paiement'=>$total_paiement,
                         'date_last_transaction'=>Carbon::now(),
                         'user_last_transaction_id'=>$agent,
                         'last_service_id'=>ServiceEnum::PAYMENT_OM->value,
