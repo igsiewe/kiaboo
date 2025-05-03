@@ -1173,19 +1173,18 @@ class ApiOMController extends Controller
         //Le client a été notifié. Donc on reste en attente de sa confirmation (Saisie de son code secret)
 
         //On change le statut de la transaction dans la base de donnée
-
+       // $montantAPercevoir = doubleval($request->amount) - doubleval($fees);
         $Transaction = Transaction::where('id',$idTransaction)->where('service_id',$service)->update([
             'reference_partenaire'=>$dataPaiement->data->txnid,
             'balance_before'=>0,
             'balance_after'=>0,
             'debit'=>0,
-            'credit'=>$request->amount,
+            'credit'=>$request->amount, //Lorsque la transaction passera en succès on va déduire de ce montant les frais du paiement
+            'fees'=>$fees,
             'status'=>2, // Pending
             'paytoken'=>$payToken,
-           // 'date_end_trans'=>Carbon::now(),
             'description'=>$dataPaiement->data->status,
             'message'=>"Transaction initiée par l'agent N°".Auth::user()->telephone." - ".$dataPaiement->message." | ".$dataPaiement->data->status." | ".$dataPaiement->data->inittxnmessage,
-            'fees'=>$fees,
             'api_response'=>$responseTraitePaiementOM->getContent(),
             'application'=>1
         ]);
@@ -1240,12 +1239,12 @@ class ApiOMController extends Controller
             if($data->status=="SUCCESSFULL"){
                 $montant = $Transaction->first()->credit;
                 $user = User::where('id', $Transaction->first()->created_by);
-                $balanceBeforeAgent = $user->get()->first()->balance_after_payment;
+                $balanceBeforeAgent = $user->get()->first()->balance_after;
                 $balanceAfterAgent = floatval($balanceBeforeAgent) + floatval($montant);
                 $reference_partenaire=$data->txnid;
                 $agent = $user->first()->id;
                 $total_fees = $user->first()->total_fees + $Transaction->first()->fees;
-                $total_paiement = $user->first()->total_paiement + $montant;
+                $montantACrediter = doubleval($montant) -  doubleval($Transaction->first()->fees);
                 $reference = $Transaction->first()->reference;
                 $telephone = $Transaction->first()->customer_phone;
                 $dateTransaction = $Transaction->first()->date_transaction;
@@ -1255,20 +1254,20 @@ class ApiOMController extends Controller
                     $Transaction->update([
                         'status'=>1,
                         'reference_partenaire'=>$data->txnid,
+                        'credit'=>$montantACrediter, //La valeur du montant à créditer change (on retire les frais)
                         'description'=>$data->status,
                         'message'=>$data->message,
                         'date_end_trans'=>Carbon::now(),
-                        'balance_after_payment'=>$balanceAfterAgent,
-                        'balance_before_payment'=>$balanceBeforeAgent,
+                        'balance_after'=>$balanceAfterAgent,
+                        'balance_before'=>$balanceBeforeAgent,
                         'terminaison'=>'CALLBACK',
                     ]);
                     //On met à jour le solde de l'agent
                     $debitAgent = DB::table("users")->where("id", $agent)->update([
-                        'balance_after_payment'=>$balanceAfterAgent,
-                        'balance_before_payment'=>$balanceBeforeAgent,
+                        'balance_after'=>$balanceAfterAgent,
+                        'balance_before'=>$balanceBeforeAgent,
                         'last_amount'=>$montant,
                         'total_fees'=>$total_fees,
-                        'total_paiement'=>$total_paiement,
                         'date_last_transaction'=>Carbon::now(),
                         'user_last_transaction_id'=>$agent,
                         'last_service_id'=>ServiceEnum::PAYMENT_OM->value,
