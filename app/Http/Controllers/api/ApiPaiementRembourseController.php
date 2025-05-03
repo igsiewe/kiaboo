@@ -215,7 +215,7 @@ class ApiPaiementRembourseController extends Controller
         }else{
             return response()->json([
                 "status"=>false,
-                "message"=>"Aucun remboursement possible",
+                "message"=>"Aucun  remboursement trouvé à rembourser",
             ],404);
         }
 
