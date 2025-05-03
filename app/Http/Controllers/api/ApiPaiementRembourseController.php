@@ -103,7 +103,7 @@ class ApiPaiementRembourseController extends Controller
         $paiement =Transaction::where('source', Auth::user()->id)->where("paiement_agent_rembourse",0)
             ->join("services","services.id","transactions.service_id")
             ->where('transactions.status',1)->where("transactions.fichier","agent")
-            ->whereIn("services.type_service_id",TypeServiceEnum::PAYMENT->value);
+            ->where("services.type_service_id",TypeServiceEnum::PAYMENT->value);
 
         if($paiement->count()>0){
             $montantArembourser=$paiement->sum("credit") - $paiement->sum("fees");
