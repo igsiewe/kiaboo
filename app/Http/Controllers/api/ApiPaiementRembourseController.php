@@ -169,7 +169,7 @@ class ApiPaiementRembourseController extends Controller
                     ->select(DB::raw('ref_remb_paiement_agent as reference, DATE_FORMAT(paiement_agent_rembourse_date,"%Y-%m-%d")  as date_remboursement, sum(credit) as montant, sum(fees) as frais'))
                     ->where('transactions.source', Auth::user()->id)
                     ->where("transactions.paiement_agent_rembourse",1)
-                    ->whereNotIn("type_services.id", TypeServiceEnum::PAYMENT->value)
+                    ->where("type_services.id", TypeServiceEnum::PAYMENT->value)
                     ->where("transactions.fichier","agent")->where('transactions.status',1)
                     ->groupBy('transactions.ref_remb_paiement_agent','date_remboursement')
                     ->get();
