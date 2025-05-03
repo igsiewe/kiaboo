@@ -1104,6 +1104,7 @@ class ApiProdMoMoMoneyController extends Controller
         $customer_phone = $Transaction->first()->customer_phone;
         $dateTransaction = $Transaction->first()->date_transaction;
         $device_notification = $Transaction->first()->device_notification;
+        $service = $Transaction->first()->service_id;
         if($Transaction->count()>0){
             $status = $Transaction->first()->status;
             if(($Transaction->first()->service_id ==ServiceEnum::RETRAIT_MOMO->value || $Transaction->first()->service_id ==ServiceEnum::PAYMENT_MOMO->value) && $status==2){
@@ -1123,38 +1124,74 @@ class ApiProdMoMoMoneyController extends Controller
                     ]);
                 }
                 if($data->status=="SUCCESSFUL"){
-                    $montant = $data->amount;
-                    $user = User::where('id', $Transaction->first()->created_by);
-                    $balanceBeforeAgent = $user->get()->first()->balance_after;
-                    $balanceAfterAgent = floatval($balanceBeforeAgent) + floatval($montant);
-                    $reference_partenaire=$data->financialTransactionId;
-                    $agent = $user->first()->id;
-                    $reference = $Transaction->first()->reference;
+
                     try{
                         DB::beginTransaction();
-                        $updateTransaction=$Transaction->update([
-                            'balance_before'=>$balanceBeforeAgent,
-                            'balance_after'=>$balanceAfterAgent,
-                            'status'=>1, // Successful
-                            'date_end_trans'=>Carbon::now(),
-                            'description'=>$data->status,
-                            'reference_partenaire'=>$reference_partenaire,
-                            'terminaison'=>'CALLBACK',
-                           // 'callback_response'=>$data,
-                        ]);
+                        $montant = $data->amount;
+                        $user = User::where('id', $Transaction->first()->created_by);
+                        $reference_partenaire=$data->financialTransactionId;
+                        $agent = $user->first()->id;
+                        $reference = $Transaction->first()->reference;
+                        $device_notification= $Transaction->first()->device_notification;
 
-                        $commission_agent = Transaction::where("status",1)->where("fichier","agent")->where("commission_agent_rembourse",0)->where("source",$agent)->sum("commission_agent");
-                        $debitAgent = DB::table("users")->where("id", $agent)->update([
-                            'balance_after'=>$balanceAfterAgent,
-                            'balance_before'=>$balanceBeforeAgent,
-                            'last_amount'=>$montant,
-                            'date_last_transaction'=>Carbon::now(),
-                            'user_last_transaction_id'=>$agent,
-                            'last_service_id'=>ServiceEnum::RETRAIT_MOMO->value,
-                            'reference_last_transaction'=>$reference_partenaire,
-                            'remember_token'=>$reference,
-                            'total_commission'=>$commission_agent,
-                        ]);
+                        if($Transaction->first()->service_id ==ServiceEnum::RETRAIT_MOMO->value){
+                            $balanceBeforeAgent = $user->get()->first()->balance_after;
+                            $balanceAfterAgent = floatval($balanceBeforeAgent) + floatval($montant);
+
+                            $updateTransaction=$Transaction->update([
+                                'balance_before'=>$balanceBeforeAgent,
+                                'balance_after'=>$balanceAfterAgent,
+                                'status'=>1, // Successful
+                                'date_end_trans'=>Carbon::now(),
+                                'description'=>$data->status,
+                                'reference_partenaire'=>$reference_partenaire,
+                                'terminaison'=>'CALLBACK',
+                                // 'callback_response'=>$data,
+                            ]);
+
+                            $commission_agent = Transaction::where("status",1)->where("fichier","agent")->where("commission_agent_rembourse",0)->where("source",$agent)->sum("commission_agent");
+                            $debitAgent = DB::table("users")->where("id", $agent)->update([
+                                'balance_after'=>$balanceAfterAgent,
+                                'balance_before'=>$balanceBeforeAgent,
+                                'last_amount'=>$montant,
+                                'date_last_transaction'=>Carbon::now(),
+                                'user_last_transaction_id'=>$agent,
+                                'last_service_id'=>$service,
+                                'reference_last_transaction'=>$reference_partenaire,
+                                'remember_token'=>$reference,
+                                'total_commission'=>$commission_agent,
+                            ]);
+                        }
+                        if($Transaction->first()->service_id ==ServiceEnum::PAYMENT_MOMO->value){
+                            $fees = $Transaction->first()->fees;
+                            $total_fees = doubleval($user->first()->total_fees) + doubleval($fees);
+                            $montantACrediter = doubleval($montant) -  doubleval($fees);
+                            $balanceBeforeAgent = $user->get()->first()->balance_after;
+                            $balanceAfterAgent = floatval($balanceBeforeAgent) + floatval($montantACrediter);
+
+                            $updateTransaction=$Transaction->update([
+                                'balance_before'=>$balanceBeforeAgent,
+                                'balance_after'=>$balanceAfterAgent,
+                                'status'=>1, // Successful
+                                'date_end_trans'=>Carbon::now(),
+                                'description'=>$data->status,
+                                'reference_partenaire'=>$reference_partenaire,
+                                'terminaison'=>'CALLBACK',
+                                // 'callback_response'=>$data,
+                            ]);
+
+                            $debitAgent = DB::table("users")->where("id", $agent)->update([
+                                'balance_after'=>$balanceAfterAgent,
+                                'balance_before'=>$balanceBeforeAgent,
+                                'last_amount'=>$montant,
+                                'date_last_transaction'=>Carbon::now(),
+                                'user_last_transaction_id'=>$agent,
+                                'last_service_id'=>$service,
+                                'reference_last_transaction'=>$reference_partenaire,
+                                'remember_token'=>$reference,
+                                'total_fees'=>$total_fees,
+                            ]);
+                        }
 
                         $title = "Kiaboo";
                         $message = "Le retrait MoMo de " . $montant . " F CFA a été effectué avec succès au ".$customer_phone." (ID : ".$reference_partenaire.") le ".$dateTransaction;
@@ -1166,7 +1203,7 @@ class ApiProdMoMoMoneyController extends Controller
                     }catch(\Exception $e){
                         DB::rollBack();
                         Log::error(
-                            'MOMO CallBack',
+                            'MoMoCallBack',
                             [
                                 'error' => $e->getMessage(),
                                 'transaction_id' => $Transaction->first()->id,
