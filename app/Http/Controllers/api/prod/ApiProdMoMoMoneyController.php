@@ -1384,91 +1384,53 @@ class ApiProdMoMoMoneyController extends Controller
      */
     public function MOMO_Payment(Request $request){
 
+        $validator = Validator::make($request->all(), [
+            'customerPhone' => 'required|numeric|digits:9',
+            'amount' => 'required|numeric|min:200|max:500000',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first(),
+            ], 400);
+        }
+
         $apiCheck = new ApiCheckController();
 
         $service = ServiceEnum::PAYMENT_MOMO->value;
-        $user = User::where("telephone",$request->agentNumber)->where('type_user_id', UserRolesEnum::AGENT->value)->get();
-        $amount=$request->amount;
-        $customer=$request->phone;
 
-      //  $amount=$request->data["amount"];
-      //  $customer=$request->data["phone"];
+        $user = User::where("id",Auth::user()->id)->where('type_user_id', UserRolesEnum::AGENT->value)->get();
+        $amount=$request->amount;
+        $customer=$request->customerPhone;
 
         // Vérifie si l'utilisateur est autorisé à faire cette opération
 
-        if($user->count()==0){
+        if(!$apiCheck->checkUserValidity()){
             return response()->json([
-                'success'=>false,
-                'statusCode'=>'ERR-AGENT-NOT-VALID',
-                'message'=>"The agent used is not found",
-            ],404);
-        }
-
-        if($user->first()->status ==0){
-            return response()->json([
-                'success'=>false,
-                'statusCode'=>'ERR-NOT-PERMISSION',
-                'message'=>"The agent used does not have the necessary permissions",
+                'status'=>'error',
+                'message'=>'Votre compte est désactivé. Veuillez contacter votre distributeur',
             ],403);
         }
 
-        //On se rassure que l'utilisateur est bien rattaché au compte connecté
-
-        if($user->first()->distributeur_id !=Auth::user()->distributeur_id){
-           // if($user->count()==0 || $user->first()->status ==0){
-                return response()->json([
-                    'success'=>false,
-                    'statusCode'=>'ERR-NOT-PERMISSION',
-                    'message'=>"The agent used does not have the necessary permissions with your profil",
-                ],403);
-           // }
-        }
-
-        //Verifie le statut de l'id transaction cote marchand
-        $distributeurAuquelAppartienAgent = $user->first()->distributeur_id;
-
-        $checkTransactionExternalId = DB::table('transactions')
-            ->join('users', 'transactions.source', '=', 'users.id')
-            ->select('transactions.*')
-            ->where('transactions.marchand_transaction_id', $request->marchandTransactionId)
-            ->where('users.distributeur_id', $distributeurAuquelAppartienAgent)
-            ->get();
-
-        if($checkTransactionExternalId->count()>0){
-            return response()->json([
-                'success'=>false,
-                'statusCode'=>"ERR-MERCHAND-TRANSACTION-ID-DUPLICATE",
-                'message' => "The merchand transaction ID used already exists: ".$request->marchandTransactionId,
-                'data'=>[
-                    'status' => $checkTransactionExternalId->first()->description,
-                    'transactionId'=>$checkTransactionExternalId->first()->reference,
-                    'dateTransaction'=>$checkTransactionExternalId->first()->date_transaction,
-                    'amount'=>$checkTransactionExternalId->first()->credit,
-                    'fees'=>$checkTransactionExternalId->first()->fees_collecte,
-                    'agent'=>$user->first()->telephone,
-                    'customer'=>$checkTransactionExternalId->first()->customer_phone,
-                    'marchandTransactionID'=>$checkTransactionExternalId->first()->marchand_transaction_id,
-                ]
-            ], 208);
-        }
-
-
-        // On vérifie si les commissions sont paramétrées
+        // On vérifie si les frais sont paramétrées
         $functionFees = new ApiCommissionController();
-        $lesFees =$functionFees->getFeesByService($service,$amount);
-
-        if($lesFees->getStatusCode()!=200){
+        $lesfees =$functionFees->getFeesByService($service,$request->amount);
+        if($lesfees->getStatusCode()!=200){
             return response()->json([
-                'success'=>false,
-                'statusCode' => "ERR-FEES-INVALID",
-                'message' => "Impossible de calculer les frais liés à la transaction",
-            ], 400);
+                'success' => false,
+                'message' => "Impossible de calculer la commission",
+            ], 403);
         }
-        $fees=json_decode($lesFees->getContent());
+        $fee=json_decode($lesfees->getContent());
+        $fees = doubleval($fee->fees_globale);
 
         //Initie la transaction
+        $device = $request->deviceId;
+        $latitude = $request->latitude;
+        $longitude = $request->longitude;
+        $place = $request->place;
+        $init_transaction = $apiCheck->init_Payment($amount, $customer, $service,"", Auth::user()->id,1, $device,$latitude,$longitude,$place);
 
-        $init_transaction = $apiCheck->init_Payment($amount, $customer, $service,"",$user->first()->id,"2");
         $dataTransactionInit = json_decode($init_transaction->getContent());
 
         if($init_transaction->getStatusCode() !=200){
@@ -1495,7 +1457,7 @@ class ApiProdMoMoMoneyController extends Controller
 
         $dataAcessToken = json_decode($responseToken->getContent());
         $AccessToken = $dataAcessToken->access_token;
-
+        dd($AccessToken,$idTransaction,$reference);
         //Référence de la transaction
         $referenceID = $this->gen_uuid();
         //On gardee l'UID de la transaction initiee
@@ -1525,25 +1487,6 @@ class ApiProdMoMoMoneyController extends Controller
                 "payerMessage" => "Agent ".$user->first()->telephone." Partenaire ".strtoupper($partenaire),
             ]);
 
-
-        Log::info([
-            "Service"=>ServiceEnum::PAYMENT_MOMO->name,
-            "url"=>"https://proxy.momoapi.mtn.com/collection/v1_0/requesttopay",
-            "requete"=>[
-                "payeeNote" => "Agent ".$user->first()->telephone." Partenaire ".strtoupper($partenaire),
-                "externalId" => $idTransaction,
-                "amount" => $amount,
-                "currency" => "XAF",
-                "payer" => [
-                    "partyIdType" => "MSISDN",
-                    "partyId" => $customerPhone
-                ],
-                "payerMessage" => "Agent ".$user->first()->telephone." Partenaire ".strtoupper($partenaire),
-            ],
-            "marchandTransactionID"=>$request->marchandTransactionId,
-            "reponse"=>json_decode($response->status()),
-            "body"=>json_decode($response->body()),
-        ]);
 
 
         if($response->status()==202){
@@ -1588,13 +1531,7 @@ class ApiProdMoMoMoneyController extends Controller
             );
 
         }else{
-            Log::error([
-                'code'=> $response->status(),
-                'function' => "MOMO_PAYMENT",
-                'response'=>$response->body(),
-                'user' => $user->first()->id,
-                'request' => $request->all()
-            ]);
+
             return response()->json(
                 [
                     'status'=>$response->status(),
