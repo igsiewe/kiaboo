@@ -83,12 +83,12 @@ class ApiTransactionsController extends BaseController
         $depot=$transactions->where('type_service_id', TypeServiceEnum::ENVOI->value)->sum("debit");
         $retrait=$transactions->where('type_service_id', TypeServiceEnum::RETRAIT->value)->sum("credit");
         $facture=$transactions->where('type_service_id', TypeServiceEnum::FACTURE->value)->sum("debit");
+        $payment=$transactions->where('type_service_id', TypeServiceEnum::PAYMENT->value)->sum("credit");
+        $transfertEmis= $transactions->where('type_service_id', TypeServiceEnum::TRANSFERT->value)->sum("debit");
+        $transfertRecu= $transactions->where('type_service_id', TypeServiceEnum::TRANSFERT->value)->sum("credit");
         $commission=$transactions->sum("commission");
 
-        $solde = $appro + $retrait-$depot-$facture;
-
-
-
+        $solde = $appro + $retrait-$depot-$facture+$payment-$transfertEmis+$transfertRecu;
         return response()->json([
             'status'=>"true",
             'message'=> $transactions->count()." transactions trouvées",
@@ -96,6 +96,7 @@ class ApiTransactionsController extends BaseController
             'depot'=>$depot,
             'retrait'=>$retrait,
             'facture'=>$facture,
+            'payment'=>$payment,
             'solde'=>$solde,
             'commission'=>$commission,
             'transactions'=> $transactions,
@@ -163,6 +164,7 @@ class ApiTransactionsController extends BaseController
         $commission=$transactions->sum("commission");
 
         $solde = $appro + $retrait-$depot-$facture+$payment-$transfertEmis+$transfertRecu;
+
         return response()->json([
             'status'=>"true",
             'message'=> $transactions->count()." transactions trouvées",
@@ -207,7 +209,7 @@ class ApiTransactionsController extends BaseController
             ->where("fichier","agent")
             ->where('status',1)
             ->whereHas('service',function ($query){
-                $query->whereIn("type_service_id",[TypeServiceEnum::ENVOI->value,TypeServiceEnum::RETRAIT->value,TypeServiceEnum::FACTURE->value]);
+                $query->whereIn("type_service_id",[TypeServiceEnum::ENVOI->value,TypeServiceEnum::RETRAIT->value,TypeServiceEnum::FACTURE->value,TypeServiceEnum::PAYMENT->value]);
             });
         $count = $query->count();
         if($count>0){
@@ -234,7 +236,7 @@ class ApiTransactionsController extends BaseController
             ->where("transactions.fichier","=","agent")
             ->where("transactions.source",Auth::user()->id)
             ->where('transactions.status',StatusTransEnum::PENDING->value)
-            ->whereIn('type_services.id',[TypeServiceEnum::ENVOI->value,TypeServiceEnum::RETRAIT->value,TypeServiceEnum::FACTURE->value])
+            ->whereIn('type_services.id',[TypeServiceEnum::ENVOI->value,TypeServiceEnum::RETRAIT->value,TypeServiceEnum::FACTURE->value,TypeServiceEnum::PAYMENT->value])
             ->orderBy('transactions.date_transaction', 'desc')
             ->get();
 
@@ -265,7 +267,7 @@ class ApiTransactionsController extends BaseController
             ->where("transactions.fichier","=","agent")
             ->where("transactions.source",Auth::user()->id)
             ->where('transactions.status',StatusTransEnum::CANCELED->value)
-            ->whereIn('type_services.id',[TypeServiceEnum::ENVOI->value,TypeServiceEnum::RETRAIT->value,TypeServiceEnum::FACTURE->value])->limit(10)
+            ->whereIn('type_services.id',[TypeServiceEnum::ENVOI->value,TypeServiceEnum::RETRAIT->value,TypeServiceEnum::FACTURE->value,TypeServiceEnum::PAYMENT->value])->limit(10)
             ->orderBy('transactions.date_transaction', 'desc')
             ->get();
 
