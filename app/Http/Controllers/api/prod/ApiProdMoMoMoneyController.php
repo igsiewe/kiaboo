@@ -1488,12 +1488,9 @@ class ApiProdMoMoMoneyController extends Controller
             ]);
 
 
-        dd($response);
         if($response->status()==202){
             //Le client a été notifié. Donc on reste en attente de sa confirmation (Saisie de son code secret)
-
             //On change le statut de la transaction dans la base de donnée
-
             $Transaction = Transaction::where('id',$idTransaction)->where('service_id',$service)->update([
                 'reference_partenaire'=>$referenceID,
                 'balance_before'=>0,
@@ -1504,22 +1501,13 @@ class ApiProdMoMoMoneyController extends Controller
                 'paytoken'=>$referenceID,
                 'date_end_trans'=>Carbon::now(),
                 'description'=>'PENDING',
-                'message'=>"Transaction initiée par l'agent N°".$user->first()->id." le ".Carbon::now()." vers le client ".$customerPhone." En attente confirmation du client",
-                'fees_collecte'=>$fees->fees_globale,
-                'fees_partenaire_service'=>$fees->fees_partenaire_service,
-                'fees_kiaboo'=>$fees->fees_kiaboo,
-                'marchand_amount'=>doubleval($amount)-doubleval($fees->fees_globale),
-                'commission'=>0,//$commission->commission_globale,
-                'commission_filiale'=>0,//$commissionFiliale,
-                'commission_agent'=>0,//$commissionAgent,
-                'commission_distributeur'=>0,//$commissionDistributeur,
+                'message'=>"Transaction initiée par l'agent N°".$user->first()->id." ".$user->first()->telephone,
+                'fees'=>$fees,
                 'marchand_transaction_id'=>$request->marchandTransactionId,
             ]);
 
             //Le solde du compte de l'agent ne sera mis à jour qu'après confirmation de l'agent : Opération traitée dans le callback
-
             //On recupère toutes les transactions en attente
-
             return response()->json(
                 [
                     'success'=>true,
