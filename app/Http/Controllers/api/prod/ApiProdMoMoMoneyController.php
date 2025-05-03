@@ -1167,8 +1167,17 @@ class ApiProdMoMoMoneyController extends Controller
                             $total_fees = doubleval($user->first()->total_fees) + doubleval($fees);
                             $montantACrediter = doubleval($montant) -  doubleval($fees);
                             $balanceBeforeAgent = $user->get()->first()->balance_after;
-                            $balanceAfterAgent = floatval($balanceBeforeAgent) + floatval($montantACrediter);
+                            $balanceAfterAgent = floatval($balanceBeforeAgent) + floatval($montantACrediter); //On a déduit les frais de la transaction.
 
+                             Log::info("MoMoCallBack", [
+                                 "fees"=>$fees,
+                                 "total_fees"=>$total_fees,
+                                 "montantACrediter"=>$montantACrediter,
+                                 "montant"=>$montant,
+                                 "balance_before"=>$balanceBeforeAgent,
+                                 "balance_after"=>$balanceAfterAgent,
+
+                             ]);
                             $updateTransaction=$Transaction->update([
                                 'balance_before'=>$balanceBeforeAgent,
                                 'balance_after'=>$balanceAfterAgent,
@@ -1549,7 +1558,7 @@ class ApiProdMoMoMoneyController extends Controller
                 [
                     'success'=>true,
                     'statusCode'=>"PAYMENT-INITIATE-SUCCESSFULLY",
-                    'message'=>"Transaction initiée avec succès. Le client doit confirmer le retrait avec son code secret",
+                    'message'=>"Transaction initiée avec succès. Le client doit confirmer le paiement avec son code secret",
                     'paytoken'=>$referenceID,
                     'transactionId'=>$reference,//$idTransaction,
                 ],202
