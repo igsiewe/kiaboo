@@ -7,6 +7,7 @@ use App\Http\Controllers\api\ApiImageUploadController;
 use App\Http\Controllers\api\ApiNotification;
 use App\Http\Controllers\api\ApiOMControllerSave;
 use App\Http\Controllers\api\ApiOperationAgent;
+use App\Http\Controllers\api\ApiPaiementRembourseController;
 use App\Http\Controllers\api\ApiParrainageController;
 use App\Http\Controllers\api\ApiProspectController;
 use App\Http\Controllers\api\ApiSmsController;
@@ -143,6 +144,11 @@ Route::middleware('auth:api')->group(function () {
             Route::get('commission/remboursement/agent', 'commissionAgentRembourse')->name("commissionAgentRembourse");
             Route::post('commission/remboursement/agent/filtre', 'commissionAgentRembourseFiltre')->name("commissionAgentRembourseFiltre");
             Route::post('/commission/remboursement/execute', 'setRemboursementCommission')->name("setRemboursementCommission");
+        });
+
+        //Paiement rembourse
+        Route::controller(ApiPaiementRembourseController::class)->group(function () {
+            Route::post('paiement/remboursement/agent/filtre', 'paiementAgentRembourseFiltre')->name("paiementAgentRembourseFiltre");
         });
 
         Route::controller(ApiNotification::class)->group(function () {

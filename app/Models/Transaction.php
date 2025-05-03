@@ -33,7 +33,9 @@ class Transaction extends Model
         'commission_distributeur_rembourse_date',
         'ref_remb_com_agent',
         'ref_remb_com_distributeur',
-
+        'paiement_agent_rembourse',
+        'ref_remb_paiement_agent',
+        'paiement_agent_rembourse_date',
         'charge',
         'charge_kiaboo',
         'charge_distributeur',

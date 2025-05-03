@@ -222,7 +222,7 @@ class ApiCommissionController extends BaseController
             ->select(DB::raw('ref_remb_com_agent as reference, DATE_FORMAT(commission_agent_rembourse_date,"%Y-%m-%d")  as date_remboursement, sum(commission_agent) as commission'))
             ->where('transactions.source', Auth::user()->id)
             ->where("transactions.commission_agent_rembourse",1)
-            ->whereNotIn("type_services.id", [TypeServiceEnum::APPROVISIONNEMENT->value,TypeServiceEnum::REMBOURSEMENT])
+            ->whereNotIn("type_services.id", [TypeServiceEnum::APPROVISIONNEMENT->value,TypeServiceEnum::REMBOURSEMENT->value])
             ->where("transactions.fichier","agent")->where('transactions.status',1)
             ->where("transactions.ref_remb_com_agent","!=",null)
             ->groupBy('transactions.ref_remb_com_agent','date_remboursement')
@@ -241,7 +241,7 @@ class ApiCommissionController extends BaseController
                 "status" => false,
                 "total"=>0,
                 "message" => "Aucune commission trouvée",
-                "commissio,s"=>[]
+                "commissions"=>[]
             ],404);
         }
 

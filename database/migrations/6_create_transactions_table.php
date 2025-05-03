@@ -27,20 +27,24 @@ return new class extends Migration
             $table->double("debit")->default(0);
             $table->double("credit")->default(0);
             $table->double("balance_after")->default(0);
-            $table->double("fees")->default(0);
+            $table->double("fees")->default(0)->comment("Montant à prelever lors du remboursement du paiement collecté");
             $table->string("callback_response",250)->nullable();
             $table->string("terminaison",250)->nullable();
             $table->double("commission")->default(0)->comment("Commission reversée par le partenaire de service");
             $table->double("commission_filiale")->default(0)->comment("Par commission filiale");
             $table->double("commission_distributeur")->default(0)->comment("Part commission distributeur");
             $table->double("commission_agent")->default(0)->comment("Par commission agent");
-            $table->double("commission_rembourse")->default(0)->comment("0 = Encaissée, 1 = non encaissée");
-            $table->double("commission_distributeur_rembourse")->default(0)->comment("0 = Encaissée, 1 = non encaissée");
-            $table->double("commission_agent_rembourse")->default(0)->comment("0 = Encaissée, 1 = non encaissée");
+            $table->double("commission_rembourse")->default(0)->comment("1 = Encaissée, 0 = non encaissée");
+            $table->double("commission_distributeur_rembourse")->default(0)->comment("1 = Encaissée, 0 = non encaissée");
+            $table->double("commission_agent_rembourse")->default(0)->comment("1 = Encaissée, 0 = non encaissée");
             $table->date("commission_agent_rembourse_date")->nullable();
             $table->date("commission_distributeur_rembourse_date")->nullable();
             $table->string("ref_remb_com_agent",80)->nullable();
             $table->string("ref_remb_com_distributeur",80)->nullable();
+
+            $table->string("ref_remb_paiement_agent",80)->nullable()->comment("Lorsqu'on remboursement le paiement, on génère une reference");
+            $table->double("paiement_agent_rembourse")->default(0)->comment("0 = non remboursé, 1 = remboursé");
+            $table->date("paiement_agent_rembourse_date")->nullable()->comment("Date à laquelle le paiement a été remboursé par KIABOO à l'agent");
 
             $table->double("charge")->default(0)->comment("Charge de service facturée par KIABOO");
             $table->double("charge_kiaboo")->default(0)->comment("Par charge kiaboo");
