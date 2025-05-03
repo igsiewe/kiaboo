@@ -1238,13 +1238,14 @@ class ApiOMController extends Controller
         if($Transaction->count()>0){
             if($data->status=="SUCCESSFULL"){
                 $montant = $Transaction->first()->credit;
+                $montantACrediter = doubleval($montant) -  doubleval($Transaction->first()->fees);
                 $user = User::where('id', $Transaction->first()->created_by);
                 $balanceBeforeAgent = $user->get()->first()->balance_after;
-                $balanceAfterAgent = floatval($balanceBeforeAgent) + floatval($montant);
+                $balanceAfterAgent = floatval($balanceBeforeAgent) + floatval($montantACrediter); //On a déduit les frais de la transaction.
                 $reference_partenaire=$data->txnid;
                 $agent = $user->first()->id;
                 $total_fees = $user->first()->total_fees + $Transaction->first()->fees;
-                $montantACrediter = doubleval($montant) -  doubleval($Transaction->first()->fees);
+
                 $reference = $Transaction->first()->reference;
                 $telephone = $Transaction->first()->customer_phone;
                 $dateTransaction = $Transaction->first()->date_transaction;
@@ -1254,7 +1255,7 @@ class ApiOMController extends Controller
                     $Transaction->update([
                         'status'=>1,
                         'reference_partenaire'=>$data->txnid,
-                        'credit'=>$montantACrediter, //La valeur du montant à créditer change (on retire les frais)
+                      //  'credit'=>$montantACrediter, //La valeur du montant à créditer change (on retire les frais)
                         'description'=>$data->status,
                         'message'=>$data->message,
                         'date_end_trans'=>Carbon::now(),
