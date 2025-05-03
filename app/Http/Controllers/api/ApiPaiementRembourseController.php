@@ -109,7 +109,8 @@ class ApiPaiementRembourseController extends Controller
             $montantArembourser=$paiement->sum("credit") - $paiement->sum("fees");
             $totalfeesCollecte=$paiement->sum("fees");
             $date = Carbon::now();
-            $reference = "RP".Carbon::now()->format('ymd').".".Carbon::now()->format('His').".".$this->genererChaineAleatoire(1)."".$this->GenereRang();
+            $chaine = new ApiCheckController();
+            $reference = "RP".Carbon::now()->format('ymd').".".Carbon::now()->format('His').".".$chaine->genererChaineAleatoire(1)."".$chaine->GenereRang();
             try{
                 DB::beginTransaction();
                 $rembourse = $paiement->update([

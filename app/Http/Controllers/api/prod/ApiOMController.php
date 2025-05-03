@@ -1245,7 +1245,7 @@ class ApiOMController extends Controller
                 $reference_partenaire=$data->txnid;
                 $agent = $user->first()->id;
                 $total_fees = $user->first()->total_fees + $Transaction->first()->fees;
-                $total_paiement = $user->first()->total_paiement + $Transaction->first()->credit;
+                $total_paiement = $user->first()->total_paiement + $montant;
                 $reference = $Transaction->first()->reference;
                 $telephone = $Transaction->first()->customer_phone;
                 $dateTransaction = $Transaction->first()->date_transaction;
