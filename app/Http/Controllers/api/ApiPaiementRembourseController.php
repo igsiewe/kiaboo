@@ -106,7 +106,8 @@ class ApiPaiementRembourseController extends Controller
             ->whereIn("services.type_service_id",TypeServiceEnum::PAYMENT->value);
 
         if($paiement->count()>0){
-            $montantfees= $paiement->sum("fees");
+            $montantArembourser=$paiement->sum("credit") - $paiement->sum("fees");
+            $totalfeesCollecte=$paiement->sum("fees");
             $date = Carbon::now();
             $reference = "RP".Carbon::now()->format('ymd').".".Carbon::now()->format('His').".".$this->genererChaineAleatoire(1)."".$this->GenereRang();
             try{
@@ -117,17 +118,18 @@ class ApiPaiementRembourseController extends Controller
                     "ref_remb_paiement_agent"=>$reference,
                 ]);
 
-                $balanceAfter=doubleval(Auth::user()->balance_after_payment) + doubleval($montantfees);
-                $balanceBefore=Auth::user()->balance_after_payment;
-                //Creation d'une ligne de credit dans la table transacton (historique de l'operation)
+                $balanceAfter=doubleval(Auth::user()->balance_after) + doubleval($montantArembourser);
+                $balanceBefore=Auth::user()->balance_after;
+                //Creation d'une ligne de débit dans la table transacton (historique de l'operation)
                 $Transaction= Transaction::create([
                     'reference'=>$reference,
                     'date_transaction'=>$date,
                     'service_id'=>ServiceEnum::REMBOURSEMENT_PAIEMENT->value,
                     'balance_before'=>$balanceBefore,
                     'balance_after'=>$balanceAfter,
-                    'debit'=>$montantfees,
+                    'debit'=>$montantArembourser,
                     'credit'=>0,
+                    'fees_collecte'=>$totalfeesCollecte,
                     'status'=>1, //Initiate
                     'created_by'=>Auth::user()->id,
                     'created_at'=>$date,
@@ -143,26 +145,20 @@ class ApiPaiementRembourseController extends Controller
                     'paytoken'=>$reference,
                     'date_end_trans'=>Carbon::now(),
                     'message'=>$reference,
-                    'commission'=>0,
-                    'commission_filiale'=>0,
-                    'commission_agent'=>0,
-                    'commission_distributeur'=>0,
-                    "commission_agent_rembourse"=>1,
-                    "commission_agent_rembourse_date"=>$date,
-                    // "ref_remb_com_agent"=>$reference,
+                    "paiement_agent_rembourse_date"=>$date,
+                    "ref_remb_paiement_agent"=>$reference,
                 ]);
                 //Mise à jour du solde de l'agent
                 $updateSoldeCommissionAgent = User::where("id",Auth::user()->id)->update([
-                    "total_commission"=>0,
-                    "balance_after_payment" =>$balanceAfter,
-                    "last_amount"=>$montantfees,
-                    "balance_before_payment"=>$balanceBefore,
+                    "total_fees"=>0,
+                    "balance_after" =>$balanceAfter,
+                    "last_amount"=>$montantArembourser,
+                    "balance_before"=>$balanceBefore,
                     "date_last_transaction"=>$date,
                     "user_last_transaction_id"=>Auth::user()->id,
                     "reference_last_transaction"=>$reference,
                     "remember_token"=>$reference,
-                    "last_service_id"=>ServiceEnum::PAIEMENT_COMMISSION->value
-
+                    "last_service_id"=>ServiceEnum::REMBOURSEMENT_PAIEMENT->value
                 ]);
 
                 $paiements = DB::table('transactions')
@@ -199,7 +195,8 @@ class ApiPaiementRembourseController extends Controller
                 return response()->json([
                     "status"=>true,
                     "message"=>"Remboursement effectué avec succès",
-                    "total"=>$montantfees,
+                    "total"=>$montantArembourser,
+                    "fees"=>$totalfeesCollecte,
                     "paiements"=>$paiements,
                     "user"=>$user,
                     "transactions"=>$transactions,

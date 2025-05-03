@@ -8,6 +8,7 @@ use App\Http\Controllers\api\ApiNotification;
 use App\Http\Controllers\ApiLog;
 use App\Http\Controllers\Controller;
 use App\Http\Enums\ServiceEnum;
+use App\Http\Enums\TypeServiceEnum;
 use App\Models\Transaction;
 use App\Models\User;
 use Carbon\Carbon;
@@ -1185,7 +1186,6 @@ class ApiOMController extends Controller
             'description'=>$dataPaiement->data->status,
             'message'=>"Transaction initiée par l'agent N°".Auth::user()->telephone." - ".$dataPaiement->message." | ".$dataPaiement->data->status." | ".$dataPaiement->data->inittxnmessage,
             'fees'=>$fees,
-            'fees_collecte'=>$fees,
             'api_response'=>$responseTraitePaiementOM->getContent(),
             'application'=>1
         ]);
@@ -1261,11 +1261,16 @@ class ApiOMController extends Controller
                         'terminaison'=>'CALLBACK',
                     ]);
                     //On met à jour le solde de l'agent
+                    $total_fees =Transaction::where('source', $agent)->where("paiement_agent_rembourse",0)
+                        ->join("services","services.id","transactions.service_id")
+                        ->where('transactions.status',1)->where("transactions.fichier","agent")
+                        ->where("services.type_service_id",TypeServiceEnum::PAYMENT->value)->sum("fees");
 
                     $debitAgent = DB::table("users")->where("id", $agent)->update([
                         'balance_after_payment'=>$balanceAfterAgent,
                         'balance_before_payment'=>$balanceBeforeAgent,
                         'last_amount'=>$montant,
+                        'total_fees'=>$total_fees,
                         'date_last_transaction'=>Carbon::now(),
                         'user_last_transaction_id'=>$agent,
                         'last_service_id'=>ServiceEnum::PAYMENT_OM->value,
