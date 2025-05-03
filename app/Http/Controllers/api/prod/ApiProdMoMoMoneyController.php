@@ -1457,7 +1457,7 @@ class ApiProdMoMoMoneyController extends Controller
 
         $dataAcessToken = json_decode($responseToken->getContent());
         $AccessToken = $dataAcessToken->access_token;
-        dd($AccessToken,$idTransaction,$reference);
+
         //Référence de la transaction
         $referenceID = $this->gen_uuid();
         //On gardee l'UID de la transaction initiee
@@ -1465,7 +1465,7 @@ class ApiProdMoMoMoneyController extends Controller
             "paytoken"=>$referenceID
         ]);
         $customerPhone = "237".$customer;
-        $partenaire = Distributeur::where("id",Auth::user()->distributeur_id)->get()->first()->name_distributeur;
+
         $response = Http::withOptions(['verify' => false,])->withHeaders(
             [
                 'Authorization'=> 'Bearer '.$AccessToken,
@@ -1476,7 +1476,7 @@ class ApiProdMoMoMoneyController extends Controller
             ])
             ->Post('https://proxy.momoapi.mtn.com/collection/v1_0/requesttopay', [
 
-                "payeeNote" => "Agent ".$user->first()->telephone." Partenaire ".strtoupper($partenaire),
+                "payeeNote" => "Agent ".$user->first()->telephone,
                 "externalId" => $idTransaction,
                 "amount" => $amount,
                 "currency" => "XAF",
@@ -1484,11 +1484,11 @@ class ApiProdMoMoMoneyController extends Controller
                     "partyIdType" => "MSISDN",
                     "partyId" => $customerPhone
                 ],
-                "payerMessage" => "Agent ".$user->first()->telephone." Partenaire ".strtoupper($partenaire),
+                "payerMessage" => "Agent ".$user->first()->telephone,
             ]);
 
 
-
+        dd($response);
         if($response->status()==202){
             //Le client a été notifié. Donc on reste en attente de sa confirmation (Saisie de son code secret)
 
