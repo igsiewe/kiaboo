@@ -70,7 +70,7 @@ class ApiPaiementRembourseController extends Controller
         $paiements = DB::table('transactions')
             ->join("services","services.id","transactions.service_id")
             ->join("type_services", "type_services.id","services.type_service_id")
-            ->select(DB::raw('ref_remb_paiement_agent as reference, DATE_FORMAT(paiement_agent_rembourse_date,"%Y-%m-%d")  as date_remboursement, sum(credit) as montant, sum(commission_agent) as commission'))
+            ->select(DB::raw('ref_remb_paiement_agent as reference, DATE_FORMAT(paiement_agent_rembourse_date,"%Y-%m-%d")  as date_remboursement, sum(credit) as montant, sum(fees) as frais'))
             ->where('transactions.source', Auth::user()->id)
             ->where("transactions.paiement_agent_rembourse",1)
             ->where("type_services.id", TypeServiceEnum::PAYMENT->value)
