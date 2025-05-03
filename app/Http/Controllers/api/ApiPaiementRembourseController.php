@@ -52,7 +52,7 @@ class ApiPaiementRembourseController extends Controller
                 "status" => false,
                 "total"=>0,
                 "frais"=>0,
-                "message" => "Aucune paiement trouvé",
+                "message" => "Aucun remboursement trouvé sur la période sélectionnée",
                 "paiements"=>[]
             ],404);
         }
@@ -87,7 +87,7 @@ class ApiPaiementRembourseController extends Controller
                 "status" => false,
                 "total"=>0,
                 "frais"=>0,
-                "message" => "Aucune remboursement n'a encore été éffectué",
+                "message" => "Aucun remboursement n'a encore été éffectué",
                 "paiements"=>[]
             ],404);
         }
