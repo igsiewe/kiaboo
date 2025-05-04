@@ -1288,7 +1288,7 @@ class ApiOMController extends Controller
                 $device_notification= $Transaction->first()->device_notification;
                 $montant = $Transaction->first()->credit;
                 $user = User::where('id', $Transaction->first()->created_by);
-                dd($dateTransaction);
+
                 if($data->data->status=="SUCCESSFULL"){
 
                     $montantACrediter = doubleval($montant) -  doubleval($Transaction->first()->fees);
