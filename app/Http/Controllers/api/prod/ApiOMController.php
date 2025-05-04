@@ -1277,7 +1277,7 @@ class ApiOMController extends Controller
                 "Authorization"=>"Bearer ".$AccessToken,
                 "accept"=>"application/json"
             ])->Get($http);
-        try{
+
             $data = json_decode($response->body());
            // dd($data);
             if($response->status()==200){
@@ -1363,9 +1363,18 @@ class ApiOMController extends Controller
                                 'date_end_trans'=>Carbon::now(),
                                 'terminaison'=>'MANUEL',
                             ]);
+                            DB::commit();
+                            return response()->json(
+                                [
+                                    'success'=>true,
+                                    'statusCode'=>$data->data->status,
+                                    'message'=>$data->data->status." - ".$data->data->confirmtxnmessage,
+
+                                ],202
+                            );
                         }
                         $message = "La transaction est en status en attente. Le client doit confirmer la transaction en saisissant son code secret.";
-                        DB::commit();
+                        DB::rollBack();
                         return response()->json(
                             [
                                 'success'=>true,
@@ -1386,6 +1395,12 @@ class ApiOMController extends Controller
                     DB::rollback();
                     $alerte = new ApiLog();
                     $alerte->logErrorCallBack($e->getCode(), "OMPMCheckStatus", $e->getMessage(), $data,"OM_Payment_Status",$agent);
+                    return response()->json(
+                        [
+                            'success'=>false,
+                            'transactionId'=>$e->getMessage(),
+                        ],$e->getCode()
+                    );
                 }
             }else{
                 return response()->json(
@@ -1397,16 +1412,7 @@ class ApiOMController extends Controller
                     ],$response->status()
                 );
             }
-        }catch(\Exception $e){
 
-            Log::error($e->getCode()." ".$e->getMessage(),$e->getTrace());
-            return response()->json(
-                [
-                    'success'=>false,
-                    'message'=>"Une erreur interne s'est produite. Veuillez vérifier votre connexion internet ou informer votre support."
-                ],500
-            );
-        }
     }
 
     public function OMCallBack(Request $request)
