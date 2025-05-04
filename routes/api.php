@@ -210,7 +210,7 @@ Route::middleware('auth:api')->group(function () {
 
                     Route::get('cashin/status/{referenceID}', 'OM_Depot_Status')->name("OM_Depot_Status");
                     Route::get('cashout/status/{referenceID}', 'OM_Retrait_Status')->name("OM_Retrait_Status");
-                    Route::get('pm/status/{referenceID}', 'OM_Payment_Status')->name("OM_Payment_Status");
+                    Route::get('payment/status/{referenceID}', 'OM_Payment_Status')->name("OM_Payment_Status");
 
                 });
 
@@ -222,7 +222,6 @@ Route::middleware('auth:api')->group(function () {
                     Route::post('retrait', 'MOMO_Retrait')->name("MOMO_Retrait");
                     Route::post('payment', 'MOMO_Payment')->name("MOMO_Payment");
                     Route::get('payment/status/{transactionId}', 'MOMO_Payment_Status')->name("MOMO_Payment_Status");
-
                     Route::get('retrait/status/{referenceID}', 'MOMO_Retrait_Status')->name("MOMO_Retrait_Status");
                     Route::get('depot/status/{referenceID}', 'MOMO_Depot_Status_Api')->name("MOMO_Depot_Status_Api");
 
