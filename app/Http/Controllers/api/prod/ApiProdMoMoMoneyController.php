@@ -1640,7 +1640,7 @@ class ApiProdMoMoMoneyController extends Controller
             }catch (\Exception $e){
                 DB::rollback();
                 $alerte = new ApiLog();
-                $alerte->logErrorCallBack($e->getCode(), "MoMoPMCheckStatus", $e->getMessage(), $data,"MOMO_Payment_Status",$user->first()->telephone);
+                $alerte->logErrorCallBack($e->getCode(), "MoMoPMCheckStatus", $e->getMessage(), $data,"MOMO_Payment_Status",$agent);
                 return response()->json(
                     [
                         'success'=>false,
