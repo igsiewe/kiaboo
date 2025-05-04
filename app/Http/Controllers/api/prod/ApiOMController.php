@@ -1371,7 +1371,7 @@ class ApiOMController extends Controller
                     return response()->json([
 
                         'update'=>$update,
-                        'transactions'=>$Transaction,
+                        'transactions'=>$Transaction->get(),
 
                     ],200);
 
