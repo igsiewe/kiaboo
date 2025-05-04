@@ -9,6 +9,7 @@ use App\Http\Controllers\ApiLog;
 use App\Http\Controllers\Controller;
 use App\Http\Enums\ServiceEnum;
 use App\Http\Enums\TypeServiceEnum;
+use App\Models\Service;
 use App\Models\Transaction;
 use App\Models\User;
 use Carbon\Carbon;
@@ -28,6 +29,7 @@ class ApiOMController extends Controller
     protected $channel;
     protected $pin;
     protected $url;
+    protected $endpoint;
     protected $callbackUrl;
 
     public function __construct()
@@ -1220,6 +1222,72 @@ class ApiOMController extends Controller
                 'transactions'=>$transactionsRefresh,
             ],200
         );
+
+    }
+
+    public function OM_Payment_Status($transactionId){
+
+        // On cherche la transaction dans la table transaction : On se rassure que le service correspondant est Paiement OM et que son status est à 2 = Pending
+        $transaction = Transaction::where("reference", $transactionId)->where("service_id", ServiceEnum::PAYMENT_OM->value)->where("status",2);
+        if($transaction->count()==0){
+            return response()->json(
+                [
+                    'success'=>false,
+                    'statusCode'=>"ERR-TRANSACTION-NOT-FOUND",
+                    'message'=>"This id transaction does not exist"
+                ],404
+            );
+        }
+
+        //On génère l'access Token
+        $responseToken = $this->OM_GetTokenAccess();
+        if($responseToken->getStatusCode() !=200){
+            return response()->json([
+                "result"=>false,
+                "message"=>"Exception ".$responseToken->getStatusCode()."\nUne exception a été déclenchée au moment de la génération du token"
+            ], $responseToken->getStatusCode());
+        }
+        $dataAcessToken = json_decode($responseToken->getContent());
+        $AccessToken = $dataAcessToken->access_token;
+
+        $payToken = $transaction->first()->paytoken;
+        $http = $this->endpoint."/mp/paymentstatus/".$payToken;
+
+        $response = Http::withOptions(['verify' => false,])->withHeaders(
+            [
+                "X-AUTH-TOKEN"=>$this->auth_x_token,
+                "Authorization"=>"Bearer ".$AccessToken,
+                "accept"=>"application/json"
+            ])->Get($http);
+
+        $data = json_decode($response->body());
+
+        if($response->status()==200){
+            return response()->json(
+                [
+                    'success'=>true,
+                    'statusCode'=>$data->data->status,
+                    'message'=>$data->data->status=="PENDING"?$data->data->inittxnmessage:$data->message,
+                    'data'=>[
+                        'currency'=>'XAF',
+                        'transactionId'=>$transactionId,
+                        'dateTransaction'=>$transaction->first()->date_transaction,
+                        'amount'=>$transaction->first()->credit,
+                        'agent'=>User::where("id", $transaction->first()->source)->first()->telephone,
+                        'customer'=>$transaction->first()->customer_phone,
+                    ]
+                ],200
+            );
+        }else{
+            return response()->json(
+                [
+                    'success'=>false,
+                    'statusCode'=>$data->data->status,
+                    'message'=>$data->message
+
+                ],$response->status()
+            );
+        }
 
     }
 

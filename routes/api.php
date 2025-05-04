@@ -199,7 +199,7 @@ Route::middleware('auth:api')->group(function () {
                 Route::controller(ApiProdOrangeMoneyController::class)->group(function () {
                  //   Route::post('payment', 'OM_Payment')->name("OM_Payment");
                     Route::get('payment/push/{transactionId}', 'OM_Payment_Push')->name("OM_Payment_Push");
-                    Route::get('payment/status/{transactionId}', 'OM_Payment_Status')->name("OM_Payment_Status");
+                 //   Route::get('payment/status/{transactionId}', 'OM_Payment_Status')->name("OM_Payment_Status");
                 });
 
                 Route::controller(ApiOMController::class)->group(function () {
@@ -210,6 +210,8 @@ Route::middleware('auth:api')->group(function () {
 
                     Route::get('cashin/status/{referenceID}', 'OM_Depot_Status')->name("OM_Depot_Status");
                     Route::get('cashout/status/{referenceID}', 'OM_Retrait_Status')->name("OM_Retrait_Status");
+                    Route::get('pm/status/{referenceID}', 'OM_Payment_Status')->name("OM_Payment_Status");
+
                 });
 
             });
