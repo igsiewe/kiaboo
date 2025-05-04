@@ -1366,7 +1366,7 @@ class ApiOMController extends Controller
                         'message'=>$data->data->confirmtxnmessage,
                         'date_end_trans'=>Carbon::now(),
                         'terminaison'=>'MANUEL',
-                        'api_response'=>$data,
+                       // 'api_response'=>$data,
                     ]);
                 }
                 $message = "La transaction est en status en attente. Le client doit confirmer la transaction en saisissant son code secret.";
