@@ -14,7 +14,7 @@ class ApiNotification extends Controller
 {
     public function sendNotification($token, $title, $body, $data = [])
     {
-        $fcmurl = 'https://fcm.googleapis.com/v1/projects/kiaboo-8bc01/messages:send';
+        $fcmurl = 'https://fcm.googleapis.com/v1/projects/kiaboo-467f9/messages:send';
 
         $notification = [
             'notification' => [

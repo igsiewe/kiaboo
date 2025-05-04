@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="b5b54f66-e581-4161-b657-148197a21413" name="Kiaboo">
+        <fileTransfer accessType="SFTP" host="ec2-16-171-187-56.eu-north-1.compute.amazonaws.com" port="22" sshConfigId="6fd94dd9-b50f-4563-acf8-57def72b75c7" sshConfig="kiabooPay" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
