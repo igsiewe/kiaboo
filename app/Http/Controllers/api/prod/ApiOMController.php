@@ -1278,7 +1278,6 @@ class ApiOMController extends Controller
                 "accept"=>"application/json"
             ])->Get($http);
         try{
-            DB::beginTransaction();
             $data = json_decode($response->body());
            // dd($data);
             if($response->status()==200){
@@ -1288,106 +1287,107 @@ class ApiOMController extends Controller
                 $device_notification= $Transaction->first()->device_notification;
                 $montant = $Transaction->first()->credit;
                 $user = User::where('id', $Transaction->first()->created_by);
+                try{
 
-                if($data->data->status=="SUCCESSFULL"){
+                        DB::beginTransaction();
+                        if($data->data->status=="SUCCESSFULL"){
 
-                    $montantACrediter = doubleval($montant) -  doubleval($Transaction->first()->fees);
-                    $balanceBeforeAgent = $user->get()->first()->balance_after;
-                    $balanceAfterAgent = floatval($balanceBeforeAgent) + floatval($montantACrediter); //On a déduit les frais de la transaction.
-                    $reference_partenaire=$data->data->txnid;
-                    $agent = $user->first()->id;
-                    $total_fees = $user->first()->total_fees + $Transaction->first()->fees;
+                                $montantACrediter = doubleval($montant) -  doubleval($Transaction->first()->fees);
+                                $balanceBeforeAgent = $user->get()->first()->balance_after;
+                                $balanceAfterAgent = floatval($balanceBeforeAgent) + floatval($montantACrediter); //On a déduit les frais de la transaction.
+                                $reference_partenaire=$data->data->txnid;
+                                $agent = $user->first()->id;
+                                $total_fees = $user->first()->total_fees + $Transaction->first()->fees;
 
-                    try{
+                                $update = $Transaction->update([
+                                    'status'=>1,
+                                    'reference_partenaire'=>$data->data->txnid,
+                                    'description'=>$data->data->status,
+                                    'message'=>$data->data->confirmtxnmessage,
+                                    'date_end_trans'=>Carbon::now(),
+                                    'balance_after'=>$balanceAfterAgent,
+                                    'balance_before'=>$balanceBeforeAgent,
+                                    'terminaison'=>'MANUEL',
+                                ]);
+                                //On met à jour le solde de l'agent
+                                $debitAgent = DB::table("users")->where("id", $agent)->update([
+                                    'balance_after'=>$balanceAfterAgent,
+                                    'balance_before'=>$balanceBeforeAgent,
+                                    'last_amount'=>$montant,
+                                    'total_fees'=>$total_fees,
+                                    'date_last_transaction'=>Carbon::now(),
+                                    'user_last_transaction_id'=>$agent,
+                                    'last_service_id'=>ServiceEnum::PAYMENT_OM->value,
+                                    'reference_last_transaction'=>$reference,
+                                    'remember_token'=>$reference,
+                                ]);
+                                DB::commit();
+                                $title = "Kiaboo";
+                                $message = "Le paiement Orange Money de " . $montant . " F CFA a été effectué avec succès au ".$telephone." (ID : ".$reference_partenaire.") le ".$dateTransaction;
+                                $appNotification = new ApiNotification();
+                                $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
 
-                        $update = $Transaction->update([
-                            'status'=>1,
-                            'reference_partenaire'=>$data->data->txnid,
-                            'description'=>$data->data->status,
-                            'message'=>$data->data->confirmtxnmessage,
-                            'date_end_trans'=>Carbon::now(),
-                            'balance_after'=>$balanceAfterAgent,
-                            'balance_before'=>$balanceBeforeAgent,
-                            'terminaison'=>'MANUEL',
-                        ]);
-                        //On met à jour le solde de l'agent
-                        $debitAgent = DB::table("users")->where("id", $agent)->update([
-                            'balance_after'=>$balanceAfterAgent,
-                            'balance_before'=>$balanceBeforeAgent,
-                            'last_amount'=>$montant,
-                            'total_fees'=>$total_fees,
-                            'date_last_transaction'=>Carbon::now(),
-                            'user_last_transaction_id'=>$agent,
-                            'last_service_id'=>ServiceEnum::PAYMENT_OM->value,
-                            'reference_last_transaction'=>$reference,
-                            'remember_token'=>$reference,
-                        ]);
+                                $user = DB::table("users")->join("quartiers", "users.quartier_id", "=", "quartiers.id")
+                                    ->join("villes", "quartiers.ville_id", "=", "villes.id")
+                                    ->where('users.id', Auth::user()->id)
+                                    ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id','users.qr_code','users.total_fees','users.total_paiement')->first();
+
+                                $transactions = DB::table('transactions')
+                                    ->join('services', 'transactions.service_id', '=', 'services.id')
+                                    ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
+                                    ->select('transactions.id','transactions.reference as reference','transactions.paytoken','transactions.reference_partenaire','transactions.date_transaction','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.commission_agent as commission','transactions.balance_before','transactions.balance_after' ,'transactions.status','transactions.service_id','services.name_service','services.logo_service','type_services.name_type_service','type_services.id as type_service_id','transactions.date_operation', 'transactions.heure_operation','transactions.commission_agent_rembourse as commission_agent','transactions.fees')
+                                    ->where("fichier","agent")
+                                    ->where("source",Auth::user()->id)
+                                    ->where('transactions.status',1)
+                                    ->orderBy('transactions.date_transaction', 'desc')
+                                    ->limit(5)
+                                    ->get();
+                                return response()->json(
+                                    [
+                                        'success'=>true,
+                                        'statusCode'=>$data->data->status,
+                                        'message'=>$data->data->confirmtxnmessage." ".$data->data->status." ".$data->data->txnid,
+                                        'user'=>$user,
+                                        'transactions'=>$transactions,
+
+                                    ],200);
+
+
+                        }
+                        if($data->data->status=="FAILED"){
+                            $update=$Transaction->update([
+                                'status'=>3,
+                                'reference_partenaire'=>$data->data->txnid,
+                                'description'=>$data->data->status,
+                                'message'=>$data->data->confirmtxnmessage,
+                                'date_end_trans'=>Carbon::now(),
+                                'terminaison'=>'MANUEL',
+                            ]);
+                        }
+                        $message = "La transaction est en status en attente. Le client doit confirmer la transaction en saisissant son code secret.";
                         DB::commit();
-                        $title = "Kiaboo";
-                        $message = "Le paiement Orange Money de " . $montant . " F CFA a été effectué avec succès au ".$telephone." (ID : ".$reference_partenaire.") le ".$dateTransaction;
-                        $appNotification = new ApiNotification();
-                        $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
-
-                        $user = DB::table("users")->join("quartiers", "users.quartier_id", "=", "quartiers.id")
-                            ->join("villes", "quartiers.ville_id", "=", "villes.id")
-                            ->where('users.id', Auth::user()->id)
-                            ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id','users.qr_code','users.total_fees','users.total_paiement')->first();
-
-                        $transactions = DB::table('transactions')
-                            ->join('services', 'transactions.service_id', '=', 'services.id')
-                            ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
-                            ->select('transactions.id','transactions.reference as reference','transactions.paytoken','transactions.reference_partenaire','transactions.date_transaction','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.commission_agent as commission','transactions.balance_before','transactions.balance_after' ,'transactions.status','transactions.service_id','services.name_service','services.logo_service','type_services.name_type_service','type_services.id as type_service_id','transactions.date_operation', 'transactions.heure_operation','transactions.commission_agent_rembourse as commission_agent','transactions.fees')
-                            ->where("fichier","agent")
-                            ->where("source",Auth::user()->id)
-                            ->where('transactions.status',1)
-                            ->orderBy('transactions.date_transaction', 'desc')
-                            ->limit(5)
-                            ->get();
                         return response()->json(
                             [
                                 'success'=>true,
                                 'statusCode'=>$data->data->status,
-                                'message'=>$data->data->confirmtxnmessage." ".$data->data->status." ".$data->data->txnid,
-                                'user'=>$user,
-                                'transactions'=>$transactions,
+                                'message'=>$data->data->status=="PENDING"?$message:$data->data->confirmtxnmessage,
+                                'data'=>[
+                                    'currency'=>'XAF',
+                                    'transactionId'=>$transactionId,
+                                    'dateTransaction'=>$Transaction->first()->date_transaction,
+                                    'amount'=>$Transaction->first()->credit,
+                                    'agent'=>User::where("id", $Transaction->first()->source)->first()->telephone,
+                                    'customer'=>$Transaction->first()->customer_phone,
+                                ]
+                            ],202
+                        );
 
-                            ],200);
-
-                    }catch (\Exception $e){
-                        DB::rollback();
-                        $alerte = new ApiLog();
-                        $alerte->logErrorCallBack($e->getCode(), "OMPMCheckStatus", $e->getMessage(), $data,"OM_Payment_Status",$agent);
-                    }
+                }catch (\Exception $e){
+                    DB::rollback();
+                    $alerte = new ApiLog();
+                    $alerte->logErrorCallBack($e->getCode(), "OMPMCheckStatus", $e->getMessage(), $data,"OM_Payment_Status",$agent);
                 }
-                if($data->data->status=="FAILED"){
-                    $update=$Transaction->update([
-                        'status'=>3,
-                        'reference_partenaire'=>$data->data->txnid,
-                        'description'=>$data->data->status,
-                        'message'=>$data->data->confirmtxnmessage,
-                        'date_end_trans'=>Carbon::now(),
-                        'terminaison'=>'MANUEL',
-                    ]);
-                }
-                $message = "La transaction est en status en attente. Le client doit confirmer la transaction en saisissant son code secret.";
-                DB::rollback();
-                return response()->json(
-                    [
-                        'success'=>true,
-                        'statusCode'=>$data->data->status,
-                        'message'=>$data->data->status=="PENDING"?$message:$data->data->confirmtxnmessage,
-                        'data'=>[
-                            'currency'=>'XAF',
-                            'transactionId'=>$transactionId,
-                            'dateTransaction'=>$Transaction->first()->date_transaction,
-                            'amount'=>$Transaction->first()->credit,
-                            'agent'=>User::where("id", $Transaction->first()->source)->first()->telephone,
-                            'customer'=>$Transaction->first()->customer_phone,
-                        ]
-                    ],202
-                );
             }else{
-                DB::rollback();
                 return response()->json(
                     [
                         'success'=>false,
@@ -1398,14 +1398,12 @@ class ApiOMController extends Controller
                 );
             }
         }catch(\Exception $e){
-            DB::rollback();
+
             Log::error($e->getCode()." ".$e->getMessage(),$e->getTrace());
             return response()->json(
                 [
                     'success'=>false,
-                    'message'=>$e->getMessage(),
-                    //'message'=>"Une erreur interne s'est produite. Veuillez vérifier votre connexion internet ou informer votre support."
-
+                    'message'=>"Une erreur interne s'est produite. Veuillez vérifier votre connexion internet ou informer votre support."
                 ],500
             );
         }
