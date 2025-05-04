@@ -1368,13 +1368,6 @@ class ApiOMController extends Controller
                         'date_end_trans'=>Carbon::now(),
                         'terminaison'=>'MANUEL',
                     ]);
-                    return response()->json([
-
-                        'update'=>$update,
-                        'transactions'=>$Transaction->get(),
-
-                    ],200);
-
                 }
                 $message = "La transaction est en status en attente. Le client doit confirmer la transaction en saisissant son code secret.";
                 DB::rollback();
