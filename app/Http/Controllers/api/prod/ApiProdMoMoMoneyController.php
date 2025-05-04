@@ -1568,7 +1568,9 @@ class ApiProdMoMoMoneyController extends Controller
                     $message = "Le paiement MTN Mobile Money de " . $montant . " F CFA a été effectué avec succès au ".$telephone." (ID : ".$reference_partenaire.") le ".$dateTransaction;
                     $appNotification = new ApiNotification();
                     $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
-
+                    Log::info("Notification",[
+                        'resultat'=>$envoiNotification,
+                    ]);
                     $user = DB::table("users")->join("quartiers", "users.quartier_id", "=", "quartiers.id")
                         ->join("villes", "quartiers.ville_id", "=", "villes.id")
                         ->where('users.id', Auth::user()->id)
