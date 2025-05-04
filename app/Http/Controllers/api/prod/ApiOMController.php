@@ -196,7 +196,7 @@ class ApiOMController extends Controller
         return response()->json(
             [
                 'success' => false,
-                'message' => "Service indisponible",
+                'message' => "Service indisponible. Nous vous tiendrons informé dès sa remise en service",
             ], 404);
         $validator = Validator::make($request->all(), [
             'phone' => 'required|numeric|digits:9',
@@ -680,7 +680,7 @@ class ApiOMController extends Controller
         return response()->json(
             [
                 'success' => false,
-                'message' => "Service indisponible",
+                'message' => "Service indisponible. Nous vous tiendrons informé dès sa remise en service",
             ], 404);
 
 
