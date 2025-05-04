@@ -1299,14 +1299,14 @@ class ApiOMController extends Controller
                         DB::beginTransaction();
                         $Transaction->update([
                             'status'=>1,
-                            'reference_partenaire'=>$data->txnid,
+                            'reference_partenaire'=>$data->data->txnid,
                             //  'credit'=>$montantACrediter, //La valeur du montant à créditer change (on retire les frais)
-                            'description'=>$data->status,
-                            'message'=>$data->message,
+                            'description'=>$data->data->status,
+                            'message'=>$data->data->confirmtxnmessage,
                             'date_end_trans'=>Carbon::now(),
                             'balance_after'=>$balanceAfterAgent,
                             'balance_before'=>$balanceBeforeAgent,
-                            'terminaison'=>'CALLBACK',
+                            'terminaison'=>'MANUEL',
                         ]);
                         //On met à jour le solde de l'agent
                         $debitAgent = DB::table("users")->where("id", $agent)->update([
@@ -1356,6 +1356,18 @@ class ApiOMController extends Controller
                         $alerte = new ApiLog();
                         $alerte->logErrorCallBack($e->getCode(), "OMPMCheckStatus", $e->getMessage(), $data,"OM_Payment_Status",$agent);
                     }
+                }
+                if($data->data->status=="FAILED"){
+                    $Transaction->update([
+                        'status'=>3,
+                        'reference_partenaire'=>$data->data->txnid,
+                        //  'credit'=>$montantACrediter, //La valeur du montant à créditer change (on retire les frais)
+                        'description'=>$data->data->status,
+                        'message'=>$data->data->confirmtxnmessage,
+                        'date_end_trans'=>Carbon::now(),
+                        'terminaison'=>'MANUEL',
+                        'api_response'=>$data,
+                    ]);
                 }
                 $message = "La transaction est en status en attente. Le client doit confirmer la transaction en saisissant son code secret.";
                 return response()->json(
