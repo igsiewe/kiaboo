@@ -1228,7 +1228,7 @@ class ApiOMController extends Controller
     public function OM_Payment_Status($transactionId){
 
         // On cherche la transaction dans la table transaction : On se rassure que le service correspondant est Paiement OM et que son status est à 2 = Pending
-        $transaction = Transaction::where("reference", $transactionId)->where("service_id", ServiceEnum::PAYMENT_OM->value)->where("status",2);
+        $transaction = Transaction::where("paytoken", $transactionId)->where("service_id", ServiceEnum::PAYMENT_OM->value)->where("status",2);
         if($transaction->count()==0){
             return response()->json(
                 [
