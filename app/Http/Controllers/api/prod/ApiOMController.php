@@ -1400,7 +1400,8 @@ class ApiOMController extends Controller
             return response()->json(
                 [
                     'success'=>false,
-                    'message'=>"Une erreur interne s'est produite. Veuillez vérifier votre connexion internet ou informer votre support."
+                    'message'=>$e->getMessage(),
+                    //'message'=>"Une erreur interne s'est produite. Veuillez vérifier votre connexion internet ou informer votre support."
 
                 ],500
             );
