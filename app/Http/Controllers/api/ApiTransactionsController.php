@@ -86,9 +86,10 @@ class ApiTransactionsController extends BaseController
         $payment=$transactions->where('type_service_id', TypeServiceEnum::PAYMENT->value)->sum("credit");
         $transfertEmis= $transactions->where('type_service_id', TypeServiceEnum::TRANSFERT->value)->sum("debit");
         $transfertRecu= $transactions->where('type_service_id', TypeServiceEnum::TRANSFERT->value)->sum("credit");
+        $fees= $transactions->where('type_service_id', TypeServiceEnum::PAYMENT->value)->sum("fees");
         $commission=$transactions->sum("commission");
 
-        $solde = $appro + $retrait-$depot-$facture+$payment-$transfertEmis+$transfertRecu;
+        $solde = $appro + $retrait-$depot-$facture+$payment-$transfertEmis+$transfertRecu-$fees;
         return response()->json([
             'status'=>"true",
             'message'=> $transactions->count()." transactions trouvées",
@@ -96,6 +97,7 @@ class ApiTransactionsController extends BaseController
             'depot'=>$depot,
             'retrait'=>$retrait,
             'facture'=>$facture,
+            'fees'=>$fees,
             'payment'=>$payment,
             'solde'=>$solde,
             'commission'=>$commission,
@@ -161,9 +163,10 @@ class ApiTransactionsController extends BaseController
         $payment=$transactions->where('type_service_id', TypeServiceEnum::PAYMENT->value)->sum("credit");
         $transfertEmis= $transactions->where('type_service_id', TypeServiceEnum::TRANSFERT->value)->sum("debit");
         $transfertRecu= $transactions->where('type_service_id', TypeServiceEnum::TRANSFERT->value)->sum("credit");
+        $fees= $transactions->where('type_service_id', TypeServiceEnum::PAYMENT->value)->sum("fees");
         $commission=$transactions->sum("commission");
 
-        $solde = $appro + $retrait-$depot-$facture+$payment-$transfertEmis+$transfertRecu;
+        $solde = $appro + $retrait-$depot-$facture+$payment-$transfertEmis+$transfertRecu-$fees;
 
         return response()->json([
             'status'=>"true",
@@ -172,6 +175,7 @@ class ApiTransactionsController extends BaseController
             'depot'=>$depot,
             'retrait'=>$retrait,
             'facture'=>$facture,
+            'fees'=>$fees,
             'transfertEmis'=>$transfertEmis,
             'transfertRecu'=>$transfertRecu,
             'payment'=>$payment,
