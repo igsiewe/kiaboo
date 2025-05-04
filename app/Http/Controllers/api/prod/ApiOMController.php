@@ -1278,6 +1278,7 @@ class ApiOMController extends Controller
                 "accept"=>"application/json"
             ])->Get($http);
         try{
+            DB::beginTransaction();
             $data = json_decode($response->body());
            // dd($data);
             if($response->status()==200){
@@ -1295,8 +1296,9 @@ class ApiOMController extends Controller
                     $telephone = $Transaction->first()->customer_phone;
                     $dateTransaction = $Transaction->first()->date_transaction;
                     $device_notification= $Transaction->first()->device_notification;
+                    dd($dateTransaction);
                     try{
-                        DB::beginTransaction();
+
                         $Transaction->update([
                             'status'=>1,
                             'reference_partenaire'=>$data->data->txnid,
@@ -1370,6 +1372,7 @@ class ApiOMController extends Controller
                     ]);
                 }
                 $message = "La transaction est en status en attente. Le client doit confirmer la transaction en saisissant son code secret.";
+                DB::rollback();
                 return response()->json(
                     [
                         'success'=>true,
@@ -1386,6 +1389,7 @@ class ApiOMController extends Controller
                     ],202
                 );
             }else{
+                DB::rollback();
                 return response()->json(
                     [
                         'success'=>false,
@@ -1396,6 +1400,7 @@ class ApiOMController extends Controller
                 );
             }
         }catch(\Exception $e){
+            DB::rollback();
             Log::error($e->getCode()." ".$e->getMessage(),$e->getTrace());
             return response()->json(
                 [
