@@ -1303,7 +1303,6 @@ class ApiOMController extends Controller
                         $Transaction->update([
                             'status'=>1,
                             'reference_partenaire'=>$data->data->txnid,
-                            //  'credit'=>$montantACrediter, //La valeur du montant à créditer change (on retire les frais)
                             'description'=>$data->data->status,
                             'message'=>$data->data->confirmtxnmessage,
                             'date_end_trans'=>Carbon::now(),
@@ -1361,7 +1360,7 @@ class ApiOMController extends Controller
                     }
                 }
                 if($data->data->status=="FAILED"){
-                    $Transaction->update([
+                    $update=$Transaction->update([
                         'status'=>3,
                         'reference_partenaire'=>$data->data->txnid,
                         'description'=>$data->data->status,
@@ -1369,9 +1368,12 @@ class ApiOMController extends Controller
                         'date_end_trans'=>Carbon::now(),
                         'terminaison'=>'MANUEL',
                     ]);
-                    return response()->json(
-                        $Transaction,200
-                    );
+                    return response()->json([
+
+                        'update'=>$update,
+
+                    ],200);
+
                 }
                 $message = "La transaction est en status en attente. Le client doit confirmer la transaction en saisissant son code secret.";
                 DB::rollback();
