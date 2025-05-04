@@ -1300,7 +1300,7 @@ class ApiOMController extends Controller
 
                     try{
 
-                        $Transaction->update([
+                        $update = $Transaction->update([
                             'status'=>1,
                             'reference_partenaire'=>$data->data->txnid,
                             'description'=>$data->data->status,
