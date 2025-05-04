@@ -193,7 +193,11 @@ class ApiOMController extends Controller
     }
 
     public function OM_Depot(Request $request){
-
+        return response()->json(
+            [
+                'success' => false,
+                'message' => "Service indisponible",
+            ], 404);
         $validator = Validator::make($request->all(), [
             'phone' => 'required|numeric|digits:9',
             'amount' => 'required|numeric|min:100|max:500000',
@@ -673,6 +677,12 @@ class ApiOMController extends Controller
 
     }
     public function OM_Retrait(Request $request){
+        return response()->json(
+            [
+                'success' => false,
+                'message' => "Service indisponible",
+            ], 404);
+
 
         $validator = Validator::make($request->all(), [
             'customerPhone' => 'required|numeric|digits:9',
@@ -753,7 +763,7 @@ class ApiOMController extends Controller
                     ], $responseInitRetrait->getStatusCode());
                 }
                 $dataInitRetrait= json_decode($responseInitRetrait->getContent());
-                Log::alert($dataInitRetrait);
+               // Log::alert($dataInitRetrait);
                 //    $reference = $dataInitDepot->transId;
                 $payToken =$dataInitRetrait->data->payToken;
                 //    $description = $dataInitDepot->data->description;
