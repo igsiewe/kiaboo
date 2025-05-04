@@ -205,251 +205,251 @@ class ApiOMController extends Controller
             ], 400);
         }
 
-        $customerNumber = $request->phone;
-        $montant = $request->amount;
+            $customerNumber = $request->phone;
+            $montant = $request->amount;
 
-        $apiCheck = new ApiCheckController();
-        $rang = $apiCheck->GenereRang();
-        $code = $apiCheck->genererChaineAleatoire(10);
-        $code = strtoupper($code);
-        $service = ServiceEnum::DEPOT_OM->value;
-        // Vérifie si le service est actif
-        if($apiCheck->checkStatusService($service)==false){
-            return response()->json([
-                'status'=>'error',
-                'message'=>"Ce service n'est pas actif",
-            ],403);
-        }
-        // Vérifie si l'utilisateur est autorisé à faire cette opération
-        if(!$apiCheck->checkUserValidity()){
-            return response()->json([
-                'status'=>'error',
-                'message'=>'Votre compte est désactivé. Veuillez contacter votre distributeur',
-            ],401);
-        }
+            $apiCheck = new ApiCheckController();
+            $rang = $apiCheck->GenereRang();
+            $code = $apiCheck->genererChaineAleatoire(10);
+            $code = strtoupper($code);
+            $service = ServiceEnum::DEPOT_OM->value;
+            // Vérifie si le service est actif
+            if($apiCheck->checkStatusService($service)==false){
+                return response()->json([
+                    'status'=>'error',
+                    'message'=>"Ce service n'est pas actif",
+                ],403);
+            }
+            // Vérifie si l'utilisateur est autorisé à faire cette opération
+            if(!$apiCheck->checkUserValidity()){
+                return response()->json([
+                    'status'=>'error',
+                    'message'=>'Votre compte est désactivé. Veuillez contacter votre distributeur',
+                ],401);
+            }
 
-        // Vérifie si le solde de l'utilisateur lui permet d'effectuer cette opération
-        if(!$apiCheck->checkUserBalance($montant)){
-            return response()->json([
-                'status'=>'error',
-                'message'=>'Votre solde est insuffisant pour effectuer cette opération',
-            ],403);
-        }
+            // Vérifie si le solde de l'utilisateur lui permet d'effectuer cette opération
+            if(!$apiCheck->checkUserBalance($montant)){
+                return response()->json([
+                    'status'=>'error',
+                    'message'=>'Votre solde est insuffisant pour effectuer cette opération',
+                ],403);
+            }
 
-        //Vérifie si l'utilisateur n'a pas initié une operation similaire dans les 5 dernières minutes
+            //Vérifie si l'utilisateur n'a pas initié une operation similaire dans les 5 dernières minutes
 
-        if($apiCheck->checkFiveLastTransaction($customerNumber, $montant, $service)){
-            return response()->json([
-                'status'=>'error',
-                'message'=>'Une transaction similaire a été faite il y\'a moins de 5 minutes',
-            ],403);
-        }
+            if($apiCheck->checkFiveLastTransaction($customerNumber, $montant, $service)){
+                return response()->json([
+                    'status'=>'error',
+                    'message'=>'Une transaction similaire a été faite il y\'a moins de 5 minutes',
+                ],403);
+            }
 
-        // On vérifie si les commissions sont paramétrées
-        $functionCommission = new ApiCommissionController();
-        $lacommission =$functionCommission->getCommissionByService($service,$montant);
-        if($lacommission->getStatusCode()!=200){
-            return response()->json([
-                'success' => false,
-                'message' => "Impossible de calculer la commission",
-            ], 403);
-        }
-
-        //Initie la transaction
-        $device = $request->deviceId;
-        $init_transaction = $apiCheck->init_Depot($montant, $customerNumber, $service,"", $device,"","","",1, Auth::user()->id,"");
-        $dataInit = json_decode($init_transaction->getContent());
-
-        if($init_transaction->getStatusCode() !=200){
-            return response()->json([
-                'status'=>'error',
-                'message'=>$dataInit->message,
-            ],$init_transaction->getStatusCode());
-        }
-        $idTransaction = $dataInit->transId; //Id de la transaction initiée
-        $reference = $dataInit->reference; //Référence de la transaction initiée
-
-        //On genere le token
-        $responseToken = $this->OM_GetTokenAccess();
-
-        if($responseToken->getStatusCode() !=200){
-            return response()->json([
-                "result"=>false,
-                "message"=>"Exception ".$responseToken->getStatusCode()."\nUne exception a été déclenchée au moment de la génération du token"
-            ], $responseToken->getStatusCode());
-        }
-        $dataAcessToken = json_decode($responseToken->getContent());
-        $AccessToken = $dataAcessToken->access_token;
-        $token = $AccessToken;
-
-        //On initie le dépôt (Obtention du PayToken
-
-        $responseInitDepot = $this->OM_Depot_init($token);
-        if($responseInitDepot->getStatusCode() !=200){
-            return response()->json([
-                "result"=>false,
-                "message"=>"Exception ".$responseInitDepot->getStatusCode()."\nUne exception a été déclenché au moment de l'initialisation de la transaction"
-            ], $responseInitDepot->getStatusCode());
-        }
-
-        $dataInitDepot= json_decode($responseInitDepot->getContent());
-        //    $reference = $dataInitDepot->transId;
-        $payToken =$dataInitDepot->data->payToken;
-        //    $description = $dataInitDepot->data->description;
-
-        // On met à jour le payToken généré dans la table transaction
-        $updateTransactionTableWithPayToken = Transaction::where("id", $idTransaction)->update([
-            "payToken"=>$payToken,
-            "reference_partenaire"=>$payToken,
-            "description"=>"PENDING",
-            "status"=>2, //Contrairement à MTN où il ya une etape intermediaire entre (code 202 pour indiquer que le code est PENDING, Orange n'en a pas, raison pour laquelle, on place le status à 2 après création du PayToken
-        ]);
-        //On execute la dépôt OM
-        $responseTraiteDepotOM = $this->OM_Depot_execute($token, $payToken, $customerNumber, $montant, $idTransaction);
-        if($responseTraiteDepotOM->getStatusCode() !=200){
-            $resultat = json_decode($responseTraiteDepotOM->getContent());
-            $result = (array)$resultat;
-            if (Arr::has($result, 'message')) {
-                $data =json_decode($result["message"]);
-                $updateTransactionTableWithPayToken = Transaction::where("id", $idTransaction)->update([
-                    "reference_partenaire"=>$data->data->txnid,
-                    "description"=>$data->data->status,
-                    "status"=>3,
-                    "date_end_trans"=>Carbon::now(),
-                    "api_response"=>$responseTraiteDepotOM->getContent(),
-                ]);
+            // On vérifie si les commissions sont paramétrées
+            $functionCommission = new ApiCommissionController();
+            $lacommission =$functionCommission->getCommissionByService($service,$montant);
+            if($lacommission->getStatusCode()!=200){
                 return response()->json([
                     'success' => false,
-                    'message' => "Exception ".$result["code"]."\n".$data->message,
-                ], $result["code"]);
-            }else{
-                $updateTransactionTableWithPayToken = Transaction::where("id", $idTransaction)->update([
-                    "payToken"=>$payToken,
-                    "description"=>"FAILED",
-                    "status"=>3,
-                    "date_end_trans"=>Carbon::now(),
-                    "api_response"=>$responseTraiteDepotOM->getContent(),
-                ]);
+                    'message' => "Impossible de calculer la commission",
+                ], 403);
+            }
+
+            //Initie la transaction
+            $device = $request->deviceId;
+            $init_transaction = $apiCheck->init_Depot($montant, $customerNumber, $service,"", $device,"","","",1, Auth::user()->id,"");
+            $dataInit = json_decode($init_transaction->getContent());
+
+            if($init_transaction->getStatusCode() !=200){
+                return response()->json([
+                    'status'=>'error',
+                    'message'=>$dataInit->message,
+                ],$init_transaction->getStatusCode());
+            }
+            $idTransaction = $dataInit->transId; //Id de la transaction initiée
+            $reference = $dataInit->reference; //Référence de la transaction initiée
+
+            //On genere le token
+            $responseToken = $this->OM_GetTokenAccess();
+
+            if($responseToken->getStatusCode() !=200){
                 return response()->json([
                     "result"=>false,
-                    "success"=>false,
-                    "message"=>"Exception ".$responseTraiteDepotOM->getStatusCode() ."\nUne exception a été déclenchée au moment du traitement du dépôt"
-                ], $responseTraiteDepotOM->getStatusCode() );
+                    "message"=>"Exception ".$responseToken->getStatusCode()."\nUne exception a été déclenchée au moment de la génération du token"
+                ], $responseToken->getStatusCode());
+            }
+            $dataAcessToken = json_decode($responseToken->getContent());
+            $AccessToken = $dataAcessToken->access_token;
+            $token = $AccessToken;
+
+            //On initie le dépôt (Obtention du PayToken
+
+            $responseInitDepot = $this->OM_Depot_init($token);
+            if($responseInitDepot->getStatusCode() !=200){
+                return response()->json([
+                    "result"=>false,
+                    "message"=>"Exception ".$responseInitDepot->getStatusCode()."\nUne exception a été déclenché au moment de l'initialisation de la transaction"
+                ], $responseInitDepot->getStatusCode());
             }
 
-        }
+            $dataInitDepot= json_decode($responseInitDepot->getContent());
+            //    $reference = $dataInitDepot->transId;
+            $payToken =$dataInitDepot->data->payToken;
+            //    $description = $dataInitDepot->data->description;
 
-        try{
-            DB::beginTransaction();
-            $resultat = json_decode($responseTraiteDepotOM->getContent());
+            // On met à jour le payToken généré dans la table transaction
+            $updateTransactionTableWithPayToken = Transaction::where("id", $idTransaction)->update([
+                "payToken"=>$payToken,
+                "reference_partenaire"=>$payToken,
+                "description"=>"PENDING",
+                "status"=>2, //Contrairement à MTN où il ya une etape intermediaire entre (code 202 pour indiquer que le code est PENDING, Orange n'en a pas, raison pour laquelle, on place le status à 2 après création du PayToken
+            ]);
+            //On execute la dépôt OM
+            $responseTraiteDepotOM = $this->OM_Depot_execute($token, $payToken, $customerNumber, $montant, $idTransaction);
+            if($responseTraiteDepotOM->getStatusCode() !=200){
+                $resultat = json_decode($responseTraiteDepotOM->getContent());
+                $result = (array)$resultat;
+                if (Arr::has($result, 'message')) {
+                    $data =json_decode($result["message"]);
+                    $updateTransactionTableWithPayToken = Transaction::where("id", $idTransaction)->update([
+                        "reference_partenaire"=>$data->data->txnid,
+                        "description"=>$data->data->status,
+                        "status"=>3,
+                        "date_end_trans"=>Carbon::now(),
+                        "api_response"=>$responseTraiteDepotOM->getContent(),
+                    ]);
+                    return response()->json([
+                        'success' => false,
+                        'message' => "Exception ".$result["code"]."\n".$data->message,
+                    ], $result["code"]);
+                }else{
+                    $updateTransactionTableWithPayToken = Transaction::where("id", $idTransaction)->update([
+                        "payToken"=>$payToken,
+                        "description"=>"FAILED",
+                        "status"=>3,
+                        "date_end_trans"=>Carbon::now(),
+                        "api_response"=>$responseTraiteDepotOM->getContent(),
+                    ]);
+                    return response()->json([
+                        "result"=>false,
+                        "success"=>false,
+                        "message"=>"Exception ".$responseTraiteDepotOM->getStatusCode() ."\nUne exception a été déclenchée au moment du traitement du dépôt"
+                    ], $responseTraiteDepotOM->getStatusCode() );
+                }
 
-            //Dépassement de plafond côté Orange Money
-            $result = (array)$resultat;
-            if (Arr::has($result, 'code')) {
-                $data =json_decode($result["message"]);
-                $updateTransactionTableWithPayToken = Transaction::where("id", $idTransaction)->update([
-                    "reference_partenaire"=>json_decode($result["data"])->txnid,
-                    "description"=>json_decode($result["data"])->status,
-                    "status"=>3,
-                    "date_end_trans"=>Carbon::now(),
-                    "api_response"=>$responseTraiteDepotOM->getContent(),
+            }
+
+            try{
+                DB::beginTransaction();
+                $resultat = json_decode($responseTraiteDepotOM->getContent());
+
+                //Dépassement de plafond côté Orange Money
+                $result = (array)$resultat;
+                if (Arr::has($result, 'code')) {
+                    $data =json_decode($result["message"]);
+                    $updateTransactionTableWithPayToken = Transaction::where("id", $idTransaction)->update([
+                        "reference_partenaire"=>json_decode($result["data"])->txnid,
+                        "description"=>json_decode($result["data"])->status,
+                        "status"=>3,
+                        "date_end_trans"=>Carbon::now(),
+                        "api_response"=>$responseTraiteDepotOM->getContent(),
+                    ]);
+                    return response()->json([
+                        'success' => false,
+                        'message' => "Exception ".$result["code"]."\n".$data->message,
+                    ], $result["code"]);
+                }
+
+                //On Calcule la commission
+                $commission=json_decode($lacommission->getContent());
+                $commissionFiliale = doubleval($commission->commission_kiaboo);
+                $commissionDistributeur=doubleval($commission->commission_distributeur);
+                $commissionAgent=doubleval($commission->commission_agent);
+
+                $user = User::where('id', Auth::user()->id);
+                $balanceBeforeAgent = $user->get()->first()->balance_after;
+                $balanceAfterAgent = floatval($balanceBeforeAgent) - floatval($montant);
+                //on met à jour la table transaction
+
+                $Transaction = Transaction::where('paytoken',$payToken)->where('service_id',$service)->update([
+                    'reference_partenaire'=>$resultat->data->txnid,
+                    'balance_before'=>$balanceBeforeAgent,
+                    'balance_after'=>$balanceAfterAgent,
+                    'debit'=>$resultat->data->amount,
+                    'credit'=>0,
+                    'status'=>1, //End successfully
+                    'paytoken'=>$resultat->data->payToken,
+                    'date_end_trans'=>Carbon::now(),
+                    'description'=>$resultat->data->status,
+                    'message'=>$resultat->message,
+                    'commission'=>$commission->commission_globale,
+                    'commission_filiale'=>$commissionFiliale,
+                    'commission_agent'=>$commissionAgent,
+                    'commission_distributeur'=>$commissionDistributeur,
+                    'application'=>1,
+                    'api_response'=>$responseTraiteDepotOM->getContent(),
+
                 ]);
+
+                //on met à jour le solde de l'utilisateur
+
+                //La commmission de l'agent après chaque transaction
+
+                $commission_agent = Transaction::where("fichier","agent")->where("commission_agent_rembourse",0)->where("source",Auth::user()->id)->sum("commission_agent");
+
+                $debitAgent = DB::table("users")->where("id", Auth::user()->id)->update([
+                    'balance_after'=>$balanceAfterAgent,
+                    'balance_before'=>$balanceBeforeAgent,
+                    'last_amount'=>$montant,
+                    'date_last_transaction'=>Carbon::now(),
+                    'user_last_transaction_id'=>Auth::user()->id,
+                    'last_service_id'=>ServiceEnum::DEPOT_OM->value,
+                    'reference_last_transaction'=>$resultat->data->txnid,
+                    'remember_token'=>$resultat->data->payToken,
+                    'total_commission'=>$commission_agent,
+                ]);
+                DB::commit();
+                // $userRefresh = User::where('id', Auth::user()->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before', 'balance_after','total_commission', 'last_amount','sous_distributeur_id','date_last_transaction')->first();
+
+                $userRefresh = DB::table("users")->join("quartiers", "users.quartier_id", "=", "quartiers.id")
+                    ->join("villes", "quartiers.ville_id", "=", "villes.id")
+                    ->where('users.id', Auth::user()->id)
+                    ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id','users.qr_code','users.total_fees','users.total_paiement')->first();
+
+                $transactionsRefresh = DB::table('transactions')
+                    ->join('services', 'transactions.service_id', '=', 'services.id')
+                    ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
+                    ->select('transactions.id','transactions.reference as reference','transactions.paytoken','transactions.reference_partenaire','transactions.date_transaction','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.commission_agent as commission','transactions.balance_before','transactions.balance_after' ,'transactions.status','transactions.service_id','services.name_service','services.logo_service','type_services.name_type_service','type_services.id as type_service_id','transactions.date_operation', 'transactions.heure_operation','transactions.commission_agent_rembourse as commission_agent')
+                    ->where("fichier","agent")
+                    ->where("source",Auth::user()->id)
+                    ->where('transactions.status',1)
+                    ->orderBy('transactions.date_transaction', 'desc')
+                    ->limit(5)
+                    ->get();
+
+                $title = "Kiaboo";
+                $message = "Le dépôt Orange Money de " . $montant . " F CFA a été effectué avec succès au ".$customerNumber." (ID : ".$resultat->data->payToken.") le ".Carbon::now()->format("d/m/Y H:i:s");
+                $appNotification = new ApiNotification();
+                $envoiNotification = $appNotification->SendPushNotificationCallBack($device, $title, $message);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => $resultat->message,
+                    'textmessage' => $resultat->message,
+                    'reference' => $resultat->data->txnid,
+                    'data' => $resultat,
+                    'user'=>$userRefresh,
+                    'transactions'=>$transactionsRefresh,
+                ], 200);
+
+            }catch (\Exception $e) {
+                $alerte = new ApiLog();
+                $alerte->logError($e->getCode(), "OM_Depot", null, $e->getMessage());
                 return response()->json([
                     'success' => false,
-                    'message' => "Exception ".$result["code"]."\n".$data->message,
-                ], $result["code"]);
+                    'message' => "Exception ".$e->getCode()."\nUne exception a été détectée, veuillez contacter votre superviseur si le problème persiste", //'Une erreur innatendue s\est produite. Si le problème persiste, veuillez contacter votre support.',
+                ], $e->getCode());
             }
-
-            //On Calcule la commission
-            $commission=json_decode($lacommission->getContent());
-            $commissionFiliale = doubleval($commission->commission_kiaboo);
-            $commissionDistributeur=doubleval($commission->commission_distributeur);
-            $commissionAgent=doubleval($commission->commission_agent);
-
-            $user = User::where('id', Auth::user()->id);
-            $balanceBeforeAgent = $user->get()->first()->balance_after;
-            $balanceAfterAgent = floatval($balanceBeforeAgent) - floatval($montant);
-            //on met à jour la table transaction
-
-            $Transaction = Transaction::where('paytoken',$payToken)->where('service_id',$service)->update([
-                'reference_partenaire'=>$resultat->data->txnid,
-                'balance_before'=>$balanceBeforeAgent,
-                'balance_after'=>$balanceAfterAgent,
-                'debit'=>$resultat->data->amount,
-                'credit'=>0,
-                'status'=>1, //End successfully
-                'paytoken'=>$resultat->data->payToken,
-                'date_end_trans'=>Carbon::now(),
-                'description'=>$resultat->data->status,
-                'message'=>$resultat->message,
-                'commission'=>$commission->commission_globale,
-                'commission_filiale'=>$commissionFiliale,
-                'commission_agent'=>$commissionAgent,
-                'commission_distributeur'=>$commissionDistributeur,
-                'application'=>1,
-                'api_response'=>$responseTraiteDepotOM->getContent(),
-
-            ]);
-
-            //on met à jour le solde de l'utilisateur
-
-            //La commmission de l'agent après chaque transaction
-
-            $commission_agent = Transaction::where("fichier","agent")->where("commission_agent_rembourse",0)->where("source",Auth::user()->id)->sum("commission_agent");
-
-            $debitAgent = DB::table("users")->where("id", Auth::user()->id)->update([
-                'balance_after'=>$balanceAfterAgent,
-                'balance_before'=>$balanceBeforeAgent,
-                'last_amount'=>$montant,
-                'date_last_transaction'=>Carbon::now(),
-                'user_last_transaction_id'=>Auth::user()->id,
-                'last_service_id'=>ServiceEnum::DEPOT_OM->value,
-                'reference_last_transaction'=>$resultat->data->txnid,
-                'remember_token'=>$resultat->data->payToken,
-                'total_commission'=>$commission_agent,
-            ]);
-            DB::commit();
-            // $userRefresh = User::where('id', Auth::user()->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before', 'balance_after','total_commission', 'last_amount','sous_distributeur_id','date_last_transaction')->first();
-
-            $userRefresh = DB::table("users")->join("quartiers", "users.quartier_id", "=", "quartiers.id")
-                ->join("villes", "quartiers.ville_id", "=", "villes.id")
-                ->where('users.id', Auth::user()->id)
-                ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id','users.qr_code','users.total_fees','users.total_paiement')->first();
-
-            $transactionsRefresh = DB::table('transactions')
-                ->join('services', 'transactions.service_id', '=', 'services.id')
-                ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
-                ->select('transactions.id','transactions.reference as reference','transactions.paytoken','transactions.reference_partenaire','transactions.date_transaction','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.commission_agent as commission','transactions.balance_before','transactions.balance_after' ,'transactions.status','transactions.service_id','services.name_service','services.logo_service','type_services.name_type_service','type_services.id as type_service_id','transactions.date_operation', 'transactions.heure_operation','transactions.commission_agent_rembourse as commission_agent')
-                ->where("fichier","agent")
-                ->where("source",Auth::user()->id)
-                ->where('transactions.status',1)
-                ->orderBy('transactions.date_transaction', 'desc')
-                ->limit(5)
-                ->get();
-
-            $title = "Kiaboo";
-            $message = "Le dépôt Orange Money de " . $montant . " F CFA a été effectué avec succès au ".$customerNumber." (ID : ".$resultat->data->payToken.") le ".Carbon::now()->format("d/m/Y H:i:s");
-            $appNotification = new ApiNotification();
-            $envoiNotification = $appNotification->SendPushNotificationCallBack($device, $title, $message);
-
-            return response()->json([
-                'success' => true,
-                'message' => $resultat->message,
-                'textmessage' => $resultat->message,
-                'reference' => $resultat->data->txnid,
-                'data' => $resultat,
-                'user'=>$userRefresh,
-                'transactions'=>$transactionsRefresh,
-            ], 200);
-
-        }catch (\Exception $e) {
-            $alerte = new ApiLog();
-            $alerte->logError($e->getCode(), "OM_Depot", null, $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => "Exception ".$e->getCode()."\nUne exception a été détectée, veuillez contacter votre superviseur si le problème persiste", //'Une erreur innatendue s\est produite. Si le problème persiste, veuillez contacter votre support.',
-            ], $e->getCode());
-        }
     }
     public function OM_Depot_Status($referenceId){
 
@@ -684,142 +684,151 @@ class ApiOMController extends Controller
                 'message' => $validator->errors()->first(),
             ], 400);
         }
+        try{
+                $apiCheck = new ApiCheckController();
 
-        $apiCheck = new ApiCheckController();
+                $service = ServiceEnum::RETRAIT_OM->value;
 
-        $service = ServiceEnum::RETRAIT_OM->value;
+                // Vérifie si l'utilisateur est autorisé à faire cette opération
+                if(!$apiCheck->checkUserValidity()){
+                    return response()->json([
+                        'status'=>'error',
+                        'message'=>'Votre compte est désactivé. Veuillez contacter votre distributeur',
+                    ],403);
+                }
 
-        // Vérifie si l'utilisateur est autorisé à faire cette opération
-        if(!$apiCheck->checkUserValidity()){
-            return response()->json([
-                'status'=>'error',
-                'message'=>'Votre compte est désactivé. Veuillez contacter votre distributeur',
-            ],403);
+                // On vérifie si les commissions sont paramétrées
+                $functionCommission = new ApiCommissionController();
+                $lacommission =$functionCommission->getCommissionByService($service,$request->amount);
+                if($lacommission->getStatusCode()!=200){
+                    return response()->json([
+                        'success' => false,
+                        'message' => "Impossible de calculer la commission",
+                    ], 403);
+                }
+                $commission=json_decode($lacommission->getContent());
+
+                $commissionFiliale = doubleval($commission->commission_kiaboo);
+                $commissionDistributeur=doubleval($commission->commission_distributeur);
+                $commissionAgent=doubleval($commission->commission_agent);
+
+                //Initie la transaction
+                $device = $request->deviceId;
+                $latitude = $request->latitude;
+                $longitude = $request->longitude;
+                $place = $request->place;
+                $init_transaction = $apiCheck->init_Retrait($request->amount, $request->customerPhone, $service,"", $device,$latitude,$longitude,$place);
+
+                $dataTransactionInit = json_decode($init_transaction->getContent());
+
+                if($init_transaction->getStatusCode() !=200){
+                    return response()->json([
+                        'status'=>'error',
+                        'message'=>$dataTransactionInit->message,
+                    ],$init_transaction->getStatusCode());
+                }
+                $idTransaction = $dataTransactionInit->transId; //Id de la transaction initiée
+                $reference = $dataTransactionInit->reference; //Référence de la transaction initiée
+                //On génère le token de la transation
+
+                $responseToken = $this->OM_GetTokenAccess();
+
+                if($responseToken->getStatusCode() !=200){
+                    return response()->json([
+                        "result"=>false,
+                        "message"=>"Exception ".$responseToken->getStatusCode()."\nUne exception a été déclenchée au moment de la génération du token"
+                    ], $responseToken->getStatusCode());
+                }
+                $dataAcessToken = json_decode($responseToken->getContent());
+                $AccessToken = $dataAcessToken->access_token;
+
+                $customerPhone = "237".$request->customerPhone;
+
+                //On initie le retrait (Obtention du PayToken)
+                $responseInitRetrait = $this->OM_Retrait_init($AccessToken);
+                if($responseInitRetrait->getStatusCode() !=200){
+                    return response()->json([
+                        "result"=>false,
+                        "message"=>"Exception ".$responseInitRetrait->getStatusCode()."\nUne exception a été déclenchée au moment de l'initialisation de la transaction"
+                    ], $responseInitRetrait->getStatusCode());
+                }
+                $dataInitRetrait= json_decode($responseInitRetrait->getContent());
+                //    $reference = $dataInitDepot->transId;
+                $payToken =$dataInitRetrait->data->payToken;
+                //    $description = $dataInitDepot->data->description;
+                $updateTransactionTableWithPayToken = Transaction::where("id", $idTransaction)->update([
+                    "payToken"=>$payToken,
+                ]);
+
+
+                $responseTraiteRetraitOM = $this->OM_Retrait_execute($AccessToken, $payToken, $customerPhone, $request->amount, $idTransaction);
+                if($responseTraiteRetraitOM->getStatusCode() !=200){
+                    $dataRetrait=json_decode($responseTraiteRetraitOM->getContent());
+                    $data =json_decode($dataRetrait->message);
+                    return response()->json([
+                        "result"=>false,
+                        "message"=>"Exception ".$responseTraiteRetraitOM->getStatusCode()."\n".$data->message
+                    ], $responseTraiteRetraitOM->getStatusCode());
+                }
+
+                $dataRetrait= json_decode($responseTraiteRetraitOM->getContent());
+                //Le client a été notifié. Donc on reste en attente de sa confirmation (Saisie de son code secret)
+
+                //On change le statut de la transaction dans la base de donnée
+
+                $Transaction = Transaction::where('id',$idTransaction)->where('service_id',$service)->update([
+                    'reference_partenaire'=>$dataRetrait->data->txnid,
+                    'balance_before'=>0,
+                    'balance_after'=>0,
+                    'debit'=>0,
+                    'credit'=>$request->amount,
+                    'status'=>2, // Pending
+                    'paytoken'=>$payToken,
+                    'date_end_trans'=>Carbon::now(),
+                    'description'=>$dataRetrait->data->status,
+                    'message'=>"Transaction initiée par l'agent N°".Auth::user()->telephone." - ".$dataRetrait->message." | ".$dataRetrait->data->status." | ".$dataRetrait->data->inittxnmessage,
+                    'commission'=>$commission->commission_globale,
+                    'commission_filiale'=>$commissionFiliale,
+                    'commission_agent'=>$commissionAgent,
+                    'commission_distributeur'=>$commissionDistributeur,
+                    'api_response'=>$responseTraiteRetraitOM->getContent(),
+                    'application'=>1
+                ]);
+
+                //Le solde du compte de l'agent ne sera mis à jour qu'après confirmation de l'agent : Opération traitée dans le callback
+
+                //On recupère toutes les transactions en attente
+                $userRefresh = User::where('id', Auth::user()->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before', 'balance_after','total_commission', 'last_amount','sous_distributeur_id','date_last_transaction')->first();
+                $transactionsRefresh = DB::table('transactions')
+                    ->join('services', 'transactions.service_id', '=', 'services.id')
+                    ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
+                    ->select('transactions.id','transactions.reference as reference','transactions.paytoken','transactions.reference_partenaire','transactions.date_transaction','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.commission_agent as commission','transactions.balance_before','transactions.balance_after' ,'transactions.status','transactions.service_id','services.name_service','services.logo_service','type_services.name_type_service','type_services.id as type_service_id','transactions.date_operation', 'transactions.heure_operation','transactions.commission_agent_rembourse as commission_agent')
+                    ->where("fichier","agent")
+                    ->where("source",Auth::user()->id)
+                    ->where('transactions.status',1)
+                    ->orderBy('transactions.date_transaction', 'desc')
+                    ->limit(5)
+                    ->get();
+
+                return response()->json(
+                    [
+                        'status'=>200,
+                        'message'=>$dataRetrait->message."\n".$dataRetrait->data->status." | ".$dataRetrait->data->inittxnmessage,
+                        'paytoken'=>$payToken,
+                        'user'=>$userRefresh,
+                        'transactions'=>$transactionsRefresh,
+                    ],200
+                );
+        }catch(\Exception $e){
+            Log::error($e->getCode()." ".$e->getMessage(),$e->getTrace());
+            return response()->json(
+                [
+                    'success'=>false,
+                    'message'=>"Une erreur interne s'est produite. Veuillez vérifier votre connexion internet ou informer votre support."
+
+                ],500
+            );
         }
-
-        // On vérifie si les commissions sont paramétrées
-        $functionCommission = new ApiCommissionController();
-        $lacommission =$functionCommission->getCommissionByService($service,$request->amount);
-        if($lacommission->getStatusCode()!=200){
-            return response()->json([
-                'success' => false,
-                'message' => "Impossible de calculer la commission",
-            ], 403);
-        }
-        $commission=json_decode($lacommission->getContent());
-
-        $commissionFiliale = doubleval($commission->commission_kiaboo);
-        $commissionDistributeur=doubleval($commission->commission_distributeur);
-        $commissionAgent=doubleval($commission->commission_agent);
-
-        //Initie la transaction
-        $device = $request->deviceId;
-        $latitude = $request->latitude;
-        $longitude = $request->longitude;
-        $place = $request->place;
-        $init_transaction = $apiCheck->init_Retrait($request->amount, $request->customerPhone, $service,"", $device,$latitude,$longitude,$place);
-
-        $dataTransactionInit = json_decode($init_transaction->getContent());
-
-        if($init_transaction->getStatusCode() !=200){
-            return response()->json([
-                'status'=>'error',
-                'message'=>$dataTransactionInit->message,
-            ],$init_transaction->getStatusCode());
-        }
-        $idTransaction = $dataTransactionInit->transId; //Id de la transaction initiée
-        $reference = $dataTransactionInit->reference; //Référence de la transaction initiée
-        //On génère le token de la transation
-
-        $responseToken = $this->OM_GetTokenAccess();
-
-        if($responseToken->getStatusCode() !=200){
-            return response()->json([
-                "result"=>false,
-                "message"=>"Exception ".$responseToken->getStatusCode()."\nUne exception a été déclenchée au moment de la génération du token"
-            ], $responseToken->getStatusCode());
-        }
-        $dataAcessToken = json_decode($responseToken->getContent());
-        $AccessToken = $dataAcessToken->access_token;
-
-        $customerPhone = "237".$request->customerPhone;
-
-        //On initie le retrait (Obtention du PayToken)
-        $responseInitRetrait = $this->OM_Retrait_init($AccessToken);
-        if($responseInitRetrait->getStatusCode() !=200){
-            return response()->json([
-                "result"=>false,
-                "message"=>"Exception ".$responseInitRetrait->getStatusCode()."\nUne exception a été déclenchée au moment de l'initialisation de la transaction"
-            ], $responseInitRetrait->getStatusCode());
-        }
-        $dataInitRetrait= json_decode($responseInitRetrait->getContent());
-        //    $reference = $dataInitDepot->transId;
-        $payToken =$dataInitRetrait->data->payToken;
-        //    $description = $dataInitDepot->data->description;
-        $updateTransactionTableWithPayToken = Transaction::where("id", $idTransaction)->update([
-            "payToken"=>$payToken,
-        ]);
-
-
-        $responseTraiteRetraitOM = $this->OM_Retrait_execute($AccessToken, $payToken, $customerPhone, $request->amount, $idTransaction);
-        if($responseTraiteRetraitOM->getStatusCode() !=200){
-            $dataRetrait=json_decode($responseTraiteRetraitOM->getContent());
-            $data =json_decode($dataRetrait->message);
-            return response()->json([
-                "result"=>false,
-                "message"=>"Exception ".$responseTraiteRetraitOM->getStatusCode()."\n".$data->message
-            ], $responseTraiteRetraitOM->getStatusCode());
-        }
-
-        $dataRetrait= json_decode($responseTraiteRetraitOM->getContent());
-        //Le client a été notifié. Donc on reste en attente de sa confirmation (Saisie de son code secret)
-
-        //On change le statut de la transaction dans la base de donnée
-
-        $Transaction = Transaction::where('id',$idTransaction)->where('service_id',$service)->update([
-            'reference_partenaire'=>$dataRetrait->data->txnid,
-            'balance_before'=>0,
-            'balance_after'=>0,
-            'debit'=>0,
-            'credit'=>$request->amount,
-            'status'=>2, // Pending
-            'paytoken'=>$payToken,
-            'date_end_trans'=>Carbon::now(),
-            'description'=>$dataRetrait->data->status,
-            'message'=>"Transaction initiée par l'agent N°".Auth::user()->telephone." - ".$dataRetrait->message." | ".$dataRetrait->data->status." | ".$dataRetrait->data->inittxnmessage,
-            'commission'=>$commission->commission_globale,
-            'commission_filiale'=>$commissionFiliale,
-            'commission_agent'=>$commissionAgent,
-            'commission_distributeur'=>$commissionDistributeur,
-            'api_response'=>$responseTraiteRetraitOM->getContent(),
-            'application'=>1
-        ]);
-
-        //Le solde du compte de l'agent ne sera mis à jour qu'après confirmation de l'agent : Opération traitée dans le callback
-
-        //On recupère toutes les transactions en attente
-        $userRefresh = User::where('id', Auth::user()->id)->select('id', 'name', 'surname', 'telephone', 'login', 'email','balance_before', 'balance_after','total_commission', 'last_amount','sous_distributeur_id','date_last_transaction')->first();
-        $transactionsRefresh = DB::table('transactions')
-            ->join('services', 'transactions.service_id', '=', 'services.id')
-            ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
-            ->select('transactions.id','transactions.reference as reference','transactions.paytoken','transactions.reference_partenaire','transactions.date_transaction','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.commission_agent as commission','transactions.balance_before','transactions.balance_after' ,'transactions.status','transactions.service_id','services.name_service','services.logo_service','type_services.name_type_service','type_services.id as type_service_id','transactions.date_operation', 'transactions.heure_operation','transactions.commission_agent_rembourse as commission_agent')
-            ->where("fichier","agent")
-            ->where("source",Auth::user()->id)
-            ->where('transactions.status',1)
-            ->orderBy('transactions.date_transaction', 'desc')
-            ->limit(5)
-            ->get();
-
-        return response()->json(
-            [
-                'status'=>200,
-                'message'=>$dataRetrait->message."\n".$dataRetrait->data->status." | ".$dataRetrait->data->inittxnmessage,
-                'paytoken'=>$payToken,
-                'user'=>$userRefresh,
-                'transactions'=>$transactionsRefresh,
-            ],200
-        );
-
     }
 
     public function OM_Retrait_Status($referenceID){
@@ -1037,7 +1046,7 @@ class ApiOMController extends Controller
     {
 
         //On execute le retrait
-        $description = "Ordoné par ".Auth::user()->telephone;
+        $description = "Agent : ".Auth::user()->telephone;
 
         try{
             $response = Http::withOptions(['verify' => false,])
@@ -1087,142 +1096,151 @@ class ApiOMController extends Controller
                 'message' => $validator->errors()->first(),
             ], 400);
         }
+        try{
+                $apiCheck = new ApiCheckController();
 
-        $apiCheck = new ApiCheckController();
+                $service = ServiceEnum::PAYMENT_OM->value;
 
-        $service = ServiceEnum::PAYMENT_OM->value;
+                // Vérifie si l'utilisateur est autorisé à faire cette opération
+                if(!$apiCheck->checkUserValidity()){
+                    return response()->json([
+                        'status'=>'error',
+                        'message'=>'Votre compte est désactivé. Veuillez contacter votre distributeur',
+                    ],403);
+                }
 
-        // Vérifie si l'utilisateur est autorisé à faire cette opération
-        if(!$apiCheck->checkUserValidity()){
-            return response()->json([
-                'status'=>'error',
-                'message'=>'Votre compte est désactivé. Veuillez contacter votre distributeur',
-            ],403);
+                // On vérifie si les frais sont paramétrées
+                $functionFees = new ApiCommissionController();
+                $lesfees =$functionFees->getFeesByService($service,$request->amount);
+                if($lesfees->getStatusCode()!=200){
+                    return response()->json([
+                        'success' => false,
+                        'message' => "Impossible de calculer la commission",
+                    ], 403);
+                }
+                $fee=json_decode($lesfees->getContent());
+                $fees = doubleval($fee->fees_globale);
+
+                //Initie la transaction
+                $device = $request->deviceId;
+                $latitude = $request->latitude;
+                $longitude = $request->longitude;
+                $place = $request->place;
+                $init_transaction = $apiCheck->init_Payment($request->amount, $request->customerPhone, $service,"", Auth::user()->id,1, $device,$latitude,$longitude,$place);
+
+                $dataTransactionInit = json_decode($init_transaction->getContent());
+
+                if($init_transaction->getStatusCode() !=200){
+                    return response()->json([
+                        'status'=>'error',
+                        'message'=>$dataTransactionInit->message,
+                    ],$init_transaction->getStatusCode());
+                }
+                $idTransaction = $dataTransactionInit->transId; //Id de la transaction initiée
+                $reference = $dataTransactionInit->reference; //Référence de la transaction initiée
+                //On génère le token de la transation
+
+                $responseToken = $this->OM_GetTokenAccess();
+                if($responseToken->getStatusCode() !=200){
+                    return response()->json([
+                        "result"=>false,
+                        "message"=>"Exception ".$responseToken->getStatusCode()."\nUne exception a été déclenchée au moment de la génération du token"
+                    ], $responseToken->getStatusCode());
+                }
+                $dataAcessToken = json_decode($responseToken->getContent());
+                $AccessToken = $dataAcessToken->access_token;
+
+                $customerPhone = "237".$request->customerPhone;
+
+                //On initie le paiement (Obtention du PayToken)
+                $responseInitPaiement = $this->OM_Paiement_init($AccessToken);
+                if($responseInitPaiement->getStatusCode() !=200){
+                    return response()->json([
+                        "result"=>false,
+                        "message"=>"Exception ".$responseInitPaiement->getStatusCode()."\nUne exception a été déclenchée au moment de l'initialisation de la transaction"
+                    ], $responseInitPaiement->getStatusCode());
+                }
+                $dataInitPaiement= json_decode($responseInitPaiement->getContent());
+                //    $reference = $dataInitDepot->transId;
+                $payToken =$dataInitPaiement->data->payToken;
+
+                //    $description = $dataInitDepot->data->description;
+                $updateTransactionTableWithPayToken = Transaction::where("id", $idTransaction)->update([
+                    "payToken"=>$payToken,
+                ]);
+
+                $responseTraitePaiementOM = $this->OM_Payment_execute($AccessToken, $payToken, $request->customerPhone, $request->amount, $idTransaction);
+
+                if($responseTraitePaiementOM->getStatusCode() !=200){
+                    $dataPaiement=json_decode($responseTraitePaiementOM->getContent());
+                    $data =json_decode($dataPaiement->message);
+                    return response()->json([
+                        "result"=>false,
+                        "message"=>"Exception ".$responseTraitePaiementOM->getStatusCode()."\n".$data->message
+                    ], $responseTraitePaiementOM->getStatusCode());
+                }
+
+                $dataPaiement= json_decode($responseTraitePaiementOM->getContent());
+                //Le client a été notifié. Donc on reste en attente de sa confirmation (Saisie de son code secret)
+
+                //On change le statut de la transaction dans la base de donnée
+               // $montantAPercevoir = doubleval($request->amount) - doubleval($fees);
+                $Transaction = Transaction::where('id',$idTransaction)->where('service_id',$service)->update([
+                    'reference_partenaire'=>$dataPaiement->data->txnid,
+                    'balance_before'=>0,
+                    'balance_after'=>0,
+                    'debit'=>0,
+                    'credit'=>$request->amount, //Lorsque la transaction passera en succès on va déduire de ce montant les frais du paiement
+                    'fees'=>$fees,
+                    'status'=>2, // Pending
+                    'paytoken'=>$payToken,
+                    'description'=>$dataPaiement->data->status,
+                    'message'=>"Transaction initiée par l'agent N°".Auth::user()->telephone." - ".$dataPaiement->message." | ".$dataPaiement->data->status." | ".$dataPaiement->data->inittxnmessage,
+                    'api_response'=>$responseTraitePaiementOM->getContent(),
+                    'application'=>1
+                ]);
+
+                //Le solde du compte de l'agent ne sera mis à jour qu'après confirmation de l'agent : Opération traitée dans le callback
+
+                //On recupère toutes les transactions en attente
+                $userRefresh = DB::table("users")->join("quartiers", "users.quartier_id", "=", "quartiers.id")
+                    ->join("villes", "quartiers.ville_id", "=", "villes.id")
+                    ->where('users.id', Auth::user()->id)
+                    ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id','users.qr_code','users.total_fees','users.total_paiement')->first();
+
+                $transactionsRefresh = DB::table('transactions')
+                    ->join('services', 'transactions.service_id', '=', 'services.id')
+                    ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
+                    ->select('transactions.id','transactions.reference as reference','transactions.paytoken','transactions.reference_partenaire','transactions.date_transaction','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.commission_agent as commission','transactions.balance_before','transactions.balance_after' ,'transactions.status','transactions.service_id','services.name_service','services.logo_service','type_services.name_type_service','type_services.id as type_service_id','transactions.date_operation', 'transactions.heure_operation','transactions.commission_agent_rembourse as commission_agent')
+                    ->where("fichier","agent")
+                    ->where("source",Auth::user()->id)
+                    ->where('transactions.status',1)
+                    ->orderBy('transactions.date_transaction', 'desc')
+                    ->limit(5)
+                    ->get();
+
+                $alerte = new ApiLog();
+                $alerte->logInfo($responseTraitePaiementOM->getStatusCode(), "OM_Payment", "", $dataPaiement,"OM_Payment");
+
+                return response()->json(
+                    [
+                        'status'=>200,
+                        'message'=>$dataPaiement->message."\n".$dataPaiement->data->status,
+                        'paytoken'=>$payToken,
+                        'user'=>$userRefresh,
+                        'transactions'=>$transactionsRefresh,
+                    ],200
+                );
+        }catch(\Exception $e){
+            Log::error($e->getCode()." ".$e->getMessage(),$e->getTrace());
+            return response()->json(
+                [
+                    'success'=>false,
+                    'message'=>"Une erreur interne s'est produite. Veuillez vérifier votre connexion internet ou informer votre support."
+
+                ],500
+            );
         }
-
-        // On vérifie si les frais sont paramétrées
-        $functionFees = new ApiCommissionController();
-        $lesfees =$functionFees->getFeesByService($service,$request->amount);
-        if($lesfees->getStatusCode()!=200){
-            return response()->json([
-                'success' => false,
-                'message' => "Impossible de calculer la commission",
-            ], 403);
-        }
-        $fee=json_decode($lesfees->getContent());
-        $fees = doubleval($fee->fees_globale);
-
-        //Initie la transaction
-        $device = $request->deviceId;
-        $latitude = $request->latitude;
-        $longitude = $request->longitude;
-        $place = $request->place;
-        $init_transaction = $apiCheck->init_Payment($request->amount, $request->customerPhone, $service,"", Auth::user()->id,1, $device,$latitude,$longitude,$place);
-
-        $dataTransactionInit = json_decode($init_transaction->getContent());
-
-        if($init_transaction->getStatusCode() !=200){
-            return response()->json([
-                'status'=>'error',
-                'message'=>$dataTransactionInit->message,
-            ],$init_transaction->getStatusCode());
-        }
-        $idTransaction = $dataTransactionInit->transId; //Id de la transaction initiée
-        $reference = $dataTransactionInit->reference; //Référence de la transaction initiée
-        //On génère le token de la transation
-
-        $responseToken = $this->OM_GetTokenAccess();
-        if($responseToken->getStatusCode() !=200){
-            return response()->json([
-                "result"=>false,
-                "message"=>"Exception ".$responseToken->getStatusCode()."\nUne exception a été déclenchée au moment de la génération du token"
-            ], $responseToken->getStatusCode());
-        }
-        $dataAcessToken = json_decode($responseToken->getContent());
-        $AccessToken = $dataAcessToken->access_token;
-
-        $customerPhone = "237".$request->customerPhone;
-
-        //On initie le paiement (Obtention du PayToken)
-        $responseInitPaiement = $this->OM_Paiement_init($AccessToken);
-        if($responseInitPaiement->getStatusCode() !=200){
-            return response()->json([
-                "result"=>false,
-                "message"=>"Exception ".$responseInitPaiement->getStatusCode()."\nUne exception a été déclenchée au moment de l'initialisation de la transaction"
-            ], $responseInitPaiement->getStatusCode());
-        }
-        $dataInitPaiement= json_decode($responseInitPaiement->getContent());
-        //    $reference = $dataInitDepot->transId;
-        $payToken =$dataInitPaiement->data->payToken;
-
-        //    $description = $dataInitDepot->data->description;
-        $updateTransactionTableWithPayToken = Transaction::where("id", $idTransaction)->update([
-            "payToken"=>$payToken,
-        ]);
-
-        $responseTraitePaiementOM = $this->OM_Payment_execute($AccessToken, $payToken, $request->customerPhone, $request->amount, $idTransaction);
-
-        if($responseTraitePaiementOM->getStatusCode() !=200){
-            $dataPaiement=json_decode($responseTraitePaiementOM->getContent());
-            $data =json_decode($dataPaiement->message);
-            return response()->json([
-                "result"=>false,
-                "message"=>"Exception ".$responseTraitePaiementOM->getStatusCode()."\n".$data->message
-            ], $responseTraitePaiementOM->getStatusCode());
-        }
-
-        $dataPaiement= json_decode($responseTraitePaiementOM->getContent());
-        //Le client a été notifié. Donc on reste en attente de sa confirmation (Saisie de son code secret)
-
-        //On change le statut de la transaction dans la base de donnée
-       // $montantAPercevoir = doubleval($request->amount) - doubleval($fees);
-        $Transaction = Transaction::where('id',$idTransaction)->where('service_id',$service)->update([
-            'reference_partenaire'=>$dataPaiement->data->txnid,
-            'balance_before'=>0,
-            'balance_after'=>0,
-            'debit'=>0,
-            'credit'=>$request->amount, //Lorsque la transaction passera en succès on va déduire de ce montant les frais du paiement
-            'fees'=>$fees,
-            'status'=>2, // Pending
-            'paytoken'=>$payToken,
-            'description'=>$dataPaiement->data->status,
-            'message'=>"Transaction initiée par l'agent N°".Auth::user()->telephone." - ".$dataPaiement->message." | ".$dataPaiement->data->status." | ".$dataPaiement->data->inittxnmessage,
-            'api_response'=>$responseTraitePaiementOM->getContent(),
-            'application'=>1
-        ]);
-
-        //Le solde du compte de l'agent ne sera mis à jour qu'après confirmation de l'agent : Opération traitée dans le callback
-
-        //On recupère toutes les transactions en attente
-        $userRefresh = DB::table("users")->join("quartiers", "users.quartier_id", "=", "quartiers.id")
-            ->join("villes", "quartiers.ville_id", "=", "villes.id")
-            ->where('users.id', Auth::user()->id)
-            ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id','users.qr_code','users.total_fees','users.total_paiement')->first();
-
-        $transactionsRefresh = DB::table('transactions')
-            ->join('services', 'transactions.service_id', '=', 'services.id')
-            ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
-            ->select('transactions.id','transactions.reference as reference','transactions.paytoken','transactions.reference_partenaire','transactions.date_transaction','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.commission_agent as commission','transactions.balance_before','transactions.balance_after' ,'transactions.status','transactions.service_id','services.name_service','services.logo_service','type_services.name_type_service','type_services.id as type_service_id','transactions.date_operation', 'transactions.heure_operation','transactions.commission_agent_rembourse as commission_agent')
-            ->where("fichier","agent")
-            ->where("source",Auth::user()->id)
-            ->where('transactions.status',1)
-            ->orderBy('transactions.date_transaction', 'desc')
-            ->limit(5)
-            ->get();
-
-        $alerte = new ApiLog();
-        $alerte->logInfo($responseTraitePaiementOM->getStatusCode(), "OM_Payment", "", $dataPaiement,"OM_Payment");
-
-        return response()->json(
-            [
-                'status'=>200,
-                'message'=>$dataPaiement->message."\n".$dataPaiement->data->status,
-                'paytoken'=>$payToken,
-                'user'=>$userRefresh,
-                'transactions'=>$transactionsRefresh,
-            ],200
-        );
-
     }
 
     public function OM_Payment_Status($transactionId){
@@ -1259,112 +1277,122 @@ class ApiOMController extends Controller
                 "Authorization"=>"Bearer ".$AccessToken,
                 "accept"=>"application/json"
             ])->Get($http);
+        try{
+            $data = json_decode($response->body());
+           // dd($data);
+            if($response->status()==200){
+                if($data->data->status=="SUCCESSFULL"){
+                    $montant = $Transaction->first()->credit;
+                    $montantACrediter = doubleval($montant) -  doubleval($Transaction->first()->fees);
+                    $user = User::where('id', $Transaction->first()->created_by);
+                    $balanceBeforeAgent = $user->get()->first()->balance_after;
+                    $balanceAfterAgent = floatval($balanceBeforeAgent) + floatval($montantACrediter); //On a déduit les frais de la transaction.
+                    $reference_partenaire=$data->data->txnid;
+                    $agent = $user->first()->id;
+                    $total_fees = $user->first()->total_fees + $Transaction->first()->fees;
 
-        $data = json_decode($response->body());
-dd($data);
-        if($response->status()==200){
-            if($data->data->status=="SUCCESSFULL"){
-                $montant = $Transaction->first()->credit;
-                $montantACrediter = doubleval($montant) -  doubleval($Transaction->first()->fees);
-                $user = User::where('id', $Transaction->first()->created_by);
-                $balanceBeforeAgent = $user->get()->first()->balance_after;
-                $balanceAfterAgent = floatval($balanceBeforeAgent) + floatval($montantACrediter); //On a déduit les frais de la transaction.
-                $reference_partenaire=$data->data->txnid;
-                $agent = $user->first()->id;
-                $total_fees = $user->first()->total_fees + $Transaction->first()->fees;
+                    $reference = $Transaction->first()->reference;
+                    $telephone = $Transaction->first()->customer_phone;
+                    $dateTransaction = $Transaction->first()->date_transaction;
+                    $device_notification= $Transaction->first()->device_notification;
+                    try{
+                        DB::beginTransaction();
+                        $Transaction->update([
+                            'status'=>1,
+                            'reference_partenaire'=>$data->txnid,
+                            //  'credit'=>$montantACrediter, //La valeur du montant à créditer change (on retire les frais)
+                            'description'=>$data->status,
+                            'message'=>$data->message,
+                            'date_end_trans'=>Carbon::now(),
+                            'balance_after'=>$balanceAfterAgent,
+                            'balance_before'=>$balanceBeforeAgent,
+                            'terminaison'=>'CALLBACK',
+                        ]);
+                        //On met à jour le solde de l'agent
+                        $debitAgent = DB::table("users")->where("id", $agent)->update([
+                            'balance_after'=>$balanceAfterAgent,
+                            'balance_before'=>$balanceBeforeAgent,
+                            'last_amount'=>$montant,
+                            'total_fees'=>$total_fees,
+                            'date_last_transaction'=>Carbon::now(),
+                            'user_last_transaction_id'=>$agent,
+                            'last_service_id'=>ServiceEnum::PAYMENT_OM->value,
+                            'reference_last_transaction'=>$reference,
+                            'remember_token'=>$reference,
+                        ]);
+                        DB::commit();
+                        $title = "Kiaboo";
+                        $message = "Le paiement Orange Money de " . $montant . " F CFA a été effectué avec succès au ".$telephone." (ID : ".$reference_partenaire.") le ".$dateTransaction;
+                        $appNotification = new ApiNotification();
+                        $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
 
-                $reference = $Transaction->first()->reference;
-                $telephone = $Transaction->first()->customer_phone;
-                $dateTransaction = $Transaction->first()->date_transaction;
-                $device_notification= $Transaction->first()->device_notification;
-                try{
-                    DB::beginTransaction();
-                    $Transaction->update([
-                        'status'=>1,
-                        'reference_partenaire'=>$data->txnid,
-                        //  'credit'=>$montantACrediter, //La valeur du montant à créditer change (on retire les frais)
-                        'description'=>$data->status,
-                        'message'=>$data->message,
-                        'date_end_trans'=>Carbon::now(),
-                        'balance_after'=>$balanceAfterAgent,
-                        'balance_before'=>$balanceBeforeAgent,
-                        'terminaison'=>'CALLBACK',
-                    ]);
-                    //On met à jour le solde de l'agent
-                    $debitAgent = DB::table("users")->where("id", $agent)->update([
-                        'balance_after'=>$balanceAfterAgent,
-                        'balance_before'=>$balanceBeforeAgent,
-                        'last_amount'=>$montant,
-                        'total_fees'=>$total_fees,
-                        'date_last_transaction'=>Carbon::now(),
-                        'user_last_transaction_id'=>$agent,
-                        'last_service_id'=>ServiceEnum::PAYMENT_OM->value,
-                        'reference_last_transaction'=>$reference,
-                        'remember_token'=>$reference,
-                    ]);
-                    DB::commit();
-                    $title = "Kiaboo";
-                    $message = "Le paiement Orange Money de " . $montant . " F CFA a été effectué avec succès au ".$telephone." (ID : ".$reference_partenaire.") le ".$dateTransaction;
-                    $appNotification = new ApiNotification();
-                    $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
+                        $user = DB::table("users")->join("quartiers", "users.quartier_id", "=", "quartiers.id")
+                            ->join("villes", "quartiers.ville_id", "=", "villes.id")
+                            ->where('users.id', Auth::user()->id)
+                            ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id','users.qr_code','users.total_fees','users.total_paiement')->first();
 
-                    $user = DB::table("users")->join("quartiers", "users.quartier_id", "=", "quartiers.id")
-                        ->join("villes", "quartiers.ville_id", "=", "villes.id")
-                        ->where('users.id', Auth::user()->id)
-                        ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id','users.qr_code','users.total_fees','users.total_paiement')->first();
+                        $transactions = DB::table('transactions')
+                            ->join('services', 'transactions.service_id', '=', 'services.id')
+                            ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
+                            ->select('transactions.id','transactions.reference as reference','transactions.paytoken','transactions.reference_partenaire','transactions.date_transaction','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.commission_agent as commission','transactions.balance_before','transactions.balance_after' ,'transactions.status','transactions.service_id','services.name_service','services.logo_service','type_services.name_type_service','type_services.id as type_service_id','transactions.date_operation', 'transactions.heure_operation','transactions.commission_agent_rembourse as commission_agent','transactions.fees')
+                            ->where("fichier","agent")
+                            ->where("source",Auth::user()->id)
+                            ->where('transactions.status',1)
+                            ->orderBy('transactions.date_transaction', 'desc')
+                            ->limit(5)
+                            ->get();
+                        return response()->json(
+                            [
+                                'success'=>true,
+                                'statusCode'=>$data->data->status,
+                                'message'=>$data->data->confirmtxnmessage." ".$data->data->status." ".$data->data->txnid,
+                                'user'=>$user,
+                                'transactions'=>$transactions,
 
-                    $transactions = DB::table('transactions')
-                        ->join('services', 'transactions.service_id', '=', 'services.id')
-                        ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
-                        ->select('transactions.id','transactions.reference as reference','transactions.paytoken','transactions.reference_partenaire','transactions.date_transaction','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.commission_agent as commission','transactions.balance_before','transactions.balance_after' ,'transactions.status','transactions.service_id','services.name_service','services.logo_service','type_services.name_type_service','type_services.id as type_service_id','transactions.date_operation', 'transactions.heure_operation','transactions.commission_agent_rembourse as commission_agent','transactions.fees')
-                        ->where("fichier","agent")
-                        ->where("source",Auth::user()->id)
-                        ->where('transactions.status',1)
-                        ->orderBy('transactions.date_transaction', 'desc')
-                        ->limit(5)
-                        ->get();
-                    return response()->json(
-                        [
-                            'success'=>true,
-                            'statusCode'=>$data->data->status,
-                            'message'=>$data->message." ".$data->data->status." ".$data->data->txnid,
-                            'user'=>$user,
-                            'transactions'=>$transactions,
+                            ],200);
 
-                        ],200);
-
-                }catch (\Exception $e){
-                    DB::rollback();
-                    $alerte = new ApiLog();
-                    $alerte->logErrorCallBack($e->getCode(), "OMPMCheckStatus", $e->getMessage(), $data,"OM_Payment_Status",$agent);
+                    }catch (\Exception $e){
+                        DB::rollback();
+                        $alerte = new ApiLog();
+                        $alerte->logErrorCallBack($e->getCode(), "OMPMCheckStatus", $e->getMessage(), $data,"OM_Payment_Status",$agent);
+                    }
                 }
+                $message = "La transaction est en status en attente. Le client doit confirmer la transaction en saisissant son code secret.";
+                return response()->json(
+                    [
+                        'success'=>true,
+                        'statusCode'=>$data->data->status,
+                        'message'=>$data->data->status=="PENDING"?$message:$data->data->confirmtxnmessage,
+                        'data'=>[
+                            'currency'=>'XAF',
+                            'transactionId'=>$transactionId,
+                            'dateTransaction'=>$Transaction->first()->date_transaction,
+                            'amount'=>$Transaction->first()->credit,
+                            'agent'=>User::where("id", $Transaction->first()->source)->first()->telephone,
+                            'customer'=>$Transaction->first()->customer_phone,
+                        ]
+                    ],202
+                );
+            }else{
+                return response()->json(
+                    [
+                        'success'=>false,
+                        'statusCode'=>$data->data->status,
+                        'message'=>$data->data->confirmtxnmessage,
+
+                    ],$response->status()
+                );
             }
-            return response()->json(
-                [
-                    'success'=>true,
-                    'statusCode'=>$data->data->status,
-                    'message'=>$data->data->status=="PENDING"?$data->data->inittxnmessage:$data->message,
-                    'data'=>[
-                        'currency'=>'XAF',
-                        'transactionId'=>$transactionId,
-                        'dateTransaction'=>$Transaction->first()->date_transaction,
-                        'amount'=>$Transaction->first()->credit,
-                        'agent'=>User::where("id", $Transaction->first()->source)->first()->telephone,
-                        'customer'=>$Transaction->first()->customer_phone,
-                    ]
-                ],202
-            );
-        }else{
+        }catch(\Exception $e){
+            Log::error($e->getCode()." ".$e->getMessage(),$e->getTrace());
             return response()->json(
                 [
                     'success'=>false,
-                    'statusCode'=>$data->data->status,
-                    'message'=>$data->message
+                    'message'=>"Une erreur interne s'est produite. Veuillez vérifier votre connexion internet ou informer votre support."
 
-                ],$response->status()
+                ],500
             );
         }
-
     }
 
     public function OMCallBack(Request $request)
