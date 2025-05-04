@@ -1523,7 +1523,7 @@ class ApiProdMoMoMoneyController extends Controller
             ])->Get($http);
 
         $data = json_decode($response->body());
-        dd($data);
+
         if($response->status()==200){
             $reference = $Transaction->first()->reference;
             $telephone = $Transaction->first()->customer_phone;
@@ -1534,30 +1534,73 @@ class ApiProdMoMoMoneyController extends Controller
             try{
                 DB::beginTransaction();
                 if($data->status=="SUCCESSFUL"){
+                    $montantACrediter = doubleval($montant) -  doubleval($Transaction->first()->fees);
+                    $balanceBeforeAgent = $user->get()->first()->balance_after;
+                    $balanceAfterAgent = floatval($balanceBeforeAgent) + floatval($montantACrediter); //On a déduit les frais de la transaction.
+                    $reference_partenaire=$data->financialTransactionId;
+                    $agent = $user->first()->id;
+                    $total_fees = $user->first()->total_fees + $Transaction->first()->fees;
 
+                    $update = $Transaction->update([
+                        'status'=>1,
+                        'reference_partenaire'=>$data->financialTransactionId,
+                        'description'=>$data->status,
+                        'message'=>$data->status,
+                        'date_end_trans'=>Carbon::now(),
+                        'balance_after'=>$balanceAfterAgent,
+                        'balance_before'=>$balanceBeforeAgent,
+                        'terminaison'=>'MANUEL',
+                    ]);
+                    //On met à jour le solde de l'agent
+                    $debitAgent = DB::table("users")->where("id", $agent)->update([
+                        'balance_after'=>$balanceAfterAgent,
+                        'balance_before'=>$balanceBeforeAgent,
+                        'last_amount'=>$montant,
+                        'total_fees'=>$total_fees,
+                        'date_last_transaction'=>Carbon::now(),
+                        'user_last_transaction_id'=>$agent,
+                        'last_service_id'=>ServiceEnum::PAYMENT_MOMO->value,
+                        'reference_last_transaction'=>$reference,
+                        'remember_token'=>$reference,
+                    ]);
+                    DB::commit();
+                    $title = "Kiaboo";
+                    $message = "Le paiement MTN Mobile Money de " . $montant . " F CFA a été effectué avec succès au ".$telephone." (ID : ".$reference_partenaire.") le ".$dateTransaction;
+                    $appNotification = new ApiNotification();
+                    $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
+
+                    $user = DB::table("users")->join("quartiers", "users.quartier_id", "=", "quartiers.id")
+                        ->join("villes", "quartiers.ville_id", "=", "villes.id")
+                        ->where('users.id', Auth::user()->id)
+                        ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id','users.qr_code','users.total_fees','users.total_paiement')->first();
+
+                    $transactions = DB::table('transactions')
+                        ->join('services', 'transactions.service_id', '=', 'services.id')
+                        ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
+                        ->select('transactions.id','transactions.reference as reference','transactions.paytoken','transactions.reference_partenaire','transactions.date_transaction','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.commission_agent as commission','transactions.balance_before','transactions.balance_after' ,'transactions.status','transactions.service_id','services.name_service','services.logo_service','type_services.name_type_service','type_services.id as type_service_id','transactions.date_operation', 'transactions.heure_operation','transactions.commission_agent_rembourse as commission_agent','transactions.fees')
+                        ->where("fichier","agent")
+                        ->where("source",Auth::user()->id)
+                        ->where('transactions.status',1)
+                        ->orderBy('transactions.date_transaction', 'desc')
+                        ->limit(5)
+                        ->get();
                     return response()->json(
                         [
                             'success'=>true,
-                            'statusCode'=>$data->status,
-                            'message'=>'Transaction terminée avec succès',
-                            'data'=>[
-                                'currency'=>'XAF',
-                                'transactionId'=>$transactionId,
-                                'dateTransaction'=>$Transaction->first()->date_transaction,
-                                'amount'=>$Transaction->first()->credit,
-                                'fees'=>$Transaction->first()->fees_collecte,
-                                'collect'=>$Transaction->first()->marchand_amount,
-                                'customer'=>$Transaction->first()->customer_phone,
-                            ]
-                        ],200
-                    );
+                            'statusCode'=>$data->data->status,
+                            'message'=>$data->data->confirmtxnmessage." ".$data->data->status." ".$data->data->txnid,
+                            'user'=>$user,
+                            'transactions'=>$transactions,
+
+                        ],200);
+
                 }
                 if($data->status=="FAILED"){
                     $update=$Transaction->update([
                         'status'=>3,
-                        'reference_partenaire'=>$data->data->txnid,
-                        'description'=>$data->data->status,
-                        'message'=>$data->data->confirmtxnmessage,
+                        'reference_partenaire'=>$data->financialTransactionId,
+                        'description'=>$data->status,
+                        'message'=>$data->reason,
                         'date_end_trans'=>Carbon::now(),
                         'terminaison'=>'MANUEL',
                     ]);
@@ -1573,21 +1616,17 @@ class ApiProdMoMoMoneyController extends Controller
                 }
                 if($data->status=="PENDING"){
                     // $reason = json_decode($data->reason);
-                    DB::rollBack();
+                    $update=$Transaction->update([
+                        'status'=>2,
+                        'reference_partenaire'=>$data->financialTransactionId,
+                        'description'=>$data->status,
+                    ]);
+                    DB::commit();
                     return response()->json(
                         [
                             'success'=>true,
                             'statusCode'=>'PENDING',
-                            'message'=>"PENDING - Transaction en attente de confirmation par le client",
-                            'data'=>[
-                                'transactionId'=>$transactionId,
-                                'dateTransaction'=>$Transaction->first()->date_transaction,
-                                'currency'=>'XAF',
-                                'amount'=>$Transaction->first()->credit,
-                                'fees'=>$Transaction->first()->fees_collecte,
-                                'customer'=>$Transaction->first()->customer_phone,
-                            ]
-
+                            'message'=>"La transaction est en status en attente. Le client doit confirmer la transaction en saisissant son code secret.",
                         ],202
                     );
                 }
@@ -1595,7 +1634,7 @@ class ApiProdMoMoMoneyController extends Controller
                 return response()->json(
                     [
                         'success'=>false,
-                        'message'=>"Transaction en cours de traitemet chez l'opérateur",
+                        'message'=>"Transaction en cours de traitement chez l'opérateur",
                     ] ,403
                 );
             }catch (\Exception $e){
