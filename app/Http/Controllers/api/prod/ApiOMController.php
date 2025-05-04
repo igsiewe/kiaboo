@@ -753,6 +753,7 @@ class ApiOMController extends Controller
                     ], $responseInitRetrait->getStatusCode());
                 }
                 $dataInitRetrait= json_decode($responseInitRetrait->getContent());
+                Log::alert($dataInitRetrait);
                 //    $reference = $dataInitDepot->transId;
                 $payToken =$dataInitRetrait->data->payToken;
                 //    $description = $dataInitDepot->data->description;
