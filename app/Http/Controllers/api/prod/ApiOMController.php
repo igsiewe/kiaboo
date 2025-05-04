@@ -1318,7 +1318,7 @@ class ApiOMController extends Controller
                 }catch (\Exception $e){
                     DB::rollback();
                     $alerte = new ApiLog();
-                    $alerte->logErrorCallBack($e->getCode(), "OMCallBack", $e->getMessage(), $data,"OMCallBack",$agent);
+                    $alerte->logErrorCallBack($e->getCode(), "OMPMCheckStatus", $e->getMessage(), $data,"OM_Payment_Status",$agent);
                 }
             }
             return response()->json(
@@ -1334,7 +1334,7 @@ class ApiOMController extends Controller
                         'agent'=>User::where("id", $Transaction->first()->source)->first()->telephone,
                         'customer'=>$Transaction->first()->customer_phone,
                     ]
-                ],200
+                ],403
             );
         }else{
             return response()->json(
