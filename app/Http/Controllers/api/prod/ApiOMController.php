@@ -1234,7 +1234,7 @@ class ApiOMController extends Controller
                 [
                     'success'=>false,
                     'statusCode'=>"ERR-TRANSACTION-NOT-FOUND",
-                    'message'=>"This id transaction does not exist"
+                    'message'=>"Cette transaction n'existe plus dans la liste des transactions en attente",
                 ],404
             );
         }
