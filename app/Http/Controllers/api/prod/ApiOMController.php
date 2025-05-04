@@ -1269,7 +1269,7 @@ dd($data);
                 $user = User::where('id', $Transaction->first()->created_by);
                 $balanceBeforeAgent = $user->get()->first()->balance_after;
                 $balanceAfterAgent = floatval($balanceBeforeAgent) + floatval($montantACrediter); //On a déduit les frais de la transaction.
-                $reference_partenaire=$data->txnid;
+                $reference_partenaire=$data->data->txnid;
                 $agent = $user->first()->id;
                 $total_fees = $user->first()->total_fees + $Transaction->first()->fees;
 
@@ -1327,7 +1327,7 @@ dd($data);
                         [
                             'success'=>true,
                             'statusCode'=>$data->data->status,
-                            'message'=>$data->message,
+                            'message'=>$data->message." ".$data->data->status." ".$data->data->txnid,
                             'user'=>$user,
                             'transactions'=>$transactions,
 
