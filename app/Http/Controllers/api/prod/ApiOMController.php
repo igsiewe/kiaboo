@@ -1228,8 +1228,8 @@ class ApiOMController extends Controller
     public function OM_Payment_Status($transactionId){
 
         // On cherche la transaction dans la table transaction : On se rassure que le service correspondant est Paiement OM et que son status est à 2 = Pending
-        $transaction = Transaction::where("paytoken", $transactionId)->where("service_id", ServiceEnum::PAYMENT_OM->value)->where("status",2);
-        if($transaction->count()==0){
+        $Transaction = Transaction::where("paytoken", $transactionId)->where("service_id", ServiceEnum::PAYMENT_OM->value)->where("status",2);
+        if($Transaction->count()==0){
             return response()->json(
                 [
                     'success'=>false,
@@ -1250,7 +1250,7 @@ class ApiOMController extends Controller
         $dataAcessToken = json_decode($responseToken->getContent());
         $AccessToken = $dataAcessToken->access_token;
 
-        $payToken = $transaction->first()->paytoken;
+        $payToken = $Transaction->first()->paytoken;
         $http = $this->endpoint."/mp/paymentstatus/".$payToken;
 
         $response = Http::withOptions(['verify' => false,])->withHeaders(
@@ -1263,6 +1263,64 @@ class ApiOMController extends Controller
         $data = json_decode($response->body());
 
         if($response->status()==200){
+            if($data->data->status=="SUCCESSFULL"){
+                $montant = $Transaction->first()->credit;
+                $montantACrediter = doubleval($montant) -  doubleval($Transaction->first()->fees);
+                $user = User::where('id', $Transaction->first()->created_by);
+                $balanceBeforeAgent = $user->get()->first()->balance_after;
+                $balanceAfterAgent = floatval($balanceBeforeAgent) + floatval($montantACrediter); //On a déduit les frais de la transaction.
+                $reference_partenaire=$data->txnid;
+                $agent = $user->first()->id;
+                $total_fees = $user->first()->total_fees + $Transaction->first()->fees;
+
+                $reference = $Transaction->first()->reference;
+                $telephone = $Transaction->first()->customer_phone;
+                $dateTransaction = $Transaction->first()->date_transaction;
+                $device_notification= $Transaction->first()->device_notification;
+                try{
+                    DB::beginTransaction();
+                    $Transaction->update([
+                        'status'=>1,
+                        'reference_partenaire'=>$data->txnid,
+                        //  'credit'=>$montantACrediter, //La valeur du montant à créditer change (on retire les frais)
+                        'description'=>$data->status,
+                        'message'=>$data->message,
+                        'date_end_trans'=>Carbon::now(),
+                        'balance_after'=>$balanceAfterAgent,
+                        'balance_before'=>$balanceBeforeAgent,
+                        'terminaison'=>'CALLBACK',
+                    ]);
+                    //On met à jour le solde de l'agent
+                    $debitAgent = DB::table("users")->where("id", $agent)->update([
+                        'balance_after'=>$balanceAfterAgent,
+                        'balance_before'=>$balanceBeforeAgent,
+                        'last_amount'=>$montant,
+                        'total_fees'=>$total_fees,
+                        'date_last_transaction'=>Carbon::now(),
+                        'user_last_transaction_id'=>$agent,
+                        'last_service_id'=>ServiceEnum::PAYMENT_OM->value,
+                        'reference_last_transaction'=>$reference,
+                        'remember_token'=>$reference,
+                    ]);
+                    DB::commit();
+                    $title = "Kiaboo";
+                    $message = "Le paiement Orange Money de " . $montant . " F CFA a été effectué avec succès au ".$telephone." (ID : ".$reference_partenaire.") le ".$dateTransaction;
+                    $appNotification = new ApiNotification();
+                    $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
+                    return response()->json(
+                        [
+                            'success'=>true,
+                            'statusCode'=>$data->data->status,
+                            'message'=>$data->message
+
+                        ],200);
+
+                }catch (\Exception $e){
+                    DB::rollback();
+                    $alerte = new ApiLog();
+                    $alerte->logErrorCallBack($e->getCode(), "OMCallBack", $e->getMessage(), $data,"OMCallBack",$agent);
+                }
+            }
             return response()->json(
                 [
                     'success'=>true,
@@ -1271,10 +1329,10 @@ class ApiOMController extends Controller
                     'data'=>[
                         'currency'=>'XAF',
                         'transactionId'=>$transactionId,
-                        'dateTransaction'=>$transaction->first()->date_transaction,
-                        'amount'=>$transaction->first()->credit,
-                        'agent'=>User::where("id", $transaction->first()->source)->first()->telephone,
-                        'customer'=>$transaction->first()->customer_phone,
+                        'dateTransaction'=>$Transaction->first()->date_transaction,
+                        'amount'=>$Transaction->first()->credit,
+                        'agent'=>User::where("id", $Transaction->first()->source)->first()->telephone,
+                        'customer'=>$Transaction->first()->customer_phone,
                     ]
                 ],200
             );
