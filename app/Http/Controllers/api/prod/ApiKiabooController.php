@@ -58,7 +58,7 @@ class ApiKiabooController extends Controller
     public function setTransfert(Request $request){
         $validator = Validator::make($request->all(), [
             'compte' => 'required|numeric|digits:9',
-            'amount' => 'required|numeric|min:1000|max:500000',
+            'amount' => 'required|numeric|min:500|max:500000',
             'deviceId' => 'required|string',
         ]);
         if ($validator->fails()) {
