@@ -156,10 +156,10 @@ class WebApproAgentController extends Controller
                 'moyen_payment'=>"Cash",
             ]);
             $nomDistributeur = Auth::user()->telephone." ".Distributeur::where("id", Auth::user()->distributeur_id)->first()->name_distributeur; //Auth::user()->telephone." ".Auth::user()->name;
-            $msg = "Compte rechargé par ".strtoupper($nomDistributeur)." vers ".$nomAgent.". Informations détaillées: ID transaction: ".$payToken.", Montant transaction : ".$request->amount." F CFA. Nouveau solde : ".$newBalanceAgent." F CFA. Merci de votre confiance";
+            $msg = "M/Mme ".$nomAgent.". votre compte KIABOO a ete recharge. Informations detaillees: ID transaction: ".$payToken.", Montant transaction : ".$request->amount." F CFA. Nouveau solde : ".$newBalanceAgent." F CFA. Merci de votre confiance";
             $sms = new ApiSmsController();
             $tel ="237".$telephoneAgent;
-
+            $envoyerSMS = $sms->SendSMS($tel,utf8_decode($msg));
 
             $data = [
                 'nameAgent'=>$nomAgent,
