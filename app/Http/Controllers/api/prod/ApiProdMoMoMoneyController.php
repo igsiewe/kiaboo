@@ -1120,8 +1120,14 @@ class ApiProdMoMoMoneyController extends Controller
                         'description'=>$data->status,
                         'message'=>$data->reason,
                         'terminaison'=>'CALLBACK',
-
                     ]);
+                    $title = "0";
+                    $message = "Le paiement MoMo de " . $Transaction->first()->credit . " F CFA au ".$customer_phone." (ID : ".$financialTransactionId.") le ".$dateTransaction." est en échec";
+                    if($Transaction->first()->service_id ==ServiceEnum::RETRAIT_MOMO->value){
+                        $message = "Le retrait MoMo de " . $Transaction->first()->credit . " F CFA au ".$customer_phone." (ID : ".$financialTransactionId.") le ".$dateTransaction." est en échec";
+                    }
+                    $appNotification = new ApiNotification();
+                    $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
                 }
                 $message = "Notification";
                 if($data->status=="SUCCESSFUL"){
@@ -1205,7 +1211,7 @@ class ApiProdMoMoMoneyController extends Controller
                             $message = "Le paiement MoMo de " . $montant . " F CFA a été effectué avec succès au ".$customer_phone." (ID : ".$reference_partenaire.") le ".$dateTransaction;
                         }
 
-                        $title = "Kiaboo";
+                        $title = "1";
                         $appNotification = new ApiNotification();
                         $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
 
@@ -1247,6 +1253,10 @@ class ApiProdMoMoMoneyController extends Controller
                         'terminaison'=>'CALLBACK',
 
                     ]);
+                    $title = "0";
+                    $message = "Le dépôt MoMo de " . $Transaction->first()->credit . " F CFA au ".$customer_phone." (ID : ".$financialTransactionId.") le ".$dateTransaction." est en échec";
+                    $appNotification = new ApiNotification();
+                    $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
                 }
                 if($data->status=="CREATED"){
                     $updateTransaction=$Transaction->update([
@@ -1257,6 +1267,10 @@ class ApiProdMoMoMoneyController extends Controller
                         'message'=>$reason==null?$Transaction->first()->message:$reason,
                         'terminaison'=>'CALLBACK',
                     ]);
+                    $title = "0";
+                    $message = "Le dépôt MoMo de " . $Transaction->first()->credit . " F CFA au ".$customer_phone." (ID : ".$financialTransactionId.") le ".$dateTransaction." est en échec";
+                    $appNotification = new ApiNotification();
+                    $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
                 }
                 if($data->status=="SUCCESSFUL"){
 
