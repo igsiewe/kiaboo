@@ -1341,7 +1341,7 @@ class ApiProdMoMoMoneyController extends Controller
                         'total_commission'=>$commission_agent,
                     ]);
                     DB::commit();
-                    $title = "Kiaboo";
+                    $title = "1";
                     $message = "Le dépôt MoMo de " . $montant . " F CFA a été effectué avec succès au ".$customer_phone." (ID : ".$reference_partenaire.") le ".$dateTransaction;
                     $appNotification = new ApiNotification();
                     $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
