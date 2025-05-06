@@ -1580,7 +1580,7 @@ class ApiProdMoMoMoneyController extends Controller
                         'remember_token'=>$reference,
                     ]);
                     DB::commit();
-                    $title = "Kiaboo";
+                    $title = "Transaction en succès";
                     $message = "Le paiement MTN Mobile Money de " . $montant . " F CFA a été effectué avec succès au ".$telephone." (ID : ".$reference_partenaire.") le ".$dateTransaction;
                     $appNotification = new ApiNotification();
                     $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
@@ -1621,6 +1621,11 @@ class ApiProdMoMoMoneyController extends Controller
                         'terminaison'=>'MANUEL',
                     ]);
                     DB::commit();
+                    $title = "Transaction en échec";
+                    $message = "Le paiement MTN Mobile Money de " . $montant . " F CFA de ".$telephone." (ID : ".$data->data->txnid.") le ".$dateTransaction." est échec";
+                    $appNotification = new ApiNotification();
+                    $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
+
                     return response()->json(
                         [
                             'success'=>false,
@@ -1661,7 +1666,7 @@ class ApiProdMoMoMoneyController extends Controller
                     [
                         'success'=>false,
                         'transactionId'=>$e->getMessage(),
-                    ],$e->getCode()
+                    ],404
                 );
             }
         }else{
