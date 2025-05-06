@@ -112,6 +112,7 @@ class ApiOMController extends Controller
                     'status' => 'success',
                     'firstName' => $firstName,
                     'lastName' => $lastName,
+                    'message' => $data->message,
                 ],200);
             }else{
                 $alerte = new ApiLog();
