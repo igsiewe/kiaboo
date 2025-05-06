@@ -35,7 +35,8 @@ class WebProspectontroller extends Controller
            if($prospect){
                if($prospect->status == 0){
                    //desctive dans la table des prospects
-                   $codeparrainage = new WebUtilisateurController();
+                   $codeparrainage =$this->extraireChaine( ($this->nettoyerTexte($prospect->name."".$prospect->surname)),0,5)."".$this->extraireChaine($prospect->phone,0,3);
+
                    $prospect->status = 1;
                    $prospect->validated_by = Auth::user()->id;
                    $prospect->validated_at = Carbon::now();
@@ -60,9 +61,9 @@ class WebProspectontroller extends Controller
                    $newAgent->status = 1;
                    $newAgent->numcni = $prospect->numero_piece;
                    $newAgent->datecni = $prospect->date_validite;
-                   $newAgent->seuilapprovisionnement="100000";
+                   $newAgent->seuilapprovisionnement="150000";
                    $newAgent->optin=$prospect->optin;
-                   $newAgent->moncodeparrainage = strtoupper("KI".$codeparrainage->genererChaineAleatoire(8));
+                   $newAgent->moncodeparrainage = strtoupper("KI".$codeparrainage);
                    $newAgent->save();
 
                    //On informe le client par SMS que son profil a été validé
@@ -87,6 +88,32 @@ class WebProspectontroller extends Controller
        }
 
    }
+
+    function nettoyerTexte($texte) {
+        // 1. Remplace les caractères accentués par leur équivalent sans accent
+        $texte = strtr(
+            $texte,
+            [
+                'é' => 'e', 'è' => 'e', 'ê' => 'e', 'ë' => 'e',
+                'à' => 'a', 'â' => 'a', 'ä' => 'a',
+                'î' => 'i', 'ï' => 'i',
+                'ô' => 'o', 'ö' => 'o',
+                'ù' => 'u', 'û' => 'u', 'ü' => 'u',
+                'ç' => 'c',
+                'É' => 'E', 'È' => 'E', 'Ê' => 'E',
+                'À' => 'A', 'Â' => 'A', 'Ç' => 'C',
+            ]
+        );
+
+        // 2. Supprime les apostrophes, traits d'union et espaces
+        $texte = str_replace(["'", "-", " "], "", $texte);
+
+        return strtoupper($texte);
+    }
+
+    function extraireChaine($texte, $debut, $longueur = null) {
+        return $longueur ? substr($texte, $debut, $longueur) : substr($texte, $debut);
+    }
 
    public function rejectedProspect($id){
        if(Auth::user()->type_user_id !=UserRolesEnum::SUPADMIN->value && Auth::user()->type_user_id !=UserRolesEnum::ADMIN->value && Auth::user()->type_user_id !=UserRolesEnum::BACKOFFICE->value){
