@@ -1122,9 +1122,9 @@ class ApiProdMoMoMoneyController extends Controller
                         'terminaison'=>'CALLBACK',
                     ]);
                     $title = "0";
-                    $message = "Le paiement MoMo de " . $Transaction->first()->credit . " F CFA au ".$customer_phone." (ID : ".$financialTransactionId.") le ".$dateTransaction." est en échec";
+                    $message = "Le paiement MoMo de " . $data->amount . " F CFA au ".$customer_phone." (ID : ".$financialTransactionId.") le ".$dateTransaction." est en échec";
                     if($Transaction->first()->service_id ==ServiceEnum::RETRAIT_MOMO->value){
-                        $message = "Le retrait MoMo de " . $Transaction->first()->credit . " F CFA au ".$customer_phone." (ID : ".$financialTransactionId.") le ".$dateTransaction." est en échec";
+                        $message = "Le retrait MoMo de " . $data->amount . " F CFA au ".$customer_phone." (ID : ".$financialTransactionId.") le ".$dateTransaction." est en échec";
                     }
                     $appNotification = new ApiNotification();
                     $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
