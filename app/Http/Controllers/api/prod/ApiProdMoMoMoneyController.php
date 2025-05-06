@@ -1121,7 +1121,7 @@ class ApiProdMoMoMoneyController extends Controller
                         'message'=>$data->reason,
                         'terminaison'=>'CALLBACK',
                     ]);
-                    $title = "0";
+                    $title = "Transaction en échec";
                     $message = "Le paiement MoMo de " . $data->amount . " F CFA au ".$customer_phone." (ID : ".$financialTransactionId.") le ".$dateTransaction." est en échec";
                     if($Transaction->first()->service_id ==ServiceEnum::RETRAIT_MOMO->value){
                         $message = "Le retrait MoMo de " . $data->amount . " F CFA au ".$customer_phone." (ID : ".$financialTransactionId.") le ".$dateTransaction." est en échec";
@@ -1211,7 +1211,7 @@ class ApiProdMoMoMoneyController extends Controller
                             $message = "Le paiement MoMo de " . $montant . " F CFA a été effectué avec succès au ".$customer_phone." (ID : ".$reference_partenaire.") le ".$dateTransaction;
                         }
 
-                        $title = "1";
+                        $title = "Transaction en succès";
                         $appNotification = new ApiNotification();
                         $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
 
@@ -1267,7 +1267,7 @@ class ApiProdMoMoMoneyController extends Controller
                         'message'=>$reason==null?$Transaction->first()->message:$reason,
                         'terminaison'=>'CALLBACK',
                     ]);
-                    $title = "0";
+                    $title = "Transaction en échec";
                     $message = "Le dépôt MoMo de " . $Transaction->first()->credit . " F CFA au ".$customer_phone." (ID : ".$financialTransactionId.") le ".$dateTransaction." est en échec";
                     $appNotification = new ApiNotification();
                     $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
@@ -1341,7 +1341,7 @@ class ApiProdMoMoMoneyController extends Controller
                         'total_commission'=>$commission_agent,
                     ]);
                     DB::commit();
-                    $title = "1";
+                    $title = "Transaction en succès";
                     $message = "Le dépôt MoMo de " . $montant . " F CFA a été effectué avec succès au ".$customer_phone." (ID : ".$reference_partenaire.") le ".$dateTransaction;
                     $appNotification = new ApiNotification();
                     $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
