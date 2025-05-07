@@ -1253,7 +1253,7 @@ class ApiProdMoMoMoneyController extends Controller
                         'terminaison'=>'CALLBACK',
 
                     ]);
-                    $title = "0";
+                    $title = "Transaction en échec";
                     $message = "Le dépôt MoMo de " . $Transaction->first()->credit . " F CFA au ".$customer_phone." (ID : ".$financialTransactionId.") le ".$dateTransaction." est en échec";
                     $appNotification = new ApiNotification();
                     $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);

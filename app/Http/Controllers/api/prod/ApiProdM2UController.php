@@ -380,11 +380,11 @@ class ApiProdM2UController extends Controller
 
                     $idDevice = $device;
                     $services = Service::all();
-                    $title = "Kiaboo";
-                    $message = "Votre dépôt M2U Money de " . $montant . " F CFA a été effectué avec succès au ".$customerNumber;
-                    $subtitle ="Success";
+
+                    $title = "Transaction en succès";
+                    $message = "Le dépôt M2U de " . $montant . " F CFA a été effectué avec succès au ".$customerNumber." (ID : ".$dataResultat->TransactionID.") le ".Carbon::now()->format('d/m/Y H:i:s');
                     $appNotification = new ApiNotification();
-                    $envoiNotification = $appNotification->SendPushNotificationCallBack($idDevice, $title,  $message);
+                    $envoiNotification = $appNotification->SendPushNotificationCallBack($idDevice, $title, $message);
 
                     return response()->json([
                         'success' => true,
@@ -405,9 +405,13 @@ class ApiProdM2UController extends Controller
                     ],$e->getCode());
                 }
             }else{
+                $title = "Transaction en échec";
+                $message = "Le dépôt M2U de " . $montant . " F CFA au ".$customerNumber." est en échec";
+                $appNotification = new ApiNotification();
+                $envoiNotification = $appNotification->SendPushNotificationCallBack($device, $title, $message);
                 return response()->json([
                     'code' => $response->status(),
-                    'message' =>"12. Exception ".$response->status()."\nUne exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
+                    'message' =>"Transaction en échec",
                 ],$response->status());
             }
         }else{
