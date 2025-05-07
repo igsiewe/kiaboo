@@ -201,7 +201,7 @@ class ApiProdYooMeeController extends Controller
         $customerAmount =$montant;
         $url="https://yoomeemoney.cm/api/";
         $endpoint = $url."self/payments";
-        $description = "test kiaboo";
+        $description = "Agent ".Auth::user()->telephone;
         $codePin="7424";
         $response = Http::withOptions(['verify' => false,])->withBasicAuth("kiabooProd2024", "Ki@@boo#@2024")->withHeaders(
             [
@@ -293,12 +293,10 @@ class ApiProdYooMeeController extends Controller
                     ->limit(5)
                     ->get();
 
-                $idDevice = $device;
-                $title = "Kiaboo";
-                $message = "Le dépôt YOOMEE de " . $montant . " F CFA a été effectué avec succès au ".$customerNumber." (ID :".$referenceID.")";
-                $subtitle ="Success";
+                $title = "Transaction en succès";
+                $message = "Le dépôt YOOMEE de " . $montant . " F CFA a été effectué avec succès au ".$customerNumber." (ID : ".$referenceID.") le ".Carbon::now()->format('d/m/Y H:i');
                 $appNotification = new ApiNotification();
-                $envoiNotification = $appNotification->SendPushNotificationCallBack($idDevice, $title,  $message); //Push notification sur le telephone de l'agent
+                $envoiNotification = $appNotification->SendPushNotificationCallBack($device, $title, $message);
                 $services = Service::all();
                 return response()->json([
                     'success' => true,
@@ -313,7 +311,11 @@ class ApiProdYooMeeController extends Controller
 
             }catch (\Exception $e) {
                 DB::rollback();
-
+                $title = "Transaction en échec";
+                $message = "Le dépôt YOOMEE de " . $montant . " F CFA au ".$customerNumber." (ID : ".$referenceID.") est échec";
+                $appNotification = new ApiNotification();
+                $envoiNotification = $appNotification->SendPushNotificationCallBack($device, $title, $message);
+                Log::error("YooMee_Depot",["response"=>$e->getMessage(),"code"=>$e->getCode(),"Message"=>$e->getMessage()]);
                 return response()->json([
                     'success' => false,
                     'message' => "Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste", //'Une erreur innatendue s\est produite. Si le problème persiste, veuillez contacter votre support.',
@@ -328,7 +330,8 @@ class ApiProdYooMeeController extends Controller
                     'status'=>$response->status(),
                     'error'=>$response->body(),
                     'message'=>$data->code,
-                ],$response->status()
+                    'statusCode'=>$response->status(),
+                ],404
             );
         }
     }
