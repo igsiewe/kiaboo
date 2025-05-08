@@ -1334,6 +1334,9 @@ class ApiProdM2UController extends Controller
             $montant = $request->Amount;
             $Transaction->update([
                 'status'=>2,
+                'description'=>"PENDING",
+                'reference'=>$reference,
+                'reference_partenaire'=>$reference,
                 'fees'=>$fees,
             ]);
             $SourceWallet = $dataResultatUser->Wallets[0]->AccountNumber;
@@ -1444,6 +1447,15 @@ class ApiProdM2UController extends Controller
                             ], 404);
                         }
                     }else {
+                        $Transaction->update([
+                            'status'=>3,
+                            'description'=>"FAILED",
+                            'date_end_trans'=>Carbon::now(),
+                        ]);
+                        $title = "Transaction en échec";
+                        $message = $data->Description."\nLa transaction a échoué.";
+                        $appNotification = new ApiNotification();
+                        $envoiNotification = $appNotification->SendPushNotificationCallBack($device, $title, $message);
                         return response()->json([
                             'success' => false,
                             'message' => $data->Description,
@@ -1457,8 +1469,13 @@ class ApiProdM2UController extends Controller
                     ], 404);
                 }
             }else{
+                $Transaction->update([
+                    'status'=>3,
+                    'description'=>"FAILED",
+                    'date_end_trans'=>Carbon::now(),
+                ]);
                 $title = "Transaction en échec";
-                $message = $data->Description;
+                $message = $data->Description."\nLa transaction a échoué.";
                 $appNotification = new ApiNotification();
                 $envoiNotification = $appNotification->SendPushNotificationCallBack($device, $title, $message);
                 return response()->json([
