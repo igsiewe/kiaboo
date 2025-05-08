@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api\prod;
 
 use App\Http\Controllers\api\ApiCheckController;
+use App\Http\Controllers\api\ApiNotification;
 use App\Http\Controllers\api\ApiSmsController;
 use App\Http\Controllers\Controller;
 use App\Http\Enums\ServiceEnum;
@@ -210,7 +211,7 @@ class ApiKiabooController extends Controller
             $transactionsRefresh = DB::table('transactions')
                 ->join('services', 'transactions.service_id', '=', 'services.id')
                 ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
-                ->select('transactions.id','transactions.reference as reference','transactions.paytoken','transactions.reference_partenaire','transactions.date_transaction','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.commission_agent as commission','transactions.balance_before','transactions.balance_after' ,'transactions.status','transactions.service_id','services.name_service','services.logo_service','type_services.name_type_service','type_services.id as type_service_id','transactions.date_operation', 'transactions.heure_operation','transactions.commission_agent_rembourse as commission_agent')
+                ->select('transactions.id','transactions.reference as reference','transactions.paytoken','transactions.reference_partenaire','transactions.date_transaction','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.commission_agent as commission','transactions.balance_before','transactions.balance_after' ,'transactions.status','transactions.service_id','services.name_service','services.logo_service','type_services.name_type_service','type_services.id as type_service_id','transactions.date_operation', 'transactions.heure_operation','transactions.commission_agent_rembourse as commission_agent','transactions.fees')
                 ->where("fichier","agent")
                 ->where("source",Auth::user()->id)
                 ->where('transactions.status',1)
@@ -218,6 +219,10 @@ class ApiKiabooController extends Controller
                 ->limit(5)
                 ->get();
 
+            $title = "Transaction en succès";
+            $message = "Le transfert Kiaboo de " . $request->amount . " F CFA a été effectué avec succès par le ".$beneficiaire->first()->telephone." (ID transaction: ".$reference.") le ".Carbon::now()->format('Y-m-d H:i:s');
+            $appNotification = new ApiNotification();
+            $envoiNotification = $appNotification->SendPushNotificationCallBack($request->deviceId, $title, $message);
             $services = Service::all();
 
             $sms = new ApiSmsController();
