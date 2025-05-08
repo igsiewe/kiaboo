@@ -1503,12 +1503,13 @@ class ApiOMController extends Controller
                     'date_end_trans'=>Carbon::now(),
                     'terminaison'=>'CALLBACK',
                 ]);
-                $title = "Transaction en échec";
-                $message = "Le paiement Orange Money de " . $data->amount . " F CFA du ".$telephone." (ID : ".$data->txnid.") le ".$dateTransaction." est en échec";
-                $appNotification = new ApiNotification();
-                $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
                 $alerte = new ApiLog();
                 $alerte->logError(500, "OMCallBack", null, $data,"OMCallBack");
+                $title = "Transaction en échec";
+                $message = "Le paiement Orange Money de " . $montant . " F CFA du ".$telephone." (ID : ".$data->txnid.") le ".$dateTransaction." est en échec";
+                $appNotification = new ApiNotification();
+                $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
+
             }
 
         }
