@@ -1327,6 +1327,11 @@ class ApiProdM2UController extends Controller
                 ],404);
             }
             $Transaction = Transaction::where('id',$idTransaction)->where("status",1);
+            Log::info("M2UPaiement",[
+                "fonction"=>"M2UPaiement",
+                "request"=>$request,
+                "Transaction"=>$Transaction,
+            ]);
             $user = User::where('id', $Transaction->first()->created_by);
             $agent = $user->first()->id;
             $montant = $request->Amount;
