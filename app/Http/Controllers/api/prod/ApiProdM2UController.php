@@ -816,7 +816,7 @@ class ApiProdM2UController extends Controller
             return response()->json([
                 'status'=>'error',
                 'message'=>"1. Exception 401\nVotre compte est désactivé. Veuillez contacter votre distributeur",
-            ],401);
+            ],404);
         }
 
 
@@ -1005,7 +1005,7 @@ class ApiProdM2UController extends Controller
                 return response()->json([
                     'code' => $response->status(),
                     'message' =>"7. Exception ".$response->status()."\n".$dataResultat->Description,//"4. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
-                ],$response->status());
+                ],404);
             }
         }else{
             Log::error("M2U_CashBack",[
