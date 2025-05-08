@@ -795,8 +795,8 @@ class ApiProdM2UController extends Controller
     public function M2U_ExecuteCashBack(Request $request){ //Retrait
         $validator = Validator::make($request->all(), [
 
-            "TransactionNumber" => 'required|numeric',
-            "OTP" => 'required|numeric',
+            "TransactionNumber" => 'required',
+            "OTP" => 'required',
             "Amount" => 'required|numeric',
             "CustomerPhoneNumber"=>'required',
 
