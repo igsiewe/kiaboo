@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\prod;
 use App\Http\Controllers\api\ApiCheckController;
 use App\Http\Controllers\api\ApiCommissionController;
 use App\Http\Controllers\api\ApiNotification;
+use App\Http\Controllers\ApiLog;
 use App\Http\Controllers\Controller;
 use App\Http\Enums\ServiceEnum;
 use App\Models\Service;
@@ -1248,60 +1249,92 @@ class ApiProdM2UController extends Controller
             ], 400);
         }
         $apiCheck = new ApiCheckController();
-        $code = $apiCheck->genererChaineAleatoire(10);
-        $service = ServiceEnum::PAYMENT_M2U->value;
-        $customerNumber =$request->SourceWalletPhone;
 
-        // Vérifie si le service est actif
-        if($apiCheck->checkStatusService($service)==false){
-            return response()->json([
-                'status'=>'error',
-                'message'=>"1. Exception 403 \nCe service n'est pas actif",
-            ],403);
-        }
+        $service = ServiceEnum::PAYMENT_M2U->value;
+        $customerNumber = $request->SourceWalletPhone;
+
         // Vérifie si l'utilisateur est autorisé à faire cette opération
         if(!$apiCheck->checkUserValidity()){
             return response()->json([
                 'status'=>'error',
-                'message'=>"2. Exception 401 \nVotre compte est désactivé. Veuillez contacter votre distributeur",
-            ],404);
+                'message'=>'Votre compte est désactivé. Veuillez contacter votre distributeur',
+            ],403);
         }
+
+        // On vérifie si les frais sont paramétrées
+        $functionFees = new ApiCommissionController();
+        $lesfees =$functionFees->getFeesByService($service,$request->amount);
+        if($lesfees->getStatusCode()!=200){
+            return response()->json([
+                'success' => false,
+                'message' => "Impossible de calculer la commission",
+            ], 403);
+        }
+        $fee=json_decode($lesfees->getContent());
+        $fees = doubleval($fee->fees_globale);
+
+        //Initie la transaction
+        $device = $request->deviceId;
+        $latitude = $request->latitude;
+        $longitude = $request->longitude;
+        $place = $request->place;
+        $init_transaction = $apiCheck->init_Payment($request->amount, $request->customerPhone, $service,"", Auth::user()->id,1, $device,$latitude,$longitude,$place);
+
+        $dataTransactionInit = json_decode($init_transaction->getContent());
+
+        if($init_transaction->getStatusCode() !=200){
+            return response()->json([
+                'status'=>'error',
+                'message'=>$dataTransactionInit->message,
+            ],$init_transaction->getStatusCode());
+        }
+        $idTransaction = $dataTransactionInit->transId; //Id de la transaction initiée
+        $reference = $dataTransactionInit->reference; //Référence de la transaction initiée
 
         //Je recupere les info du client
 
-        $endpoint = 'https://apps.m2u.money/LocateUser';
-        $response = Http::withOptions(['verify' => false,])
-            ->withHeaders(
-                [
-                    'Content-Type'=> 'application/json',
-                ])
-
-            ->Post($endpoint, [
+        $endpointUser = 'https://apps.m2u.money/LocateUser';
+        $responseUser = Http::withOptions(['verify' => false,])
+            ->withHeaders(['Content-Type'=> 'application/json',])
+            ->Post($endpointUser, [
                 "LoginName"=> "CM949513",
                 "APIKey"=> "oh09DFok0T4ecUz1kzw2o9SoVslEwE3eMpvgtpzrhE4uv",
                 "AppID"=> "8SZpExWP0fxu6rKQEDva03KVT",
                 "PhoneNumber"=>'237'.$customerNumber,
             ]  );
-
-        if($response->status()==401){
+        $jsonUser = json_decode($responseUser, false);
+        $dataResultatUser = collect($jsonUser)->first();
+        Log::info("M2UPaiement",[
+            "fonction"=>"M2UPaiement",
+            "request"=>$request->SourceWalletPhone,
+            "responseUser"=>$dataResultatUser,
+        ]);
+        if($responseUser->status()==401){
             return response()->json([
                 'status' => 'echec',
-                'message'=>'Aucun client trouvé',
+                'message'=>$dataResultatUser->Description,
             ],404);
         }
 
-        if($response->status()==200){
-            $json = json_decode($response, false);
-            $data=collect($json)->first();
+        if($responseUser->status()==200){
+
             //Je convertis en tableau associatif
-            $element = json_decode($response, associative: true);
+            $element = json_decode($responseUser, associative: true);
             if(!Arr::has($element[0], "Wallets")){ //On teste si l'utilisateur a un wallet actif
                 return response()->json([
                     'status' => 'echec',
                     'message'=>"1. Exception 204\nCe numéro de client n'a pas de compte actif",
                 ],404);
             }
-            $SourceWallet = $data->Wallets[0]->AccountNumber;
+            $Transaction = Transaction::where('id',$idTransaction)->where("status",1);
+            $user = User::where('id', $Transaction->first()->created_by);
+            $agent = $user->first()->id;
+            $montant = $request->Amount;
+            $Transaction->update([
+                'status'=>2,
+                'fees'=>$fees,
+            ]);
+            $SourceWallet = $dataResultatUser->Wallets[0]->AccountNumber;
             $OPT = $request->OTP;
             $TargetWallet ="XAF-01-CM949513";
             $LoginName="CM949513";
@@ -1330,19 +1363,121 @@ class ApiProdM2UController extends Controller
                 "response"=>$response,
                 "TargetWallet"=>$TargetWallet,
             ]);
-            if($response->status()==401){
-                return response()->json([
-                    'status' => 'echec',
-                    'message' => $response->body(),
-                ],404);
-            }
+            $json = json_decode($response, false);
+            $element = json_decode($response, associative: true);
+            $data = collect($json)->first();
             if($response->status()==200){
-               return response()->json([
-                   'status' => 'success',
-                   'message' => $response->body(),
-               ],200);
 
+                if(Arr::has($element[0], "OK")) {
+                    if ($data->OK == "200") {
+                        $montantACrediter = doubleval($montant) - doubleval($Transaction->first()->fees);
+                        $balanceBeforeAgent = $user->get()->first()->balance_after;
+                        $balanceAfterAgent = floatval($balanceBeforeAgent) + floatval($montantACrediter); //On a déduit les frais de la transaction.
+                        $reference_partenaire = $reference;
+                        $total_fees = $user->first()->total_fees + $Transaction->first()->fees;
+                        try {
+                            DB::beginTransaction();
+                            //La transaction s'est bien passée
+                            //1- On modifie le soilde de le statut de la transaction dans la table Transaction
+                            $Transaction->update([
+                                'status' => 3,
+                                'reference_partenaire' => $reference_partenaire,
+                                'description' => $data->Result,
+                                'message' => $data->Description,
+                                'date_end_trans' => Carbon::now(),
+                                'balance_after' => $balanceAfterAgent,
+                                'balance_before' => $balanceBeforeAgent,
+                                'terminaison' => 'CALLBACK',
+                            ]);
+                            //2- On met à jour le solde du client
+                            $debitAgent = DB::table("users")->where("id", $agent)->update([
+                                'balance_after'=>$balanceAfterAgent,
+                                'balance_before'=>$balanceBeforeAgent,
+                                'last_amount'=>$montant,
+                                'total_fees'=>$total_fees,
+                                'date_last_transaction'=>Carbon::now(),
+                                'user_last_transaction_id'=>$agent,
+                                'last_service_id'=>ServiceEnum::PAYMENT_M2U->value,
+                                'reference_last_transaction'=>$reference,
+                                'remember_token'=>$reference,
+                            ]);
+                            $userRefresh = DB::table("users")->join("quartiers", "users.quartier_id", "=", "quartiers.id")
+                                ->join("villes", "quartiers.ville_id", "=", "villes.id")
+                                ->where('users.id', Auth::user()->id)
+                                ->select('users.id', 'users.name', 'users.surname', 'users.telephone', 'users.login', 'users.email','users.balance_before', 'users.balance_after','users.total_commission', 'users.last_amount','users.sous_distributeur_id','users.date_last_transaction','users.moncodeparrainage','quartiers.name_quartier as quartier','villes.name_ville as ville','users.adresse','users.quartier_id','quartiers.ville_id','users.qr_code','users.total_fees','users.total_paiement')->first();
+
+                            $transactionsRefresh = DB::table('transactions')
+                                ->join('services', 'transactions.service_id', '=', 'services.id')
+                                ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
+                                ->select('transactions.id','transactions.reference as reference','transactions.paytoken','transactions.reference_partenaire','transactions.date_transaction','transactions.debit','transactions.credit' ,'transactions.customer_phone','transactions.commission_agent as commission','transactions.balance_before','transactions.balance_after' ,'transactions.status','transactions.service_id','services.name_service','services.logo_service','type_services.name_type_service','type_services.id as type_service_id','transactions.date_operation', 'transactions.heure_operation','transactions.commission_agent_rembourse as commission_agent','transactions.fees')
+                                ->where("fichier","agent")
+                                ->where("source",Auth::user()->id)
+                                ->where('transactions.status',1)
+                                ->orderBy('transactions.date_transaction', 'desc')
+                                ->limit(5)
+                                ->get();
+                            DB::commit();
+                            $title = "Transaction en succès";
+                            $message = $data->Description;
+                            $appNotification = new ApiNotification();
+                            $envoiNotification = $appNotification->SendPushNotificationCallBack($device, $title, $message);
+
+                            return response()->json(
+                                [
+                                    'success' => true,
+                                    'status'=>200,
+                                    'message'=>$data->Result."\n".$data->Description,
+                                    'user'=>$userRefresh,
+                                    'transactions'=>$transactionsRefresh,
+                                ],200
+                            );
+                        } catch (\Exception $e) {
+                            DB::rollback();
+                            $alerte = new ApiLog();
+                            $alerte->logErrorCallBack($e->getCode(), "M2UPaiement", $e->getMessage(), $data, "M2UPaiement", $agent);
+                            return response()->json([
+                                'success' => false,
+                                'message' => $data->Description,
+                                'data' => $response->body(),
+                            ], 404);
+                        }
+                    }else {
+                        return response()->json([
+                            'success' => false,
+                            'message' => $data->Description,
+                            'data' => $response->body(),
+                        ], 404);
+                    }
+                }else{
+                    return response()->json([
+                        'success' => false,
+                        'message' => "1. Exception 404 \n".$data->Description,
+                    ], 404);
+                }
+            }else{
+                $title = "Transaction en échec";
+                $message = $data->Description;
+                $appNotification = new ApiNotification();
+                $envoiNotification = $appNotification->SendPushNotificationCallBack($device, $title, $message);
+                return response()->json([
+                    'code' => $response->status(),
+                    'message' =>"2. Exception ".$response->status()."\nUne exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
+                ],$response->status());
             }
+        }else{
+            //$body = json_decode($response->body());
+            Log::info("M2UPaiement",[
+                "request"=>$request->all(),
+                "response"=>$responseUser,
+            ]);
+            $title = "Transaction en échec";
+            $message = $dataResultatUser->Description;
+            $appNotification = new ApiNotification();
+            $envoiNotification = $appNotification->SendPushNotificationCallBack($device, $title, $message);
+            return response()->json([
+                'code' => $responseUser->status(),
+                'message' =>"3. Exception ".$responseUser->status()."\nUne exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
+            ],$responseUser->status());
         }
         //
     }

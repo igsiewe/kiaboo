@@ -1487,7 +1487,6 @@ class ApiOMController extends Controller
                     $message = "Le paiement Orange Money de " . $montant . " F CFA a été effectué avec succès par le ".$telephone." (ID transaction: ".$reference_partenaire.") le ".$dateTransaction;
                     $appNotification = new ApiNotification();
                     $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
-                    DB::commit();
                 }catch (\Exception $e){
                     DB::rollback();
                     $alerte = new ApiLog();
