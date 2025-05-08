@@ -1328,11 +1328,12 @@ class ApiProdM2UController extends Controller
             Log::info("M2UPaiement",[
                 "request"=>$request->all(),
                 "response"=>$response,
+                "TargetWallet"=>$TargetWallet,
             ]);
             if($response->status()==401){
                 return response()->json([
                     'status' => 'echec',
-                    'message' => response()->body(),
+                    'message' => $response->body(),
                 ],404);
             }
             if($response->status()==200){
