@@ -852,7 +852,7 @@ class ApiProdM2UController extends Controller
         if($init_transaction->getStatusCode() !=200){
             return response()->json([
                 'status'=>'error',
-                'message'=>"3. Exception ".$init_transaction->getStatusCode() ."\n".$dataInit->message,
+                'message'=>"3. Exception. ".$init_transaction->getStatusCode() ."\n".$dataInit->message,
             ],$init_transaction->getStatusCode());
         }
         $idTransaction = $dataInit->transId; //Id de la transaction initiée
