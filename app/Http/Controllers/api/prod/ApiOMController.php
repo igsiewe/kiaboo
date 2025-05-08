@@ -1445,6 +1445,7 @@ class ApiOMController extends Controller
         $Transaction = Transaction::where('payToken',$payToken)->where("status",2);
         if($Transaction->count()>0){
             $user = User::where('id', $Transaction->first()->created_by);
+            $agent = $user->first()->id;
             $montant = $Transaction->first()->credit;
             $reference = $Transaction->first()->reference;
             $telephone = $Transaction->first()->customer_phone;
@@ -1455,7 +1456,6 @@ class ApiOMController extends Controller
                 $balanceBeforeAgent = $user->get()->first()->balance_after;
                 $balanceAfterAgent = floatval($balanceBeforeAgent) + floatval($montantACrediter); //On a déduit les frais de la transaction.
                 $reference_partenaire=$data->txnid;
-                $agent = $user->first()->id;
                 $total_fees = $user->first()->total_fees + $Transaction->first()->fees;
                 try{
                     DB::beginTransaction();
@@ -1504,7 +1504,7 @@ class ApiOMController extends Controller
                     'terminaison'=>'CALLBACK',
                 ]);
                 $alerte = new ApiLog();
-                $alerte->logError(500, "OMCallBack", null, $data,"OMCallBack");
+                $alerte->logErrorCallBack(500, "OMCallBack", null, $data,"OMCallBack",$agent);
                 $title = "Transaction en échec";
                 $message = "Le paiement Orange Money de " . $montant . " F CFA du ".$telephone." (ID : ".$data->txnid.") le ".$dateTransaction." est en échec";
                 $appNotification = new ApiNotification();
