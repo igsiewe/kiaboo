@@ -1384,8 +1384,8 @@ class ApiProdM2UController extends Controller
                             DB::beginTransaction();
                             //La transaction s'est bien passée
                             //1- On modifie le soilde de le statut de la transaction dans la table Transaction
-                            $Transaction->update([
-                                'status' => 3,
+                            $Transaction->where("status",2)->update([
+                                'status' => 1,
                                 'reference_partenaire' => $reference_partenaire,
                                 'description' => $data->Result,
                                 'message' => $data->Description,
@@ -1447,7 +1447,7 @@ class ApiProdM2UController extends Controller
                             ], 404);
                         }
                     }else {
-                        $Transaction->update([
+                        $Transaction->where("status",2)->update([
                             'status'=>3,
                             'description'=>"FAILED",
                             'date_end_trans'=>Carbon::now(),
@@ -1469,7 +1469,7 @@ class ApiProdM2UController extends Controller
                     ], 404);
                 }
             }else{
-                $Transaction->update([
+                $Transaction->where("status",2)->update([
                     'status'=>3,
                     'description'=>"FAILED",
                     'date_end_trans'=>Carbon::now(),
