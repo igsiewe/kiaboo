@@ -881,6 +881,10 @@ class ApiProdM2UController extends Controller
                     "PIN"=>"SibSnfeSdksSji2023_@",
                     "PartnerTellerID"=>Auth::user()->id,
                 ]  );
+            Log::info("M2U_ExecuteCashBack",[
+                "data"=>$response,
+                "code"=>$response->status(),
+            ]);
             $json = json_decode($response, false);
             $dataResultat = collect($json)->first();
             $element = json_decode($response, associative: true);
