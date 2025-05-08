@@ -1308,6 +1308,7 @@ class ApiProdM2UController extends Controller
             "fonction"=>"M2UPaiement",
             "request"=>$request->SourceWalletPhone,
             "responseUser"=>$dataResultatUser,
+
         ]);
         if($responseUser->status()==401){
             return response()->json([
@@ -1328,9 +1329,8 @@ class ApiProdM2UController extends Controller
             }
             $Transaction = Transaction::where('id',$idTransaction)->where("status",1);
             Log::info("M2UPaiement",[
-                "fonction"=>"M2UPaiement",
                 "request"=>$request,
-                "Transaction"=>$Transaction,
+                "Transaction"=>$Transaction->first(),
             ]);
             $user = User::where('id', $Transaction->first()->created_by);
             $agent = $user->first()->id;
