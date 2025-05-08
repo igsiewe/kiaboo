@@ -1484,15 +1484,6 @@ class ApiProdM2UController extends Controller
                 ],$response->status());
             }
         }else{
-            //$body = json_decode($response->body());
-            Log::info("M2UPaiement",[
-                "request"=>$request->all(),
-                "response"=>$responseUser,
-            ]);
-            $title = "Transaction en échec";
-            $message = $dataResultatUser->Description;
-            $appNotification = new ApiNotification();
-            $envoiNotification = $appNotification->SendPushNotificationCallBack($device, $title, $message);
             return response()->json([
                 'code' => $responseUser->status(),
                 'message' =>"3. Exception ".$responseUser->status()."\nUne exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
