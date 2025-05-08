@@ -553,8 +553,8 @@ class ApiProdM2UController extends Controller
     public function M2U_RetraitCPPayCash(Request $request){ //CPPayCash
         $validator = Validator::make($request->all(), [
 
-            "SecurityCode" => 'required|numeric',
-            "VoucherNumber" => 'required|numeric',
+            "SecurityCode" => 'required',
+            "VoucherNumber" => 'required',
             "TargetPhoneNumber" => 'required|numeric',
             "FirstName" => 'required|string',
             "LastName" => 'required|string',
@@ -877,8 +877,10 @@ class ApiProdM2UController extends Controller
                 ->Post($endpoint, [
                     "TransactionNumber"=> $request->TransactionNumber,
                     "WalletNumber"=>"XAF-01-CM9539-001",
-                    "OTP"=>$request->OTP,
-                    "PIN"=>"SibSnfeSdksSji2023_@",
+                 //   "OTP"=>$request->OTP,
+                  //  "PIN"=>"SibSnfeSdksSji2023_@",
+                    "OTP"=>"SibSnfeSdksSji2023_@",
+                    "PIN"=>$request->OTP,
                     "PartnerTellerID"=>Auth::user()->id,
                 ]  );
             Log::info("M2U_ExecuteCashBack",[
