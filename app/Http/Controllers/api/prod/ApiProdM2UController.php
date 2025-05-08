@@ -877,11 +877,9 @@ class ApiProdM2UController extends Controller
                 ->Post($endpoint, [
                     "TransactionNumber"=> $request->TransactionNumber,
                     "WalletNumber"=>"XAF-01-CM9539-001",
-                 //   "OTP"=>$request->OTP,
-                  //  "PIN"=>"SibSnfeSdksSji2023_@",
-                    "OTP"=>"SibSnfeSdksSji2023_@",
-                    "PIN"=>$request->OTP,
-                  //  "PartnerTellerID"=>Auth::user()->id,
+                    "OTP"=>$request->OTP,
+                    "PIN"=>"SibSnfeSdksSji2023_@",
+                    "PartnerTellerID"=>Auth::user()->id,
                 ]  );
             Log::info("M2U_ExecuteCashBack",[
                 "data"=>$response,
