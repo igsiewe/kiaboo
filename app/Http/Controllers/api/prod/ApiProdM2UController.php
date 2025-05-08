@@ -884,6 +884,7 @@ class ApiProdM2UController extends Controller
             Log::info("M2U_ExecuteCashBack",[
                 "data"=>$response,
                 "code"=>$response->status(),
+                "request"=>$request->all(),
             ]);
             $json = json_decode($response, false);
             $dataResultat = collect($json)->first();
