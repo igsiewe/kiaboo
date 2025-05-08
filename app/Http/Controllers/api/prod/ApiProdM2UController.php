@@ -1469,7 +1469,7 @@ class ApiProdM2UController extends Controller
                     ], 404);
                 }
             }else{
-                $Transaction->where("status",2)->update([
+                $Transaction=Transaction::where('id',$idTransaction)->update([
                     'status'=>3,
                     'description'=>"FAILED",
                     'date_end_trans'=>Carbon::now(),
