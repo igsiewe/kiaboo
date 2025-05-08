@@ -242,6 +242,7 @@ Route::middleware('auth:api')->group(function () {
                     Route::post('retrait/CPPayCash', 'M2U_RetraitCPPayCash')->name("M2U_PROD_RetraitCPPayCash");
 
                     Route::post('CashBackStatus', 'M2U_CashBackStatus')->name("M2U_CashBackStatus");
+                    Route::post('PaymentRequest', 'M2U_Paiement')->name("M2U_Paiement");
                     Route::post('retrait/ExecuteCashBack', 'M2U_ExecuteCashBack')->name("M2U_PROD_ExecuteCashBack");
                 });
             });

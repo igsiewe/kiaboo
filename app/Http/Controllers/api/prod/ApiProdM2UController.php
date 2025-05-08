@@ -1232,6 +1232,118 @@ class ApiProdM2UController extends Controller
         }
 
 
+
+    }
+
+    public function M2U_Paiement(Request $request){
+        $validator = Validator::make($request->all(), [
+            "SourceWalletPhone" => 'required',
+            "OTP" => 'required',
+            "Amount" => 'required|numeric',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first(),
+            ], 400);
+        }
+        $apiCheck = new ApiCheckController();
+        $code = $apiCheck->genererChaineAleatoire(10);
+        $service = ServiceEnum::PAYMENT_M2U->value;
+        $customerNumber =$request->SourceWalletPhone;
+
+        // Vérifie si le service est actif
+        if($apiCheck->checkStatusService($service)==false){
+            return response()->json([
+                'status'=>'error',
+                'message'=>"1. Exception 403 \nCe service n'est pas actif",
+            ],403);
+        }
+        // Vérifie si l'utilisateur est autorisé à faire cette opération
+        if(!$apiCheck->checkUserValidity()){
+            return response()->json([
+                'status'=>'error',
+                'message'=>"2. Exception 401 \nVotre compte est désactivé. Veuillez contacter votre distributeur",
+            ],404);
+        }
+
+        //Je recupere les info du client
+
+        $endpoint = 'https://apps.m2u.money/LocateUser';
+        $response = Http::withOptions(['verify' => false,])
+            ->withHeaders(
+                [
+                    'Content-Type'=> 'application/json',
+                ])
+
+            ->Post($endpoint, [
+                "LoginName"=> "CM949513",
+                "APIKey"=> "oh09DFok0T4ecUz1kzw2o9SoVslEwE3eMpvgtpzrhE4uv",
+                "AppID"=> "8SZpExWP0fxu6rKQEDva03KVT",
+                "PhoneNumber"=>'237'.$customerNumber,
+            ]  );
+
+        if($response->status()==401){
+            return response()->json([
+                'status' => 'echec',
+                'message'=>'Aucun client trouvé',
+            ],404);
+        }
+
+        if($response->status()==200){
+            $json = json_decode($response, false);
+            $data=collect($json)->first();
+            //Je convertis en tableau associatif
+            $element = json_decode($response, associative: true);
+            if(!Arr::has($element[0], "Wallets")){ //On teste si l'utilisateur a un wallet actif
+                return response()->json([
+                    'status' => 'echec',
+                    'message'=>"1. Exception 204\nCe numéro de client n'a pas de compte actif",
+                ],404);
+            }
+            $SourceWallet = $data->Wallets[0]->AccountNumber;
+            $OPT = $request->OTP;
+            $TargetWallet ="";
+            $LoginName="CM949513";
+            $AppID="8SZpExWP0fxu6rKQEDva03KVT";
+            $APIKey="oh09DFok0T4ecUz1kzw2o9SoVslEwE3eMpvgtpzrhE4uv";
+            $Amount=$request->Amount;
+
+            $endpointPaiement = 'https://apps.m2u.money/PaymentRequest';
+            $response = Http::withOptions(['verify' => false,])
+                ->withHeaders(
+                    [
+                        'Content-Type'=> 'application/json',
+                    ])
+
+                ->Post($endpointPaiement, [
+                    "LoginName"=> $LoginName,
+                    "APIKey"=> $APIKey,
+                    "AppID"=> $AppID,
+                    "OTP"=>$OPT,
+                    "TargetWallet"=>$TargetWallet,
+                    "SourceWallet"=>$SourceWallet,
+                    "Amount"=>$Amount,
+                ]  );
+            Log::info("M2UPaiement",[
+                "request"=>$request->all(),
+                "response"=>$response,
+            ]);
+            if($response->status()==401){
+                return response()->json([
+                    'status' => 'echec',
+                    'message' => response()->body(),
+                ],404);
+            }
+            if($response->status()==200){
+               return response()->json([
+                   'status' => 'success',
+                   'message' => $response->body(),
+               ],200);
+
+            }
+        }
+        //
     }
 
 }
