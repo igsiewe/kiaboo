@@ -739,9 +739,8 @@ class ApiProdM2UController extends Controller
                         ->get();
 
                     $idDevice = $device;
-                    $title = "Kiaboo";
-                    $message = "Le retrait M2U Money de " . $request->Amount . " F CFA a été effectué avec succès au ".$request->TargetPhoneNumber;
-                    $subtitle ="Success";
+                    $title = "Transaction en succès";
+                    $message = "Le retrait M2U Money de " . $request->Amount . " F CFA a été effectué avec succès au ".$request->TargetPhoneNumber." (ID transaction: ".$dataResultat->TransactionID."). le ".Carbon::now()->format('d/m/Y H:i:s');
                     $appNotification = new ApiNotification();
                     $envoiNotification = $appNotification->SendPushNotificationCallBack($idDevice, $title,  $message);
 
@@ -756,18 +755,34 @@ class ApiProdM2UController extends Controller
                     ], 200);
                 }catch (\Exception $e){
                     DB::rollBack();
+                    Log::error("M2U_Depot",[
+                        "data"=>$e->getMessage(),
+                        "code"=>$e->getCode(),
+                    ]);
                     return response()->json([
                         'success' => false,
                         'message' =>"5. Exception ".$e->getCode()."\nUne exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
                     ],$e->getCode());
                 }
             }else{
+                Log::error("M2U_Depot",[
+                    "data"=>$response->body(),
+                    "code"=>$response->status(),
+                ]);
+                $title = "Transaction en échec";
+                $message = "Le retrait M2U Money de " . $request->Amount . " F CFA au ".$request->TargetPhoneNumber." le ".Carbon::now()->format('d/m/Y H:i:s')." est en échec";
+                $appNotification = new ApiNotification();
+                $envoiNotification = $appNotification->SendPushNotificationCallBack($device, $title,  $message);
                 return response()->json([
                     'code' => $response->status(),
                     'message' =>"6. Exception ".$response->status()."\nUne exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
                 ],$response->status());
             }
         }else{
+            Log::error("M2U_Depot",[
+                "data"=>$getToken->getContent(),
+                "code"=>$getToken->getStatusCode(),
+            ]);
             return response()->json([
                 'status'=>'error',
                 'message' =>"7. Exception ".$getToken->getContent()." Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
@@ -940,9 +955,8 @@ class ApiProdM2UController extends Controller
                                     ->get();
 
                                 $idDevice = $device;
-                                $title = "Kiaboo";
-                                $message = "Le retrait M2U Money de " . $request->Amount . " F CFA a été effectué avec succès au ".$request->TargetPhoneNumber." (".$dataResultat->TransactionID.")";
-                                $subtitle ="Success";
+                                $title = "Transaction en succès";
+                                $message = "Le retrait M2U Money de " . $request->Amount . " F CFA a été effectué avec succès par le ".$request->TargetPhoneNumber." (".$dataResultat->TransactionID.") le".Carbon::now()->format('d/m/Y H:i:s');
                                 $appNotification = new ApiNotification();
                                 $envoiNotification = $appNotification->SendPushNotificationCallBack($idDevice, $title,  $message);
 
@@ -957,6 +971,10 @@ class ApiProdM2UController extends Controller
                                 ], 200);
                             }catch (\Exception $e){
                                 DB::rollBack();
+                                Log::error("M2U_CashBack",[
+                                    "data"=>$e->getMessage(),
+                                    "code"=>$e->getCode(),
+                                ]);
                                 return response()->json([
                                     'success' => false,
                                     'message' =>"5. Exception ".$e->getCode()."\nUne exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
@@ -965,6 +983,14 @@ class ApiProdM2UController extends Controller
                         }
                     }
                 }else{
+                    Log::error("M2U_CashBack",[
+                        "data"=>$response->body(),
+                        "code"=>$response->status(),
+                    ]);
+                    $title = "Transaction en échec";
+                    $message = "Le retrait CashBack M2U Money de " . $request->Amount . " F CFA au ".$request->TargetPhoneNumber." le ".Carbon::now()->format('d/m/Y H:i:s')." est en échec";
+                    $appNotification = new ApiNotification();
+                    $envoiNotification = $appNotification->SendPushNotificationCallBack($device, $title,  $message);
                     return response()->json([
                         'status' => 'error',
                         'message' =>"6. Exception 404\n".$dataResultat->Description,// 'Une error s\'est produite. Veuillez contacter votre support',
@@ -972,12 +998,20 @@ class ApiProdM2UController extends Controller
                 }
 
             }else{
+                Log::error("M2U_CashBack",[
+                    "data"=>$response->body(),
+                    "code"=>$response->status(),
+                ]);
                 return response()->json([
                     'code' => $response->status(),
                     'message' =>"7. Exception ".$response->status()."\n".$dataResultat->Description,//"4. Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
                 ],$response->status());
             }
         }else{
+            Log::error("M2U_CashBack",[
+                "data"=>$getToken->getContent(),
+                "code"=>$getToken->getStatusCode() ,
+            ]);
             return response()->json([
                 'status'=>'error',
                 'message' =>"8. Exception ".$getToken->getStatusCode()."\nUne exception a été détectée, veuillez contacter votre superviseur si le problème persiste",
