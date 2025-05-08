@@ -433,7 +433,7 @@ class ApiOMController extends Controller
                     ->get();
 
                 $title = "Kiaboo";
-                $message = "Le dépôt Orange Money de " . $montant . " F CFA a été effectué avec succès au ".$customerNumber." (ID : ".$resultat->data->payToken.") le ".Carbon::now()->format("d/m/Y H:i:s");
+                $message = "Le dépôt Orange Money de " . $montant . " F CFA a été effectué avec succès au ".$customerNumber." (ID transaction: ".$resultat->data->payToken.") le ".Carbon::now()->format("d/m/Y H:i:s");
                 $appNotification = new ApiNotification();
                 $envoiNotification = $appNotification->SendPushNotificationCallBack($device, $title, $message);
 
@@ -1335,7 +1335,7 @@ class ApiOMController extends Controller
                                 ]);
                                 DB::commit();
                                 $title = "Transaction en succès";
-                                $message = "Le paiement Orange Money de " . $montant . " F CFA a été effectué avec succès au ".$telephone." (ID : ".$reference_partenaire.") le ".$dateTransaction;
+                                $message = "Le paiement Orange Money de " . $montant . " F CFA a été effectué avec succès au ".$telephone." (ID transaction:".$reference_partenaire.") le ".$dateTransaction;
                                 $appNotification = new ApiNotification();
                                 $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
 
@@ -1377,7 +1377,7 @@ class ApiOMController extends Controller
                             ]);
                             DB::commit();
                             $title = "Transaction en échec";
-                            $message = "Le paiement Orange Money de " . $montant . " F CFA du ".$telephone." (ID : ".$data->data->txnid.") le ".$dateTransaction." est en échec";
+                            $message = "Le paiement Orange Money de " . $montant . " F CFA du ".$telephone." (ID transaction:".$data->data->txnid.") le ".$dateTransaction." est en échec";
                             $appNotification = new ApiNotification();
                             $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
                             return response()->json(
@@ -1449,7 +1449,7 @@ class ApiOMController extends Controller
             $montant = $Transaction->first()->credit;
             $reference = $Transaction->first()->reference;
             $telephone = $Transaction->first()->customer_phone;
-            $dateTransaction = $Transaction->first()->date_transaction;
+            $dateTransaction =Carbon::parse($Transaction->first()->date_transaction)->format('d/m/Y H:i:s');
             $device_notification= $Transaction->first()->device_notification;
             if($data->status=="SUCCESSFULL"){
                 $montantACrediter = doubleval($montant) -  doubleval($Transaction->first()->fees);
@@ -1484,7 +1484,7 @@ class ApiOMController extends Controller
                     ]);
                     DB::commit();
                     $title = "Transaction en succès";
-                    $message = "Le paiement Orange Money de " . $montant . " F CFA a été effectué avec succès au ".$telephone." (ID : ".$reference_partenaire.") le ".$dateTransaction;
+                    $message = "Le paiement Orange Money de " . $montant . " F CFA a été effectué avec succès au ".$telephone." (ID transaction: ".$reference_partenaire.") le ".$dateTransaction;
                     $appNotification = new ApiNotification();
                     $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
                     DB::commit();
@@ -1506,7 +1506,7 @@ class ApiOMController extends Controller
                 $alerte = new ApiLog();
                 $alerte->logErrorCallBack(500, "OMCallBack", null, $data,"OMCallBack",$agent);
                 $title = "Transaction en échec";
-                $message = "Le paiement Orange Money de " . $montant . " F CFA du ".$telephone." (ID : ".$data->txnid.") le ".$dateTransaction." est en échec";
+                $message = "Le paiement Orange Money de " . $montant . " F CFA du ".$telephone." (ID transaction: ".$data->txnid.") le ".$dateTransaction." est en échec";
                 $appNotification = new ApiNotification();
                 $envoiNotification = $appNotification->SendPushNotificationCallBack($device_notification, $title, $message);
 

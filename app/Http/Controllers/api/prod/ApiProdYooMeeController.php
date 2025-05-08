@@ -294,7 +294,7 @@ class ApiProdYooMeeController extends Controller
                     ->get();
 
                 $title = "Transaction en succès";
-                $message = "Le dépôt YOOMEE de " . $montant . " F CFA a été effectué avec succès au ".$customerNumber." (ID : ".$referenceID.") le ".Carbon::now()->format('d/m/Y H:i');
+                $message = "Le dépôt YOOMEE de " . $montant . " F CFA a été effectué avec succès au ".$customerNumber." (ID transaction:".$referenceID.") le ".Carbon::now()->format('d/m/Y H:i');
                 $appNotification = new ApiNotification();
                 $envoiNotification = $appNotification->SendPushNotificationCallBack($device, $title, $message);
                 $services = Service::all();
@@ -312,7 +312,7 @@ class ApiProdYooMeeController extends Controller
             }catch (\Exception $e) {
                 DB::rollback();
                 $title = "Transaction en échec";
-                $message = "Le dépôt YOOMEE de " . $montant . " F CFA au ".$customerNumber." (ID : ".$referenceID.") est échec";
+                $message = "Le dépôt YOOMEE de " . $montant . " F CFA au ".$customerNumber." (ID transaction: ".$referenceID.") est échec";
                 $appNotification = new ApiNotification();
                 $envoiNotification = $appNotification->SendPushNotificationCallBack($device, $title, $message);
                 Log::error("YooMee_Depot",["response"=>$e->getMessage(),"code"=>$e->getCode(),"Message"=>$e->getMessage()]);

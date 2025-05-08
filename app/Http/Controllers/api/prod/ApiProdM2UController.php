@@ -382,7 +382,7 @@ class ApiProdM2UController extends Controller
                     $services = Service::all();
 
                     $title = "Transaction en succès";
-                    $message = "Le dépôt M2U de " . $montant . " F CFA a été effectué avec succès au ".$customerNumber." (ID : ".$dataResultat->TransactionID.") le ".Carbon::now()->format('d/m/Y H:i:s');
+                    $message = "Le dépôt M2U de " . $montant . " F CFA a été effectué avec succès au ".$customerNumber." (ID transaction: ".$dataResultat->TransactionID.") le ".Carbon::now()->format('d/m/Y H:i:s');
                     $appNotification = new ApiNotification();
                     $envoiNotification = $appNotification->SendPushNotificationCallBack($idDevice, $title, $message);
 
