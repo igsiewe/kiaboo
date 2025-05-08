@@ -1263,7 +1263,7 @@ class ApiProdM2UController extends Controller
 
         // On vérifie si les frais sont paramétrées
         $functionFees = new ApiCommissionController();
-        $lesfees =$functionFees->getFeesByService($service,$request->amount);
+        $lesfees =$functionFees->getFeesByService($service,$request->Amount);
         if($lesfees->getStatusCode()!=200){
             return response()->json([
                 'success' => false,
@@ -1278,7 +1278,7 @@ class ApiProdM2UController extends Controller
         $latitude = $request->latitude;
         $longitude = $request->longitude;
         $place = $request->place;
-        $init_transaction = $apiCheck->init_Payment($request->amount, $request->customerPhone, $service,"", Auth::user()->id,1, $device,$latitude,$longitude,$place);
+        $init_transaction = $apiCheck->init_Payment($request->Amount, $request->SourceWalletPhone, $service,"", Auth::user()->id,1, $device,$latitude,$longitude,$place);
 
         $dataTransactionInit = json_decode($init_transaction->getContent());
 
