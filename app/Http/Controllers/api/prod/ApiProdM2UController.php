@@ -881,7 +881,7 @@ class ApiProdM2UController extends Controller
                   //  "PIN"=>"SibSnfeSdksSji2023_@",
                     "OTP"=>"SibSnfeSdksSji2023_@",
                     "PIN"=>$request->OTP,
-                    "PartnerTellerID"=>Auth::user()->id,
+                  //  "PartnerTellerID"=>Auth::user()->id,
                 ]  );
             Log::info("M2U_ExecuteCashBack",[
                 "data"=>$response,
