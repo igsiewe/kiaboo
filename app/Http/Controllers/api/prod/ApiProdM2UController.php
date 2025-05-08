@@ -194,7 +194,7 @@ class ApiProdM2UController extends Controller
             return response()->json([
                 'status'=>'error',
                 'message'=>"2. Exception 401 \nVotre compte est désactivé. Veuillez contacter votre distributeur",
-            ],401);
+            ],404);
         }
 
         // Vérifie si le solde de l'utilisateur lui permet d'effectuer cette opération

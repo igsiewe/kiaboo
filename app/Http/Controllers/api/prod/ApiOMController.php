@@ -230,7 +230,7 @@ class ApiOMController extends Controller
                 return response()->json([
                     'status'=>'error',
                     'message'=>'Votre compte est désactivé. Veuillez contacter votre distributeur',
-                ],401);
+                ],404);
             }
 
             // Vérifie si le solde de l'utilisateur lui permet d'effectuer cette opération
