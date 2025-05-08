@@ -1327,11 +1327,8 @@ class ApiProdM2UController extends Controller
                     'message'=>"1. Exception 204\nCe numéro de client n'a pas de compte actif",
                 ],404);
             }
-            $Transaction = Transaction::where('id',$idTransaction)->where("status",1);
-            Log::info("M2UPaiement",[
-                "request"=>$request,
-                "Transaction"=>$Transaction->first(),
-            ]);
+            $Transaction = Transaction::where('id',$idTransaction)->where("status",0);
+
             $user = User::where('id', $Transaction->first()->created_by);
             $agent = $user->first()->id;
             $montant = $request->Amount;
