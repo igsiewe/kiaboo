@@ -1303,7 +1303,7 @@ class ApiProdM2UController extends Controller
             }
             $SourceWallet = $data->Wallets[0]->AccountNumber;
             $OPT = $request->OTP;
-            $TargetWallet ="";
+            $TargetWallet ="XAF-01-CM949513";
             $LoginName="CM949513";
             $AppID="8SZpExWP0fxu6rKQEDva03KVT";
             $APIKey="oh09DFok0T4ecUz1kzw2o9SoVslEwE3eMpvgtpzrhE4uv";
