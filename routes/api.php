@@ -178,6 +178,8 @@ Route::middleware('auth:api')->group(function () {
                 Route::controller(ApiProdTransactionsController::class)->group(function () {
                     Route::post('/', 'getTransactionSwagger')->name("getTransactionSwagger");
                     Route::get('/{nbre}', 'getLastTransactionSwagger')->name("getLastTransactionSwagger");
+                    Route::get('/last/{nbre}', 'getLastUserTransaction')->name("getLastUserTransaction");
+
                     Route::get('/dashboard/data', 'getDataDashBoard')->name("getDataDashBoard");
                 });
             });
