@@ -1295,7 +1295,8 @@ class ApiOMController extends Controller
             if($response->status()==200){
                 $reference = $Transaction->first()->reference;
                 $telephone = $Transaction->first()->customer_phone;
-                $dateTransaction = $Transaction->first()->date_transaction;
+               // $dateTransaction = $Transaction->first()->date_transaction;
+                $dateTransaction =Carbon::parse($Transaction->first()->date_transaction)->format('d/m/Y H:i:s');
                 $device_notification= $Transaction->first()->device_notification;
                 $montant = $Transaction->first()->credit;
                 $user = User::where('id', $Transaction->first()->created_by);
