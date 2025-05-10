@@ -25,7 +25,7 @@
                             <td nowrap>Client : </td><td nowrap><span style="text-decoration-line: underline; display: flex">{{$transactions->customer_phone}}</span></td></tr>
                         <tr><td nowrap>Solde avant : </td><td nowrap><span style="text-decoration-line: underline; display: flex">{{number_format($transactions->balance_before,0,","," ")." ".$money}}</span></td><td nowrap>Solde après : </td><td nowrap><span style="text-decoration-line: underline; display: flex">{{number_format($transactions->balance_after,0,","," ")." ".$money}}</span></td></tr>
                         <tr><td nowrap>Commission Distributeur : </td><td><span style="text-decoration-line: underline; display: flex">{{number_format($transactions->commission_distributeur,0,","," ")." ".$money}}</span></td><td nowrap>Commission Agent : </td><td nowrap><span style="text-decoration-line: underline; display: flex">{{number_format($transactions->commission_agent,0,","," ")." ".$money}}</span></td></tr>
-                        <tr><td nowrap>Frais : </td><td><span style="text-decoration-line: underline; display: flex">{{number_format($transactions->frais,0,","," ")." ".$money}}</span></td><td nowrap></td><td nowrap><span style="text-decoration-line: underline; display: flex"></span></td></tr>
+                        <tr><td nowrap>Frais : </td><td><span style="text-decoration-line: underline; display: flex">{{number_format($transactions->fees,0,","," ")." ".$money}}</span></td><td nowrap></td><td nowrap><span style="text-decoration-line: underline; display: flex"></span></td></tr>
                     </table>
                 </div>
                 </div>
