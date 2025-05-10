@@ -230,8 +230,8 @@
                     @endisset
             }, {
                 name: 'Paiement',
-                data: @isset($envoi)
-                        {{$envoi}}
+                data: @isset($paiement)
+                        {{$paiemeent}}
                         @endisset
             }],
 
