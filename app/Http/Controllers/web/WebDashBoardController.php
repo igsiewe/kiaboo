@@ -112,7 +112,7 @@ class WebDashBoardController extends Controller
             for ($i = 1; $i <= 12; $i++) {
 
                $data = collect($resultGraphe)->where("mois",$i);
-                dd($data);
+                dd($resultGraphe);
                $envoi->add($data->sum(function ($op) use ($envoi){
                      return $op->envoi;
                 }));
