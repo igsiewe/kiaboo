@@ -124,7 +124,7 @@ class WebDashBoardController extends Controller
                 }));
             }
 
-            dd ($envoi, $retrait, $paiement);
+          //  dd ($envoi, $retrait, $paiement);
 
         }
 
