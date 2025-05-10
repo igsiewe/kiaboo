@@ -110,6 +110,7 @@ class WebDashBoardController extends Controller
             $paiement = collect();
 
             for ($i = 1; $i <= 12; $i++) {
+                dd($i);
                $data = collect($resultGraphe)->where("mois",$i);
                $envoi->add($data->sum(function ($op) use ($envoi){
                      return $op->envoi;
