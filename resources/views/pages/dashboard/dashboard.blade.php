@@ -217,7 +217,7 @@
             stroke: {
                 curve: 'smooth'
             },
-            colors: ['#90e0db','#e1b5c2'],
+            colors: ['#90e0db','#e1b5c2','#f1b5c3'],
             series: [{
                 name: 'Retrait',
                 data: @isset($retrait)
@@ -231,7 +231,7 @@
             }, {
                 name: 'Paiement',
                 data: @isset($paiement)
-                        {{$paiemeent}}
+                        {{$paiement}}
                         @endisset
             }],
 
