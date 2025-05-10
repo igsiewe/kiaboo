@@ -98,7 +98,7 @@ class WebDashBoardController extends Controller
             $resultGraphe= $transAgent
                 ->whereYear('transactions.date_transaction', Carbon::now()->year)
                 ->selectRaw("month(kb_transactions.date_transaction) as mois, SUM(CASE WHEN kb_type_services.name_type_service = 'Payment' THEN credit ELSE 0 END) AS Paiement,
-                    SUM(CASE WHEN kb_type_services.name_type_service = 'Retait' THEN credit ELSE 0 END) AS Retait,
+                    SUM(CASE WHEN kb_type_services.name_type_service = 'Retrait' THEN credit ELSE 0 END) AS Retrait,
                     SUM(CASE WHEN kb_type_services.name_type_service = 'Envoi' THEN debit ELSE 0 END) AS Envoi")
                 ->groupBy('mois')
                 ->orderBy('mois', 'desc')->get()->toArray();
