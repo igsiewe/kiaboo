@@ -228,6 +228,11 @@
                 data: @isset($envoi)
                     {{$envoi}}
                     @endisset
+            }, {
+                name: 'Paiement',
+                data: @isset($envoi)
+                        {{$envoi}}
+                        @endisset
             }],
 
             xaxis: {

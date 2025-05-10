@@ -27,7 +27,7 @@ class WebDashBoardController extends Controller
             ->where("fichier","agent")
             ->where('status',StatusTransEnum::VALIDATED->value)
             ->whereHas('service',function ($query){
-                $query->whereIn("type_service_id",[TypeServiceEnum::ENVOI->value,TypeServiceEnum::RETRAIT->value,TypeServiceEnum::FACTURE->value,TypeServiceEnum::PAYMENT->value]);
+                $query->whereIn("type_service_id",[TypeServiceEnum::ENVOI->value,TypeServiceEnum::RETRAIT->value,TypeServiceEnum::PAYMENT->value]);
             })->whereHas('auteur',function ($query) use ($auth){
                 $query->whereIn("id",$auth);
             });
@@ -64,7 +64,7 @@ class WebDashBoardController extends Controller
                 ->join("type_services","type_services.id","services.type_service_id")
                 ->where("transactions.fichier","agent")
                 ->where('transactions.status',StatusTransEnum::VALIDATED->value)
-                ->whereIn("type_services.id", [TypeServiceEnum::ENVOI->value,TypeServiceEnum::RETRAIT->value,TypeServiceEnum::FACTURE->value,TypeServiceEnum::PAYMENT->value]);
+                ->whereIn("type_services.id", [TypeServiceEnum::ENVOI->value,TypeServiceEnum::RETRAIT->value,TypeServiceEnum::PAYMENT->value]);
 
             $bestAgents =$transAgent->selectRaw('kb_users.id, kb_users.login, kb_users.name, kb_users.surname, kb_distributeurs.name_distributeur, sum(kb_transactions.debit+kb_transactions.credit) as volume, sum(kb_transactions.commission) as commission')
                 ->groupBy('users.name', 'users.surname','users.login','users.id')
@@ -106,7 +106,6 @@ class WebDashBoardController extends Controller
                 $retrait->add($data->sum(function ($op) use ($retrait){
                     return $op->retrait;
                 }));
-
             }
 
         }
