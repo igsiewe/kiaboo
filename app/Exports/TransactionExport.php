@@ -58,6 +58,7 @@ class TransactionExport implements FromCollection, WithHeadings, WithEvents, Wit
             'CLIENT',
             'COMMISSION AGENT',
             'COMMISSION DISTRIBUTEUR',
+            'FEES',
             'STATUT',
             'AGENT',
         ];
@@ -105,8 +106,10 @@ class TransactionExport implements FromCollection, WithHeadings, WithEvents, Wit
           $row->customer_phone,
           $row->commission_agent,
           $row->commission_distributeur,
+          $row->fees,
           $row->description,
           $row->auteur->telephone,
+
         ];
     }
 }
