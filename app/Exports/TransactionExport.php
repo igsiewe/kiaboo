@@ -30,7 +30,7 @@ class TransactionExport implements FromCollection, WithHeadings, WithEvents, Wit
             ->where("fichier","agent")
             ->where('status',StatusTransEnum::VALIDATED->value)
             ->whereHas('service',function ($query){
-                $query->whereIn("type_service_id",[TypeServiceEnum::ENVOI->value,TypeServiceEnum::RETRAIT->value,TypeServiceEnum::FACTURE->value]);
+                $query->whereIn("type_service_id",[TypeServiceEnum::ENVOI->value,TypeServiceEnum::RETRAIT->value,TypeServiceEnum::PAYMENT->value]);
             })->whereHas('auteur',function ($query) use ($auth){
                 $query->whereIn("id",$auth);
             })->orderByDesc('transactions.date_transaction')->get();
