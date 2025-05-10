@@ -103,10 +103,11 @@ class WebDashBoardController extends Controller
                 ->groupBy('mois')
                 ->orderBy('mois', 'desc')->get()->toArray();
 
-            dd($resultGraphe);
+
 
             $envoi = collect();
             $retrait = collect();
+            $paiement = collect();
 
             for ($i = 1; $i <= 12; $i++) {
                $data = collect($resultGraphe)->where("mois",$i);
@@ -117,7 +118,12 @@ class WebDashBoardController extends Controller
                 $retrait->add($data->sum(function ($op) use ($retrait){
                     return $op->retrait;
                 }));
+                $paiement->add($data->sum(function ($op) use ($paiement){
+                    return $op->paiement;
+                }));
             }
+
+            dd ($envoi, $retrait, $paiement);
 
         }
 
