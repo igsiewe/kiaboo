@@ -53,7 +53,7 @@ class ApiProspectController extends Controller
 //            }
             if($request->isCodeParrainage == true){
                 $parrainageCheck = User::where('codeparrainage', $request->codeParrainage)->where("statut_code_parrainage",1)->where("type_user_id", UserRolesEnum::AGENT->value)->first();
-                if(!$parrainageCheck){
+                if($parrainageCheck->count() <= 0){
                     DB::rollBack();
                     return response()->json(
                         [
