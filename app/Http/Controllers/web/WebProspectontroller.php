@@ -35,7 +35,7 @@ class WebProspectontroller extends Controller
            if($prospect){
                if($prospect->status == 0){
                    //desctive dans la table des prospects
-                   $codeparrainage =$this->extraireChaine( ($this->nettoyerTexte($prospect->name."".$prospect->surname)),0,5)."".$this->extraireChaine($prospect->phone,0,3);
+                   $codeparrainage =$this->extraireChaine( ($this->nettoyerTexte($prospect->name."".$prospect->surname)),0,5)."".$this->extraireChaine($prospect->phone,3,3);
 
                    $prospect->status = 1;
                    $prospect->validated_by = Auth::user()->id;
