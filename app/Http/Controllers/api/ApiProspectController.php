@@ -58,7 +58,7 @@ class ApiProspectController extends Controller
                     return response()->json(
                         [
                             'success' => false,
-                            'message' => "Ce code de parrainage n'est pas valide. ".$parrainageCheck->count()
+                            'message' => "Ce code de parrainage n'est pas valide. ".$request->codeParrainage
                         ], 202);
                 }
 
