@@ -52,13 +52,13 @@ class ApiProspectController extends Controller
 //                    ], 202);
 //            }
             if($request->isCodeParrainage == true){
-                $parrainageCheck = User::where('codeparrainage', $request->codeParrainage)->where("statut_code_parrainage",1)->where("type_user_id", UserRolesEnum::AGENT->value)->first();
+                $parrainageCheck = User::where('codeparrainage', $request->codeParrainage)->where("statut_code_parrainage",1)->where("type_user_id", UserRolesEnum::AGENT->value);
                 if($parrainageCheck->count() <= 0){
                     DB::rollBack();
                     return response()->json(
                         [
                             'success' => false,
-                            'message' => "Ce code de parrainage n'est pas valide. ".$parrainageCheck
+                            'message' => "Ce code de parrainage n'est pas valide. ".$parrainageCheck->count()
                         ], 202);
                 }
 
