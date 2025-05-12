@@ -64,8 +64,8 @@ class WebProspectontroller extends Controller
                    $newAgent->seuilapprovisionnement="150000";
                    $newAgent->optin=$prospect->optin;
                    $newAgent->moncodeparrainage = strtoupper("KI".$codeparrainage);
+                   $newAgent->codeparrainage  =  $prospect->code_parrainage;
                    $newAgent->save();
-
                    //On informe le client par SMS que son profil a été validé
                    $sms = new ApiSmsController();
                    $tel =str_replace("+","",$prospect->phone);
