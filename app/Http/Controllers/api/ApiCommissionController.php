@@ -307,7 +307,7 @@ class ApiCommissionController extends BaseController
         }
     }
 
-    public function setRemboursementCommission(){
+    public function setRemboursementCommission(Request $request){
         $commission =Transaction::where('source', Auth::user()->id)->where("commission_agent_rembourse",0)
             ->join("services","services.id","transactions.service_id")
             ->where('transactions.status',1)->where("transactions.fichier","agent")
@@ -403,6 +403,10 @@ class ApiCommissionController extends BaseController
                    $services = Service::all();
 
                     DB::commit();
+                    $title = "Transaction en succès";
+                    $message = "Vos commissions (" . $montantCommission . " F CFA) ont été créditées avec succès à votre compte principal. Votre nouveau solde s'élève à ".$balanceAfter." F CFA";
+                    $appNotification = new ApiNotification();
+                    $envoiNotification = $appNotification->SendPushNotificationCallBack($request->deviceId, $title, $message);
 
                     return response()->json([
                         "status"=>true,
@@ -425,7 +429,7 @@ class ApiCommissionController extends BaseController
         }else{
             return response()->json([
                 "status"=>false,
-                "message"=>"Aucun remboursement possible",
+                "message"=>"Aucun remboursement possible trouvé",
             ],404);
         }
 
