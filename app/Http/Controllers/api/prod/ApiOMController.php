@@ -107,7 +107,14 @@ class ApiOMController extends Controller
                 $data = json_decode($response, false);
                 $firstName = $data->data->firstName;
                 $lastName = $data->data->lastName;
-
+                if($firstName==null || $firstName==""){
+                    return response()->json([
+                        'status' => 'success',
+                        'firstName' => $firstName,
+                        'lastName' => $lastName,
+                        'message' => "Compte Orange Money inexistant",
+                    ],404);
+                }
                 return response()->json([
                     'status' => 'success',
                     'firstName' => $firstName,
