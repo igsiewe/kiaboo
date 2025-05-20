@@ -52,8 +52,9 @@ class ArchiveLaravelLog extends Command
             exec("chown g+w -R www-data:www-data " . storage_path());
             exec("chown g+r -R " . storage_path("logs/"));
             exec("chown g+r -R " . storage_path("framework/"));
-            exec("chown g+r -R " . storage_path("framework/ssessions"));
-
+            exec("chown g+r -R " . storage_path("framework/sessions"));
+     //       exec("chown -R www-data:www-data /var/www/kiaboopay/storage >> /var/www/kiaboopay/storage/logs/cron.log 2>&1");
+     //       exec("chmod -R 775 /var/www/kiaboopay/storage >> /var/www/kiaboopay/storage/logs/cron.log 2>&1");
 
             $this->info("Nouveau fichier laravel.log créé avec droits pour ubuntu");
         } else {
