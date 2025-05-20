@@ -26,7 +26,6 @@ class Kernel extends ConsoleKernel
             // Récupère les utilisateurs de type AGENT actifs (exemple ici avec un seul user : id = 36)
             $users = User::where("type_user_id", UserRolesEnum::AGENT->value)
                 ->where("status", 1)
-                ->where("id", 36)
                 ->get();
 
             foreach ($users as $user) {
