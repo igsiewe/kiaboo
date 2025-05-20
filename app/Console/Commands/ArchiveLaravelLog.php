@@ -46,7 +46,7 @@ class ArchiveLaravelLog extends Command
 
             // Changer le propriétaire en "ubuntu"
             // ATTENTION : nécessite que le script soit exécuté avec des droits sudo/crontab
-            exec("chown ubuntu:ubuntu {$logPath}");
+            exec("chown www-data:www-data {$logPath}");
             exec("chmod 664 {$logPath}"); // lecture/écriture pour user et groupe
 
             exec("chown -R www-data:www-data " . storage_path());
