@@ -33,7 +33,7 @@ class Kernel extends ConsoleKernel
                 $message = null;
 
                 if ($user->last_connexion === null) {
-                    $message = "M./Mme {$user->name} {$user->surname}\nVotre compte KIABOO vous attend ! Connectez-vous dès maintenant et découvrez nos services.";
+                    $message = "M./Mme {$user->name}\nVotre compte KIABOO vous attend ! Connectez-vous dès maintenant et découvrez nos services.";
                 } else {
                     $date_last_transaction = $user->date_last_transaction;
 
@@ -42,7 +42,7 @@ class Kernel extends ConsoleKernel
 
                         if ($diffInDays >= 3) {
                             $formattedDate = Carbon::parse($date_last_transaction)->format("d/m/Y H:i:s");
-                            $message = "M./Mme {$user->name} {$user->surname}\nVotre dernière transaction date du {$formattedDate} - Solde : {$user->balance_after} F CFA";
+                            $message = "M./Mme {$user->name}\nVotre dernière transaction date du {$formattedDate} - Solde : {$user->balance_after} F CFA. Faites 10 transactions et tentez de gagner un billet pour le prochain match de football des lions indomptables au Cameroun, billet offert par KIABOO";
                         }
                     }
                 }
