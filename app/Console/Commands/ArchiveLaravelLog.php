@@ -33,7 +33,7 @@ class ArchiveLaravelLog extends Command
 
         if (File::exists($logPath)) {
             // Date de la veille
-            $yesterday = Carbon::yesterday()->format('Y-m-d His');
+            $yesterday = Carbon::today()->format('Y-m-d His');
             $archivedPath = storage_path("logs/laravel-{$yesterday}.log");
 
             // Renommer le fichier
