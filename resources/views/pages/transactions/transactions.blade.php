@@ -210,7 +210,7 @@
                                                                 <td nowrap style="color: red" align="right">{{number_format($c->debit,0,',',' ')." ".$money}}</span></td>
                                                             @endif
                                                             <td align="right">{{number_format($c->balance_after,0,',',' ')." ".$money}}</td>
-                                                            <td align="center">{{str_repeat('*', 5) . substr($c->customer_phone, -4)}}</td>
+                                                            <td align="center">{{substr($number, 0, 3) . '***' . substr($number, -3)}}</td>
 
                                                             <td>{{$c->auteur->telephone}}</td>
 {{--                                                            @if(\Illuminate\Support\Facades\Auth::user()->type_user_id != \App\Http\Enums\UserRolesEnum::DISTRIBUTEUR->value)--}}
