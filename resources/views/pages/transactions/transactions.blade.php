@@ -187,9 +187,9 @@
                                                 <th scope="col">Balance After</th>
                                                 <th scope="col">Customer</th>
                                                 <th scope="col">Agent</th>
-                                                @if(\Illuminate\Support\Facades\Auth::user()->type_user_id != \App\Http\Enums\UserRolesEnum::DISTRIBUTEUR->value)
-                                                    <th scope="col">Distributeur</th>
-                                                @endif
+{{--                                                @if(\Illuminate\Support\Facades\Auth::user()->type_user_id != \App\Http\Enums\UserRolesEnum::DISTRIBUTEUR->value)--}}
+{{--                                                    <th scope="col">Distributeur</th>--}}
+{{--                                                @endif--}}
                                                 <th scope="col" class="sorting_asc_disabled sorting_desc_disabled"></th>
                                             </tr>
                                             </thead>
@@ -212,9 +212,9 @@
                                                             <td align="right">{{number_format($c->balance_after,0,',',' ')." ".$money}}</td>
                                                             <td align="center">{{$c->customer_phone}}</td>
                                                             <td>{{$c->auteur->telephone}}</td>
-                                                            @if(\Illuminate\Support\Facades\Auth::user()->type_user_id != \App\Http\Enums\UserRolesEnum::DISTRIBUTEUR->value)
-                                                            <td>{{$c->auteur->distributeur->name_distributeur}}</td>
-                                                            @endif
+{{--                                                            @if(\Illuminate\Support\Facades\Auth::user()->type_user_id != \App\Http\Enums\UserRolesEnum::DISTRIBUTEUR->value)--}}
+{{--                                                            <td>{{$c->auteur->distributeur->name_distributeur}}</td>--}}
+{{--                                                            @endif--}}
                                                             <td align="center">
                                                                 <button type="button" class="btn" style="border: none; color: red" title="Afficher le détail" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="getDetailTransaction({{$c->id}})">
                                                                     <i class="fa fa-eye"></i>
