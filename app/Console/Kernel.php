@@ -18,7 +18,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // Planifie l'archivage du log tous les jours à minuit
-        $schedule->command('archive:log')->dailyAt('21:31');
+        $schedule->command('archive:log')->dailyAt('21:35');
 
         $schedule->call(function () {
             $sms = new ApiSmsController();
