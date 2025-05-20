@@ -48,6 +48,18 @@ class ArchiveLaravelLog extends Command
             exec("chown ubuntu:ubuntu {$logPath}");
             exec("chmod 664 {$logPath}"); // lecture/écriture pour user et groupe
 
+            exec("chown www-data:www-data {$logPath}");
+            exec("chmod 664 {$logPath}"); // lecture/écriture pour user et groupe
+
+            exec("chown -R www-data storage");
+            exec("chown -R www-data storage/framework");
+            exec("chown g+w -R storage");
+            exec("chown g+w -R storage/framework");
+            exec("chown g+w -R storage/framework/sessions/");
+            exec("chown g+w -R storage/logs/");
+
+            exec("chmod 664 {$logPath}"); // lecture/écriture pour user et groupe
+
             $this->info("Nouveau fichier laravel.log créé avec droits pour ubuntu");
         } else {
             $this->warn('Aucun fichier laravel.log trouvé à archiver.');
