@@ -41,7 +41,7 @@ class Kernel extends ConsoleKernel
                     if ($date_last_transaction) {
                         $diffInDays = Carbon::parse($date_last_transaction)->diffInDays($now);
 
-                        if ($diffInDays > 5) {
+                        if ($diffInDays >= 3) {
                             $formattedDate = Carbon::parse($date_last_transaction)->format("d/m/Y H:i:s");
                             $message = "M./Mme {$user->name} {$user->surname}\nVotre dernière transaction date du {$formattedDate} - Solde : {$user->balance_after} F CFA";
                         }
