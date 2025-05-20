@@ -1,0 +1,17 @@
+{
+    "name": "Kiaboo",
+    "short_name": "Kiaboo",
+    "start_url": "/index.php",
+    "background_color": "#6777ef",
+    "description": "Suivez vos transactions en toute sécurité",
+    "display": "fullscreen",
+    "theme_color": "#6777ef",
+    "icons": [
+        {
+            "src": "logo.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}
