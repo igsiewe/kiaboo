@@ -30,12 +30,11 @@ class ArchiveLaravelLog extends Command
     public function handle()
     {
         $logPath = storage_path('logs/laravel.log');
-        $cheminStorage = storage_path('logs/laravel.log');
 
         if (File::exists($logPath)) {
             // Date de la veille
-            $yesterday = Carbon::today()->format('Y-m-d H_i_s');
-            $archivedPath = storage_path("logs/laravel-{$yesterday}.log");
+            $yesterday = Carbon::today()->format('Y-m-d');
+            $archivedPath = storage_path("logs/archive-{$yesterday}.log");
 
             // Renommer le fichier
             File::move($logPath, $archivedPath);
