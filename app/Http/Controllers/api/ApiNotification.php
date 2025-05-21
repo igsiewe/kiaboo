@@ -74,6 +74,7 @@ class ApiNotification extends Controller
             'key2' => 'value2',
         ];
         $response = $this->sendNotification($deviceToken, $title, $body, $data);
+        Log::info("Notification", (array)json_encode($response));
         return response()->json([
             "success"=>true,
             "response"=>$response
