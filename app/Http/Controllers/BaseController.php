@@ -125,7 +125,7 @@ class BaseController extends Controller
         ], 200);
     }
 
-    public function respondWithToken($token, $user = null, $partenaires = null, $transactions = null, $services = null, $version=null, $urlApplication=null, $notification=null, $monnaies = null, $questions = null, $configurations = null)
+    public function respondWithToken($token, $user = null, $partenaires = null, $transactions = null, $services = null, $version=null, $urlApplication=null, $notification=null, $monnaies = null, $questions = null, $configurations = null,$version_ios=null, $lien_appstore=null, $version_android = null, $lien_playstore = null)
     {
         return response()->json([
             'token_type' => 'bearer',
@@ -141,7 +141,10 @@ class BaseController extends Controller
             'monnaies'=>$monnaies,
             'questions'=> $questions,
             'configurations'=> $configurations,
-
+            'version_ios'=> $version_ios,
+            'lien_appstore'=> $lien_appstore,
+            'version_android'=>$version_android,
+            'lien_playstore'=> $lien_playstore
         ], 200);
     }
     public function respondWithTokenSwagger($token, $user = null,$delay=null)

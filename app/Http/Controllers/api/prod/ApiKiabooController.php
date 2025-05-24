@@ -220,7 +220,7 @@ class ApiKiabooController extends Controller
                 ->get();
 
             $title = "Transaction en succès";
-            $message = "Le transfert Kiaboo de " . $request->amount . " F CFA a été effectué avec succès par le ".$beneficiaire->first()->telephone." (ID transaction: ".$reference.") le ".Carbon::now()->format('Y-m-d H:i:s');
+            $message = "Le transfert Kiaboo de " . $request->amount . " F CFA a été effectué avec succès au ".$beneficiaire->first()->telephone." (ID transaction: ".$reference.") le ".Carbon::now()->format('d/m/Y H:i:s');
             $appNotification = new ApiNotification();
             $envoiNotification = $appNotification->SendPushNotificationCallBack($request->deviceId, $title, $message);
             $services = Service::all();

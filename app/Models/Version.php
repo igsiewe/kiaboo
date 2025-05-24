@@ -9,13 +9,17 @@ class Version extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'version',
+        'version', //A supprimer
         'date_start',
         'date_end',
         'status',
-        'url',
+        'url', //A supprimer
         'description',
         'created_by',
         'updated_by',
+        'version_ios',
+        'lien_appstore',
+        'version_android',
+        'lien_playstore'
     ];
 }

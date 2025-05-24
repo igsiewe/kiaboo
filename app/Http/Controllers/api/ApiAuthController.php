@@ -100,6 +100,13 @@ class ApiAuthController extends BaseController
             $infoVersion = Version::where('status',1)->get();
             $version = $infoVersion->first()->version;
             $urlApplication = $infoVersion->first()->url;
+
+            $version_android = $infoVersion->first()->version_android;
+            $lien_playstore = $infoVersion->first()->lien_playstore;
+
+            $version_ios = $infoVersion->first()->version_ios;
+            $lien_appstore = $infoVersion->first()->lien_appstore;
+
             $notification = Notification::where("status",1)->get();
             $monnaies = monnaie::where("status",1)->get();
             $transactions = DB::table('transactions')
@@ -123,6 +130,7 @@ class ApiAuthController extends BaseController
             $user->last_connexion = Carbon::now();
             $user->version = $version;
             $user->urlApplication = $urlApplication;
+
             $user->qr_code = $qr_code;
             $user->save();
 
@@ -134,7 +142,7 @@ class ApiAuthController extends BaseController
             $questions = question::where("status",1)->orderBy('ordre', 'asc')->select('id','question','reponse','detail')->get();
             $configurations = configuration::where("status",1)->select('id','lien_politique', 'lien_cgu', 'lien_mention', 'lien_appstore','lien_playstore', 'telephone_support', 'email_support', 'message_parrainage')->get();
 
-            return $this->respondWithToken($access_token, $user, $partenaires, $transactions, $services,$version,$urlApplication, $notification, $monnaies, $questions, $configurations);
+            return $this->respondWithToken($access_token, $user, $partenaires, $transactions, $services,$version,$urlApplication, $notification, $monnaies, $questions, $configurations,$version_ios, $lien_appstore, $version_android, $lien_playstore);
         }
 
         return response()->json([

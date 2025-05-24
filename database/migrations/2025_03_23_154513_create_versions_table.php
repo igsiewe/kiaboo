@@ -14,12 +14,18 @@ return new class extends Migration
         Schema::create('versions', function (Blueprint $table) {
             $table->id();
             $table->string('version');
+            $table->string('version_ios');
+            $table->string('version_android');
+            $table->string('lien_appstore');
+            $table->string('lien_appstore');
+
             $table->date('date_start');
             $table->date('date_end')->nullable();
             $table->integer("status")->default(1)->comment("0 : Deactivated, 1:Activated");
             $table->text('description')->nullable();
             $table->foreignId("created_by")->references("id")->on("users");
             $table->foreignId("updated_by")->references("id")->on("users");
+
             $table->timestamps();
         });
     }
