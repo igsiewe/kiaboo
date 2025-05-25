@@ -227,14 +227,15 @@ class ApiKiabooController extends Controller
 
             $sms = new ApiSmsController();
             $telBeneficiaire ="237".$beneficiaire->first()->telephone;
-            $msgBeneficiaire = "Vous avez recu ".$request->amount." F CFA de ".$emetteur->first()->name." (".$emetteur->first()->telephone.") sur votre compte KIABOO a ".Carbon::now().". Votre nouveau solde est ".$newSoldeBeneficiaire." F CFA. Id transaction : ".$reference;
+            $msgBeneficiaire = "Vous avez recu ".$request->amount." F CFA de ".$emetteur->first()->name." (".$emetteur->first()->telephone.") sur votre compte KIABOO a ".Carbon::now()->format('d/m/Y H:i:s').". Votre nouveau solde est ".$newSoldeBeneficiaire." F CFA. Id transaction : ".$reference;
             $envoyerSMSBeneficiaire = $sms->SendSMS($telBeneficiaire,utf8_decode($msgBeneficiaire));
-            $msgEmetteur = "Vous, ".$emetteur->first()->name." (".$emetteur->first()->telephone.") avez effectue avec succes un transfert de ".$request->amount." F CFA a ".$beneficiaire->first()->name." ".$beneficiaire->first()->surname." (".$beneficiaire->first()->telephone.") le ".Carbon::now().". Votre nouveau solde est ".$newSoldeEmetteur." F CFA. Id transaction :".$reference;
+            $msgEmetteur = "Vous, ".$emetteur->first()->name." (".$emetteur->first()->telephone.") avez effectue avec succes un transfert de ".$request->amount." F CFA a ".$beneficiaire->first()->name." ".$beneficiaire->first()->surname." (".$beneficiaire->first()->telephone.") le ".Carbon::now()->format('d/m/Y H:i:s').". Votre nouveau solde est ".$newSoldeEmetteur." F CFA. Id transaction :".$reference;
             $telEmetteur = "237".$emetteur->first()->telephone;
             $envoyerSMSEmetteur= $sms->SendSMS($telEmetteur,utf8_decode($msgEmetteur));
             $devideBeneficiaire =$beneficiaire->first()->device_id;
 
             if($devideBeneficiaire){ //On notifie également le bénéficiaire par PushNotification sur son téléphone
+                $msgBeneficiaire = "Vous venez de rececoir ".$request->amount." F CFA de ".$emetteur->first()->name." (".$emetteur->first()->telephone.") sur votre compte KIABOO à ".Carbon::now()->format('d/m/Y H:i:s').". Votre nouveau solde est ".$newSoldeBeneficiaire." F CFA. Id transaction : ".$reference;
                 $envoiNotificationbeneficiaire = $appNotification->SendPushNotificationCallBack($devideBeneficiaire, $title, $msgBeneficiaire);
             }
 
