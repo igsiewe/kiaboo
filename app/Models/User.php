@@ -65,6 +65,7 @@ class User extends Authenticatable
         'qr_code',
         'balance_after_payment',
         'balance_before_payment',
+        'device_id'
     ];
 
     public function ville()

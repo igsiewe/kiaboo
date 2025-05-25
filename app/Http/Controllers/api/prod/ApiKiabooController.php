@@ -218,12 +218,12 @@ class ApiKiabooController extends Controller
                 ->orderBy('transactions.date_transaction', 'desc')
                 ->limit(5)
                 ->get();
+            $services = Service::all();
 
             $title = "Transaction en succès";
             $message = "Le transfert Kiaboo de " . $request->amount . " F CFA a été effectué avec succès au ".$beneficiaire->first()->telephone." (ID transaction: ".$reference.") le ".Carbon::now()->format('d/m/Y H:i:s');
             $appNotification = new ApiNotification();
             $envoiNotification = $appNotification->SendPushNotificationCallBack($request->deviceId, $title, $message);
-            $services = Service::all();
 
             $sms = new ApiSmsController();
             $telBeneficiaire ="237".$beneficiaire->first()->telephone;
@@ -232,6 +232,12 @@ class ApiKiabooController extends Controller
             $msgEmetteur = "Vous, ".$emetteur->first()->name." (".$emetteur->first()->telephone.") avez effectue avec succes un transfert de ".$request->amount." F CFA a ".$beneficiaire->first()->name." ".$beneficiaire->first()->surname." (".$beneficiaire->first()->telephone.") le ".Carbon::now().". Votre nouveau solde est ".$newSoldeEmetteur." F CFA. Id transaction :".$reference;
             $telEmetteur = "237".$emetteur->first()->telephone;
             $envoyerSMSEmetteur= $sms->SendSMS($telEmetteur,utf8_decode($msgEmetteur));
+            $devideBeneficiaire =$beneficiaire->first()->device_id;
+
+            if($devideBeneficiaire){ //On notifie également le bénéficiaire par PushNotification sur son téléphone
+                $envoiNotificationbeneficiaire = $appNotification->SendPushNotificationCallBack($devideBeneficiaire, $title, $msgBeneficiaire);
+            }
+
             return response()->json([
                 'success' => true,
                 'message' => "SUCCESSFULL", // $resultat->message,

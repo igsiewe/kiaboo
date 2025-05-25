@@ -130,10 +130,9 @@ class ApiAuthController extends BaseController
             $user->last_connexion = Carbon::now();
             $user->version = $version;
             $user->urlApplication = $urlApplication;
-
+            $user->device_id = $request->device_id;
             $user->qr_code = $qr_code;
             $user->save();
-
             $user = DB::table("users")->join("quartiers", "users.quartier_id", "=", "quartiers.id")
                 ->join("villes", "quartiers.ville_id", "=", "villes.id")
                 ->where('users.id', $users->id)
