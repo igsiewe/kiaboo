@@ -173,17 +173,29 @@ class MoMo_Controller extends Controller
             ]);
     }
     public function MOMO_Customer($accessToken, $customerPhone){
-        $http = $this->endpoint."/disbursement/v1_0/accountholder/msisdn/237".$customerPhone."/basicuserinfo";
-        $response = Http::withOptions(['verify' => false,])->withHeaders(
-            [
-                'Authorization'=> 'Bearer '.$accessToken,
-                'Ocp-Apim-Subscription-Key'=> $this->OcpApimSubscriptionKeyDisbursement,
-                'X-Target-Environment'=> 'mtncameroon',
-                'Accept'=>'application/json',
-            ])
-            ->Get($http);
 
-        return response()->json($response->json());
+        try {
+            $http = $this->endpoint."/disbursement/v1_0/accountholder/msisdn/237".$customerPhone."/basicuserinfo";
+            $response = Http::withOptions(['verify' => false,])->withHeaders(
+                [
+                    'Authorization'=> 'Bearer '.$accessToken,
+                    'Ocp-Apim-Subscription-Key'=> $this->OcpApimSubscriptionKeyDisbursement,
+                    'X-Target-Environment'=> 'mtncameroon',
+                    'Accept'=>'application/json',
+                ])
+                ->Get($http);
+
+            return response()->json($response->json());
+        }catch (\Exception $e){
+            return response()->json(
+            [
+            'status'=> 'error',
+            'messsage'=>  $e->getMessage(),
+
+            ],$e->getCode()
+            );
+        }
+
     }
     public function MOMO_CashInStatus($accessToken, $referenceId){
 
@@ -331,7 +343,6 @@ class MoMo_Controller extends Controller
 
                 ],$e->getCode()
             );
-
         }
     }
 
