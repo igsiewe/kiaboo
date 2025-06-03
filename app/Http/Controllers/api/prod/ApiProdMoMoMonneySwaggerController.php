@@ -644,7 +644,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
 
         $customerPhone = "237".$customerNumber;
         $response = $MoMoFunction->MOMO_CashIn($accessToken,$referenceID, $idTransaction, $montant, $customerPhone);
-         return response()->json([$response],$response->status());
+         return response()->json([$response->getContent()],$response->status());
         $saveResponse = Transaction::where('id',$idTransaction)->update([
             'api_response'=>$response->status(),
         ]);
