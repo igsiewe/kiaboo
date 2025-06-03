@@ -485,14 +485,13 @@ class ApiProdMoMoMonneySwaggerController extends Controller
             }
         }
         if ($Transaction->first()->status == 3) {
-
             return response()->json(
                 [
                     'success' => false,
                     'statusCode' => "FAILED",
                     'message' => "Transaction failed",
-                    // 'data'=>$data->data,
-                ], 404
+                    'data' => $data->data,
+                ], 200
             );
         }
 
