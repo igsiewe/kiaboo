@@ -512,13 +512,22 @@ class ApiProdMoMoMonneySwaggerController extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="CashIn initiated successfully",
+     *         description="CashIn end successfully",
      *         @OA\JsonContent(
      *             @OA\Property(property="success", type="boolean", example=true),
      *             @OA\Property(property="message", type="string", example="Payment request sent successfully"),
      *             @OA\Property(property="transactionId", type="string", example="tx-123456789")
      *         )
      *     ),
+     *    @OA\Response(
+     *          response=201,
+     *          description="CashIn initiated successfully",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="success", type="boolean", example=false),
+     *              @OA\Property(property="message", type="string", example="Payment request sent successfully"),
+     *              @OA\Property(property="transactionId", type="string", example="tx-123456789")
+     *          )
+     *      ),
      *     @OA\Response(
      *         response=422,
      *         description="Invalid input",
