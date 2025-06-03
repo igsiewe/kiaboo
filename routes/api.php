@@ -99,10 +99,10 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::group(['prefix' => 'v1'], function () {
             Route::controller(ApiProdAuthController::class)->group(function (){
                 Route::post('authenticate/changepassword','changePasswordSwagger')->name("changePasswordSwagger");
-                Route::post('agent/add','CreatedNewAgentSwagger')->name("CreatedNewAgentSwagger");
+             //   Route::post('agent/add','CreatedNewAgentSwagger')->name("CreatedNewAgentSwagger");
                 Route::get('agent/list','listAgentSwagger')->name("listAgentSwagger");
-                Route::put('agent/block/{phone}','blockAgentSwagger')->name("blockAgentSwagger");
-                Route::put('agent/unblock/{phone}','unblockAgentSwagger')->name("unblockAgentSwagger");
+             //   Route::put('agent/block/{phone}','blockAgentSwagger')->name("blockAgentSwagger");
+             //   Route::put('agent/unblock/{phone}','unblockAgentSwagger')->name("unblockAgentSwagger");
             });
 
             Route::get('/sms/' ,[ApiSmsController::class,'index']) ;
