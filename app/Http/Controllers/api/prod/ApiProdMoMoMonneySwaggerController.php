@@ -320,18 +320,19 @@ class ApiProdMoMoMonneySwaggerController extends Controller
      * )
      */
 
-    public function MoMoPaymentStatus($paytoken){
+    public function MoMoPaymentStatus($paytoken)
+    {
         // On cherche la transaction dans la table transaction
-        $Transaction = Transaction::where("paytoken", $paytoken)->where('service_id',ServiceEnum::PAYMENT_MOMO->value)->where("created_by",Auth::user()->id);
+        $Transaction = Transaction::where("paytoken", $paytoken)->where('service_id', ServiceEnum::PAYMENT_MOMO->value)->where("created_by", Auth::user()->id);
 
-        if($Transaction->count()==0){
-            if($Transaction->first()->status==1){
+        if ($Transaction->count() == 0) {
+            if ($Transaction->first()->status == 1) {
                 return response()->json(
                     [
-                        'success'=>false,
-                        'statusCode'=>"ERR-TRANSACTION-NOT-FOUND",
-                        'message'=>"PayToken not found",
-                    ],404
+                        'success' => false,
+                        'statusCode' => "ERR-TRANSACTION-NOT-FOUND",
+                        'message' => "PayToken not found",
+                    ], 404
                 );
             }
         }
@@ -340,36 +341,36 @@ class ApiProdMoMoMonneySwaggerController extends Controller
         $MoMoFunction = new MoMo_Controller();
         $responseToken = $MoMoFunction->MOMO_Payment_GetTokenAccess();
 
-        if($responseToken->status()!=200){
+        if ($responseToken->status() != 200) {
             return response()->json(
                 [
-                    'success'=>false,
-                    'statusCode'=>$responseToken->status(),
-                    'message'=>$responseToken["message"],
-                ],$responseToken->status()
+                    'success' => false,
+                    'statusCode' => $responseToken->status(),
+                    'message' => $responseToken["message"],
+                ], $responseToken->status()
             );
         }
 
         $dataAcessToken = json_decode($responseToken->getContent());
         $accessToken = $dataAcessToken->access_token;
-        $payToken =$Transaction->first()->paytoken;
+        $payToken = $Transaction->first()->paytoken;
 
-        $response = $MoMoFunction->MOMO_PaymentStatus($accessToken,$payToken);
+        $response = $MoMoFunction->MOMO_PaymentStatus($accessToken, $payToken);
 
         $data = json_decode($response->getContent());
         $status = $data->data->status;
 
-        if($Transaction->first()->status==1){
+        if ($Transaction->first()->status == 1) {
             return response()->json(
                 [
-                    'success'=>true,
-                    'statusCode'=>"SUCCESSFUL",
-                    'message'=>"Transaction successful",
-                    'data'=>$data->data,
-                ],200
+                    'success' => true,
+                    'statusCode' => "SUCCESSFUL",
+                    'message' => "Transaction successful",
+                    'data' => $data->data,
+                ], 200
             );
         }
-        if($Transaction->first()->status==2) {
+        if ($Transaction->first()->status == 2) {
             if ($response->status() == 200) {
                 $reference = $Transaction->first()->reference;
                 $montant = $Transaction->first()->credit;
@@ -377,7 +378,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
 
                 try {
                     DB::beginTransaction();
-                    if ($status== "SUCCESSFUL") {
+                    if ($status == "SUCCESSFUL") {
                         $montantACrediter = doubleval($montant) - doubleval($Transaction->first()->fees);
                         $balanceBeforeAgent = $user->get()->first()->balance_after;
                         $balanceAfterAgent = floatval($balanceBeforeAgent) + floatval($montantACrediter); //On a déduit les frais de la transaction.
@@ -483,14 +484,15 @@ class ApiProdMoMoMonneySwaggerController extends Controller
                 );
             }
         }
-        if($Transaction->first()->status==3){
+        if ($Transaction->first()->status == 3) {
+            return response()->json($data);
             return response()->json(
                 [
-                    'success'=>false,
-                    'statusCode'=>"FAILED",
-                    'message'=>"Transaction failed",
-                   // 'data'=>$data->data,
-                ],404
+                    'success' => false,
+                    'statusCode' => "FAILED",
+                    'message' => "Transaction failed",
+                    // 'data'=>$data->data,
+                ], 404
             );
         }
 
