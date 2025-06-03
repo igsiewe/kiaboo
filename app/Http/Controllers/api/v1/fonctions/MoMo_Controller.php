@@ -184,7 +184,7 @@ class MoMo_Controller extends Controller
                     'Accept'=>'application/json',
                 ])
                 ->Get($http);
-dd($response->json());
+            dd($response->json(), $response->body(), $response->status());
             return response()->json($response->json());
         }catch (\Exception $e){
             return response()->json(
