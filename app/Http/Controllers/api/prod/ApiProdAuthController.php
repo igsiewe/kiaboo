@@ -28,7 +28,7 @@ class ApiProdAuthController extends BaseController
      *    description="user informations",
      *    @OA\JsonContent(
      *       required={"login","password"},
-     *       @OA\Property(property="login", type="email",format="email", example="devops@kiaboo.net"),
+     *       @OA\Property(property="login", type="string",format="string", example="+237659657424"),
      *       @OA\Property(property="password", type="string", format="password", example="oLpIKO521@12"),
      *    ),
      * ),
