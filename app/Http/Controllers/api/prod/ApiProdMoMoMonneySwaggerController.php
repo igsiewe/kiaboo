@@ -46,7 +46,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
 
         $response = $MoMoFunction->MOMO_Customer($accessToken, $customerPhone);
 
-        return response()->json($response->getContent() , $response->getStatusCode());
+        return response()->json($response, $response->getStatusCode());
 
 
     }
