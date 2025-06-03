@@ -671,13 +671,10 @@ class ApiProdMoMoMonneySwaggerController extends Controller
 
             $checkStatus = $MoMoFunction->MOMO_CashInStatus($accessToken, $referenceID);
             $datacheckStatus = json_decode($checkStatus->getContent());
-
+return response()->json([$datacheckStatus],$response->status());
             if($checkStatus->getStatusCode() !=200) {
                 //La transaction est attente
                 $updateTransaction=Transaction::where("id",$idTransaction)->where("status",2)->update([
-                    //'status'=>2, // Le dépôt n'a pas abouti, on passe en statut pending
-                    //'reference_partenaire'=>$data->financialTransactionId,
-                    //'date_end_trans'=>Carbon::now(),
                     'description'=>$datacheckStatus->description,
                     'message'=>$datacheckStatus->message." - Vérifier le status dans la liste des encours",
                 ]);
