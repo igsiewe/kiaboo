@@ -102,7 +102,7 @@ class ApiProdAuthController extends BaseController
             'status' => 1,
             'status_delete'=>0,
             'type_user_id' => UserRolesEnum::AGENT->value,
-            'application'=>2,
+         //   'application'=>2,
         ];
 
         if (Auth::attempt($credentials)) {
