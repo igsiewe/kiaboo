@@ -703,8 +703,8 @@ class ApiProdMoMoMonneySwaggerController extends Controller
             return response()->json(
                 [
                     'status'=>$response->status(),
-                    'error'=>$response->body(),
-                    'message'=>$response->body(),
+                    'error'=>$response->getContent(),
+                    'message'=>"Une erreur innatendue s'est produite",
                 ],$response->status()
             );
         }
