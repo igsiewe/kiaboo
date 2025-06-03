@@ -209,6 +209,8 @@ class ApiProdAuthController extends BaseController
             }
 
             $user->password = bcrypt($request->new_password);
+            $user->updated_at = Carbon::now();
+            $user->updated_by = Auth::user()->id;
             $user->save();
             return response()->json(
                 [

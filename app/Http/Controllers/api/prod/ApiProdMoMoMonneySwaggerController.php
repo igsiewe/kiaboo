@@ -28,7 +28,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/v1/mtn/customer/name/{customerPhone}",
+     *     path="/api/v1/prod/mtn/customer/name/{customerPhone}",
      *     summary="Get customer information",
      *     tags={"MTN - Customer information"},
      *     security={{"bearerAuth":{}}},
