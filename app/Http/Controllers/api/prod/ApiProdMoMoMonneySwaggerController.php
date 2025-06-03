@@ -269,7 +269,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/v1/mtn/payment/status/{paytoken}",
+     *     path="/api/v1/prod/mtn/payment/status/{paytoken}",
      *     summary="Get transaction status",
      *     tags={"MTN - Payment"},
      *     security={{"bearerAuth":{}}},
@@ -337,7 +337,8 @@ class ApiProdMoMoMonneySwaggerController extends Controller
         }
 
         //On génère le token de la transation
-        $responseToken = $this->MOMO_Payment_GetTokenAccess();
+        $MoMoFunction = new MoMo_Controller();
+        $responseToken = $MoMoFunction->MOMO_Payment_GetTokenAccess();
 
         if($responseToken->status()!=200){
             return response()->json(
@@ -350,15 +351,11 @@ class ApiProdMoMoMonneySwaggerController extends Controller
         }
 
         $dataAcessToken = json_decode($responseToken->getContent());
-        $AccessToken = $dataAcessToken->access_token;
+        $accessToken = $dataAcessToken->access_token;
         $payToken =$Transaction->first()->paytoken;
-        $http = "https://proxy.momoapi.mtn.com/collection/v1_0/requesttopay/".$payToken;
-        $response = Http::withOptions(['verify' => false,])->withHeaders(
-            [
-                'Authorization'=> 'Bearer '.$AccessToken,
-                'Ocp-Apim-Subscription-Key'=> '886cc9e141ab492f80d9567b3c46d59c',
-                'X-Target-Environment'=> 'mtncameroon',
-            ])->Get($http);
+
+        $response = $MoMoFunction->MOMO_PaymentStatus($accessToken,$payToken);
+
         $data = json_decode($response->body());
 
         if($Transaction->first()->status==1){
@@ -374,9 +371,6 @@ class ApiProdMoMoMonneySwaggerController extends Controller
         if($Transaction->first()->status==2) {
             if ($response->status() == 200) {
                 $reference = $Transaction->first()->reference;
-                $telephone = $Transaction->first()->customer_phone;
-                $dateTransaction = Carbon::parse($Transaction->first()->date_transaction)->format('d/m/Y H:i:s');
-                $device_notification = $Transaction->first()->device_notification;
                 $montant = $Transaction->first()->credit;
                 $user = User::where('id', $Transaction->first()->created_by);
 
