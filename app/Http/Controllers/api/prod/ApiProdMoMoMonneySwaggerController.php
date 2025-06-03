@@ -375,7 +375,6 @@ class ApiProdMoMoMonneySwaggerController extends Controller
                 $reference = $Transaction->first()->reference;
                 $montant = $Transaction->first()->credit;
                 $user = User::where('id', $Transaction->first()->created_by);
-
                 try {
                     DB::beginTransaction();
                     if ($status == "SUCCESSFUL") {
@@ -499,7 +498,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/v1/mtn/cashin",
+     *     path="/api/v1/prod/mtn/cashin",
      *     summary="Process a MoMo cashin",
      *     tags={"MTN - CashIn"},
      *     security={{"bearerAuth":{}}},
@@ -622,7 +621,8 @@ class ApiProdMoMoMonneySwaggerController extends Controller
         $reference = $dataInit->reference; //Référence de la transaction initiée
 
         //On génère le token de la transation
-        $responseToken = $this->MOMO_Disbursement_GetTokenAccess();
+        $MoMoFunction = new MoMo_Controller();
+        $responseToken = $MoMoFunction->MOMO_Disbursement_GetTokenAccess();
 
         if($responseToken->status()!=200){
             return response()->json(
@@ -635,56 +635,20 @@ class ApiProdMoMoMonneySwaggerController extends Controller
 
         $dataAcessToken = json_decode($responseToken->getContent());
         $accessToken = $dataAcessToken->access_token;
-        $referenceID = $this->gen_uuid();
+        $referenceID = $MoMoFunction->gen_uuid();
         //On gardee l'UID de la transaction initiee
         $saveUID = Transaction::where('id',$idTransaction)->update([
             'reference_partenaire'=>$referenceID,
             "paytoken"=>$referenceID
         ]);
-        $subcriptionKey = '1466a4536a3c476ab18baf82ce82a1f3';
+
         $customerPhone = "237".$customerNumber;
-        $user = User::where("id",Auth::user()->id)->where('type_user_id', UserRolesEnum::AGENT->value)->get();
-        $distributeur = Distributeur::where("id",$user->first()->distributeur_id)->first();
-
-
-        $response = Http::withOptions(['verify' => false,])->withHeaders(
-            [
-                'Authorization'=> 'Bearer '.$accessToken,
-                'X-Reference-Id'=> $referenceID,
-                'Ocp-Apim-Subscription-Key'=> $subcriptionKey,
-                'X-Target-Environment'=> 'mtncameroon',
-                'X-Callback-Url'=>'https://kiaboopay.com/api/momo/callback'
-            ])
-            ->Post("https://proxy.momoapi.mtn.com/disbursement/v1_0/transfer", [
-                "amount" => $montant,
-                "currency" => "XAF",
-                "externalId" => $idTransaction,
-                "payee" => [
-                    "partyIdType" => "MSISDN",
-                    "partyId" => $customerPhone,
-                ],
-                "payerMessage" => $distributeur->name_distributeur."-".$user->first()->telephone,
-                "payeeNote" => "Agent : ".Auth::user()->telephone
-            ]);
-
-        $dataRequete = [
-            "amount" => $montant,
-            "currency" => "XAF",
-            "externalId" => $idTransaction,
-            "payee" => [
-                "partyIdType" => "MSISDN",
-                "partyId" => $customerPhone,
-            ],
-            "payerMessage" => $distributeur->name_distributeur."-".$user->first()->telephone,
-            "payeeNote" => "Agent : ".Auth::user()->telephone
-        ];
+        $response = $MoMoFunction->MOMO_CashIn($accessToken,$referenceID, $idTransaction, $montant, $customerPhone);
 
         $saveResponse = Transaction::where('id',$idTransaction)->update([
             'api_response'=>$response->status(),
         ]);
 
-        $alerte = new ApiLog();
-        $alerte->logInfo($response->status(), "MOMO_Depot", $dataRequete, json_decode($response->body()),"MOMO_Depot");
         if($response->status()==202){
             //Le code 202 indique que la transaction est pending
             $updateTransaction=Transaction::where("id",$idTransaction)->update([
@@ -695,7 +659,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
                 'api_response'=>$response->status(),
             ]);
 
-            $checkStatus = $this->MOMO_Depot_Status($accessToken, $subcriptionKey, $referenceID);
+            $checkStatus = $MoMoFunction->MOMO_CashInStatus($accessToken, $referenceID);
             $datacheckStatus = json_decode($checkStatus->getContent());
 
             if($checkStatus->getStatusCode() !=200) {
@@ -736,8 +700,6 @@ class ApiProdMoMoMonneySwaggerController extends Controller
             }
 
         }else{
-
-            $alerte->logError($response->status(), "MOMO_Depot", $dataRequete, json_decode($response->body()),"MOMO_Depot");
             return response()->json(
                 [
                     'status'=>$response->status(),
