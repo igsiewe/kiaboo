@@ -118,7 +118,7 @@ class MoMo_Controller extends Controller
                 ],
                 "payerMessage" => $distributeur->name_distributeur."-".$user->first()->telephone,
             ]);
-
+dd($response);
         return response()->json($response->json());
     }
     public function MOMO_CashIn($accessToken, $referenceID, $externalId, $amount, $customerPhone){
