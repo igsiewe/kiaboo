@@ -189,16 +189,15 @@ class MoMo_Controller extends Controller
                 $data = json_decode($response->body());
                 return response()->json(
                     [
-                        'status'=>200,
+                        'status'=>true,
                         'firstName'=>$data->family_name,
                         'lastName'=>$data->given_name,
-                        'message'=>"customer found"
                     ],200
                 );
             }else{
                 return response()->json(
                     [
-                        'status'=>$response->status(),
+                        'status'=>false,
                         'message'=>"Le numéro de téléphone n'est pas valide",
                     ],$response->status()
                 );
@@ -206,7 +205,7 @@ class MoMo_Controller extends Controller
         }catch (\Exception $e){
             return response()->json(
             [
-            'status'=> 'error',
+            'status'=> false,
             'messsage'=>  $e->getMessage(),
 
             ],$e->getCode()

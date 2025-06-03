@@ -26,7 +26,38 @@ use Illuminate\Support\Facades\Validator;
 class ApiProdMoMoMonneySwaggerController extends Controller
 {
 
-
+    /**
+     * @OA\Get(
+     *     path="/api/v1/mtn/customer/name/{customerPhone}",
+     *     summary="Get customer information",
+     *     tags={"MTN - Customer information"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="customerPhone",
+     *         in="path",
+     *         required=true,
+     *         description="Customer phone number",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *          response=200,
+     *          description="Customer information",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="status", type="boolean", example=true),
+     *              @OA\Property(property="firstname", type="string", example="DUPOND"),
+     *              @OA\Property(property="lastname", type="string", example="Hanry")
+     *          )
+     *      ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="An error occurred",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Le numéro de téléphone n'est pas valide")
+     *         )
+     *     )
+     * )
+     */
     public function MoMoGetName($customerPhone)
     {
 
