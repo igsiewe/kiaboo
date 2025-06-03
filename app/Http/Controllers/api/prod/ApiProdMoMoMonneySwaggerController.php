@@ -661,7 +661,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
 
             $checkStatus = $MoMoFunction->MOMO_CashInStatus($accessToken, $referenceID);
             $datacheckStatus = json_decode($checkStatus->getContent());
-            return response()->json([$datacheckStatus],$checkStatus->getStatusCode());
+
             if($checkStatus->getStatusCode() !=200) {
                 //La transaction est attente
                 $updateTransaction=Transaction::where("id",$idTransaction)->where("status",2)->update([
@@ -688,7 +688,6 @@ class ApiProdMoMoMonneySwaggerController extends Controller
                     return response()->json([
                         'success' => true,
                         'statusCode'=>"SUCCESSFULL",
-                       // 'message' => "SUCCESSFULL", // $resultat->message,
                         'message' =>"Le dépôt a été effectué avec succès", // $resultat->message,
                         'reference' => $reference,// $resultat->data->data->txnid,
                     ], 200);
