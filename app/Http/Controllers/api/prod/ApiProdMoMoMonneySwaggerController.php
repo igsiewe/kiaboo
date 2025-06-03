@@ -357,14 +357,15 @@ class ApiProdMoMoMonneySwaggerController extends Controller
         $response = $MoMoFunction->MOMO_PaymentStatus($accessToken,$payToken);
 
         $data = json_decode($response->getContent());
-         return response()->json($data->data->status, 200);
+        $status = $data->data->status;
+
         if($Transaction->first()->status==1){
             return response()->json(
                 [
                     'success'=>true,
                     'statusCode'=>"SUCCESSFUL",
                     'message'=>"Transaction successful",
-                    'data'=>$data,
+                    'data'=>$data->data,
                 ],200
             );
         }
@@ -376,7 +377,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
 
                 try {
                     DB::beginTransaction();
-                    if ($data->data->status == "SUCCESSFUL") {
+                    if ($status== "SUCCESSFUL") {
                         $montantACrediter = doubleval($montant) - doubleval($Transaction->first()->fees);
                         $balanceBeforeAgent = $user->get()->first()->balance_after;
                         $balanceAfterAgent = floatval($balanceBeforeAgent) + floatval($montantACrediter); //On a déduit les frais de la transaction.
@@ -411,17 +412,17 @@ class ApiProdMoMoMonneySwaggerController extends Controller
                         return response()->json(
                             [
                                 'success' => true,
-                                'statusCode' => $data->status,
+                                'statusCode' => $status,
                                 'message' => 'Transaction successful',
                                 'data' => $data->data,
                             ], 200);
 
                     }
-                    if ($data->data->status == "FAILED") {
+                    if ($status == "FAILED") {
                         $update = $Transaction->update([
                             'status' => 3,
                             'reference_partenaire' => $data->financialTransactionId,
-                            'description' => $data->data->status,
+                            'description' => $status,
                             'message' => $data->data->reason,
                             'date_end_trans' => Carbon::now(),
                             'terminaison' => 'MANUEL',
@@ -436,12 +437,12 @@ class ApiProdMoMoMonneySwaggerController extends Controller
                             ], 402
                         );
                     }
-                    if ($data->data->status == "PENDING") {
+                    if ($status == "PENDING") {
                         // $reason = json_decode($data->reason);
                         $update = $Transaction->update([
                             'status' => 2,
                             'reference_partenaire' => $data->data->financialTransactionId,
-                            'description' => $data->data->status,
+                            'description' => $status,
                         ]);
                         DB::commit();
                         return response()->json(
@@ -488,7 +489,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
                     'success'=>false,
                     'statusCode'=>"FAILED",
                     'message'=>"Transaction failed",
-                    'data'=>$data,
+                    'data'=>$data->data,
                 ],404
             );
         }
