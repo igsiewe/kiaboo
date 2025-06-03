@@ -485,7 +485,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
             }
         }
         if ($Transaction->first()->status == 3) {
-            return response()->json($data);
+
             return response()->json(
                 [
                     'success' => false,
