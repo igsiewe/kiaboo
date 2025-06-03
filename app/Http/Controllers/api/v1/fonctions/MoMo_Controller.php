@@ -166,7 +166,7 @@ class MoMo_Controller extends Controller
                 "payerMessage" => $distributeur->name_distributeur."-".$user->first()->telephone,
                 "payeeNote" => "Owner : ".Auth::user()->telephone
             ]);
-        return response()->json([$response->body()],$response->status());
+
         if($response->status()==202){
             return response()->json([$response],$response->status());
         }else{
