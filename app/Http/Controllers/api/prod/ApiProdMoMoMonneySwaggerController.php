@@ -358,7 +358,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
 
         $data = json_decode($response->getContent());
         $status = $data->data->status;
-        return response()->json($Transaction->first()->status);
+
         if($Transaction->first()->status==1){
             return response()->json(
                 [
@@ -489,12 +489,13 @@ class ApiProdMoMoMonneySwaggerController extends Controller
                     'success'=>false,
                     'statusCode'=>"FAILED",
                     'message'=>"Transaction failed",
-                    'data'=>$data->data,
+                   // 'data'=>$data->data,
                 ],404
             );
         }
 
     }
+
     /**
      * @OA\Post(
      *     path="/api/v1/mtn/cashin",
