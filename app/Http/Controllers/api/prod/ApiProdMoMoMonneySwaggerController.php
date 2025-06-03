@@ -520,7 +520,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
      *         )
      *     ),
      *     @OA\Response(
-     *         response=400,
+     *         response=422,
      *         description="Invalid input",
      *         @OA\JsonContent(
      *             @OA\Property(property="success", type="boolean", example=false),
@@ -547,7 +547,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => $validator->errors()->first(),
-            ], 400);
+            ], 422);
         }
 
         $customerNumber = $request->customerPhone;
