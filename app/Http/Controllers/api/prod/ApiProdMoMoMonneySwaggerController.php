@@ -27,18 +27,9 @@ class ApiProdMoMoMonneySwaggerController extends Controller
 {
 
 
-    public function MOMO_getName(Request $request)
+    public function MoMoGetName($customerPhone)
     {
 
-        $validator = Validator::make($request->all(), [
-            'customerPhone' => 'required|numeric|digits:9',
-        ]);
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $validator->errors()->first(),
-            ], 400);
-        }
         $MoMoFunction = new MoMo_Controller();
 
         $responseToken = $MoMoFunction->MOMO_Disbursement_GetTokenAccess();
@@ -53,7 +44,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
         $dataAcessToken = json_decode($responseToken->getContent());
         $accessToken = $dataAcessToken->access_token;
 
-        $response = $MoMoFunction->MOMO_Customer($accessToken, $request->customerPhone);
+        $response = $MoMoFunction->MOMO_Customer($accessToken, $customerPhone);
         return response()->json($response , 200);
 
 
