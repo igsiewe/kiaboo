@@ -135,20 +135,20 @@ class ApiProdOrangeMoneyController_Save extends Controller
      * description="This operation is used to request a payment from a consumer (Payer). The payer will be asked to authorize the payment. The transaction will be executed once the payer has authorized the payment. The requesttopay will be in status PENDING until the transaction is authorized or declined by the payer or it is timed out by the system. Status of the transaction can be validated by using the GET api/v1/prod/om/payment/<resourceId>",
      * security={{"bearerAuth":{}}},
      * tags={"Merchant payment"},
-     * @OA\RequestBody(
-     *    required=true,
-     *    description="Request to make a OM payment",
-     *    @OA\JsonContent(
-     *       required={"agentNumber","marchandTransactionId","phone","amount"},
-     *       @OA\Property(property="agentNumber", type="string", example="659657424"),
-     *       @OA\Property(property="marchandTransactionId", type="string", example="12354"),
-     *       @OA\Property(
-     *           type="object",
-     *           property="data",
-     *           @OA\Property(property="phone", type="string", example="659657424"),
-     *           @OA\Property(property="amount", type="string", example="200"),
-     *       )
-     *    ),
+    * @OA\RequestBody(
+         * required=true,
+         * description="Request to make a OM payment",
+         * @OA\JsonContent(
+         * required={"agentNumber","marchandTransactionId","phone","amount"},
+         * @OA\Property(property="agentNumber", type="string", example="659657424"),
+         * @OA\Property(property="marchandTransactionId", type="string", example="12354"),
+         * @OA\Property(
+         * property="data",
+         * type="object",
+         * @OA\Property(property="phone", type="string", example="659657424"),
+         * @OA\Property(property="amount", type="string", example="200")
+         * )
+         * )
      * ),
      * @OA\Response(
      *    response=400,
