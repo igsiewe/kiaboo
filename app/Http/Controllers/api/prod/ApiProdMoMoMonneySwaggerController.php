@@ -53,7 +53,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
                 ],$response->status()
             );
         }
-        $data=json_decode($response);
+        $data=json_decode($response->getContent());
         return response()->json($data, 200);
 
 
