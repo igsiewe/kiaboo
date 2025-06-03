@@ -133,7 +133,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
      * )
      */
 
-    public function MOMO_Payment(Request $request){
+    public function MoMoPayment(Request $request){
 
         $validator = Validator::make($request->all(), [
             'customerPhone' => 'required|numeric|digits:9',
@@ -339,7 +339,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
      * )
      */
 
-    public function MOMO_Payment_Status($paytoken){
+    public function MoMoPaymentStatus($paytoken){
         // On cherche la transaction dans la table transaction
         $Transaction = Transaction::where("paytoken", $paytoken)->where('service_id',ServiceEnum::PAYMENT_MOMO->value)->where("created_by",Auth::user()->id);
 
@@ -522,7 +522,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
      * @OA\Post(
      *     path="/api/v1/mtn/cashin",
      *     summary="Process a MoMo cashin",
-     *     tags={"MTN - CahIn"},
+     *     tags={"MTN - CashIn"},
      *     security={{"bearerAuth":{}}},
      *     @OA\RequestBody(
      *         required=true,
@@ -560,7 +560,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
      * )
      */
 
-    public function MOMO_Depot(Request $request){
+    public function MoMoCashIn(Request $request){
         $validator = Validator::make($request->all(), [
             'customerPhone' => 'required|numeric|digits:9',
             'amount' => 'required|numeric|min:50|max:500000',
@@ -821,7 +821,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
      *     )
      * )
      */
-    public function MOMO_Depot_Status($token, $subcriptionKey, $referenceId){
+    public function MoMoCashInStatus($token, $subcriptionKey, $referenceId){
 
         $http = "https://proxy.momoapi.mtn.com/disbursement/v1_0/transfer/".$referenceId;
 
