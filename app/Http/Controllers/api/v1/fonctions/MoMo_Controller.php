@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Enums\UserRolesEnum;
 use App\Models\Distributeur;
 use App\Models\User;
+use http\Env\Response;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -119,7 +120,7 @@ class MoMo_Controller extends Controller
                     "payerMessage" => $distributeur->name_distributeur."-".$user->first()->telephone,
                 ]);
             if($response->status()==202){
-                return $response->status();
+                return response()->json([$response],$response->status());
             }else{
                 return response()->json(
                     [
