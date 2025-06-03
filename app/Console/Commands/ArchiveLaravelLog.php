@@ -53,6 +53,20 @@ class ArchiveLaravelLog extends Command
             exec("chown g+r -R " . storage_path("logs/"));
             exec("chown g+r -R " . storage_path("framework/"));
             exec("chown g+r -R " . storage_path("framework/sessions"));
+
+            exec("chown -R ubuntu:ubuntu " . storage_path());
+            exec("chown g+w -R ubuntu:ubuntu " . storage_path());
+            exec("chown g+r -R " . storage_path("logs/"));
+            exec("chown g+r -R " . storage_path("framework/"));
+            exec("chown g+r -R " . storage_path("framework/sessions"));
+
+
+//            sudo chown -R ubuntu:ubuntu storage bootstrap/cache
+//sudo chmod -R 775 storage bootstrap/cache
+//sudo chmod 664 storage/logs/laravel.log
+
+
+
      //       exec("chown -R www-data:www-data /var/www/kiaboopay/storage >> /var/www/kiaboopay/storage/logs/cron.log 2>&1");
      //       exec("chmod -R 775 /var/www/kiaboopay/storage >> /var/www/kiaboopay/storage/logs/cron.log 2>&1");
 
