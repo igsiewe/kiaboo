@@ -260,7 +260,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
             return response()->json(
                 [
                     'status'=>$response->status(),
-                    'message'=>$response->body(),
+                    'message'=>$response->getContent(),
                 ],$response->status()
             );
         }
