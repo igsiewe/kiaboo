@@ -568,14 +568,14 @@ class ApiProdMoMoMonneySwaggerController extends Controller
         // Vérifie si le service est actif
         if($apiCheck->checkStatusService($service)==false){
             return response()->json([
-                'status'=>'error',
+                'success'=>false,
                 'message'=>"Ce service n'est pas actif",
             ],403);
         }
         // Vérifie si l'utilisateur est autorisé à faire cette opération
         if(!$apiCheck->checkUserValidity()){
             return response()->json([
-                'status'=>'error',
+                'success'=>false,
                 'message'=>'Votre compte est désactivé. Veuillez contacter votre distributeur',
             ],401);
         }
@@ -583,7 +583,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
         // Vérifie si le solde de l'utilisateur lui permet d'effectuer cette opération
         if(!$apiCheck->checkUserBalance($montant)){
             return response()->json([
-                'status'=>'error',
+                'success'=>false,
                 'message'=>'Votre solde est insuffisant pour effectuer cette opération',
             ],403);
         }
@@ -592,7 +592,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
 
         if($apiCheck->checkFiveLastTransaction($customerNumber, $montant, $service)){
             return response()->json([
-                'status'=>'error',
+                'success'=>false,
                 'message'=>'Une transaction similaire a été faite il y\'a moins de 5 minutes',
             ],403);
         }
@@ -621,7 +621,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
 
         if($init_transaction->getStatusCode() !=200){
             return response()->json([
-                'status'=>'error',
+                'success'=>false,
                 'message'=>$dataInit->message,
             ],$init_transaction->getStatusCode());
         }
@@ -636,7 +636,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
         if($responseToken->status()!=200){
             return response()->json(
                 [
-                    'status'=>$responseToken->status(),
+                    'success'=>false,
                     'message'=>$responseToken["message"],
                 ],$responseToken->status()
             );
