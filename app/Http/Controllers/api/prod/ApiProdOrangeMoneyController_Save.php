@@ -130,7 +130,7 @@ class ApiProdOrangeMoneyController_Save extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/v1/prod/om/payment",
+     *     path="/api/v1/prod/om/payment/pm",
      *     summary="Request to make a OM payment",
      *     description="Request a payment from a consumer. The payer must authorize it before execution. The status remains PENDING until authorization, denial, or timeout.",
      *     security={{"bearerAuth":{}}},
@@ -232,7 +232,6 @@ class ApiProdOrangeMoneyController_Save extends Controller
      *     )
      * )
      */
-
     public function OM_Payment(Request $request){
 
         $apiCheck = new ApiCheckController();
