@@ -515,7 +515,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
      *         description="CashIn end successfully",
      *         @OA\JsonContent(
      *             @OA\Property(property="success", type="boolean", example=true),
-     *             @OA\Property(property="statusCode", type="string", example=SUCCESSFUL),
+     *             @OA\Property(property="statusCode", type="string", example="SUCCESSFUL"),
      *             @OA\Property(property="message", type="string", example="Payment request sent successfully"),
      *             @OA\Property(property="transactionId", type="string", example="tx-123456789")
      *         )
@@ -525,7 +525,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
      *          description="CashIn initiated successfully",
      *          @OA\JsonContent(
      *              @OA\Property(property="success", type="boolean", example=false),
-     *              @OA\Property(property="statusCode", type="string", example=PENDING),
+     *              @OA\Property(property="statusCode", type="string", example="PENDING"),
      *              @OA\Property(property="message", type="string", example="Payment request sent successfully but it is still pending status"),
      *          )
      *      ),
