@@ -673,13 +673,13 @@ class ApiProdMoMoMonneySwaggerController extends Controller
                 ]);
                 if($checkStatus->getStatusCode() ==201) {
                     return response()->json([
-                        'status'=>false,
+                        'success'=>false,
                         'statusCode'=>"PENDING",
                         'message'=>$datacheckStatus->message,
                     ],$checkStatus->getStatusCode());
                 }
                 return response()->json([
-                    'status'=>false,
+                    'success'=>false,
                     'message'=>$datacheckStatus->message,
                 ],$checkStatus->getStatusCode());
             }else{
@@ -693,7 +693,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
                     ], 200);
                 }else{
                     return response()->json([
-                        'status'=>false,
+                        'success'=>false,
                         'message'=>$datacheckStatus->message,
                     ],$checkStatus->getStatusCode());
                 }
