@@ -184,8 +184,25 @@ class MoMo_Controller extends Controller
                     'Accept'=>'application/json',
                 ])
                 ->Get($http);
-            dd($response->json(), $response->body(), $response->status());
-            return response()->json($response->json());
+
+            if($response->status()==200){
+                $data = json_decode($response->body());
+                return response()->json(
+                    [
+                        'status'=>200,
+                        'firstName'=>$data->family_name,
+                        'lastName'=>$data->given_name,
+                        'message'=>"customer found"
+                    ],200
+                );
+            }else{
+                return response()->json(
+                    [
+                        'status'=>$response->status(),
+                        'message'=>"Le numéro de téléphone n'est pas valide",
+                    ],$response->status()
+                );
+            }
         }catch (\Exception $e){
             return response()->json(
             [
