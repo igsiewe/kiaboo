@@ -119,7 +119,11 @@ class MoMo_Controller extends Controller
                     "payerMessage" => $distributeur->name_distributeur."-".$user->first()->telephone,
                 ]);
             if($response->status()==202){
-                return response()->json($response->json());
+                return response()->json(
+                    [
+                        $response->json()
+                    ],$response->status()
+                );
             }else{
                 return response()->json(
                     [
