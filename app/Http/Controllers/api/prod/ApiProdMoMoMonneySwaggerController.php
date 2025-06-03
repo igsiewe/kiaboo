@@ -358,7 +358,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
 
         $data = json_decode($response->getContent());
         $status = $data->data->status;
-
+        return response()->json($Transaction->first()->status);
         if($Transaction->first()->status==1){
             return response()->json(
                 [
