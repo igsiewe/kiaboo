@@ -376,7 +376,6 @@ class ApiProdMoMoMonneySwaggerController extends Controller
 
                 try {
                     DB::beginTransaction();
-                    return response()->json($data->status);
                     if ($data->data->status == "SUCCESSFUL") {
                         $montantACrediter = doubleval($montant) - doubleval($Transaction->first()->fees);
                         $balanceBeforeAgent = $user->get()->first()->balance_after;
@@ -489,7 +488,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
                     'success'=>false,
                     'statusCode'=>"FAILED",
                     'message'=>"Transaction failed",
-                    'data'=>$data->data,
+                    'data'=>$data,
                 ],404
             );
         }
