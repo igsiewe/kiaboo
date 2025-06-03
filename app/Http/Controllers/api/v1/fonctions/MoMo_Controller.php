@@ -182,6 +182,8 @@ class MoMo_Controller extends Controller
                 'Accept'=>'application/json',
             ])
             ->Get($http);
+
+        return response()->json($response->json());
     }
     public function MOMO_CashInStatus($accessToken, $referenceId){
 
