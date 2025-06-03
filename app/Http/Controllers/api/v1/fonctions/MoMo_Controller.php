@@ -166,6 +166,17 @@ class MoMo_Controller extends Controller
                 "payerMessage" => $distributeur->name_distributeur."-".$user->first()->telephone,
                 "payeeNote" => "Owner : ".Auth::user()->telephone
             ]);
+
+        if($response->status()==202){
+            return response()->json([$response],$response->status());
+        }else{
+            return response()->json(
+                [
+                    'status'=>false,
+                    'message'=>"Le traitement de la transaction a été interrompu",
+                ],$response->status()
+            );
+        }
     }
     public function MOMO_CashOut($accessToken, $referenceID, $externalId, $amount, $customerPhone){
 
