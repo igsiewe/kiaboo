@@ -14,8 +14,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use OpenApi\Annotations as OA;
-
-
 class ApiProdAuthController extends BaseController
 {
 
@@ -113,11 +111,8 @@ class ApiProdAuthController extends BaseController
             DB::table('oauth_access_tokens')->where('user_id', $user->id)->delete();
             $token = $user->createToken('kiaboo');
             $access_token = $token->accessToken;
-           // $delay = $token->accessToken->expired;
-
             $user->last_connexion = Carbon::now();
             $user->save();
-
             $delay=Carbon::parse($token->token->expires_at)->diffInSeconds(Carbon::now());
             return $this->respondWithTokenSwagger($access_token, $user,$delay);
         }
@@ -346,7 +341,6 @@ class ApiProdAuthController extends BaseController
             $user->ville_id= Auth::user()->ville_id;
             $user->adresse= Auth::user()->adresse;
             $user->application =Auth::user()->application;
-
             $result = $user->save();
             if ($result) {
                 DB::commit();
@@ -521,7 +515,7 @@ class ApiProdAuthController extends BaseController
      */
     public function blockAgentSwagger($phone){
         try{
-            $agent = User::where("telephone", $phone)->where("type_user_id",UserRolesEnum::AGENT->value);
+            $agent = User::where("telephone", $phone)->where("type_user_id",UserRolesEnum::AGENT->value)->where('distributeur_id',Auth::user()->distributeur_id);
             if($agent->count()>0){
                 if($agent->first()->status==0){
                     return response()->json([
@@ -537,14 +531,10 @@ class ApiProdAuthController extends BaseController
                         'message' => 'you do not have the necessary permissions',
                     ], 403);
                 }
-                log:info([
-                    "Action"=>"Blocked",
-                    "User"=>$phone,
-                    "Block_by"=>Auth::user()->id,
-                    "Date"=>Carbon::now()
-                ]);
                 $update = $agent->update([
                     "status"=>0,
+                    "updated_at"=>Carbon::now(),
+                    "updated_by"=>Auth::user()->id
                 ]);
                 return response()->json([
                     'success'=>true,
@@ -636,7 +626,7 @@ class ApiProdAuthController extends BaseController
      */
     public function unblockAgentSwagger($phone){
         try{
-            $agent = User::where("telephone", $phone)->where("type_user_id",UserRolesEnum::AGENT->value);
+            $agent = User::where("telephone", $phone)->where("type_user_id",UserRolesEnum::AGENT->value)->where('distributeur_id',Auth::user()->distributeur_id);
             if($agent->count()>0){
                 if($agent->first()->status==1){
                     return response()->json([
@@ -652,14 +642,10 @@ class ApiProdAuthController extends BaseController
                         'message' => 'you do not have the necessary permissions',
                     ], 403);
                 }
-                log:info([
-                    "Action"=>"Unblocked",
-                    "User"=>$phone,
-                    "Block_by"=>Auth::user()->id,
-                    "Date"=>Carbon::now()
-                ]);
                 $update = $agent->update([
                     "status"=>1,
+                    "updated_at"=>Carbon::now(),
+                    "updated_by"=>Auth::user()->id
                 ]);
                 return response()->json([
                     'success'=>true,

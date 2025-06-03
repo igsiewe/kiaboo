@@ -123,8 +123,6 @@ class ApiProdMoMoMoneyController extends Controller
                     'message'=>"Le numéro de téléphone n'est pas valide",
                 ],$response->status()
             );
-
-
         }
     }
 
@@ -1738,4 +1736,6 @@ class ApiProdMoMoMoneyController extends Controller
         }
 
     }
+
+
 }
