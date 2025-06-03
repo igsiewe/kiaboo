@@ -92,7 +92,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/v1/mtn/payment",
+     *     path="/api/v1/prod/mtn/payment",
      *     summary="Process a MoMo payment",
      *     tags={"MTN - Payment"},
      *     security={{"bearerAuth":{}}},
@@ -102,7 +102,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
      *             required={"customerPhone","amount", "externalId"},
      *             @OA\Property(property="customerPhone", type="string", example="670000000"),
      *             @OA\Property(property="amount", type="string", example="2500"),
-     *             @OA\Property(property="externalId", type="string", example="TR-2025-0001", description="treeeer"),
+     *             @OA\Property(property="externalId", type="string", example="TR-2025-0001"),
      *         )
      *     ),
      *     @OA\Response(
@@ -200,8 +200,10 @@ class ApiProdMoMoMonneySwaggerController extends Controller
         $idTransaction = $dataTransactionInit->transId; //Id de la transaction initiée
         $reference = $dataTransactionInit->reference; //Référence de la transaction initiée
         //On génère le token de la transation
-        // $responseToken = $this->MOMO_Collection_GetTokenAccess();
-        $responseToken = $this->MOMO_Payment_GetTokenAccess();
+        $MoMoFunction = new MoMo_Controller();
+
+        $responseToken = $MoMoFunction->MOMO_Payment_GetTokenAccess();
+
         if($responseToken->status()!=200){
             return response()->json(
                 [
@@ -213,38 +215,16 @@ class ApiProdMoMoMonneySwaggerController extends Controller
         }
 
         $dataAcessToken = json_decode($responseToken->getContent());
-        $AccessToken = $dataAcessToken->access_token;
+        $accessToken = $dataAcessToken->access_token;
 
         //Référence de la transaction
-        $referenceID = $this->gen_uuid();
+        $referenceID = $MoMoFunction->gen_uuid();
         //On gardee l'UID de la transaction initiee
         $saveUID = Transaction::where('id',$idTransaction)->update([
             "paytoken"=>$referenceID
         ]);
         $customerPhone = "237".$customer;
-        $distributeur = Distributeur::where("id",$user->first()->distributeur_id)->first();
-        $response = Http::withOptions(['verify' => false,])->withHeaders(
-            [
-                'Authorization'=> 'Bearer '.$AccessToken,
-                'X-Reference-Id'=> $referenceID,
-                'Ocp-Apim-Subscription-Key'=> '886cc9e141ab492f80d9567b3c46d59c',
-                'X-Target-Environment'=> 'mtncameroon',
-                'X-Callback-Url'=> 'https://kiaboopay.com/api/momo/callback',
-            ])
-            ->Post('https://proxy.momoapi.mtn.com/collection/v1_0/requesttopay', [
-
-                "payeeNote" => "Agent ".$user->first()->telephone,
-                "externalId" => $idTransaction,
-                "amount" => $amount,
-                "currency" => "XAF",
-                "payer" => [
-                    "partyIdType" => "MSISDN",
-                    "partyId" => $customerPhone
-                ],
-                "payerMessage" => $distributeur->name_distributeur."-".$user->first()->telephone,
-            ]);
-
-
+        $response = $MoMoFunction->MOMO_Customer($accessToken, $customerPhone);
         if($response->status()==202){
             //Le client a été notifié. Donc on reste en attente de sa confirmation (Saisie de son code secret)
             //On change le statut de la transaction dans la base de donnée
