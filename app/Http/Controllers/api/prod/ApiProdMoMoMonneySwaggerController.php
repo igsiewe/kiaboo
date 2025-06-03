@@ -224,7 +224,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
             "paytoken"=>$referenceID
         ]);
         $customerPhone = "237".$customer;
-        $response = $MoMoFunction->MOMO_Customer($accessToken, $customerPhone);
+        $response = $MoMoFunction->MOMO_Payment($accessToken,$referenceID, $idTransaction, $amount, $customerPhone);
         if($response->status()==202){
             //Le client a été notifié. Donc on reste en attente de sa confirmation (Saisie de son code secret)
             //On change le statut de la transaction dans la base de donnée
@@ -260,7 +260,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
             return response()->json(
                 [
                     'status'=>$response->status(),
-                    'message'=>$response->getContent(),
+                    'message'=>$response->body(),
                 ],$response->status()
             );
         }
