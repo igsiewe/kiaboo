@@ -671,7 +671,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
 
             $checkStatus = $MoMoFunction->MOMO_CashInStatus($accessToken, $referenceID);
             $datacheckStatus = json_decode($checkStatus->getContent());
-return response()->json([$datacheckStatus],$response->status());
+
             if($checkStatus->getStatusCode() !=200) {
                 //La transaction est attente
                 $updateTransaction=Transaction::where("id",$idTransaction)->where("status",2)->update([
@@ -720,7 +720,7 @@ return response()->json([$datacheckStatus],$response->status());
 
     /**
      * @OA\Get(
-     *     path="/api/v1/mtn/cashin/status/{paytoken}",
+     *     path="/api/v1/prod/mtn/cashin/status/{paytoken}",
      *     summary="Get cashin transaction status",
      *     tags={"MTN - CashIn"},
      *     security={{"bearerAuth":{}}},
@@ -770,22 +770,44 @@ return response()->json([$datacheckStatus],$response->status());
      *     )
      * )
      */
-    public function MoMoCashInStatus($token, $subcriptionKey, $referenceId){
+    public function MoMoCashInStatus($paytoken){
 
-        $http = "https://proxy.momoapi.mtn.com/disbursement/v1_0/transfer/".$referenceId;
+        // On cherche la transaction dans la table transaction
+        $Transaction = Transaction::where("paytoken", $paytoken)->where('service_id', ServiceEnum::DEPOT_MOMO->value)->where("created_by", Auth::user()->id);
 
-        $response = Http::withOptions(['verify' => false,])->withHeaders(
-            [
-                'Authorization'=> 'Bearer '.$token,
-                'Ocp-Apim-Subscription-Key'=> $subcriptionKey,
-                'X-Target-Environment'=> 'mtncameroon',
-            ])
-            ->Get($http);
+        if ($Transaction->count() == 0) {
+            if ($Transaction->first()->status == 1) {
+                return response()->json(
+                    [
+                        'success' => false,
+                        'statusCode' => "ERR-TRANSACTION-NOT-FOUND",
+                        'message' => "PayToken not found",
+                    ], 404
+                );
+            }
+        }
 
-        $data = json_decode($response->body());
+        //On génère le token de la transation
+        $MoMoFunction = new MoMo_Controller();
+        $responseToken = $MoMoFunction->MOMO_Disbursement_GetTokenAccess();
+
+        if($responseToken->status()!=200){
+            return response()->json(
+                [
+                    'success'=>false,
+                    'message'=>$responseToken["message"],
+                ],$responseToken->status()
+            );
+        }
+
+        $dataAcessToken = json_decode($responseToken->getContent());
+        $accessToken = $dataAcessToken->access_token;
+
+        $response = $MoMoFunction->MOMO_CashInStatus($accessToken, $paytoken);
+
+        $data = json_decode($response->getContent());
         $element = json_decode($response, associative: true);
-        $alerte = new ApiLog();
-        $alerte->logInfo($response->status(), "MOMO_Depot_Status", $referenceId, $data,"MOMO_Depot_Status");
+
         if($response->status()==200){
             if($data->status=="SUCCESSFUL"){
                 return response()->json(
@@ -829,7 +851,7 @@ return response()->json([$datacheckStatus],$response->status());
                 }
             }
             if($data->status=="PENDING"){
-                $alerte->logError($response->status(), "MOMO_Depot_Status", $referenceId, $response->body());
+
                 return response()->json(
                     [
                         'status'=>201,
@@ -850,8 +872,6 @@ return response()->json([$datacheckStatus],$response->status());
                 ],404
             );
         }else{
-
-            $alerte->logError($response->status(), "MOMO_Depot_Status", $referenceId, $data, "MOMO_Depot_Status");
             return response()->json(
                 [
                     'status'=>$response->status(),
