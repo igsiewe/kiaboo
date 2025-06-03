@@ -49,7 +49,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
             return response()->json(
                 [
                     'status'=>$response->status(),
-                    'message'=>$response["message"],
+                    'message'=>"Le numéro de téléphone n'est pas valide",
                 ],$response->status()
             );
         }
