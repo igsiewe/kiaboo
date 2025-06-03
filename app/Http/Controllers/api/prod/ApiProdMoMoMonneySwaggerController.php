@@ -357,7 +357,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
         $response = $MoMoFunction->MOMO_PaymentStatus($accessToken,$payToken);
 
         $data = json_decode($response->getContent());
-         return response()->json($data->data, 200);
+       //  return response()->json($data->data, 200);
         if($Transaction->first()->status==1){
             return response()->json(
                 [
@@ -376,6 +376,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
 
                 try {
                     DB::beginTransaction();
+                    return response()->json($data->data->status);
                     if ($data->data->status == "SUCCESSFUL") {
                         $montantACrediter = doubleval($montant) - doubleval($Transaction->first()->fees);
                         $balanceBeforeAgent = $user->get()->first()->balance_after;
