@@ -102,7 +102,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
      *             required={"customerPhone","amount", "externalId"},
      *             @OA\Property(property="customerPhone", type="string", example="670000000"),
      *             @OA\Property(property="amount", type="string", example="2500"),
-     *             @OA\Property(property="externalId", type="string", example="invoice-2025-0001"),
+     *             @OA\Property(property="externalId", type="string", example="TR-2025-0001", description="treeeer"),
      *         )
      *     ),
      *     @OA\Response(
@@ -115,7 +115,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
      *         )
      *     ),
      *     @OA\Response(
-     *         response=400,
+     *         response=422,
      *         description="Invalid input",
      *         @OA\JsonContent(
      *             @OA\Property(property="success", type="boolean", example=false),
@@ -144,7 +144,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => $validator->errors()->first(),
-            ], 400);
+            ], 422);
         }
 
         $apiCheck = new ApiCheckController();
