@@ -94,32 +94,52 @@ class MoMo_Controller extends Controller
     }
     public function MOMO_Payment($accessToken, $referenceID,  $externalId, $amount, $customerPhone)
     {
+        try {
+            $user = User::where("id",Auth::user()->id)->where('type_user_id', UserRolesEnum::AGENT->value)->get();
+            $distributeur = Distributeur::where("id",$user->first()->distributeur_id)->first();
 
-        $user = User::where("id",Auth::user()->id)->where('type_user_id', UserRolesEnum::AGENT->value)->get();
-        $distributeur = Distributeur::where("id",$user->first()->distributeur_id)->first();
+            $response = Http::withOptions(['verify' => false,])->withHeaders(
+                [
+                    'Authorization'=> 'Bearer '.$accessToken,
+                    'X-Reference-Id'=> $referenceID,
+                    'Ocp-Apim-Subscription-Key'=> $this->OcpApimSubscriptionKeyCollection,
+                    'X-Target-Environment'=> 'mtncameroon',
+                    'X-Callback-Url'=> $this->callbackUrl,
+                ])
+                ->Post('https://proxy.momoapi.mtn.com/collection/v1_0/requesttopay', [
 
-        $response = Http::withOptions(['verify' => false,])->withHeaders(
-            [
-                'Authorization'=> 'Bearer '.$accessToken,
-                'X-Reference-Id'=> $referenceID,
-                'Ocp-Apim-Subscription-Key'=> $this->OcpApimSubscriptionKeyCollection,
-                'X-Target-Environment'=> 'mtncameroon',
-                'X-Callback-Url'=> $this->callbackUrl,
-            ])
-            ->Post('https://proxy.momoapi.mtn.com/collection/v1_0/requesttopay', [
+                    "payeeNote" => "Owner : ".Auth::user()->telephone,
+                    "externalId" => $externalId,
+                    "amount" => $amount,
+                    "currency" => "XAF",
+                    "payer" => [
+                        "partyIdType" => "MSISDN",
+                        "partyId" => $customerPhone
+                    ],
+                    "payerMessage" => $distributeur->name_distributeur."-".$user->first()->telephone,
+                ]);
+            if($response->status()==202){
+                return response()->json($response->json());
+            }else{
+                return response()->json(
+                    [
+                        'status'=>false,
+                        'message'=>"Le traitement de la transaction a été interrompu",
+                    ],$response->status()
+                );
+            }
 
-                "payeeNote" => "Owner : ".Auth::user()->telephone,
-                "externalId" => $externalId,
-                "amount" => $amount,
-                "currency" => "XAF",
-                "payer" => [
-                    "partyIdType" => "MSISDN",
-                    "partyId" => $customerPhone
-                ],
-                "payerMessage" => $distributeur->name_distributeur."-".$user->first()->telephone,
-            ]);
-dd($response);
-        return response()->json($response->json());
+
+        }catch (\Exception $e){
+            return response()->json(
+                [
+                    'status'=> false,
+                    'messsage'=>  $e->getMessage(),
+
+                ],$e->getCode()
+            );
+        }
+
     }
     public function MOMO_CashIn($accessToken, $referenceID, $externalId, $amount, $customerPhone){
 
