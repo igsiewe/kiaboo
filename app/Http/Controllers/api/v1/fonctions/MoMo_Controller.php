@@ -151,7 +151,7 @@ class MoMo_Controller extends Controller
             [
                 'Authorization'=> 'Bearer '.$accessToken,
                 'X-Reference-Id'=> $referenceID,
-                'Ocp-Apim-Subscription-Key'=> $this->OcpApimSubscriptionKeyCollection,
+                'Ocp-Apim-Subscription-Key'=> $this->OcpApimSubscriptionKeyDisbursement,
                 'X-Target-Environment'=> 'mtncameroon',
                 'X-Callback-Url'=>$this->callbackUrl,
             ])
