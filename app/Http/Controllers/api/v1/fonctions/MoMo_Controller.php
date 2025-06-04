@@ -143,40 +143,50 @@ class MoMo_Controller extends Controller
 
     }
     public function MOMO_CashIn($accessToken, $referenceID, $externalId, $amount, $customerPhone){
+        try {
+            $user = User::where("id",Auth::user()->id)->where('type_user_id', UserRolesEnum::AGENT->value)->get();
+            $distributeur = Distributeur::where("id",$user->first()->distributeur_id)->first();
 
-        $user = User::where("id",Auth::user()->id)->where('type_user_id', UserRolesEnum::AGENT->value)->get();
-        $distributeur = Distributeur::where("id",$user->first()->distributeur_id)->first();
+            $response = Http::withOptions(['verify' => false,])->withHeaders(
+                [
+                    'Authorization'=> 'Bearer '.$accessToken,
+                    'X-Reference-Id'=> $referenceID,
+                    'Ocp-Apim-Subscription-Key'=> $this->OcpApimSubscriptionKeyDisbursement,
+                    'X-Target-Environment'=> 'mtncameroon',
+                    'X-Callback-Url'=>$this->callbackUrl,
+                ])
+                ->Post("https://proxy.momoapi.mtn.com/disbursement/v1_0/transfer", [
+                    "amount" => $amount,
+                    "currency" => "XAF",
+                    "externalId" => $externalId,
+                    "payee" => [
+                        "partyIdType" => "MSISDN",
+                        "partyId" => $customerPhone,
+                    ],
+                    "payerMessage" => $distributeur->name_distributeur."-".$user->first()->telephone,
+                    "payeeNote" => "Owner : ".Auth::user()->telephone
+                ]);
 
-        $response = Http::withOptions(['verify' => false,])->withHeaders(
-            [
-                'Authorization'=> 'Bearer '.$accessToken,
-                'X-Reference-Id'=> $referenceID,
-                'Ocp-Apim-Subscription-Key'=> $this->OcpApimSubscriptionKeyDisbursement,
-                'X-Target-Environment'=> 'mtncameroon',
-                'X-Callback-Url'=>$this->callbackUrl,
-            ])
-            ->Post("https://proxy.momoapi.mtn.com/disbursement/v1_0/transfer", [
-                "amount" => $amount,
-                "currency" => "XAF",
-                "externalId" => $externalId,
-                "payee" => [
-                    "partyIdType" => "MSISDN",
-                    "partyId" => $customerPhone,
-                ],
-                "payerMessage" => $distributeur->name_distributeur."-".$user->first()->telephone,
-                "payeeNote" => "Owner : ".Auth::user()->telephone
-            ]);
-
-        if($response->status()==202){
-            return response()->json([$response],$response->status());
-        }else{
+            if($response->status()==202){
+                return response()->json([$response],$response->status());
+            }else{
+                return response()->json(
+                    [
+                        'status'=>false,
+                        'message'=>"Le traitement de la transaction a été interrompu",
+                    ],$response->status()
+                );
+            }
+        }catch (\Exception $e){
             return response()->json(
                 [
-                    'status'=>false,
-                    'message'=>"Le traitement de la transaction a été interrompu",
-                ],$response->status()
+                    'status'=> false,
+                    'messsage'=>  $e->getMessage(),
+                ],$e->getCode()
             );
         }
+
+
     }
     public function MOMO_CashOut($accessToken, $referenceID, $externalId, $amount, $customerPhone){
 
@@ -247,87 +257,96 @@ class MoMo_Controller extends Controller
     }
     public function MOMO_CashInStatus($accessToken, $referenceId){
 
-        $http = "https://proxy.momoapi.mtn.com/disbursement/v1_0/transfer/".$referenceId;
+        try {
+            $http = $this->endpoint."/disbursement/v1_0/transfer/".$referenceId;
+            $response = Http::withOptions(['verify' => false,])->withHeaders(
+                [
+                    'Authorization'=> 'Bearer '.$accessToken,
+                    'Ocp-Apim-Subscription-Key'=> $this->OcpApimSubscriptionKeyDisbursement,
+                    'X-Target-Environment'=> 'mtncameroon',
+                ])
+                ->Get($http);
 
-        $response = Http::withOptions(['verify' => false,])->withHeaders(
-            [
-                'Authorization'=> 'Bearer '.$accessToken,
-                'Ocp-Apim-Subscription-Key'=> $this->OcpApimSubscriptionKeyDisbursement,
-                'X-Target-Environment'=> 'mtncameroon',
-            ])
-            ->Get($http);
+            $data = json_decode($response->body());
+            $element = json_decode($response, associative: true);
+            if($response->status()==200){
+                if($data->status=="SUCCESSFUL"){
+                    return response()->json(
+                        [
+                            'status'=>200,
+                            'amount'=>$data->amount,
+                            'externalId'=>$data->externalId,
+                            'message'=>"Terminée avec succès",
+                            'description'=>$data->status,
+                        ],200
+                    );
+                }
 
-        $data = json_decode($response->body());
-        $element = json_decode($response, associative: true);
-        if($response->status()==200){
-            if($data->status=="SUCCESSFUL"){
-                return response()->json(
-                    [
-                        'status'=>200,
-                        'amount'=>$data->amount,
-                        'externalId'=>$data->externalId,
-                        'message'=>"Terminée avec succès",
-                        'description'=>$data->status,
-                    ],200
-                );
-            }
-
-            if($data->status=="CREATED"){
-                return response()->json(
-                    [
-                        'status'=>201,
-                        'amount'=>$data->amount,
-                        'externalId'=>$data->externalId,
-                        'message'=>"Le maximum de dépôt pour ce compte dans la semaine est atteint",
-                        'description'=>$data->status,
-                    ],201
-                );
-            }
-            if($data->status=="FAILED") {
-                if(Arr::has($element, "reason")) {
-                    $reason = $data->reason;
-                    if ($reason == "NOT_ENOUGH_FUNDS") {
-                        return response()->json(
-                            [
-                                'status' => 404,
-                                'amount' => $data->amount,
-                                'externalId' => $data->externalId,
-                                'message' => "Cette transaction de dépôt MTN ne peut pas aboutir pour l'instant. Veuillez informer votre support.",
-                                'description' => $data->status,
-                            ], 404
-                        );
+                if($data->status=="CREATED"){
+                    return response()->json(
+                        [
+                            'status'=>201,
+                            'amount'=>$data->amount,
+                            'externalId'=>$data->externalId,
+                            'message'=>"Le maximum de dépôt pour ce compte dans la semaine est atteint",
+                            'description'=>$data->status,
+                        ],201
+                    );
+                }
+                if($data->status=="FAILED") {
+                    if(Arr::has($element, "reason")) {
+                        $reason = $data->reason;
+                        if ($reason == "NOT_ENOUGH_FUNDS") {
+                            return response()->json(
+                                [
+                                    'status' => 404,
+                                    'amount' => $data->amount,
+                                    'externalId' => $data->externalId,
+                                    'message' => "Cette transaction de dépôt MTN ne peut pas aboutir pour l'instant. Veuillez informer votre support.",
+                                    'description' => $data->status,
+                                ], 404
+                            );
+                        }
                     }
                 }
-            }
-            if($data->status=="PENDING"){
+                if($data->status=="PENDING"){
+                    return response()->json(
+                        [
+                            'status'=>201,
+                            'amount'=>$data->amount,
+                            'externalId'=>$data->externalId,
+                            'message'=>"La transaction est en statut en attente. Veuillez vérifier son statut dans la liste des transactions en attente.",
+                            'description'=>$data->status,
+                        ],201
+                    );
+                }
                 return response()->json(
                     [
-                        'status'=>201,
+                        'status'=>404,
                         'amount'=>$data->amount,
                         'externalId'=>$data->externalId,
-                        'message'=>"La transaction est en statut en attente. Veuillez vérifier son statut dans la liste des transactions en attente.",
+                        'message'=>"Rassurez vous que le client n'ait pas atteint son nombre de transactions hebdomadaire, sinon consultez votre support technique.",//$data->reason,
                         'description'=>$data->status,
-                    ],201
+                    ],404
+                );
+            }else{
+                return response()->json(
+                    [
+                        'status'=>$response->status(),
+                        'message'=>$data->message,
+                        'description'=>$data->message,
+                    ],$response->status()
                 );
             }
+        }catch (\Exception $e){
             return response()->json(
                 [
-                    'status'=>404,
-                    'amount'=>$data->amount,
-                    'externalId'=>$data->externalId,
-                    'message'=>"Rassurez vous que le client n'ait pas atteint son nombre de transactions hebdomadaire, sinon consultez votre support technique.",//$data->reason,
-                    'description'=>$data->status,
-                ],404
-            );
-        }else{
-            return response()->json(
-                [
-                    'status'=>$response->status(),
-                    'message'=>$data->message,
-                    'description'=>$data->message,
-                ],$response->status()
+                    'status'=> false,
+                    'messsage'=>  $e->getMessage(),
+                ],$e->getCode()
             );
         }
+
     }
     public function MOMO_CashOutStatus($accessToken, $referenceId){
 
