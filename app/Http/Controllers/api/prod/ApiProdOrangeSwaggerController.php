@@ -33,13 +33,12 @@ class ApiProdOrangeSwaggerController extends Controller
      *    required=true,
      *    description="Request to make a OM payment",
      *    @OA\JsonContent(
-     *       required={"agentNumber","marchandTransactionId","phone","amount"},
-     *       @OA\Property(property="agentNumber", type="string", example="659657424"),
+     *       required={"marchandTransactionId","customerPhone","amount"},
      *       @OA\Property(property="marchandTransactionId", type="string", example="12354"),
      *       @OA\Property(
      *           type="object",
      *           property="data",
-     *           @OA\Property(property="phone", type="string", example="659657424"),
+     *           @OA\Property(property="customerPhone", type="string", example="659657424"),
      *           @OA\Property(property="amount", type="string", example="200"),
      *       )
      *    ),
