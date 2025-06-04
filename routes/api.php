@@ -24,6 +24,7 @@ use App\Http\Controllers\api\prod\ApiProdMoMoMoneyController;
 use App\Http\Controllers\api\prod\ApiProdM2UController;
 use App\Http\Controllers\api\prod\ApiProdMoMoMonneySwaggerController;
 use App\Http\Controllers\api\prod\ApiProdOrangeMoneyController;
+use App\Http\Controllers\api\prod\ApiProdOrangeSwaggerController;
 use App\Http\Controllers\api\prod\ApiProdRemboursementPaymentController;
 use App\Http\Controllers\api\prod\ApiProdTransactionsController;
 //use App\Http\Controllers\api\prod\ApiProduction_MoMo;
@@ -217,10 +218,13 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
                         Route::get('cashout/status/{referenceID}', 'OM_Retrait_Status')->name("OM_Retrait_Status");
                         Route::get('payment/status/{referenceID}', 'OM_Payment_Status')->name("OM_Payment_Status");
                     });
-
-                    Route::controller(Orange_Controller::class)->group(function () {
-                        Route::group(['prefix' => 'money'], function () {
+                    Route::group(['prefix' => 'money'], function () {
+                        Route::controller(Orange_Controller::class)->group(function () {
                             Route::get('customer/name/{customerNumber}', 'OM_Customer')->name("OM_Customer");
+                        });
+                        Route::controller(ApiProdOrangeSwaggerController::class)->group(function () {
+                            Route::get('payment', 'OM_Payment')->name("OM_PaymentSwagger");
+                            Route::get('payment/status/{referenceID}', 'OM_PaymentStatus')->name("OM_PaymentStatus");
                         });
                     });
 
