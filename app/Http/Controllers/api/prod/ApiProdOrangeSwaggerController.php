@@ -39,6 +39,15 @@ class ApiProdOrangeSwaggerController extends Controller
      *     )
      * ),
      * @OA\Response(
+     *      response=200,
+     *      description="Transaction initiated successfuly",
+     *      @OA\JsonContent(
+     *         @OA\Property(property="success", type="boolean", example="true"),
+     *         @OA\Property(property="paytoken", type="string", example="PM2015.4525.4121"),
+     *         @OA\Property(property="message", type="string", example="Transaction initiated successfuly"),
+     *      )
+     *   ),
+     * @OA\Response(
      *     response=422,
      *     description="attribute invalid",
      *     @OA\JsonContent(
@@ -106,7 +115,7 @@ class ApiProdOrangeSwaggerController extends Controller
 
             if($init_transaction->getStatusCode() !=200){
                 return response()->json([
-                    'status'=>'error',
+                    'success'=>false,
                     'message'=>$dataTransactionInit->message,
                 ],$init_transaction->getStatusCode());
             }
@@ -117,8 +126,8 @@ class ApiProdOrangeSwaggerController extends Controller
             $responseToken = $OMFunction->OM_GetTokenAccess();
             if($responseToken->getStatusCode() !=200){
                 return response()->json([
-                    "result"=>false,
-                    "message"=>"Exception ".$responseToken->getStatusCode()."\nUne exception a été déclenchée au moment de la génération du token"
+                    "success"=>false,
+                    "message"=>"Exception ".$responseToken->getStatusCode()." Une exception a été déclenchée au moment de la génération du token"
                 ], $responseToken->getStatusCode());
             }
             $dataAcessToken = json_decode($responseToken->getContent());
@@ -130,8 +139,8 @@ class ApiProdOrangeSwaggerController extends Controller
             $responseInitPaiement = $OMFunction->OM_Paiement_init($AccessToken);
             if($responseInitPaiement->getStatusCode() !=200){
                 return response()->json([
-                    "result"=>false,
-                    "message"=>"Exception ".$responseInitPaiement->getStatusCode()."\nUne exception a été déclenchée au moment de l'initialisation de la transaction"
+                    "success"=>false,
+                    "message"=>"Exception ".$responseInitPaiement->getStatusCode()." Une exception a été déclenchée au moment de l'initialisation de la transaction"
                 ], $responseInitPaiement->getStatusCode());
             }
             $dataInitPaiement= json_decode($responseInitPaiement->getContent());
@@ -176,8 +185,8 @@ class ApiProdOrangeSwaggerController extends Controller
 
             return response()->json(
                 [
-                    'status'=>200,
-                    'message'=>$dataPaiement->message."\n".$dataPaiement->data->status,
+                    'status'=>true,
+                    'message'=>$dataPaiement->message." ".$dataPaiement->data->status,
                     'paytoken'=>$payToken,
                 ],200
             );
