@@ -29,20 +29,15 @@ class ApiProdOrangeSwaggerController extends Controller
      * description="This operation is used to request a payment from a consumer (Payer). The payer will be asked to authorize the payment. The transaction will be executed once the payer has authorized the payment. The requesttopay will be in status PENDING until the transaction is authorized or declined by the payer or it is timed out by the system. Status of the transaction can be validated by using the GET api/v1/prod/om/payment/<resourceId>",
      * security={{"bearerAuth":{}}},
      * tags={"OM - Payment"},
-     * @OA\RequestBody(
-     *    required=true,
-     *    description="Request to make a OM payment",
-     *    @OA\JsonContent(
-     *       required={"marchandTransactionId","customerPhone","amount"},
-     *       @OA\Property(property="marchandTransactionId", type="string", example="12354"),
-     *       @OA\Property(
-     *           type="object",
-     *           property="data",
-     *           @OA\Property(property="customerPhone", type="string", example="659657424"),
-     *           @OA\Property(property="amount", type="string", example="200"),
-     *       )
-     *    ),
-     * ),
+     *     @OA\RequestBody(
+     *          required=true,
+     *        @OA\JsonContent(
+     *              required={"customerPhone","amount", "marchandTransactionId"},
+     *            @OA\Property(property="customerPhone", type="string", example="670000000"),
+     *             @OA\Property(property="amount", type="string", example="2500"),
+     *              @OA\Property(property="marchandTransactionId", type="string", example="TR-2025-0001"),
+     *          )
+     *      ),
      * @OA\Response(
      *    response=400,
      *    description="Bad request",
@@ -125,7 +120,7 @@ class ApiProdOrangeSwaggerController extends Controller
      * )
      */
     public function OM_Payment(Request $request){
-return response()->json($request->customerPhone);
+
         $validator = Validator::make($request->all(), [
             'customerPhone' => 'required|numeric|digits:9',
             'amount' => 'required|numeric|min:200|max:500000',
