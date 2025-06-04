@@ -342,7 +342,7 @@ class MoMo_Controller extends Controller
             $data = json_decode($response->body());
             return response()->json(
                 [
-                    'status'=>$response->status(),
+                    'success'=>true,
                     'data'=>$data,
                 ],$response->status()
 
@@ -350,7 +350,7 @@ class MoMo_Controller extends Controller
         }catch (\Exception $e){
             return response()->json(
                 [
-                    'status'=> $e->getCode(),
+                    'success'=> false,
                     'messsage'=>  $e->getMessage(),
 
                 ],$e->getCode()
