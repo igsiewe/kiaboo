@@ -273,12 +273,7 @@ class MoMo_Controller extends Controller
                 if($data->status=="SUCCESSFUL"){
                     return response()->json(
                         [
-                            'status'=>200,
-                            'amount'=>$data->amount,
-                            'externalId'=>$data->externalId,
-                            'message'=>"Terminée avec succès",
-                            'description'=>$data->status,
-                            'data'=>$data,
+                            $data,
                         ],200
                     );
                 }
