@@ -215,7 +215,12 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
                         Route::get('cashin/status/{referenceID}', 'OM_Depot_Status')->name("OM_Depot_Status");
                         Route::get('cashout/status/{referenceID}', 'OM_Retrait_Status')->name("OM_Retrait_Status");
                         Route::get('payment/status/{referenceID}', 'OM_Payment_Status')->name("OM_Payment_Status");
+                    });
 
+                    Route::controller(ApiProdOrangeMoneyController::class)->group(function () {
+                        Route::group(['prefix' => 'money'], function () {
+                            Route::get('customer/name/{customerNumber}', 'OM_Customer')->name("OM_Customer");
+                        });
                     });
 
                 });
@@ -232,6 +237,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
                       //  Route::get('retrait/status/trans/{referenceID}', 'MOMO_Retrait_Status_Api')->name("MOMO_Retrait_Status_Api");
 
                         Route::post('transfert', 'MOMO_Transfert')->name("MOMO_Transfert");
+
                         Route::get('customer/name/{customerPhone}', 'MOMO_CustomerName')->name("MOMO_CustomerName");
 
                     });

@@ -53,7 +53,7 @@ class Orange_Controller extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/v1/prod/om/customer/name/{customerPhone}",
+     *     path="/api/v1/prod/om/money/customer/name/{customerPhone}",
      *     summary="Get customer information",
      *     tags={"OM - Customer information"},
      *     security={{"bearerAuth":{}}},
