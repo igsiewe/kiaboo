@@ -855,7 +855,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
                     ],201
                 );
             }
-            return response()->json(["message"=>"MoMoCashInStatus","paytoken"=>$payToken,"data"=>$data],);
+
             //Je convertis en tableau associatif
 
             if($data->status=="FAILED") {
@@ -874,6 +874,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
                     }
                 }
             }
+            return response()->json(["message"=>"MoMoCashInStatus","paytoken"=>$payToken,"data"=>$data],);
             if($data->status=="PENDING"){
 
                 return response()->json(
