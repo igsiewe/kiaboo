@@ -794,19 +794,20 @@ class ApiProdMoMoMonneySwaggerController extends Controller
      */
     public function MoMoCashInStatus($payToken){
 
-//        // On cherche la transaction dans la table transaction
-//        $Transaction = Transaction::where("created_by", Auth::user()->id)->where("paytoken","=", $payToken)->where('service_id', ServiceEnum::DEPOT_MOMO->value);
-//       // dd($Transaction->count(),$payToken,ServiceEnum::DEPOT_MOMO->value,Auth::user()->id);
-//        if ($Transaction->count() == 0) {
-//                return response()->json(
-//                    [
-//                        'success' => false,
-//                        'statusCode' => "ERR-TRANSACTION-NOT-FOUND",
-//                        'message' => "PayToken not found",
-//                    ], 404
-//                );
-//
-//        }
+        return response()->json(["message"=>"MoMoCashInStatus","paytoken"=>$payToken]);
+        // On cherche la transaction dans la table transaction
+        $Transaction = Transaction::where("created_by", Auth::user()->id)->where("paytoken","=", $payToken)->where('service_id', ServiceEnum::DEPOT_MOMO->value);
+       // dd($Transaction->count(),$payToken,ServiceEnum::DEPOT_MOMO->value,Auth::user()->id);
+        if ($Transaction->count() == 0) {
+                return response()->json(
+                    [
+                        'success' => false,
+                        'statusCode' => "ERR-TRANSACTION-NOT-FOUND",
+                        'message' => "PayToken not found",
+                    ], 404
+                );
+
+        }
         //On génère le token de la transation
         $MoMoFunction = new MoMo_Controller();
         $responseToken = $MoMoFunction->MOMO_Disbursement_GetTokenAccess();
