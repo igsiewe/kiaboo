@@ -123,7 +123,7 @@ class ApiProdTransactionsController extends Controller
             ->join('services', 'transactions.service_id', '=', 'services.id')
             ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
             ->join('users','users.id','=','transactions.source')
-            ->select('transactions.reference as transactionId','transactions.paytoken','transactions.date_transaction as dateTransaction','transactions.credit as amount' ,'transactions.commission_agent_rembourse as fees','transactions.balance_before','transactions.balance_after' ,'transactions.customer_phone as customer','transactions.description as status','services.name_service as serviceName','type_services.name_type_service as type_service','users.telephone as agent','transactions.marchand_transaction_id as marchandTransactionID','transactions.date_end_trans as dateEndTransaction','services.logo_service as logoService')
+            ->select('transactions.reference as transactionId','transactions.reference_partenaire as reference','transactions.paytoken','transactions.date_transaction as dateTransaction','transactions.debit','transactions.credit' ,'transactions.fees','transactions.balance_before','transactions.balance_after' ,'transactions.customer_phone as customer','transactions.description as status','services.name_service as serviceName','type_services.name_type_service as type_service','users.telephone as agent','transactions.marchand_transaction_id as marchandTransactionID','transactions.date_end_trans as dateEndTransaction')
             ->where("fichier","agent")
             ->where('transactions.status',1)
             ->where("transactions.date_transaction",">=",$startDate.' 00:00:00')
