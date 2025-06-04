@@ -283,6 +283,7 @@ class MoMo_Controller extends Controller
                     return response()->json(
                         [
                             'success'=>false,
+                           // 'description'=>$data->status,
                             'data'=>$data,
                         ],201
                     );

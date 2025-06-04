@@ -711,8 +711,8 @@ class ApiProdMoMoMonneySwaggerController extends Controller
             if($checkStatus->getStatusCode() !=200) {
                 //La transaction est attente
                 $updateTransaction=Transaction::where("id",$idTransaction)->where("status",2)->update([
-                    'description'=>$datacheckStatus->description,
-                    'message'=>$datacheckStatus->message." - Vérifier le status dans la liste des encours",
+                    'description'=>$datacheckStatus->data->status,
+                    'message'=>$datacheckStatus->message." - En attente de validation",
                 ]);
                 if($checkStatus->getStatusCode() ==201) {
                     return response()->json([
