@@ -434,7 +434,7 @@ class ApiProdOrangeSwaggerController extends Controller
      * )
      */
 
-    public function OM_Payment_Status($transactionId){
+    public function OM_PaymentStatus($transactionId){
         // On cherche la transaction dans la table transaction
 
         $transaction = Transaction::where("reference", $transactionId)->get();
@@ -472,25 +472,21 @@ class ApiProdOrangeSwaggerController extends Controller
             );
         }
 
+        //On génère le token de la transation
+        $OMFunction = new Orange_Controller();
+        $responseToken = $OMFunction->OM_GetTokenAccess();
+        if($responseToken->getStatusCode() !=200){
+            return response()->json([
+                "success"=>false,
+                "message"=>"Exception ".$responseToken->getStatusCode()." Une exception a été déclenchée au moment de la génération du token"
+            ], $responseToken->getStatusCode());
+        }
+        $dataAcessToken = json_decode($responseToken->getContent());
+        $accessToken = $dataAcessToken->access_token;
         $payToken = $transaction->first()->paytoken;
-        $http = $this->url."/mp/paymentstatus/".$payToken;
 
-        $response = Http::withOptions(['verify' => false,])->withHeaders(
-            [
-                "X-AUTH-TOKEN"=>$this->auth_x_token,
-                "WSO2-Authorization"=>"Bearer ".$this->token,
-                "accept"=>"application/json"
-            ])->Get($http);
-
-        Log::info([
-            "fonction"=>"OM_Payment_Status",
-            "url"=>$http,
-            "status"=>$response->status(),
-            "response"=>$response->body(),
-        ]);
-
-        $data = json_decode($response->body());
-
+        $response = $OMFunction->OM_Payment_Status($accessToken, $payToken);
+        $data = json_decode($response);
         if($response->status()==200){
             return response()->json(
                 [

@@ -248,4 +248,26 @@ class Orange_Controller extends Controller
         }
 
     }
+
+    public function OM_Payment_Status($token, $payToken){
+
+        $http = $this->endpoint."/mp/paymentstatus/".$payToken;
+
+        $response = Http::withOptions(['verify' => false,])->withHeaders(
+            [
+                "X-AUTH-TOKEN"=>$this->auth_x_token,
+                "Authorization"=>"Bearer ".$token,
+                "accept"=>"application/json"
+            ])->Get($http);
+
+        if($response->status()==200){
+            return response()->json($response->json());
+        }
+        else{
+            return response()->json([
+                'code' => $response->status(),
+                'message'=>$response->body(),
+            ]);
+        }
+    }
 }
