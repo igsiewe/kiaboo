@@ -798,8 +798,8 @@ class ApiProdMoMoMonneySwaggerController extends Controller
         // On cherche la transaction dans la table transaction
         $Transaction = Transaction::where("created_by", Auth::user()->id)->where("paytoken","=", $payToken)->where('service_id', ServiceEnum::DEPOT_MOMO->value);
        // dd($Transaction->count(),$payToken,ServiceEnum::DEPOT_MOMO->value,Auth::user()->id);
-        return response()->json(["message"=>"MoMoCashInStatus","paytoken"=>$payToken]);
-        if ($Transaction->count() == 0) {
+
+        if ($Transaction->get()->count() == 0) {
                 return response()->json(
                     [
                         'success' => false,
@@ -809,6 +809,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
                 );
 
         }
+        return response()->json(["message"=>"MoMoCashInStatus","paytoken"=>$payToken]);
         //On génère le token de la transation
         $MoMoFunction = new MoMo_Controller();
         $responseToken = $MoMoFunction->MOMO_Disbursement_GetTokenAccess();
