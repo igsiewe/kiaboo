@@ -28,7 +28,6 @@ class ApiProdTransactionsController extends Controller
      *     description="Request to get transaction",
      *     @OA\JsonContent(
      *        required={"startDate","endDate"},
-     *        @OA\Property(property="agentId", type="string", example="679962015"),
      *        @OA\Property(property="startDate", format="date", example="2024-01-01"),
      *        @OA\Property(property="endDate", format="date", example="2024-01-31"),
      *     ),
@@ -109,7 +108,7 @@ class ApiProdTransactionsController extends Controller
 
         $startDate =$request->startDate;// Carbon::createFromFormat('d/m/Y', $request->startDate)->format('Y-m-d');
         $endDate =$request->endDate;// Carbon::createFromFormat('d/m/Y', $request->endDate)->format('Y-m-d');
-        $telephoneAgent= $request->agentId;
+
         $listAgent=User::where('distributeur_id',Auth::user()->distributeur_id)->where('type_user_id',UserRolesEnum::AGENT->value)->pluck('id')->toArray();
 
         if($listAgent == null || empty($listAgent)){
@@ -129,23 +128,7 @@ class ApiProdTransactionsController extends Controller
             ->where('transactions.status',1)
             ->where("transactions.date_transaction",">=",$startDate.' 00:00:00')
             ->where("transactions.date_transaction","<=",$endDate.' 23:59:59')
-            ->whereIn('transactions.source',$listAgent);
-
-        if($telephoneAgent !=0 || $telephoneAgent !=null){
-
-            $agent=User::where('telephone',$telephoneAgent)->where('distributeur_id',Auth::user()->distributeur_id)->get();
-            if($agent->count() == 0){
-                return response()->json([
-                    "success"=> false,
-                    "statusCode"=>"ERR-AGENT-NOT-FOUND",
-                    "message"=>"Agent ID not found"
-                ], 404);
-            }
-            $agentId = $agent->first()->id;
-            $transactions = $transactions->where("transactions.source",$agentId);
-        }
-
-        $transactions = $transactions->orderBy('transactions.date_transaction', 'desc')->get();
+            ->whereIn('transactions.source',$listAgent)->orderBy('transactions.date_transaction', 'desc')->get();
 
         if($transactions->isEmpty()){
             return response()->json([
