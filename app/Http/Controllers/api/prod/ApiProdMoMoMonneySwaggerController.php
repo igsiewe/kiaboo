@@ -800,7 +800,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
         $Transaction = Transaction::where("created_by", Auth::user()->id)->where("paytoken","=", $payToken)->where('service_id', ServiceEnum::DEPOT_MOMO->value);
        // dd($Transaction->count(),$payToken,ServiceEnum::DEPOT_MOMO->value,Auth::user()->id);
 
-        if ( isEmpty($Transaction) || $Transaction->get()->count() == 0) {
+        if ($Transaction->get()->count() == 0) {
                 return response()->json(
                     [
                         'success' => false,
