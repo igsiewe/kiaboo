@@ -308,6 +308,15 @@ class ApiProdMoMoMonneySwaggerController extends Controller
      *              @OA\Property(property="message", type="string", example="Wainting for customer validation")
      *          )
      *      ),
+     *      @OA\Response(
+     *           response=402,
+     *           description="Transaction failed",
+     *           @OA\JsonContent(
+     *               @OA\Property(property="success", type="boolean", example=false),
+     *               @OA\Property(property="statusCode", type="string", example="FAILED"),
+     *               @OA\Property(property="message", type="string", example="Transaction failed because, it was not approved")
+     *           )
+     *       ),
      *     @OA\Response(
      *         response=500,
      *         description="An error occurred",
@@ -490,7 +499,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
                     'statusCode' => "FAILED",
                     'message' => "Transaction failed",
                     'data' => $data->data,
-                ], 200
+                ], 230
             );
         }
 
@@ -516,8 +525,9 @@ class ApiProdMoMoMonneySwaggerController extends Controller
      *         @OA\JsonContent(
      *             @OA\Property(property="success", type="boolean", example=true),
      *             @OA\Property(property="statusCode", type="string", example="SUCCESSFUL"),
+     *             @OA\Property(property="reference", type="string", example="123456789"),
      *             @OA\Property(property="message", type="string", example="Payment request sent successfully"),
-     *             @OA\Property(property="transactionId", type="string", example="tx-123456789")
+     *
      *         )
      *     ),
      *    @OA\Response(
@@ -526,6 +536,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
      *          @OA\JsonContent(
      *              @OA\Property(property="success", type="boolean", example=false),
      *              @OA\Property(property="statusCode", type="string", example="PENDING"),
+     *              @OA\Property(property="paytoken", type="string", example="a84d7-8544-98854zd"),
      *              @OA\Property(property="message", type="string", example="Payment request sent successfully but it is still pending status"),
      *          )
      *      ),
@@ -682,6 +693,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
                     return response()->json([
                         'success'=>false,
                         'statusCode'=>"PENDING",
+                        'paytoken'=>$referenceID,
                         'message'=>$datacheckStatus->message,
                     ],$checkStatus->getStatusCode());
                 }
@@ -695,8 +707,8 @@ class ApiProdMoMoMonneySwaggerController extends Controller
                     return response()->json([
                         'success' => true,
                         'statusCode'=>"SUCCESSFULL",
-                        'message' =>"Le dépôt a été effectué avec succès", // $resultat->message,
                         'reference' => $reference,// $resultat->data->data->txnid,
+                        'message' =>"Le dépôt a été effectué avec succès", // $resultat->message,
                     ], 200);
                 }else{
                     return response()->json([
