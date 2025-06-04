@@ -295,7 +295,7 @@ class MoMo_Controller extends Controller
                         [
                             'success'=>false,
                             'data'=>$data,
-                            'message'=>"Transaction pending",
+                            'message'=>"Transaction pending. You can check its status",
                         ],201
                     );
                 }

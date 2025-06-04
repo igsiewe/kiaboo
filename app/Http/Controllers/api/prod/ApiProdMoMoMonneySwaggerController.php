@@ -701,7 +701,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
                 'status'=>2, // Le dépôt n'a pas abouti, on passe en statut pending
                 //'reference_partenaire'=>$data->financialTransactionId,
                 'description'=>"PENDING",
-                'message'=>"La transaction s'est executée correctement et doit être confirmée par le callback",
+                'message'=>"La transaction s'est exécutée correctement et doit être confirmée par le callback",
                 'api_response'=>$response->status(),
             ]);
 
@@ -712,7 +712,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
                 //La transaction est attente
                 $updateTransaction=Transaction::where("id",$idTransaction)->where("status",2)->update([
                     'description'=>$datacheckStatus->data->status,
-                    'message'=>$datacheckStatus->message." - En attente de validation",
+                    'message'=>$datacheckStatus->message." - En cours de traitement",
                 ]);
                 if($checkStatus->getStatusCode() ==201) {
                     return response()->json([
