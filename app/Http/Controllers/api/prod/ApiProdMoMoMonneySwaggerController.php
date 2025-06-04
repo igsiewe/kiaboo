@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
+use function PHPUnit\Framework\isEmpty;
 
 
 class ApiProdMoMoMonneySwaggerController extends Controller
@@ -799,7 +800,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
         $Transaction = Transaction::where("created_by", Auth::user()->id)->where("paytoken","=", $payToken)->where('service_id', ServiceEnum::DEPOT_MOMO->value);
        // dd($Transaction->count(),$payToken,ServiceEnum::DEPOT_MOMO->value,Auth::user()->id);
 
-        if ($Transaction->get()->count() == 0) {
+        if ( isEmpty($Transaction) || $Transaction->get()->count() == 0) {
                 return response()->json(
                     [
                         'success' => false,
