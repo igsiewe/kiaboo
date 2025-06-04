@@ -277,7 +277,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
      *         name="paytoken",
      *         in="path",
      *         required=true,
-     *         description="Payment ID",
+     *         description="PayToken",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Response(
@@ -750,7 +750,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
      *         name="payToken",
      *         in="path",
      *         required=true,
-     *         description="Payment ID",
+     *         description="PayToken",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Response(
