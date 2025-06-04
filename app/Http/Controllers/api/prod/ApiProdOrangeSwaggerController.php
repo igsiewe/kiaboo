@@ -125,7 +125,7 @@ class ApiProdOrangeSwaggerController extends Controller
      * )
      */
     public function OM_Payment(Request $request){
-return response()->json($request->marchandTransactionId);
+return response()->json($request->customerPhone);
         $validator = Validator::make($request->all(), [
             'customerPhone' => 'required|numeric|digits:9',
             'amount' => 'required|numeric|min:200|max:500000',
