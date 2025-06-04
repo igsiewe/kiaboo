@@ -795,8 +795,8 @@ class ApiProdMoMoMonneySwaggerController extends Controller
     public function MoMoCashInStatus($payToken){
 
         // On cherche la transaction dans la table transaction
-        $Transaction = Transaction::where("paytoken", $payToken)->where('service_id', ServiceEnum::DEPOT_MOMO->value)->where("created_by", Auth::user()->id);
-        dd($Transaction->count(),$payToken,ServiceEnum::DEPOT_MOMO->value,Auth::user()->id);
+        $Transaction = Transaction::where("paytoken","=", $payToken)->where('service_id', ServiceEnum::DEPOT_MOMO->value)->where("created_by", Auth::user()->id);
+       // dd($Transaction->count(),$payToken,ServiceEnum::DEPOT_MOMO->value,Auth::user()->id);
         if ($Transaction->count() == 0) {
                 return response()->json(
                     [
