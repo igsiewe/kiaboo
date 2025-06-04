@@ -29,6 +29,7 @@ use App\Http\Controllers\api\prod\ApiProdTransactionsController;
 //use App\Http\Controllers\api\prod\ApiProduction_MoMo;
 use App\Http\Controllers\api\prod\ApiProdYooMeeController;
 use App\Http\Controllers\api\prod\ApiStripe;
+use App\Http\Controllers\api\v1\fonctions\Orange_Controller;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -217,7 +218,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
                         Route::get('payment/status/{referenceID}', 'OM_Payment_Status')->name("OM_Payment_Status");
                     });
 
-                    Route::controller(ApiProdOrangeMoneyController::class)->group(function () {
+                    Route::controller(Orange_Controller::class)->group(function () {
                         Route::group(['prefix' => 'money'], function () {
                             Route::get('customer/name/{customerNumber}', 'OM_Customer')->name("OM_Customer");
                         });
