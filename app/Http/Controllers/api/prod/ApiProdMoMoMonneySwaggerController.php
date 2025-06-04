@@ -827,10 +827,10 @@ class ApiProdMoMoMonneySwaggerController extends Controller
         $accessToken = $dataAcessToken->access_token;
 
         $response = $MoMoFunction->MOMO_CashInStatus($accessToken, $payToken);
-        return response()->json(["message"=>"MoMoCashInStatus","paytoken"=>$payToken]);
+
         $data = json_decode($response->getContent());
         $element = json_decode($response, associative: true);
-
+        return response()->json(["message"=>"MoMoCashInStatus","paytoken"=>$payToken]);
         if($response->status()==200){
             if($data->status=="SUCCESSFUL"){
                 return response()->json(
