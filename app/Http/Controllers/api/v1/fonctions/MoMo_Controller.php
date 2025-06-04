@@ -278,6 +278,7 @@ class MoMo_Controller extends Controller
                             'externalId'=>$data->externalId,
                             'message'=>"Terminée avec succès",
                             'description'=>$data->status,
+                            'data'=>$data,
                         ],200
                     );
                 }
@@ -290,6 +291,7 @@ class MoMo_Controller extends Controller
                             'externalId'=>$data->externalId,
                             'message'=>"Le maximum de dépôt pour ce compte dans la semaine est atteint",
                             'description'=>$data->status,
+                            'data'=>$data,
                         ],201
                     );
                 }
@@ -304,6 +306,7 @@ class MoMo_Controller extends Controller
                                     'externalId' => $data->externalId,
                                     'message' => "Cette transaction de dépôt MTN ne peut pas aboutir pour l'instant. Veuillez informer votre support.",
                                     'description' => $data->status,
+                                    'data' => $data,
                                 ], 404
                             );
                         }
@@ -317,6 +320,7 @@ class MoMo_Controller extends Controller
                             'externalId'=>$data->externalId,
                             'message'=>"La transaction est en statut en attente. Veuillez vérifier son statut dans la liste des transactions en attente.",
                             'description'=>$data->status,
+                            'data'=>$data,
                         ],201
                     );
                 }
@@ -327,6 +331,7 @@ class MoMo_Controller extends Controller
                         'externalId'=>$data->externalId,
                         'message'=>"Rassurez vous que le client n'ait pas atteint son nombre de transactions hebdomadaire, sinon consultez votre support technique.",//$data->reason,
                         'description'=>$data->status,
+                        'data'=>$data,
                     ],404
                 );
             }else{
@@ -335,6 +340,7 @@ class MoMo_Controller extends Controller
                         'status'=>$response->status(),
                         'message'=>$data->message,
                         'description'=>$data->message,
+                        'data'=>[],
                     ],$response->status()
                 );
             }
@@ -343,6 +349,7 @@ class MoMo_Controller extends Controller
                 [
                     'status'=> false,
                     'messsage'=>  $e->getMessage(),
+                    'data'=>[]
                 ],$e->getCode()
             );
         }

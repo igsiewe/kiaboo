@@ -837,6 +837,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
                         'externalId'=>$data->externalId,
                         'message'=>"Terminée avec succès",
                         'description'=>$data->status,
+                        'data'=>$data,
                     ],200
                 );
 
@@ -846,6 +847,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
                     'status'=>$response->status(),
                     'message'=>$data->message,
                     'description'=>$data->message,
+                    'data'=>$data,
                 ],$response->status()
             );
         }
