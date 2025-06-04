@@ -324,9 +324,8 @@ class ApiProdMoMoMonneySwaggerController extends Controller
     {
         // On cherche la transaction dans la table transaction
         $Transaction = Transaction::where("paytoken", $paytoken)->where('service_id', ServiceEnum::PAYMENT_MOMO->value)->where("created_by", Auth::user()->id);
-
+dd($Transaction->count());
         if ($Transaction->count() == 0) {
-           // if ($Transaction->first()->status == 1) {
                 return response()->json(
                     [
                         'success' => false,
@@ -334,7 +333,6 @@ class ApiProdMoMoMonneySwaggerController extends Controller
                         'message' => "PayToken not found",
                     ], 404
                 );
-          //  }
         }
 
         //On génère le token de la transation
