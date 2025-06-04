@@ -103,7 +103,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
      *             required={"customerPhone","amount", "externalId"},
      *             @OA\Property(property="customerPhone", type="string", example="670000000"),
      *             @OA\Property(property="amount", type="string", example="2500"),
-     *             @OA\Property(property="externalId", type="string", example="TR-2025-0001"),
+     *             @OA\Property(property="marchandTransactionId", type="string", example="TR-2025-0001"),
      *         )
      *     ),
      *     @OA\Response(
@@ -139,7 +139,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
         $validator = Validator::make($request->all(), [
             'customerPhone' => 'required|numeric|digits:9',
             'amount' => 'required|numeric|min:200|max:500000',
-            'externalId' => 'required|string|max:25',
+            'marchandTransactionId' => 'required|string|max:25',
         ]);
         if ($validator->fails()) {
             return response()->json([
