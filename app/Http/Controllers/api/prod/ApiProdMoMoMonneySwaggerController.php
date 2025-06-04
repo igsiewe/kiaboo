@@ -833,7 +833,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
 
                 return response()->json(
                     [
-                      //  'success'=>true,
+                        'success'=>$data->success,
                         'data'=>$data->data,
                     ],200
                 );
@@ -842,7 +842,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
             return response()->json(
                 [
                     'success'=>false,
-                    'data'=>$data->data,
+                    'message'=>"Une erreur innatendue s'est produite",
                 ],$response->status()
             );
         }
