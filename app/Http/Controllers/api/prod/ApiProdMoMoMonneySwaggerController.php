@@ -807,7 +807,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
      *                       @OA\Property(property="partyId", type="string", example="237690000000")
      *                   ),
      *                   @OA\Property(property="payeeNote", type="string", example="Payment for invoice 123"),
-     *                   @OA\Property(property="status", type="string", example="FAILED")
+     *                   @OA\Property(property="status", type="string", example="FAILED"),
      *                   @OA\Property(property="raison", type="string", example="REJETED BY CUSTOMER")
      *               )
      *           )
