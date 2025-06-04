@@ -500,7 +500,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
                     'statusCode' => "FAILED",
                     'message' => "Transaction failed",
                     'data' => $data->data,
-                ], 230
+                ], 402
             );
         }
 
