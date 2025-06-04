@@ -111,7 +111,7 @@ class ApiProdTransactionsController extends Controller
 
         $listAgent=User::where('distributeur_id',Auth::user()->distributeur_id)->where('type_user_id',UserRolesEnum::AGENT->value)->pluck('id')->toArray();
 
-        if($listAgent == null || empty($listAgent)){
+        if($listAgent == null || empty($listAgent)  || $listAgent->count()==0){
             return response()->json([
                 "success"=> false,
                 "statusCode"=>"ERR-AGENT-NOT-FOUND",
