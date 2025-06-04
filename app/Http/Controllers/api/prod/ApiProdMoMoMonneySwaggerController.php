@@ -329,11 +329,11 @@ class ApiProdMoMoMonneySwaggerController extends Controller
      * )
      */
 
-    public function MoMoPaymentStatus($paytoken)
+    public function MoMoPaymentStatus($payToken)
     {
         // On cherche la transaction dans la table transaction
 
-        $Transaction = Transaction::where("paytoken", $paytoken)->where('service_id', ServiceEnum::PAYMENT_MOMO->value)->where("created_by", Auth::user()->id);
+        $Transaction = Transaction::where("paytoken", $payToken)->where('service_id', ServiceEnum::PAYMENT_MOMO->value)->where("created_by", Auth::user()->id);
 
         if ($Transaction->count() == 0) {
             return response()->json(
@@ -341,7 +341,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
                     'success' => false,
                     'statusCode' => "ERR-TRANSACTION-NOT-FOUND",
                     'message' => "PayToken not found",
-                    'paytoken' => $paytoken,
+                    'paytoken' => $payToken,
                 ], 404
             );
         }
@@ -732,12 +732,12 @@ class ApiProdMoMoMonneySwaggerController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/v1/prod/mtn/cashin/status/{paytoken}",
+     *     path="/api/v1/prod/mtn/cashin/status/{payToken}",
      *     summary="Get cashin transaction status",
      *     tags={"MTN - CashIn"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
-     *         name="paytoken",
+     *         name="payToken",
      *         in="path",
      *         required=true,
      *         description="Payment ID",
@@ -782,10 +782,10 @@ class ApiProdMoMoMonneySwaggerController extends Controller
      *     )
      * )
      */
-    public function MoMoCashInStatus($paytoken){
+    public function MoMoCashInStatus($payToken){
 
         // On cherche la transaction dans la table transaction
-        $Transaction = Transaction::where("paytoken", $paytoken)->where('service_id', ServiceEnum::DEPOT_MOMO->value)->where("created_by", Auth::user()->id);
+        $Transaction = Transaction::where("paytoken", $payToken)->where('service_id', ServiceEnum::DEPOT_MOMO->value)->where("created_by", Auth::user()->id);
 
         if ($Transaction->count() == 0) {
             if ($Transaction->first()->status == 1) {
@@ -815,7 +815,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
         $dataAcessToken = json_decode($responseToken->getContent());
         $accessToken = $dataAcessToken->access_token;
 
-        $response = $MoMoFunction->MOMO_CashInStatus($accessToken, $paytoken);
+        $response = $MoMoFunction->MOMO_CashInStatus($accessToken, $payToken);
 
         $data = json_decode($response->getContent());
         $element = json_decode($response, associative: true);
