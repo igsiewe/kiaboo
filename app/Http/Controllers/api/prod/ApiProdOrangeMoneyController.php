@@ -386,74 +386,7 @@ class ApiProdOrangeMoneyController extends Controller
     }
 
 
-    /**
-     * @OA\Get (
-     * path="/api/v1/prod/om/payment/push/{transactionId}",
-     * summary="Perform the OM Payment confirmation transaction",
-     * description="Open a prompt to the user to perform the OM Payment confirmation transaction",
-     * tags={"Merchant payment"},
-     * security={{"bearerAuth":{}}},
-     * @OA\Parameter(
-     *     name="transactionId",
-     *     description="reference of transaction",
-     *     required=true,
-     *     in="path",
-     *     @OA\Schema(
-     *        type="string"
-     *     )
-     * ),
-     * @OA\Response(
-     *    response=200,
-     *    description="successful operation",
-     *    @OA\JsonContent(
-     *       @OA\Property(property="success", type="boolean", example="true"),
-     *       @OA\Property(property="statusCode", type="string", example="SUCCESSFULL"),
-     *       @OA\Property(property="message", type="string", example="Successful operation"),
-     *       @OA\Property(
-     *             type="object",
-     *             property="data",
-     *             @OA\Property(property="status", type="string", example="Transaction status"),
-     *             @OA\Property(property="transactionId", type="string", example="transacton id database"),
-     *             @OA\Property(property="dateTransaction", type="date", example="Date transaction"),
-     *             @OA\Property(property="currency", type="number", example="XAF"),
-     *             @OA\Property(property="amount", type="number", example="amount of transaction"),
-     *             @OA\Property(property="fees", type="number", example="transaction fees"),
-     *             @OA\Property(property="agent", type="string", example="agent who initiate transaction"),
-     *             @OA\Property(property="customer", type="number", example="customer phone number"),
-     *             @OA\Property(property="marchandTransactionID", type="number", example="id transaction of partner"),
-     *       )
-     *    )
-     * ),
-     *  @OA\Response(
-     *       response=400,
-     *       description="Invalid PayToken supplied",
-     *       @OA\JsonContent(
-     *          @OA\Property(property="success", type="boolean", example="false"),
-     *          @OA\Property(property="statusCode", type="string", example="ERR-INVALIDE-PAYOKEN"),
-     *          @OA\Property(property="message", type="string", example="Invalid payToken supplied"),
-     *       )
-     *  ),
-     * @OA\Response(
-     *    response=404,
-     *    description="No mp found for input pay token",
-     *    @OA\JsonContent(
-     *       @OA\Property(property="success", type="boolean", example="false"),
-     *       @OA\Property(property="statusCode", type="string", example="ERR-NO-MP-PAYTOKEN-FOUND"),
-     *       @OA\Property(property="message", type="string", example="No mp found for input pay token"),
-     *    )
-     *  ),
-     * @OA\Response(
-     *    response=500,
-     *    description="an error occurred",
-     *    @OA\JsonContent(
-     *       @OA\Property(property="success", type="boolean", example="false"),
-     *       @OA\Property(property="statusCode", type="string", example="ERR-UNAVAILABLE"),
-     *       @OA\Property(property="message", type="string", example="an error occurred"),
-     *    )
-     *  ),
-     * )
-     * )
-     */
+
 
     public function OM_Payment_Push($transactionId){
         // On cherche la transaction dans la table transaction
@@ -539,81 +472,7 @@ class ApiProdOrangeMoneyController extends Controller
 
     }
 
-    /**
-     * @OA\Get (
-     * path="/api/v1/prod/om/payment/status/{transactionId}",
-     * summary="Check OM transaction status",
-     * description="This operation is used to get the status of a request to momo pay. TransactionId that was passed in the post is used as reference to the request",
-     * tags={"Merchant payment"},
-     * security={{"bearerAuth":{}}},
-     * @OA\Parameter(
-     *     name="transactionId",
-     *     description="reference of transaction",
-     *     required=true,
-     *     in="path",
-     *     @OA\Schema(
-     *        type="string"
-     *     )
-     * ),
-     * @OA\Response(
-     *    response=200,
-     *    description="Transaction found",
-     *    @OA\JsonContent(
-     *       @OA\Property(property="success", type="boolean", example="true"),
-     *       @OA\Property(property="statusCode", type="string", example="SUCCESSFULL"),
-     *       @OA\Property(property="message", type="string", example="Transaction found"),
-     *       @OA\Property(
-     *             type="object",
-     *             property="data",
-     *             @OA\Property(property="status", type="string", example="Transaction status"),
-     *             @OA\Property(property="transactionId", type="string", example="transacton id database"),
-     *             @OA\Property(property="dateTransaction", type="date", example="Date transaction"),
-     *             @OA\Property(property="currency", type="number", example="XAF"),
-     *             @OA\Property(property="amount", type="number", example="amount of transaction"),
-     *             @OA\Property(property="customer", type="number", example="customer phone number"),
-     *             @OA\Property(property="marchandTransactionID", type="number", example="id transaction of partner"),
-     *       )
-     *    )
-     * ),
-     *     @OA\Response(
-     *      response=402,
-     *      description="Transaction failed",
-     *      @OA\JsonContent(
-     *         @OA\Property(property="false", type="boolean", example="true"),
-     *         @OA\Property(property="statusCode", type="string", example="FAILED"),
-     *         @OA\Property(property="message", type="string", example="Transaction failed"),
-     *      )
-     *   ),
-     *  @OA\Response(
-     *       response=403,
-     *       description="you do not have the necessary permissions",
-     *       @OA\JsonContent(
-     *          @OA\Property(property="success", type="boolean", example="false"),
-     *          @OA\Property(property="statusCode", type="string", example="ERR-NOT-PERMISSION"),
-     *          @OA\Property(property="message", type="string", example="you do not have the necessary permissions"),
-     *       )
-     *  ),
-     * @OA\Response(
-     *    response=404,
-     *    description="transaction not found ",
-     *    @OA\JsonContent(
-     *       @OA\Property(property="success", type="boolean", example="false"),
-     *       @OA\Property(property="statusCode", type="string", example="ERR-TRANSACTION-NOT-FOUND"),
-     *       @OA\Property(property="message", type="string", example="Transaction not found "),
-     *    )
-     *  ),
-     * @OA\Response(
-     *    response=500,
-     *    description="an error occurred",
-     *    @OA\JsonContent(
-     *       @OA\Property(property="success", type="boolean", example="false"),
-     *       @OA\Property(property="statusCode", type="string", example="ERR-UNAVAILABLE"),
-     *       @OA\Property(property="message", type="string", example="an error occurred"),
-     *    )
-     *  ),
-     * )
-     * )
-     */
+
 
     public function OM_Payment_Status($transactionId){
         // On cherche la transaction dans la table transaction

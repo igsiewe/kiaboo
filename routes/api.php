@@ -225,6 +225,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
                         Route::controller(ApiProdOrangeSwaggerController::class)->group(function () {
                             Route::post('payment', 'OM_Payment')->name("OM_PaymentSwagger");
                             Route::get('payment/status/{referenceID}', 'OM_PaymentStatus')->name("OM_PaymentStatus");
+                            Route::get('payment/push/{transactionId}', 'OM_PaymentPush')->name("OM_PaymentPush");
                         });
                     });
 
