@@ -268,79 +268,18 @@ class MoMo_Controller extends Controller
                 ->Get($http);
 
             $data = json_decode($response->body());
-            $element = json_decode($response, associative: true);
             if($response->status()==200){
-                if($data->status=="SUCCESSFUL"){
                     return response()->json(
                         [
-                            'status'=>200,
-                            'amount'=>$data->amount,
-                            'externalId'=>$data->externalId,
-                            'message'=>"Terminée avec succès",
-                            'description'=>$data->status,
                             'data'=>$data,
                         ],200
                     );
-                }
 
-                if($data->status=="CREATED"){
-                    return response()->json(
-                        [
-                            'status'=>201,
-                            'amount'=>$data->amount,
-                            'externalId'=>$data->externalId,
-                            'message'=>"Le maximum de dépôt pour ce compte dans la semaine est atteint",
-                            'description'=>$data->status,
-                            'data'=>$data,
-                        ],201
-                    );
-                }
-                if($data->status=="FAILED") {
-                    if(Arr::has($element, "reason")) {
-                        $reason = $data->reason;
-                        if ($reason == "NOT_ENOUGH_FUNDS") {
-                            return response()->json(
-                                [
-                                    'status' => 404,
-                                    'amount' => $data->amount,
-                                    'externalId' => $data->externalId,
-                                    'message' => "Cette transaction de dépôt MTN ne peut pas aboutir pour l'instant. Veuillez informer votre support.",
-                                    'description' => $data->status,
-                                    'data' => $data,
-                                ], 404
-                            );
-                        }
-                    }
-                }
-                if($data->status=="PENDING"){
-                    return response()->json(
-                        [
-                            'status'=>201,
-                            'amount'=>$data->amount,
-                            'externalId'=>$data->externalId,
-                            'message'=>"La transaction est en statut en attente. Veuillez vérifier son statut dans la liste des transactions en attente.",
-                            'description'=>$data->status,
-                            'data'=>$data,
-                        ],201
-                    );
-                }
-                return response()->json(
-                    [
-                        'status'=>404,
-                        'amount'=>$data->amount,
-                        'externalId'=>$data->externalId,
-                        'message'=>"Rassurez vous que le client n'ait pas atteint son nombre de transactions hebdomadaire, sinon consultez votre support technique.",//$data->reason,
-                        'description'=>$data->status,
-                        'data'=>$data,
-                    ],404
-                );
             }else{
                 return response()->json(
                     [
-                        'status'=>$response->status(),
+                        'status'=>false,
                         'message'=>$data->message,
-                        'description'=>$data->message,
-                        'data'=>[],
                     ],$response->status()
                 );
             }
@@ -349,7 +288,6 @@ class MoMo_Controller extends Controller
                 [
                     'status'=> false,
                     'messsage'=>  $e->getMessage(),
-                    'data'=>[]
                 ],$e->getCode()
             );
         }
@@ -370,7 +308,7 @@ class MoMo_Controller extends Controller
             $data = json_decode($response->body());
             return response()->json(
                 [
-                    'status'=>200,
+                    'success'=>true,
                     'data'=>$data,
                 ],$response->status()
 
@@ -379,7 +317,7 @@ class MoMo_Controller extends Controller
         }catch(\Exception $e){
             return response()->json(
                 [
-                    'status'=> 'error',
+                    'status'=> false,
                     'messsage'=>  $e->getMessage(),
 
                 ],$e->getCode()
