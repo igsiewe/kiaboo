@@ -809,10 +809,11 @@ class ApiProdMoMoMonneySwaggerController extends Controller
                 );
 
         }
-        //return response()->json(["message"=>"MoMoCashInStatus","paytoken"=>$payToken]);
+
         //On génère le token de la transation
         $MoMoFunction = new MoMo_Controller();
         $responseToken = $MoMoFunction->MOMO_Disbursement_GetTokenAccess();
+        return response()->json(["message"=>"MoMoCashInStatus","paytoken"=>$payToken]);
         if($responseToken->status()!=200){
             return response()->json(
                 [
