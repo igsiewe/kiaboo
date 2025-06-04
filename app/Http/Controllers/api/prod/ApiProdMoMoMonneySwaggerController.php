@@ -774,20 +774,10 @@ class ApiProdMoMoMonneySwaggerController extends Controller
      *         )
      *     ),
      *     @OA\Response(
-     *          response=202,
-     *          description="Transaction pending because wainting for customer validation",
-     *          @OA\JsonContent(
-     *              @OA\Property(property="success", type="boolean", example=true),
-     *              @OA\Property(property="statusCode", type="string", example="PENDING"),
-     *              @OA\Property(property="message", type="string", example="Wainting for customer validation")
-     *          )
-     *      ),
-     *     @OA\Response(
      *         response=500,
      *         description="An error occurred",
      *         @OA\JsonContent(
      *             @OA\Property(property="success", type="boolean", example=false),
-     *             @OA\Property(property="statusCode", type="string", example="ERR-UNAVAILABLE"),
      *             @OA\Property(property="message", type="string", example="An internal server error occurred")
      *         )
      *     )
