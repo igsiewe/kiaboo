@@ -210,7 +210,7 @@ class ApiProdOrangeSwaggerController extends Controller
      * path="/api/v1/prod/om/money/payment/push/{transactionId}",
      * summary="Perform the OM Payment confirmation transaction",
      * description="Open a prompt to the user to perform the OM Payment confirmation transaction",
-     * tags={"OM - Payment Push"},
+     * tags={"OM - Payment"},
      * security={{"bearerAuth":{}}},
      * @OA\Parameter(
      *     name="transactionId",
@@ -363,7 +363,7 @@ class ApiProdOrangeSwaggerController extends Controller
      * path="/api/v1/prod/om/money/payment/status/{transactionId}",
      * summary="Check OM transaction status",
      * description="This operation is used to get the status of a request to momo pay. TransactionId that was passed in the post is used as reference to the request",
-     * tags={"Merchant payment"},
+     * tags={"OM - Payment"},
      * security={{"bearerAuth":{}}},
      * @OA\Parameter(
      *     name="transactionId",
