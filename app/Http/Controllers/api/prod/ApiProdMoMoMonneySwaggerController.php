@@ -697,10 +697,20 @@ class ApiProdMoMoMonneySwaggerController extends Controller
                         'message'=>$datacheckStatus->message,
                     ],$checkStatus->getStatusCode());
                 }
-                return response()->json([
-                    'success'=>false,
-                    'message'=>$datacheckStatus->message,
-                ],$checkStatus->getStatusCode());
+                $transaction = Transaction::where("id",$idTransaction)->first();
+                if($transaction->status==1){
+                    return response()->json([
+                        'success' => true,
+                        'statusCode'=>"SUCCESSFULL",
+                        'reference' => $reference,// $resultat->data->data->txnid,
+                        'message' =>"Le dépôt a été effectué avec succès", // $resultat->message,
+                    ], 200);
+                }else{
+                    return response()->json([
+                        'success'=>false,
+                        'message'=>$datacheckStatus->message,
+                    ],$checkStatus->getStatusCode());
+                }
             }else{
                 $transaction = Transaction::where("id",$idTransaction)->first();
                 if($transaction->status==1){
