@@ -832,8 +832,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
 
                 return response()->json(
                     [
-                        'status'=>200,
-                        'description'=>$data->status,
+                        'success'=>true,
                         'data'=>$data,
                     ],200
                 );
@@ -841,7 +840,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
         }else{
             return response()->json(
                 [
-                    'status'=>$response->status(),
+                    'success'=>false,
                     'data'=>$data,
                 ],$response->status()
             );
