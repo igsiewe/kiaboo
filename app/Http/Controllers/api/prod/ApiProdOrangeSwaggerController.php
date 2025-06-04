@@ -134,7 +134,7 @@ class ApiProdOrangeSwaggerController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => $validator->errors()->first(),
-            ], 400);
+            ], 422);
         }
         try{
             $apiCheck = new ApiCheckController();
