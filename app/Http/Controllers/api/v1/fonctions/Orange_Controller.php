@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\v1\fonctions;
 use App\Http\Controllers\ApiLog;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
 class Orange_Controller extends Controller
@@ -139,6 +140,111 @@ class Orange_Controller extends Controller
 
                 ],$e->getCode()
             );
+        }
+
+    }
+
+    public function OM_getPMPayToken(){
+
+        $url = $this->url."/mp/init";
+        $response = Http::withOptions(['verify' => false,])
+            ->withHeaders([
+                    "X-AUTH-TOKEN"=>$this->auth_x_token,
+                    "WSO2-Authorization"=>"Bearer ".$this->token,
+                    "accept"=>"application/json"
+                ]
+            )
+            ->Post($url);
+
+        if($response->status()==401){
+            $data = json_decode($response->body());
+            return response()->json([
+                "success"=>false,
+                "statusCode"=>$data->message,
+                "message"=>$data->description,
+            ], 403);
+        }
+        if($response->status()!=200){
+            return response()->json([
+                "success"=>false,
+                "statusCode"=>$response->status(),
+                "message"=>$response->body(),
+            ], 404);
+        }
+        $dataResponse = json_decode($response);
+        $payToken = $dataResponse->data->payToken;
+
+        return response()->json([
+            "success"=>true,
+            "payToken"=>$payToken,
+            "message"=>$dataResponse->message
+        ], $response->status());
+
+    }
+
+    public function OM_Paiement_init($token)
+    {
+        $response = Http::withOptions(['verify' => false,])
+            ->withHeaders(
+                [
+                    'Content-Type'=> 'application/json',
+                    'X-AUTH-TOKEN'=>$this->auth_x_token,
+                    'Authorization'=>'Bearer '.$token
+                ])
+
+            ->Post($this->endpoint.'/mp/init');
+
+        if($response->status()==200){
+            return response()->json($response->json());
+        }
+        else{
+            return response()->json([
+                'code' => $response->status(),
+                'message'=>$response->body(),
+            ]);
+        }
+
+    }
+
+    public function OM_Payment_execute($token, $payToken, $beneficiaire, $montant, $transId)
+    {
+
+        //On execute le retrait
+        $description = "Agent : ".Auth::user()->telephone;
+
+        try{
+            $response = Http::withOptions(['verify' => false,])
+                ->withHeaders(
+                    [
+                        'Content-Type'=> 'application/json',
+                        'X-AUTH-TOKEN'=>$this->auth_x_token,
+                        'Authorization'=>'Bearer '.$token
+                    ])
+
+                ->Post($this->endpoint.'/mp/pay', [
+                    "notifUrl"=> $this->callbackUrl,
+                    "channelUserMsisdn"=> $this->channel,
+                    "amount"=> $montant,
+                    "subscriberMsisdn"=> $beneficiaire,
+                    "pin"=> $this->pin,
+                    "orderId"=> str_replace(".","",$transId),
+                    "description"=> $description,
+                    "payToken"=> $payToken
+                ]);
+
+            if($response->status()==200){
+                return response()->json($response->json());
+            }
+            else{
+                return response()->json([
+                    'code' => $response->status(),
+                    'message'=>$response->body(),
+                ],$response->status());
+            }
+        }catch (\Exception $e){
+            return response()->json([
+                'message'=>$e->getMessage()
+            ],$e->getCode());
         }
 
     }

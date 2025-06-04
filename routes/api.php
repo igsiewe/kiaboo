@@ -223,7 +223,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
                             Route::get('customer/name/{customerNumber}', 'OM_Customer')->name("OM_Customer");
                         });
                         Route::controller(ApiProdOrangeSwaggerController::class)->group(function () {
-                            Route::get('payment', 'OM_Payment')->name("OM_PaymentSwagger");
+                            Route::post('payment', 'OM_Payment')->name("OM_PaymentSwagger");
                             Route::get('payment/status/{referenceID}', 'OM_PaymentStatus')->name("OM_PaymentStatus");
                         });
                     });
