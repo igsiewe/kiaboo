@@ -332,6 +332,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
                     'success' => false,
                     'statusCode' => "ERR-TRANSACTION-NOT-FOUND",
                     'message' => "PayToken not found",
+                    'paytoken' => $paytoken,
                 ], 404
             );
         }
