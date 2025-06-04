@@ -275,6 +275,7 @@ class MoMo_Controller extends Controller
                         [
                             'sucsess'=>true,
                             'data'=>$data,
+                            'message'=>"Transaction successful",
                         ],200
                     );
                 }
@@ -285,6 +286,7 @@ class MoMo_Controller extends Controller
                             'success'=>false,
                            // 'description'=>$data->status,
                             'data'=>$data,
+                            'message'=>"Transaction created",
                         ],201
                     );
                 }
@@ -293,6 +295,7 @@ class MoMo_Controller extends Controller
                         [
                             'success'=>false,
                             'data'=>$data,
+                            'message'=>"Transaction pending",
                         ],201
                     );
                 }
@@ -301,6 +304,7 @@ class MoMo_Controller extends Controller
                         [
                             'success' => false,
                             'data' => $data,
+                            'message' => "Transaction failed",
                         ], 406
                     );
 
@@ -310,6 +314,7 @@ class MoMo_Controller extends Controller
                     [
                         'status'=>false,
                         'data'=>$data,
+                        'message'=>"Transaction failed",
                     ],406
                 );
             }else{
