@@ -306,7 +306,19 @@ class ApiProdMoMoMonneySwaggerController extends Controller
      *          @OA\JsonContent(
      *              @OA\Property(property="success", type="boolean", example=true),
      *              @OA\Property(property="statusCode", type="string", example="PENDING"),
-     *              @OA\Property(property="message", type="string", example="Wainting for customer validation")
+     *              @OA\Property(property="message", type="string", example="Wainting for customer validation"),
+     *                  @OA\Property(property="data", type="object",
+     *                  @OA\Property(property="financialTransactionId", type="string", example="123456789"),
+     *                  @OA\Property(property="externalId", type="string", example="ext-abc-001"),
+     *                  @OA\Property(property="amount", type="string", example="2500"),
+     *                  @OA\Property(property="currency", type="string", example="XAF"),
+     *                  @OA\Property(property="payer", type="object",
+     *                      @OA\Property(property="partyIdType", type="string", example="MSISDN"),
+     *                      @OA\Property(property="partyId", type="string", example="237690000000")
+     *                  ),
+     *                  @OA\Property(property="payeeNote", type="string", example="Payment for invoice 123"),
+     *                  @OA\Property(property="status", type="string", example="PENDING")
+     *              )
      *          )
      *      ),
      *      @OA\Response(
@@ -315,7 +327,19 @@ class ApiProdMoMoMonneySwaggerController extends Controller
      *           @OA\JsonContent(
      *               @OA\Property(property="success", type="boolean", example=false),
      *               @OA\Property(property="statusCode", type="string", example="FAILED"),
-     *               @OA\Property(property="message", type="string", example="Transaction failed because, it was not approved")
+     *               @OA\Property(property="message", type="string", example="Transaction failed because, it was not approved"),
+     *                  @OA\Property(property="data", type="object",
+     *                  @OA\Property(property="financialTransactionId", type="string", example="123456789"),
+     *                  @OA\Property(property="externalId", type="string", example="ext-abc-001"),
+     *                  @OA\Property(property="amount", type="string", example="2500"),
+     *                  @OA\Property(property="currency", type="string", example="XAF"),
+     *                  @OA\Property(property="payer", type="object",
+     *                      @OA\Property(property="partyIdType", type="string", example="MSISDN"),
+     *                      @OA\Property(property="partyId", type="string", example="237690000000")
+     *                  ),
+     *                  @OA\Property(property="payeeNote", type="string", example="Payment for invoice 123"),
+     *                  @OA\Property(property="status", type="string", example="FAILED")
+     *              )
      *           )
      *       ),
      *     @OA\Response(
