@@ -672,12 +672,12 @@ class ApiProdMoMoMonneySwaggerController extends Controller
         ]);
 
         if($response->status()==202){
-            //Le code 202 indique que la transaction est pending
+
             $updateTransaction=Transaction::where("id",$idTransaction)->update([
                 'status'=>2, // Le dépôt n'a pas abouti, on passe en statut pending
                 //'reference_partenaire'=>$data->financialTransactionId,
                 'description'=>"PENDING",
-                'message'=>"La transaction est en statut en attente",
+                'message'=>"La transaction s'est executée correctement et doit être confirmée par le callback",
                 'api_response'=>$response->status(),
             ]);
 
@@ -774,6 +774,45 @@ class ApiProdMoMoMonneySwaggerController extends Controller
      *         )
      *     ),
      *     @OA\Response(
+     *          response=201,
+     *          description="Transaction pending or created",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="success", type="boolean", example=false),
+     *              @OA\Property(property="data", type="object",
+     *                  @OA\Property(property="financialTransactionId", type="string", example="123456789"),
+     *                  @OA\Property(property="externalId", type="string", example="ext-abc-001"),
+     *                  @OA\Property(property="amount", type="string", example="2500"),
+     *                  @OA\Property(property="currency", type="string", example="XAF"),
+     *                  @OA\Property(property="payer", type="object",
+     *                      @OA\Property(property="partyIdType", type="string", example="MSISDN"),
+     *                      @OA\Property(property="partyId", type="string", example="237690000000")
+     *                  ),
+     *                  @OA\Property(property="payeeNote", type="string", example="Payment for invoice 123"),
+     *                  @OA\Property(property="status", type="string", example="PENDING or CREATED")
+     *              )
+     *          )
+     *      ),
+     *      @OA\Response(
+     *           response=406,
+     *           description="Transaction failed",
+     *           @OA\JsonContent(
+     *               @OA\Property(property="success", type="boolean", example=false),
+     *               @OA\Property(property="data", type="object",
+     *                   @OA\Property(property="financialTransactionId", type="string", example="123456789"),
+     *                   @OA\Property(property="externalId", type="string", example="ext-abc-001"),
+     *                   @OA\Property(property="amount", type="string", example="2500"),
+     *                   @OA\Property(property="currency", type="string", example="XAF"),
+     *                   @OA\Property(property="payer", type="object",
+     *                       @OA\Property(property="partyIdType", type="string", example="MSISDN"),
+     *                       @OA\Property(property="partyId", type="string", example="237690000000")
+     *                   ),
+     *                   @OA\Property(property="payeeNote", type="string", example="Payment for invoice 123"),
+     *                   @OA\Property(property="status", type="string", example="FAILED")
+     *                   @OA\Property(property="raison", type="string", example="REJETED BY CUSTOMER")
+     *               )
+     *           )
+     *       ),
+     *     @OA\Response(
      *         response=500,
      *         description="An error occurred",
      *         @OA\JsonContent(
@@ -820,19 +859,17 @@ class ApiProdMoMoMonneySwaggerController extends Controller
         $data = json_decode($response->getContent());
 
         if($response->status()==200){
-
                 return response()->json(
                     [
-                        'success'=>$data->success,
+                        'success'=>true,
                         'data'=>$data->data,
                     ],200
                 );
-
         }else{
             return response()->json(
                 [
                     'success'=>false,
-                    'message'=>"Une erreur innatendue s'est produite",
+                    'data'=>$data->data,
                 ],$response->status()
             );
         }

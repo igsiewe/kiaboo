@@ -268,28 +268,55 @@ class MoMo_Controller extends Controller
                 ->Get($http);
 
             $data = json_decode($response->body());
+            $element = json_decode($response, associative: true);
             if($response->status()==200){
                 if($data->status=="SUCCESSFUL"){
                     return response()->json(
                         [
-                            'success'=>true,
-                            'data'=>$data,
-                        ],200
-                    );
-                }else{
-                    return response()->json(
-                        [
-                            'success'=>false,
+                            'sucsess'=>true,
                             'data'=>$data,
                         ],200
                     );
                 }
 
+                if($data->status=="CREATED"){
+                    return response()->json(
+                        [
+                            'success'=>false,
+                            'data'=>$data,
+                        ],201
+                    );
+                }
+                if($data->status=="PENDING"){
+                    return response()->json(
+                        [
+                            'success'=>false,
+                            'data'=>$data,
+                        ],201
+                    );
+                }
+                if($data->status=="FAILED") {
+                    return response()->json(
+                        [
+                            'success' => false,
+                            'data' => $data,
+                        ], 406
+                    );
+
+                }
+
+                return response()->json(
+                    [
+                        'status'=>false,
+                        'data'=>$data,
+                    ],406
+                );
             }else{
                 return response()->json(
                     [
-                        'success'=>false,
-                        'message'=>"Une erreur s'est produite, veuillez réessayer plutard",
+                        'status'=>false,
+                        'message'=>"Une erreur inattendue s'est produite",
+                        'data'=>[],
                     ],$response->status()
                 );
             }
@@ -298,6 +325,7 @@ class MoMo_Controller extends Controller
                 [
                     'status'=> false,
                     'messsage'=>  $e->getMessage(),
+                    'data'=>[]
                 ],$e->getCode()
             );
         }
