@@ -125,7 +125,7 @@ class ApiProdTransactionsController extends Controller
             ->join('users','users.id','=','transactions.source')
             ->select('transactions.reference as TransactionId','transactions.reference_partenaire as ReferencePartenaire','transactions.paytoken as PayToken','transactions.date_transaction as DateTransaction','transactions.debit as Debit','transactions.credit as Credit' ,'transactions.fees as Fees','transactions.balance_before as BalanceBefore','transactions.balance_after as BalanceAfter' ,'transactions.customer_phone as CustomerPhone','transactions.description as Status','services.name_service as ServiceName','type_services.name_type_service as TypeService','users.telephone as Agent','transactions.marchand_transaction_id as MarchandTransactionID','transactions.date_end_trans as DateEndTransaction')
             ->where("fichier","agent")
-            ->where('transactions.status',1)
+            ->whereIn('transactions.status',[1,2,3])
             ->where("transactions.date_transaction",">=",$startDate.' 00:00:00')
             ->where("transactions.date_transaction","<=",$endDate.' 23:59:59')
             ->whereIn('transactions.source',$listAgent)->orderBy('transactions.date_transaction', 'desc')->get();
