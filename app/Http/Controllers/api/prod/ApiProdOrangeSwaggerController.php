@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use function PHPUnit\Framework\isEmpty;
 
 class ApiProdOrangeSwaggerController extends Controller
 {
@@ -269,8 +270,9 @@ class ApiProdOrangeSwaggerController extends Controller
     public function OM_PaymentPush($payToken){
         // On cherche la transaction dans la table transaction
 
-        $transaction = Transaction::where("paytoken", $payToken)->where('service_id',ServiceEnum::PAYMENT_OM->value)->where("created_by",Auth::user()->created_by)->get();
-        if($transaction->count()==0){
+        $transaction = Transaction::where("paytoken", $payToken)->where("service_id",ServiceEnum::PAYMENT_OM->value)->where("created_by",Auth::user()->created_by)->get();
+
+        if( isEmpty($transaction)){
             return response()->json(
                 [
                     'success'=>false,

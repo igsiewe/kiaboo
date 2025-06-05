@@ -47,7 +47,6 @@ class Transaction extends Model
         'charge_distributeur_rembourse_date',
         'ref_remb_charge_agent',
         'ref_remb_charge_distributeur',
-
         'status',
         'description',
         'paytoken',
