@@ -269,8 +269,8 @@ class ApiProdOrangeSwaggerController extends Controller
 
     public function OM_PaymentPush($payToken){
         // On cherche la transaction dans la table transaction
-
-        $transaction = Transaction::where("paytoken", $payToken)->where("service_id",ServiceEnum::PAYMENT_OM->value)->get();
+dd(Auth::user());
+        $transaction = Transaction::where("paytoken", $payToken)->where("service_id",ServiceEnum::PAYMENT_OM->value)->where("created_by",Auth::user()->created_by)->get();
         dd($transaction, $payToken,ServiceEnum::PAYMENT_OM->value, Auth::user()->created_by);
         if( isEmpty($transaction)){
             return response()->json(
