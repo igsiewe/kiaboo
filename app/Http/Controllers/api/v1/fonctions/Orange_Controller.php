@@ -198,8 +198,6 @@ class Orange_Controller extends Controller
         if($response->status()==200){
             return response()->json(
                 [
-                    'success'=>true,
-                    'message'=>$data->message,
                     'data'=>[
                         "id"=> $data->data->id,
                         "subscriberMsisdn"=>$data->data->subscriberMsisdn,
@@ -219,8 +217,6 @@ class Orange_Controller extends Controller
         else{
             return response()->json(
                 [
-                    'success'=>false,
-                    'message'=>$data->message,
                     'data'=>[
                         "id"=> $data->data->id,
                         "subscriberMsisdn"=>$data->data->subscriberMsisdn,
