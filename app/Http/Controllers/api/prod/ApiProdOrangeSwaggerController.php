@@ -221,7 +221,7 @@ class ApiProdOrangeSwaggerController extends Controller
      *    description="successful operation",
      *    @OA\JsonContent(
      *       @OA\Property(property="success", type="boolean", example="true"),
-     *     @OA\Property(property="message", type="boolean", example="true"),
+     *     @OA\Property(property="message", type="boolean", example="The transaction is pending."),
      *       @OA\Property(
      *             type="object",
      *             property="data",
@@ -247,6 +247,30 @@ class ApiProdOrangeSwaggerController extends Controller
      *       @OA\Property(property="success", type="boolean", example="false"),
      *       @OA\Property(property="message", type="string", example="No mp found for input pay token"),
      *    )
+     *  ),
+     * @OA\Response(
+     *     response=403,
+     *     description="The transaction is already  complated.",
+     *     @OA\JsonContent(
+     *        @OA\Property(property="success", type="boolean", example="false"),
+     *        @OA\Property(property="message", type="boolean", example="The transaction is already  complated."),
+     *        @OA\Property(
+     *              type="object",
+     *              property="data",
+     *              @OA\Property(property="createtime", type="string", example="0"),
+     *              @OA\Property(property="amount", type="string", example="0"),
+     *              @OA\Property(property="channelUserMsisdn", type="string", example="string"),
+     *              @OA\Property(property="inittxnmessage", type="string", example="string"),
+     *              @OA\Property(property="confirmtxnmessage", type="string", example="string"),
+     *              @OA\Property(property="confirmtxnstatus", type="string", example="string"),
+     *              @OA\Property(property="subscriberMsisdn", type="string", example="string"),
+     *              @OA\Property(property="txnmode", type="string", example="string"),
+     *              @OA\Property(property="inittxnstatus", type="string", example="string"),
+     *              @OA\Property(property="payToken", type="string", example="string"),
+     *              @OA\Property(property="txnid", type="string", example="string"),
+     *              @OA\Property(property="status", type="string", example="string"),
+     *        )
+     *     )
      *  ),
      * @OA\Response(
      *    response=500,
