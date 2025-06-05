@@ -251,24 +251,67 @@ class Orange_Controller extends Controller
 
     public function OM_Payment_Status($token, $payToken){
 
-        $http = $this->endpoint."/mp/paymentstatus/".$payToken;
+        try {
+            $http = $this->endpoint."/mp/paymentstatus/".$payToken;
 
-        $response = Http::withOptions(['verify' => false,])->withHeaders(
-            [
-                "X-AUTH-TOKEN"=>$this->auth_x_token,
-                "Authorization"=>"Bearer ".$token,
-                "accept"=>"application/json"
-            ])->Get($http);
-        dd($response->body());
-        if($response->status()==200){
-            return response()->json($response->json());
+            $response = Http::withOptions(['verify' => false,])->withHeaders(
+                [
+                    "X-AUTH-TOKEN"=>$this->auth_x_token,
+                    "Authorization"=>"Bearer ".$token,
+                    "accept"=>"application/json"
+                ])->Get($http);
+            $data = json_decode($response->body());
+            if($response->status()==200){
+                return response()->json(
+                    [
+                        'success'=>true,
+                        'message'=>$data->message,
+                        'data'=>[
+                            "id"=> $data->data->id,
+                            "subscriberMsisdn"=>$data->data->subscriberMsisdn,
+                            "amount"=> $data->data->amount,
+                            "payToken"=> $data->data->payToken,
+                            "status"=> $data->data->status,
+                            "txnid"=> $data->data->txnid,
+                            "inittxnstatus"=> $data->data->inittxnstatus,
+                            "confirmtxnmessage"=> $data->data->confirmtxnmessage,
+                            "orderId"=> $data->data->orderId,
+                            "description"=> $data->data->description,
+                            "createtime"=> $data->data->createtime,
+                        ]
+                    ],$response->status());
+            }
+            else{
+                return response()->json(
+                    [
+                        'success'=>false,
+                        'message'=>$data->message,
+                        'data'=>[
+                            "id"=> $data->data->id,
+                            "subscriberMsisdn"=>$data->data->subscriberMsisdn,
+                            "amount"=> $data->data->amount,
+                            "payToken"=> $data->data->payToken,
+                            "status"=> $data->data->status,
+                            "txnid"=> $data->data->txnid,
+                            "inittxnstatus"=> $data->data->inittxnstatus,
+                            "confirmtxnmessage"=> $data->data->confirmtxnmessage,
+                            "orderId"=> $data->data->orderId,
+                            "description"=> $data->data->description,
+                            "createtime"=> $data->data->createtime,
+                        ]
+                    ],$response->status());
+
+            }
+        }catch (\Exception $e){
+            return response()->json(
+                [
+                    'success'=> false,
+                    'messsage'=>  $e->getMessage(),
+
+                ],$e->getCode()
+            );
         }
-        else{
-            return response()->json([
-                'code' => $response->status(),
-                'message'=>$response->body(),
-            ]);
-        }
+
     }
 
     public function OM_PaymentPush($token, $payToken){
