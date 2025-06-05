@@ -271,7 +271,7 @@ class ApiProdOrangeSwaggerController extends Controller
         // On cherche la transaction dans la table transaction
 
         $transaction = Transaction::where("paytoken", $payToken)->where("service_id",ServiceEnum::PAYMENT_OM->value)->where("created_by",Auth::user()->created_by)->get();
-        dd($transaction, $payToken,ServiceEnum::PAYMENT_OM->value, Auth::user()->cretead_by);
+        dd($transaction, $payToken,ServiceEnum::PAYMENT_OM->value, Auth::user()->created_by);
         if( isEmpty($transaction)){
             return response()->json(
                 [
