@@ -297,21 +297,10 @@ class ApiProdOrangeSwaggerController extends Controller
 
         $data = json_decode($response->getContent());
 
-
-
         if($response->status()==200){
-            return response()->json(
-                [
-                    'success'=>true,
-                    'data'=>$data,
-                ],200
-            );
+            return response()->json($data,200);
         }else{
-            return response()->json(
-                [
-                    'success'=>false,
-                    'data'=>$data,
-                ],$response->status()
+            return response()->json($data,$response->status()
             );
         }
 
