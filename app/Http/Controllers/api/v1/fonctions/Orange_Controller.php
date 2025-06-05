@@ -284,10 +284,7 @@ class Orange_Controller extends Controller
             $data = json_decode($response->body());
 
             if($response->status()==200){
-                return response()->json(
-                    [
-                        "data"=>$data
-                    ],200);
+                return response()->json($data,200);
             }
             else{
                 return response()->json([
