@@ -455,29 +455,9 @@ class ApiProdOrangeSwaggerController extends Controller
         $data = json_decode($response);
 
         if($response->status()==200){
-            return response()->json(
-                [
-                    'success'=>true,
-                    'statusCode'=>$data->data->status,
-                    'message'=>$data->data->status=="PENDING"?$data->data->inittxnmessage:$data->message,
-                    'data'=>[
-                        'currency'=>'XAF',
-                        'payToken'=>$payToken,
-                        'dateTransaction'=>$transaction->first()->date_transaction,
-                        'amount'=>$transaction->first()->credit,
-                        'agent'=>User::where("id", $transaction->first()->source)->first()->telephone,
-                        'customer'=>$transaction->first()->customer_phone,
-                    ]
-                ],200
-            );
+            return response()->json($data,200);
         }else{
-            return response()->json(
-                [
-                    'success'=>false,
-                    'statusCode'=>$data->data->status,
-                    'message'=>$data->message
-
-                ],$response->status()
+            return response()->json($data,$response->status()
             );
         }
 
