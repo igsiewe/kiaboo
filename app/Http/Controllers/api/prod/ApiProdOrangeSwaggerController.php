@@ -307,8 +307,8 @@ class ApiProdOrangeSwaggerController extends Controller
             return response()->json(
                 [
                     'success'=>false,
-                    'statusCode'=>$data,
-                    'message'=>$data->message
+                    'data'=>$data,
+                    'message'=>"Une erreur interne s'est produite."
 
                 ],$response->status()
             );
