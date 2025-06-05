@@ -272,7 +272,7 @@ class ApiProdOrangeSwaggerController extends Controller
 
         $transaction = Transaction::where("paytoken", $payToken)->where("service_id",ServiceEnum::PAYMENT_OM->value)->where("created_by",Auth::user()->id)->get();
 
-        if( isEmpty($transaction)){
+        if( $transaction->count() == 0 ){
             return response()->json(
                 [
                     'success'=>false,
