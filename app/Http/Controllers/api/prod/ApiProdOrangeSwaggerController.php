@@ -303,40 +303,14 @@ class ApiProdOrangeSwaggerController extends Controller
             return response()->json(
                 [
                     'success'=>true,
-                    'message'=>$data->message,
-                    'data'=>[
-                        "id"=> 338125732,
-                        "subscriberMsisdn"=>$data->data->subscriberMsisdn,
-                        "amount"=> $data->data->amount,
-                        "payToken"=> $data->data->payToken,
-                        "status"=> $data->data->status,
-                        "txnid"=> $data->data->txnid,
-                        "inittxnstatus"=> $data->data->inittxnstatus,
-                        "confirmtxnmessage"=> $data->data->confirmtxnmessage,
-                        "orderId"=> $data->data->orderId,
-                        "description"=> $data->data->description,
-                        "createtime"=> $data->data->createtime,
-                    ],
+                    'data'=>$data,
                 ],200
             );
         }else{
             return response()->json(
                 [
                     'success'=>false,
-                    'message'=>$data->message,
-                    'data'=>[
-                        "id"=> 338125732,
-                        "subscriberMsisdn"=>$data->data->subscriberMsisdn,
-                        "amount"=> $data->data->amount,
-                        "payToken"=> $data->data->payToken,
-                        "status"=> $data->data->status,
-                        "txnid"=> $data->data->txnid,
-                        "inittxnstatus"=> $data->data->inittxnstatus,
-                        "confirmtxnmessage"=> $data->data->confirmtxnmessage,
-                        "orderId"=> $data->data->orderId,
-                        "description"=> $data->data->description,
-                        "createtime"=> $data->data->createtime,
-                    ],
+                    'data'=>$data,
                 ],$response->status()
             );
         }

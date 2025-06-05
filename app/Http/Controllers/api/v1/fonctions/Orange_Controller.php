@@ -193,15 +193,49 @@ class Orange_Controller extends Controller
                 ])
 
             ->Post($this->endpoint.'/mp/init');
+        $data = json_decode($response->body());
 
         if($response->status()==200){
-            return response()->json($response->json());
+            return response()->json(
+                [
+                    'success'=>true,
+                    'message'=>$data->message,
+                    'data'=>[
+                        "id"=> 338125732,
+                        "subscriberMsisdn"=>$data->data->subscriberMsisdn,
+                        "amount"=> $data->data->amount,
+                        "payToken"=> $data->data->payToken,
+                        "status"=> $data->data->status,
+                        "txnid"=> $data->data->txnid,
+                        "inittxnstatus"=> $data->data->inittxnstatus,
+                        "confirmtxnmessage"=> $data->data->confirmtxnmessage,
+                        "orderId"=> $data->data->orderId,
+                        "description"=> $data->data->description,
+                        "createtime"=> $data->data->createtime,
+                    ]
+                ],200
+            );
         }
         else{
-            return response()->json([
-                'code' => $response->status(),
-                'message'=>$response->body(),
-            ]);
+            return response()->json(
+                [
+                    'success'=>false,
+                    'message'=>$data->message,
+                    'data'=>[
+                        "id"=> 338125732,
+                        "subscriberMsisdn"=>$data->data->subscriberMsisdn,
+                        "amount"=> $data->data->amount,
+                        "payToken"=> $data->data->payToken,
+                        "status"=> $data->data->status,
+                        "txnid"=> $data->data->txnid,
+                        "inittxnstatus"=> $data->data->inittxnstatus,
+                        "confirmtxnmessage"=> $data->data->confirmtxnmessage,
+                        "orderId"=> $data->data->orderId,
+                        "description"=> $data->data->description,
+                        "createtime"=> $data->data->createtime,
+                    ]
+                ],$response->status()
+            );
         }
 
     }
