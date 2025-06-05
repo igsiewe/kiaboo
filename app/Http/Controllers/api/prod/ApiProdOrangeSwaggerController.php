@@ -452,6 +452,7 @@ class ApiProdOrangeSwaggerController extends Controller
         $payToken = $transaction->first()->paytoken;
 
         $response = $OMFunction->OM_Payment_Status($accessToken, $payToken);
+        dd($response);
         $data = json_decode($response);
 dd($data);
         if($response->status()==200){
