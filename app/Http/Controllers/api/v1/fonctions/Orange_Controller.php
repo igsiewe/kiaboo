@@ -261,9 +261,9 @@ class Orange_Controller extends Controller
                     "accept"=>"application/json"
                 ])->Get($http);
             $data = json_decode($response->body());
-
+dd($data);
             if($response->status()==200){
-                dd("100");
+
                 return response()->json(
                     [
                         'success'=>true,
@@ -284,7 +284,7 @@ class Orange_Controller extends Controller
                     ],$response->status());
             }
             else{
-                dd("errror");
+
                 return response()->json(
                     [
                         'success'=>false,
