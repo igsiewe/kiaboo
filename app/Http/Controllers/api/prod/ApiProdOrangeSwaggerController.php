@@ -341,26 +341,30 @@ class ApiProdOrangeSwaggerController extends Controller
      *     )
      * ),
      * @OA\Response(
-     *    response=200,
-     *    description="Transaction found",
-     *    @OA\JsonContent(
-     *       @OA\Property(property="success", type="boolean", example="true"),
-     *       @OA\Property(property="statusCode", type="string", example="SUCCESSFULL"),
-     *       @OA\Property(property="message", type="string", example="Transaction found"),
-     *       @OA\Property(
-     *             type="object",
-     *             property="data",
-     *             @OA\Property(property="status", type="string", example="Transaction status"),
-     *             @OA\Property(property="transactionId", type="string", example="transacton id database"),
-     *             @OA\Property(property="dateTransaction", type="date", example="Date transaction"),
-     *             @OA\Property(property="currency", type="number", example="XAF"),
-     *             @OA\Property(property="amount", type="number", example="amount of transaction"),
-     *             @OA\Property(property="customer", type="number", example="customer phone number"),
-     *             @OA\Property(property="marchandTransactionID", type="number", example="id transaction of partner"),
-     *       )
-     *    )
+     *     response=200,
+     *     description="Transaction retrieved successfully",
+     *     @OA\JsonContent(
+     *        @OA\Property(property="success", type="boolean", example="true"),
+     *        @OA\Property(property="message", type="boolean", example="Transaction retrieved successfully"),
+     *        @OA\Property(
+     *              type="object",
+     *              property="data",
+     *              @OA\Property(property="createtime", type="string", example="0"),
+     *              @OA\Property(property="amount", type="string", example="0"),
+     *              @OA\Property(property="channelUserMsisdn", type="string", example="string"),
+     *              @OA\Property(property="inittxnmessage", type="string", example="string"),
+     *              @OA\Property(property="confirmtxnmessage", type="string", example="string"),
+     *              @OA\Property(property="confirmtxnstatus", type="string", example="string"),
+     *              @OA\Property(property="subscriberMsisdn", type="string", example="string"),
+     *              @OA\Property(property="txnmode", type="string", example="string"),
+     *              @OA\Property(property="inittxnstatus", type="string", example="string"),
+     *              @OA\Property(property="payToken", type="string", example="string"),
+     *              @OA\Property(property="txnid", type="string", example="string"),
+     *              @OA\Property(property="status", type="string", example="string"),
+     *        )
+     *     )
      * ),
-     *     @OA\Response(
+     * @OA\Response(
      *      response=402,
      *      description="Transaction failed",
      *      @OA\JsonContent(
