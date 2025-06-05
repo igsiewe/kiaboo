@@ -295,7 +295,7 @@ class ApiProdOrangeSwaggerController extends Controller
         $accessToken = $dataAcessToken->access_token;
         $response = $OMFunction->OM_PaymentPush($accessToken, $payToken);
 
-        $data = json_decode($response->getContent());
+        $data = json_encode($response->getContent());
 
         if($response->status()==200){
             return response()->json(
@@ -309,8 +309,6 @@ class ApiProdOrangeSwaggerController extends Controller
                 [
                     'success'=>false,
                     'data'=>$data,
-                    'message'=>"Une erreur interne s'est produite."
-
                 ],$response->status()
             );
         }
