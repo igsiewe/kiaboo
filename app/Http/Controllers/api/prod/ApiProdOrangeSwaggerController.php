@@ -221,6 +221,7 @@ class ApiProdOrangeSwaggerController extends Controller
      *    description="successful operation",
      *    @OA\JsonContent(
      *       @OA\Property(property="success", type="boolean", example="true"),
+     *     @OA\Property(property="message", type="boolean", example="true"),
      *       @OA\Property(
      *             type="object",
      *             property="data",
@@ -239,14 +240,6 @@ class ApiProdOrangeSwaggerController extends Controller
      *       )
      *    )
      * ),
-     *  @OA\Response(
-     *       response=400,
-     *       description="Invalid PayToken supplied",
-     *       @OA\JsonContent(
-     *          @OA\Property(property="success", type="boolean", example="false"),
-     *          @OA\Property(property="message", type="string", example="Invalid payToken supplied"),
-     *       )
-     *  ),
      * @OA\Response(
      *    response=404,
      *    description="No mp found for input pay token",
