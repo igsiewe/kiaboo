@@ -193,49 +193,15 @@ class Orange_Controller extends Controller
                 ])
 
             ->Post($this->endpoint.'/mp/init');
-        $data = json_decode($response->body());
 
         if($response->status()==200){
-            return response()->json(
-                [
-                    'success'=>true,
-                    'message'=>$data->message,
-                    'data'=>[
-                        "id"=> $data->data->id,
-                        "subscriberMsisdn"=>$data->data->subscriberMsisdn,
-                        "amount"=> $data->data->amount,
-                        "payToken"=> $data->data->payToken,
-                        "status"=> $data->data->status,
-                        "txnid"=> $data->data->txnid,
-                        "inittxnstatus"=> $data->data->inittxnstatus,
-                        "confirmtxnmessage"=> $data->data->confirmtxnmessage,
-                        "orderId"=> $data->data->orderId,
-                        "description"=> $data->data->description,
-                        "createtime"=> $data->data->createtime,
-                    ]
-                ],200
-            );
+            return response()->json($response->json());
         }
         else{
-            return response()->json(
-                [
-                    'success'=>false,
-                    'message'=>$data->message,
-                    'data'=>[
-                        "id"=> $data->data->id,
-                        "subscriberMsisdn"=>$data->data->subscriberMsisdn,
-                        "amount"=> $data->data->amount,
-                        "payToken"=> $data->data->payToken,
-                        "status"=> $data->data->status,
-                        "txnid"=> $data->data->txnid,
-                        "inittxnstatus"=> $data->data->inittxnstatus,
-                        "confirmtxnmessage"=> $data->data->confirmtxnmessage,
-                        "orderId"=> $data->data->orderId,
-                        "description"=> $data->data->description,
-                        "createtime"=> $data->data->createtime,
-                    ]
-                ],$response->status()
-            );
+            return response()->json([
+                'code' => $response->status(),
+                'message'=>$response->body(),
+            ]);
         }
 
     }
@@ -314,18 +280,52 @@ class Orange_Controller extends Controller
                     'X-AUTH-TOKEN'=>$this->auth_x_token,
                     'Authorization'=>'Bearer '.$token
                 ])->Get($http);
-
+            $data = json_decode($response->body());
             if($response->status()==200){
-                return response()->json([$response->json()],200);
+                return response()->json(
+                    [
+                        'success'=>true,
+                        'message'=>$data->message,
+                        'data'=>[
+                            "id"=> $data->data->id,
+                            "subscriberMsisdn"=>$data->data->subscriberMsisdn,
+                            "amount"=> $data->data->amount,
+                            "payToken"=> $data->data->payToken,
+                            "status"=> $data->data->status,
+                            "txnid"=> $data->data->txnid,
+                            "inittxnstatus"=> $data->data->inittxnstatus,
+                            "confirmtxnmessage"=> $data->data->confirmtxnmessage,
+                            "orderId"=> $data->data->orderId,
+                            "description"=> $data->data->description,
+                            "createtime"=> $data->data->createtime,
+                        ]
+                    ],$response->status());
             }
             else{
-                return response()->json([$response->json()],$response->status());
+                return response()->json(
+                    [
+                        'success'=>false,
+                        'message'=>$data->message,
+                        'data'=>[
+                            "id"=> $data->data->id,
+                            "subscriberMsisdn"=>$data->data->subscriberMsisdn,
+                            "amount"=> $data->data->amount,
+                            "payToken"=> $data->data->payToken,
+                            "status"=> $data->data->status,
+                            "txnid"=> $data->data->txnid,
+                            "inittxnstatus"=> $data->data->inittxnstatus,
+                            "confirmtxnmessage"=> $data->data->confirmtxnmessage,
+                            "orderId"=> $data->data->orderId,
+                            "description"=> $data->data->description,
+                            "createtime"=> $data->data->createtime,
+                        ]
+                    ],$response->status());
 
             }
         }catch (\Exception $e){
             return response()->json(
                 [
-                    'status'=> false,
+                    'success'=> false,
                     'messsage'=>  $e->getMessage(),
 
                 ],$e->getCode()
