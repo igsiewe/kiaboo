@@ -282,7 +282,7 @@ class Orange_Controller extends Controller
                 ])->Get($http);
 
             if($response->status()==200){
-                return response()->json($response->json());
+                return response()->json($response);
             }
             else{
                 return response()->json([
