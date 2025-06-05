@@ -303,14 +303,14 @@ class ApiProdOrangeSwaggerController extends Controller
             return response()->json(
                 [
                     'success'=>true,
-                    'data'=>$data,
+                    'data'=>$data->data,
                 ],200
             );
         }else{
             return response()->json(
                 [
                     'success'=>false,
-                    'data'=>$data,
+                    'data'=>$data->data,
                 ],$response->status()
             );
         }
