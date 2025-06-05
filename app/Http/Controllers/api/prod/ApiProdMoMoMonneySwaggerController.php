@@ -222,7 +222,8 @@ class ApiProdMoMoMonneySwaggerController extends Controller
         $referenceID = $MoMoFunction->gen_uuid();
         //On gardee l'UID de la transaction initiee
         $saveUID = Transaction::where('id',$idTransaction)->update([
-            "paytoken"=>$referenceID
+            "paytoken"=>$referenceID,
+            "marchand_transaction_id"=>$request->marchandTransactionId,
         ]);
         $customerPhone = "237".$customer;
         $response = $MoMoFunction->MOMO_Payment($accessToken,$referenceID, $idTransaction, $amount, $customerPhone);
@@ -542,6 +543,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
      *             required={"customerPhone","amount"},
      *             @OA\Property(property="customerPhone", type="string", example="670000000"),
      *             @OA\Property(property="amount", type="string", example="2500"),
+     *             @OA\Property(property="marchandTransactionId", type="string", example="Tr-12345"),
      *         )
      *     ),
      *     @OA\Response(
@@ -685,7 +687,8 @@ class ApiProdMoMoMonneySwaggerController extends Controller
         //On gardee l'UID de la transaction initiee
         $saveUID = Transaction::where('id',$idTransaction)->update([
             'reference_partenaire'=>$referenceID,
-            "paytoken"=>$referenceID
+            "paytoken"=>$referenceID,
+            "marchand_transaction_id"=>$request->marchandTransactionId,
         ]);
 
         $customerPhone = "237".$customerNumber;

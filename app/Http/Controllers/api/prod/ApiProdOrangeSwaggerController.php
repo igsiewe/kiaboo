@@ -148,6 +148,7 @@ class ApiProdOrangeSwaggerController extends Controller
             //    $description = $dataInitDepot->data->description;
             $updateTransactionTableWithPayToken = Transaction::where("id", $idTransaction)->update([
                 "payToken"=>$payToken,
+                "marchand_transaction_id"=>$request->marchandTransactionId,
             ]);
 
             $responseTraitePaiementOM = $OMFunction->OM_Payment_execute($AccessToken, $payToken, $request->customerPhone, $request->amount, $idTransaction);
@@ -218,10 +219,10 @@ class ApiProdOrangeSwaggerController extends Controller
      * ),
      * @OA\Response(
      *    response=200,
-     *    description="successful operation",
+     *    description="Push sent to customer",
      *    @OA\JsonContent(
      *       @OA\Property(property="success", type="boolean", example="true"),
-     *     @OA\Property(property="message", type="boolean", example="The transaction is pending."),
+     *     @OA\Property(property="message", type="boolean", example="Push sent to customer"),
      *       @OA\Property(
      *             type="object",
      *             property="data",
