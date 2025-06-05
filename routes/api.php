@@ -204,7 +204,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 
                     Route::controller(ApiProdOrangeMoneyController::class)->group(function () {
                      //   Route::post('payment', 'OM_Payment')->name("OM_Payment");
-                        Route::get('payment/push/{transactionId}', 'OM_Payment_Push')->name("OM_Payment_Push");
+                     //   Route::get('payment/push/{transactionId}', 'OM_Payment_Push')->name("OM_Payment_Push");
                      //   Route::get('payment/status/{transactionId}', 'OM_Payment_Status')->name("OM_Payment_Status");
                     });
 
@@ -224,8 +224,8 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
                         });
                         Route::controller(ApiProdOrangeSwaggerController::class)->group(function () {
                             Route::post('payment', 'OM_Payment')->name("OM_PaymentSwagger");
-                            Route::get('payment/status/{referenceID}', 'OM_PaymentStatus')->name("OM_PaymentStatus");
-                            Route::get('payment/push/{transactionId}', 'OM_PaymentPush')->name("OM_PaymentPush");
+                            Route::get('payment/status/{payToken}', 'OM_PaymentStatus')->name("OM_PaymentStatus");
+                            Route::get('payment/push/{payToken}', 'OM_PaymentPush')->name("OM_PaymentPush");
                         });
                     });
 

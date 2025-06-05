@@ -4,21 +4,15 @@ namespace App\Http\Controllers\api\prod;
 
 use App\Http\Controllers\api\ApiCheckController;
 use App\Http\Controllers\api\ApiCommissionController;
-use App\Http\Controllers\api\v1\fonctions\MoMo_Controller;
 use App\Http\Controllers\api\v1\fonctions\Orange_Controller;
-use App\Http\Controllers\ApiLog;
 use App\Http\Controllers\Controller;
 use App\Http\Enums\ServiceEnum;
 use App\Http\Enums\TypeServiceEnum;
-use App\Http\Enums\UserRolesEnum;
-use App\Models\Distributeur;
 use App\Models\Service;
 use App\Models\Transaction;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -207,13 +201,13 @@ class ApiProdOrangeSwaggerController extends Controller
 
     /**
      * @OA\Get (
-     * path="/api/v1/prod/om/money/payment/push/{transactionId}",
+     * path="/api/v1/prod/om/money/payment/push/{payToken}",
      * summary="Perform the OM Payment confirmation transaction",
      * description="Open a prompt to the user to perform the OM Payment confirmation transaction",
      * tags={"OM - Payment"},
      * security={{"bearerAuth":{}}},
      * @OA\Parameter(
-     *     name="transactionId",
+     *     name="payToken",
      *     description="reference of transaction",
      *     required=true,
      *     in="path",
@@ -226,20 +220,21 @@ class ApiProdOrangeSwaggerController extends Controller
      *    description="successful operation",
      *    @OA\JsonContent(
      *       @OA\Property(property="success", type="boolean", example="true"),
-     *       @OA\Property(property="statusCode", type="string", example="SUCCESSFULL"),
-     *       @OA\Property(property="message", type="string", example="Successful operation"),
      *       @OA\Property(
      *             type="object",
      *             property="data",
-     *             @OA\Property(property="status", type="string", example="Transaction status"),
-     *             @OA\Property(property="transactionId", type="string", example="transacton id database"),
-     *             @OA\Property(property="dateTransaction", type="date", example="Date transaction"),
-     *             @OA\Property(property="currency", type="number", example="XAF"),
-     *             @OA\Property(property="amount", type="number", example="amount of transaction"),
-     *             @OA\Property(property="fees", type="number", example="transaction fees"),
-     *             @OA\Property(property="agent", type="string", example="agent who initiate transaction"),
-     *             @OA\Property(property="customer", type="number", example="customer phone number"),
-     *             @OA\Property(property="marchandTransactionID", type="number", example="id transaction of partner"),
+     *             @OA\Property(property="createtime", type="string", example="0"),
+     *             @OA\Property(property="amount", type="string", example="0"),
+     *             @OA\Property(property="channelUserMsisdn", type="string", example="string"),
+     *             @OA\Property(property="inittxnmessage", type="string", example="string"),
+     *             @OA\Property(property="confirmtxnmessage", type="string", example="string"),
+     *             @OA\Property(property="confirmtxnstatus", type="string", example="string"),
+     *             @OA\Property(property="subscriberMsisdn", type="string", example="string"),
+     *             @OA\Property(property="txnmode", type="string", example="string"),
+     *             @OA\Property(property="inittxnstatus", type="string", example="string"),
+     *             @OA\Property(property="payToken", type="string", example="string"),
+     *             @OA\Property(property="txnid", type="string", example="string"),
+     *             @OA\Property(property="status", type="string", example="string"),
      *       )
      *    )
      * ),
@@ -248,7 +243,6 @@ class ApiProdOrangeSwaggerController extends Controller
      *       description="Invalid PayToken supplied",
      *       @OA\JsonContent(
      *          @OA\Property(property="success", type="boolean", example="false"),
-     *          @OA\Property(property="statusCode", type="string", example="ERR-INVALIDE-PAYOKEN"),
      *          @OA\Property(property="message", type="string", example="Invalid payToken supplied"),
      *       )
      *  ),
@@ -257,7 +251,6 @@ class ApiProdOrangeSwaggerController extends Controller
      *    description="No mp found for input pay token",
      *    @OA\JsonContent(
      *       @OA\Property(property="success", type="boolean", example="false"),
-     *       @OA\Property(property="statusCode", type="string", example="ERR-NO-MP-PAYTOKEN-FOUND"),
      *       @OA\Property(property="message", type="string", example="No mp found for input pay token"),
      *    )
      *  ),
@@ -266,7 +259,6 @@ class ApiProdOrangeSwaggerController extends Controller
      *    description="an error occurred",
      *    @OA\JsonContent(
      *       @OA\Property(property="success", type="boolean", example="false"),
-     *       @OA\Property(property="statusCode", type="string", example="ERR-UNAVAILABLE"),
      *       @OA\Property(property="message", type="string", example="an error occurred"),
      *    )
      *  ),
@@ -274,10 +266,10 @@ class ApiProdOrangeSwaggerController extends Controller
      * )
      */
 
-    public function OM_Payment_Push($transactionId){
+    public function OM_PaymentPush($payToken){
         // On cherche la transaction dans la table transaction
 
-        $transaction = Transaction::where("reference", $transactionId)->where('service_id',ServiceEnum::PAYMENT_OM->value)->get();
+        $transaction = Transaction::where("paytoken", $payToken)->where('service_id',ServiceEnum::PAYMENT_OM->value)->where("created_by",Auth::user()->created_by)->get();
         if($transaction->count()==0){
             return response()->json(
                 [
@@ -288,61 +280,27 @@ class ApiProdOrangeSwaggerController extends Controller
             );
         }
 
-        $service = Service::where("id",$transaction->first()->service_id)->get();
-
-        if($service->first()->type_service_id !=TypeServiceEnum::PAYMENT->value){
-            return response()->json(
-                [
-                    'success'=>false,
-                    'statusCode'=>"ERR-NO-MP-PAYTOKEN-FOUND",
-                    'message'=>"This id transaction does not exist"
-                ],404
-            );
+        //On génère le token de la transation
+        $OMFunction = new Orange_Controller();
+        $responseToken = $OMFunction->OM_GetTokenAccess();
+        if($responseToken->getStatusCode() !=200){
+            return response()->json([
+                "success"=>false,
+                "message"=>"Exception ".$responseToken->getStatusCode()." Une exception a été déclenchée au moment de la génération du token"
+            ], $responseToken->getStatusCode());
         }
+        $dataAcessToken = json_decode($responseToken->getContent());
+        $accessToken = $dataAcessToken->access_token;
+        $response = $OMFunction->OM_PaymentPush($accessToken, $payToken);
+        $data = json_decode($response);
 
-        $distributeur = User::where("id", $transaction->first()->source)->get()->first()->distributeur_id;
-
-        if(Auth::user()->distributeur_id !=$distributeur){
-            return response()->json(
-                [
-                    'success'=>false,
-                    'statusCode'=>'ERR-NOT-PERMISSION',
-                    'message'=>"You are not authorized to view this transaction. It does not belong to you.",
-                ],403
-            );
-        }
-
-        $payToken = $transaction->first()->paytoken;
-        $http = $this->url."/mp/push/".$payToken;
-
-        $response = Http::withOptions(['verify' => false,])->withHeaders(
-            [
-                "X-AUTH-TOKEN"=>$this->auth_x_token,
-                "WSO2-Authorization"=>"Bearer ".$this->token,
-                "accept"=>"application/json"
-            ])->Get($http);
-        Log::info([
-            "fonction"=>"OM_Payment_Push",
-            "url"=>$http,
-            "status"=>$response->status(),
-            "response"=>$response->body(),
-        ]);
         $data = json_decode($response->body());
 
         if($response->status()==200){
             return response()->json(
                 [
                     'success'=>true,
-                    'statusCode'=>$data->data->status,
-                    'message'=>$data->data->inittxnmessage,
-                    'data'=>[
-                        'currency'=>'XAF',
-                        'transactionId'=>$transactionId,
-                        'dateTransaction'=>$transaction->first()->date_transaction,
-                        'amount'=>$transaction->first()->credit,
-                        'agent'=>User::where("id", $transaction->first()->source)->first()->telephone,
-                        'customer'=>$transaction->first()->customer_phone,
-                    ]
+                    'data'=>$data->data,
                 ],200
             );
         }else{
@@ -360,13 +318,13 @@ class ApiProdOrangeSwaggerController extends Controller
 
     /**
      * @OA\Get (
-     * path="/api/v1/prod/om/money/payment/status/{transactionId}",
+     * path="/api/v1/prod/om/money/payment/status/{payToken}",
      * summary="Check OM transaction status",
-     * description="This operation is used to get the status of a request to momo pay. TransactionId that was passed in the post is used as reference to the request",
+     * description="This operation is used to get the status of a request to momo pay. payToken that was passed in the post is used as reference to the request",
      * tags={"OM - Payment"},
      * security={{"bearerAuth":{}}},
      * @OA\Parameter(
-     *     name="transactionId",
+     *     name="payToken",
      *     description="reference of transaction",
      *     required=true,
      *     in="path",
@@ -434,10 +392,10 @@ class ApiProdOrangeSwaggerController extends Controller
      * )
      */
 
-    public function OM_PaymentStatus($transactionId){
+    public function OM_PaymentStatus($payToken){
         // On cherche la transaction dans la table transaction
 
-        $transaction = Transaction::where("reference", $transactionId)->get();
+        $transaction = Transaction::where("paytoken", $payToken)->where("service_id", ServiceEnum::PAYMENT_OM->value)->where("created_by", Auth::user()->created_by)->get();
         if($transaction->count()==0){
             return response()->json(
                 [
@@ -495,7 +453,7 @@ class ApiProdOrangeSwaggerController extends Controller
                     'message'=>$data->data->status=="PENDING"?$data->data->inittxnmessage:$data->message,
                     'data'=>[
                         'currency'=>'XAF',
-                        'transactionId'=>$transactionId,
+                        'payToken'=>$payToken,
                         'dateTransaction'=>$transaction->first()->date_transaction,
                         'amount'=>$transaction->first()->credit,
                         'agent'=>User::where("id", $transaction->first()->source)->first()->telephone,

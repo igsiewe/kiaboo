@@ -33,6 +33,22 @@ class ApiProdAuthController extends BaseController
      *    ),
      * ),
      * @OA\Response(
+     *     response=200,
+     *     description="successful login user",
+     *     @OA\JsonContent(
+     *        @OA\Property(property="success", type="boolean", example="true"),
+     *        @OA\Property(property="statusCode", type="string", example="LOGIN-SUCCESS"),
+     *        @OA\Property(property="message", type="string", example="successful login user"),
+     *        @OA\Property(property="access_token", type="string", example="xxxxxxxxxxxxxxxxxxxx"),
+     *        @OA\Property(
+     *                   property="user",
+     *                   type="object",
+     *                   @OA\Property(property="name", type="string", example="houvre"),
+     *                   @OA\Property(property="surname", type="string", example="autre"),
+     *                 ),
+     *       ),
+     *  ),
+     * @OA\Response(
      *    response=400,
      *    description="login credentials are invalid",
      *    @OA\JsonContent(
@@ -50,22 +66,6 @@ class ApiProdAuthController extends BaseController
      *        @OA\Property(property="message", type="string", example="attribute not valid"),
      *     )
      *  ),
-     * @OA\Response(
-     *    response=200,
-     *    description="successful login user",
-     *    @OA\JsonContent(
-     *       @OA\Property(property="success", type="boolean", example="true"),
-     *       @OA\Property(property="statusCode", type="string", example="LOGIN-SUCCESS"),
-     *       @OA\Property(property="message", type="string", example="successful login user"),
-     *       @OA\Property(property="access_token", type="string", example="xxxxxxxxxxxxxxxxxxxx"),
-     *       @OA\Property(
-     *                  property="user",
-     *                  type="object",
-     *                  @OA\Property(property="name", type="string", example="houvre"),
-     *                  @OA\Property(property="surname", type="string", example="autre"),
-     *                ),
-     *      ),
-     * ),
      * @OA\Response(
      *    response=500,
      *    description="an error occurred",

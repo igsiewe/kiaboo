@@ -270,4 +270,36 @@ class Orange_Controller extends Controller
             ]);
         }
     }
+
+    public function OM_PaymentPush($token, $payToken){
+        try {
+            $http = $this->endpoint."/mp/push/".$payToken;
+            $response = Http::withOptions(['verify' => false,])->withHeaders(
+                [
+                    'Content-Type'=> 'application/json',
+                    'X-AUTH-TOKEN'=>$this->auth_x_token,
+                    'Authorization'=>'Bearer '.$token
+                ])->Get($http);
+
+            if($response->status()==200){
+                return response()->json($response->json());
+            }
+            else{
+                return response()->json([
+                    'status'=>false,
+                    'message'=>$response->body()
+                ],$response->status());
+
+            }
+        }catch (\Exception $e){
+            return response()->json(
+                [
+                    'status'=> false,
+                    'messsage'=>  $e->getMessage(),
+
+                ],$e->getCode()
+            );
+        }
+
+    }
 }
