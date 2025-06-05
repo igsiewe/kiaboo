@@ -282,13 +282,10 @@ class Orange_Controller extends Controller
                 ])->Get($http);
 
             if($response->status()==200){
-                return response()->json([$response->json()],20);
+                return response()->json([$response->json()],200);
             }
             else{
-                return response()->json([
-                    'status'=>false,
-                    'message'=>$response->body()
-                ],$response->status());
+                return response()->json([$response->json()],$response->status());
 
             }
         }catch (\Exception $e){
