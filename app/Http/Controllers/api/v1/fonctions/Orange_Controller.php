@@ -281,8 +281,13 @@ class Orange_Controller extends Controller
                     'Authorization'=>'Bearer '.$token
                 ])->Get($http);
 
+            $data = json_decode($response->body());
+
             if($response->status()==200){
-                return response()->json($response);
+                return response()->json(
+                    [
+                        "data"=>$data
+                    ],200);
             }
             else{
                 return response()->json([
