@@ -99,13 +99,16 @@
             @endif
 
             @if(Auth::user()->hasRole(['super-admin', 'Administrateur', 'Distributeur', 'Front-office', 'Back-office']))
-                <li class="sidebar-title">Opérations</li>
                     @if(Auth::user()->hasRole(['Distributeur']))
-                        <li class="{{ request()->routeIs('topupAgent') ? 'active-page' : '' }}">
-                            <a href="{{ route('topupAgent') }}"><i data-feather="bell"></i>Recharge agent</a>
-                        </li>
+                        @if(Auth::user()->application==1)
+                            <li class="sidebar-title">Opérations</li>
+                            <li class="{{ request()->routeIs('topupAgent') ? 'active-page' : '' }}">
+                                <a href="{{ route('topupAgent') }}"><i data-feather="bell"></i>Recharge agent</a>
+                            </li>
+                        @endif
                     @endif
                     @if(Auth::user()->hasRole(['Front-office', 'Back-office']))
+                        <li class="sidebar-title">Opérations</li>
                         <li class="{{ request()->routeIs('getApproDistributor') ? 'active-page' : '' }}">
                             <a href="{{ route('getApproDistributor') }}"><i data-feather="credit-card"></i>Recharge distributeur</a>
                         </li>
