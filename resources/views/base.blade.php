@@ -55,7 +55,7 @@
     <div class="page-sidebar">
         <ul class="list-unstyled accordion-menu">
             <li class="sidebar-title">Main</li>
-            @if(Auth::user()->hasRole(['super-admin', 'administrateur', 'analyste']))
+            @if(Auth::user()->hasRole(['super-admin', 'administrateur', 'Distributeur', 'Front-office', 'Back-office']))
                 <li class="{{ request()->routeIs('dashboard') ? 'active-page' : '' }}">
                     <a href="{{ route('dashboard') }}"><i data-feather="home"></i>Dashboard</a>
                 </li>
