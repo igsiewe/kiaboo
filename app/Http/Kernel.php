@@ -75,6 +75,8 @@ class Kernel extends HttpKernel
         'routeadministrateur' => \App\Http\Middleware\RouteAdministrateur::class, //verifier si la route empruntee est bonne
        // '2fa' => \PragmaRX\Google2FALaravel\Middleware::class,
        // '2fa' => Google2FA::class,
+        'role' => \App\Http\Middleware\CheckUserRole::class,
+
 
     ];
 }

@@ -14,7 +14,7 @@
                             <span class="d-inline-block pr-2">
                             <i class="fa fa-list fa-2x"></i>
                             </span>
-                        <span class="d-inline-block"><h4><b>&nbsp;&nbsp;TRANSACTTIONS HISTORY</b></h4></span>
+                        <span class="d-inline-block"><h4><b>&nbsp;&nbsp;HISTORIQUE DES TRANSACTIONS</b></h4></span>
                     </div>
                 </div>
             </div><p/>

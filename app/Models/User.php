@@ -85,6 +85,20 @@ class User extends Authenticatable
         return $this->belongsTo(TypeUser::class,'type_user_id','id');
     }
 
+    public function type()
+    {
+        return $this->belongsTo(TypeUser::class, 'type_user_id');
+    }
+
+    public function hasRole($roles)
+    {
+        $userRole = strtolower($this->type->name_type_user);
+        if (is_array($roles)) {
+            return in_array($userRole, array_map('strtolower', $roles));
+        }
+        return $userRole === strtolower($roles);
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *
