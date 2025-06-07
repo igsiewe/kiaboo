@@ -89,7 +89,7 @@
 
             @if(Auth::user()->hasRole(['super-admin', 'Administrateur', 'Distributeur', 'Front-office', 'Back-office']))
                 <li class="sidebar-title">Opérations</li>
-                    @if(Auth::user()->hasRole(['Back-office']))
+                    @if(Auth::user()->hasRole(['Distributeur']))
                         <li class="{{ request()->routeIs('topupAgent') ? 'active-page' : '' }}">
                             <a href="{{ route('topupAgent') }}"><i data-feather="bell"></i>Recharge agent</a>
                         </li>
