@@ -61,7 +61,7 @@
                 </li>
             @endif
 
-            @if(Auth::user()->hasRole(['super-admin', 'administrateur', 'analyste', 'auditeur']))
+            @if(Auth::user()->hasRole(['super-admin', 'Distributeur', 'Front-office', 'Back-office']))
                 <li class="sidebar-title">Transactions</li>
                 <li class="{{ request()->routeIs('listTransactions') ? 'active-page' : '' }}">
                     <a href="{{ route('listTransactions') }}"><i data-feather="list"></i>Transactions</a>
