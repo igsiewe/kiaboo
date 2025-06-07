@@ -16,6 +16,7 @@ use App\Http\Controllers\web\WebReconciliationController;
 use App\Http\Controllers\web\WebServiceController;
 use App\Http\Controllers\web\WebTransactionsController;
 use App\Http\Controllers\web\WebUtilisateurController;
+use App\Http\Enums\UserRolesEnum;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
@@ -40,7 +41,9 @@ Route::get('/', function () {
 Route::any('/', [WebAuthController::class, 'login'])->name('login');
 Route::get('/reload-captcha', [WebAuthController::class, 'reloadCaptcha']);
 Route::middleware(['auth','checkStatus'])->group(function (){
-
+    Route::middleware(['auth', 'role:'.UserRolesEnum::SUPADMIN->name])->group(function () {
+        // Routes protégées
+    });
     Route::any('/dashboard', [WebDashBoardController::class,'dashboard'])->name("dashboard");
     Route::any('/logout', [WebAuthController::class, 'logout'])->name('fermer');
     Route::get('https://kiaboo.net', function () {
@@ -92,7 +95,6 @@ Route::middleware(['auth','checkStatus'])->group(function (){
         });
     });
 
-
     Route::group(['prefix' => 'transactions'], function () {
         Route::controller(WebTransactionsController::class)->group(function () {
             Route::any('/list', 'listTransactions')->name("listTransactions");
@@ -104,8 +106,6 @@ Route::middleware(['auth','checkStatus'])->group(function (){
 
         });
     });
-
-
 
     Route::group(['prefix' => 'reconciliation'], function () {
         Route::controller(WebReconciliationController::class)->group(function () {
