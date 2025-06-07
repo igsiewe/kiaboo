@@ -41,7 +41,7 @@ Route::get('/', function () {
 Route::any('/', [WebAuthController::class, 'login'])->name('login');
 Route::get('/reload-captcha', [WebAuthController::class, 'reloadCaptcha']);
 Route::middleware(['auth','checkStatus'])->group(function (){
-    Route::middleware(['auth', 'role:Super-admin, Administrateur,  Back-office, Front-office'])->group(function () {
+    Route::middleware(['auth', 'role:Super-admin, Administrateur, Distributeur, Back-office, Front-office'])->group(function () {
 
         Route::any('/dashboard', [WebDashBoardController::class,'dashboard'])->name("dashboard");
         Route::any('/logout', [WebAuthController::class, 'logout'])->name('fermer');
