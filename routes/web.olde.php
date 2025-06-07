@@ -78,7 +78,7 @@ Route::middleware(['auth','checkStatus'])->group(function (){
                 Route::any('distributeur/update/{id}', 'setUpdateDistributeur')->name('setUpdateDistributeur');
                 Route::any('distributeur/delete/{id}', 'deleteDistributeur')->name('deleteDistributeur');
             });
-        });
+            });
         Route::controller(WebApproDistributeurController::class)->group(function () {
             Route::any('/distributor/list', 'getApproDistributor')->name("getApproDistributor");
             Route::any('/approvisionnement/search', 'listApprovisionnementFiltre')->name('listApprovisionnement.filtre');
