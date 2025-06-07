@@ -50,22 +50,24 @@ Route::middleware(['auth','checkStatus'])->group(function (){
             Auth::logout();
             return Redirect::to("https://kiaboo.net");
         })->name("siteweb");
-
-        Route::group(['prefix' => 'partenaires'], function () {
-            Route::controller(WebProspectontroller::class)->group(function () {
-                Route::any('list/prospect', 'getListProspect')->name('listProspect');
-                Route::any('prospect/validate/{id}', 'valideProspect')->name('valideProspect');
-                Route::any('prospect/rejeted/{id}', 'rejectedProspect')->name('rejectedProspect');
-                Route::any('prospect/edit/{id}', 'editProspect')->name('editProspect');
+        Route::middleware(['auth', 'role:Administrateur, Super-admin, Back-office'])->group(function () {
+            Route::group(['prefix' => 'partenaires'], function () {
+                Route::controller(WebProspectontroller::class)->group(function () {
+                    Route::any('list/prospect', 'getListProspect')->name('listProspect');
+                    Route::any('prospect/validate/{id}', 'valideProspect')->name('valideProspect');
+                    Route::any('prospect/rejeted/{id}', 'rejectedProspect')->name('rejectedProspect');
+                    Route::any('prospect/edit/{id}', 'editProspect')->name('editProspect');
+                });
             });
         });
-
         Route::group(['prefix' => 'approvisionnement'], function () {
-            Route::controller(WebApproAgentController::class)->group(function () {
-                Route::middleware(['routedealer'])->group(function () {
-                    Route::any('/agent/new', 'setTopUpAgent')->name("setTopUpAgent");
+            Route::middleware(['auth', 'role:Administrateur, Super-admin, Distributeur'])->group(function () {
+                Route::controller(WebApproAgentController::class)->group(function () {
+                    Route::middleware(['routedealer'])->group(function () {
+                        Route::any('/agent/new', 'setTopUpAgent')->name("setTopUpAgent");
+                    });
+                    Route::get('/agent/edit/{edit}', 'getDetailAgentTopUpd')->name("getDetailAgentTopUpd");
                 });
-                Route::get('/agent/edit/{edit}', 'getDetailAgentTopUpd')->name("getDetailAgentTopUpd");
             });
             Route::controller(WebDistributeurController::class)->group(function () {
                 Route::get('/distributeur/edit/{edit}', 'getDetailDistributeurTopUpd')->name("getDetailDistributeurTopUpd");
@@ -86,7 +88,7 @@ Route::middleware(['auth','checkStatus'])->group(function (){
                 Route::any('/approvisionnement/search', 'listApprovisionnementFiltre')->name('listApprovisionnement.filtre');
                 Route::any('/approvisionnement/distributeur/init/', 'initApproDistributeur')->name("approDistributeurInit");
                 Route::any('/distributeur/topup/{id}/{action}', 'getTopUpDetailDistributeur')->name('topupDistributeur.detail');
-                Route::middleware(['routebackoffice'])->group(function () {
+                Route::middleware(['auth', 'role:Administrateur, Back-office, Front-office'])->group(function () {
                     Route::any('/approvisionnement/cancel/{id}', 'CancelTopUpDistributeur')->name("CancelTopUpDistributeur");
                     Route::any('/approvisionnement/validate/{id}', 'validateTopUpDistributeur')->name("validateTopUpDistributeur");
                 });
@@ -108,10 +110,12 @@ Route::middleware(['auth','checkStatus'])->group(function (){
 
         Route::group(['prefix' => 'reconciliation'], function () {
             Route::controller(WebReconciliationController::class)->group(function () {
-                Route::any('/transactions/attente', 'transactionEnattente')->name("transactionEnattente");
-                Route::any('/transactions/attente/search', 'transactionEnattenteSearch')->name("transactionEnattente.filtre");
-                Route::any('/transactions/corrigees', 'transactionCorrigees')->name("transactionCorrigees");
-                Route::get('/transactions/edit/{id}', 'getDetailTransaction')->name("getDetailTransactionEnAttente");
+                Route::middleware(['auth', 'role:Back-office'])->group(function () {
+                    Route::any('/transactions/attente', 'transactionEnattente')->name("transactionEnattente");
+                    Route::any('/transactions/attente/search', 'transactionEnattenteSearch')->name("transactionEnattente.filtre");
+                    Route::any('/transactions/corrigees', 'transactionCorrigees')->name("transactionCorrigees");
+                    Route::get('/transactions/edit/{id}', 'getDetailTransaction')->name("getDetailTransactionEnAttente");
+                });
             });
         });
         Route::group(['prefix' => 'commissions'], function () {
@@ -130,7 +134,7 @@ Route::middleware(['auth','checkStatus'])->group(function (){
             });
         });
         Route::group(['prefix' => 'utilisateur'], function () {
-            Route::middleware(['notauthorizefordealer'])->group(function () {
+            Route::middleware(['auth', 'role:Administrateur, Super-admin, IT'])->group(function () {
                 Route::controller(WebUtilisateurController::class)->group(function () {
                     Route::any('/list', 'listUtilisateurs')->name("listUtilisateurs");
                     Route::any('/create', 'setNewUtilisateur')->name('setNewUtilisateur');
@@ -154,7 +158,7 @@ Route::middleware(['auth','checkStatus'])->group(function (){
             Route::get('agent/list', 'listAgent')->name('listAgent');
             Route::get('agent/edit/{id}', 'getUpdateUser')->name('getUpdateUser');
             Route::get('agent/edit/{id}', 'getUpdateUser')->name('getUpdateUser');
-            Route::middleware(['routedealer'])->group(function () {
+            Route::middleware(['auth', 'role:Administrateur, Super-admin, Distributeur'])->group(function () {
                 Route::any('agent/update/{id}', 'setUpdateAgent')->name('setUpdateAgent');
                 Route::any('agent/create', 'setNewAgent')->name('setNewAgent');
                 Route::any('agent/debloque/{id}', 'debloqueAgent')->name('debloqueAgent');
