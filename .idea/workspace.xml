@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f91fca3f-e4da-40b0-9457-5f63c3b5d882" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/resources/views/base_old.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/base.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/base.blade.php" afterDir="false" />
-    </list>
+    <list default="true" id="f91fca3f-e4da-40b0-9457-5f63c3b5d882" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -208,6 +205,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/resources/views" />
       <recent name="$PROJECT_DIR$/public" />
       <recent name="$PROJECT_DIR$/resources/views/pages/prospect" />
     </key>
@@ -241,7 +239,7 @@
       <workItem from="1746079982183" duration="163912000" />
       <workItem from="1746827915110" duration="57994000" />
       <workItem from="1748455539956" duration="26356000" />
-      <workItem from="1748969075672" duration="70093000" />
+      <workItem from="1748969075672" duration="70434000" />
     </task>
     <servers />
   </component>
