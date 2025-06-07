@@ -116,71 +116,75 @@
             </li>
             @endif
             @if(Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::SUPADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::ADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::AUDIT->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::BACKOFFICE->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::ACCOUNTABLE->value)
-            <li>
-                <a href="#"><i data-feather="alert-circle"></i>Réconciliation <i class="fa fa-chevron-right dropdown-icon"></i></a>
-                <ul class="">
-                    <li><a href="{{route("transactionEnattente")}}" title="Transactions en attente"><i class="fa fa-history"></i>Trans. en attente</a></li>
-                </ul>
-            </li>
+                @if(Auth::user()->application == 1)
+                   <li>
+                       <a href="#"><i data-feather="alert-circle"></i>Réconciliation <i class="fa fa-chevron-right dropdown-icon"></i></a>
+                       <ul class="">
+                           <li><a href="{{route("transactionEnattente")}}" title="Transactions en attente"><i class="fa fa-history"></i>Trans. en attente</a></li>
+                       </ul>
+                   </li>
+                @endif
             @endif
-            <li class="sidebar-title">
-                Opérations
-            </li>
-            @if(Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::SUPADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::ADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::DISTRIBUTEUR->value)
-            <li><a href="{{route("topupAgent")}}"><i data-feather="bell"></i>Recharge agent</a></li>
-            @endif
-            @if(Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::SUPADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::ADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::BACKOFFICE->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::FRONTOFFICE->value)
-            <li><a href="{{route("getApproDistributor")}}"><i data-feather="credit-card"></i>Recharge distributeur</a>
-            @endif
-            </li>
-             <li class="sidebar-title">
-                Management
-            </li>
+            @if(Auth::user()->application == 1)
+               <li class="sidebar-title">
+                   Opérations
+               </li>
+               @if(Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::SUPADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::ADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::DISTRIBUTEUR->value)
+               <li><a href="{{route("topupAgent")}}"><i data-feather="bell"></i>Recharge agent</a></li>
+               @endif
+               @if(Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::SUPADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::ADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::BACKOFFICE->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::FRONTOFFICE->value)
+               <li><a href="{{route("getApproDistributor")}}"><i data-feather="credit-card"></i>Recharge distributeur</a>
+               @endif
+           @endif
+   </li>
+    <li class="sidebar-title">
+       Management
+   </li>
 
-            <li>
-                <a href="index.html"><i data-feather="smile"></i>Partenaires <i class="fa fa-chevron-right dropdown-icon"></i></a>
-                <ul class="">
-                    @if(Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::SUPADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::ADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::BACKOFFICE->value)
-                    <li><a href="{{route("listDistributeur")}}"><i class="fa fa-handshake"></i>Distributeurs</a></li>
-                    @endif
-                    @if(Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::SUPADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::ADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::DISTRIBUTEUR->value)
-                    <li><a href="{{route("listAgent")}}"><i class="fa fa-user-cog"></i>Agents</a></li>
-                    @endif
-                    @if(Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::SUPADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::ADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::BACKOFFICE->value)
-                        <li><a href="{{route("listProspect")}}"><i class="fa fa-users"></i>Prospects</a></li>
-                    @endif
-                </ul>
-            </li>
-            @if(Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::SUPADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::ADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::BACKOFFICE->value)
-                <li>
-                    <a href="#"><i data-feather="settings"></i>Paramètres <i class="fa fa-chevron-right dropdown-icon"></i></a>
-                    <ul class="">
-                        <li><a href="#"><i class="fa fa-box"></i>Partenaires</a></li>
-                        <li><a href="#"><i class="fa fa-wind"></i>Services</a></li>
-                        <li><a href="{{route("grilleCommission")}}"><i class="fa fa-star"></i>Grille commission</a></li>
-                    </ul>
-                </li>
-            @endif
-            @if(Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::SUPADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::ADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::IT->value)
-                <li><a href="{{route("listUtilisateurs")}}"><i data-feather="users"></i>Utilisateurs</a></li>
-            @endif
+   <li>
+       <a href="index.html"><i data-feather="smile"></i>Partenaires <i class="fa fa-chevron-right dropdown-icon"></i></a>
+       <ul class="">
+           @if(Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::SUPADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::ADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::BACKOFFICE->value)
+           <li><a href="{{route("listDistributeur")}}"><i class="fa fa-handshake"></i>Distributeurs</a></li>
+           @endif
+           @if(Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::SUPADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::ADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::DISTRIBUTEUR->value)
+           <li><a href="{{route("listAgent")}}"><i class="fa fa-user-cog"></i>Agents</a></li>
+           @endif
+           @if(Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::SUPADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::ADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::BACKOFFICE->value)
+               <li><a href="{{route("listProspect")}}"><i class="fa fa-users"></i>Prospects</a></li>
+           @endif
+       </ul>
+   </li>
+   @if(Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::SUPADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::ADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::BACKOFFICE->value)
+       <li>
+           <a href="#"><i data-feather="settings"></i>Paramètres <i class="fa fa-chevron-right dropdown-icon"></i></a>
+           <ul class="">
+               <li><a href="#"><i class="fa fa-box"></i>Partenaires</a></li>
+               <li><a href="#"><i class="fa fa-wind"></i>Services</a></li>
+               <li><a href="{{route("grilleCommission")}}"><i class="fa fa-star"></i>Grille commission</a></li>
+           </ul>
+       </li>
+   @endif
+   @if(Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::SUPADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::ADMIN->value || Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::IT->value)
+       <li><a href="{{route("listUtilisateurs")}}"><i data-feather="users"></i>Utilisateurs</a></li>
+   @endif
 
-            @if(Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::SUPADMIN->value)
-                <li class="sidebar-title">
-                    Contrôle
-                </li>
+   @if(Auth::user()->type_user_id == \App\Http\Enums\UserRolesEnum::SUPADMIN->value)
+       <li class="sidebar-title">
+           Contrôle
+       </li>
 
-                <li>
-                    <a href="index.html"><i data-feather="globe"></i>Journal <i class="fa fa-chevron-right dropdown-icon"></i></a>
-                    <ul class="">
-                        <li><a href="{{route("log-viewer.index")}}"><i class="fa fa-folder"></i>Log</a></li>
-                        <li><a href=""><i class="fa fa-calendar"></i>Activités</a></li>
-                    </ul>
-                </li>
-            @endif
-        </ul>
-    </div>
-    @yield('content')
+       <li>
+           <a href="index.html"><i data-feather="globe"></i>Journal <i class="fa fa-chevron-right dropdown-icon"></i></a>
+           <ul class="">
+               <li><a href="{{route("log-viewer.index")}}"><i class="fa fa-folder"></i>Log</a></li>
+               <li><a href=""><i class="fa fa-calendar"></i>Activités</a></li>
+           </ul>
+       </li>
+   @endif
+</ul>
+</div>
+@yield('content')
 
 </div>
 
@@ -204,36 +208,36 @@
 
 <script type="text/javascript">
 
-    jQuery(function ($) {
-        $("ul a")
-            .click(function(e) {
-                var link = $(this);
+jQuery(function ($) {
+$("ul a")
+   .click(function(e) {
+       var link = $(this);
 
-                var item = link.parent("li");
+       var item = link.parent("li");
 
-                if (item.hasClass("active-page")) {
-                    item.removeClass("active-page").children("a").removeClass("active-page");
-                } else {
-                    item.addClass("active-page").children("a").addClass("active-page");
-                }
+       if (item.hasClass("active-page")) {
+           item.removeClass("active-page").children("a").removeClass("active-page");
+       } else {
+           item.addClass("active-page").children("a").addClass("active-page");
+       }
 
-                if (item.children("ul").length > 0) {
-                    var href = link.attr("href");
-                    link.attr("href", "#");
-                    setTimeout(function () {
-                        link.attr("href", href);
-                    }, 300);
-                    e.preventDefault();
-                }
-            })
-            .each(function() {
-                var link = $(this);
-                if (link.get(0).href === location.href) {
-                    link.addClass("active-page").parents("li").addClass("active-page");
-                    return false;
-                }
-            });
-    });
+       if (item.children("ul").length > 0) {
+           var href = link.attr("href");
+           link.attr("href", "#");
+           setTimeout(function () {
+               link.attr("href", href);
+           }, 300);
+           e.preventDefault();
+       }
+   })
+   .each(function() {
+       var link = $(this);
+       if (link.get(0).href === location.href) {
+           link.addClass("active-page").parents("li").addClass("active-page");
+           return false;
+       }
+   });
+});
 
- </script>
+</script>
 </html>
