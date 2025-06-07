@@ -68,7 +68,7 @@
                 </li>
             @endif
 
-            @if(Auth::user()->hasRole(['super-admin', 'Administrateur', 'Distributeur', 'Front-office', 'Back-office']))
+            @if(Auth::user()->hasRole(['super-admin', 'Administrateur', 'Front-office', 'Back-office']))
                 <li class="{{ request()->routeIs('listAgentCommissions', 'listDistributeurCommissions') ? 'active-page' : '' }}">
                     <a href="#"><i data-feather="gift"></i>Commissions <i class="fa fa-chevron-right dropdown-icon"></i></a>
                     <ul style="{{ request()->routeIs('listAgentCommissions', 'listDistributeurCommissions') ? 'display: block;' : '' }}">
@@ -76,6 +76,17 @@
                         <li><a class="{{ request()->routeIs('listDistributeurCommissions') ? 'active-page' : '' }}" href="{{ route('listDistributeurCommissions') }}"><i class="fa fa-star"></i>Distributeurs</a></li>
                     </ul>
                 </li>
+            @endif
+            @if(Auth::user()->hasRole(['Distributeur']))
+                    @if(Auth::user()->application==1)
+                        <li class="{{ request()->routeIs('listAgentCommissions', 'listDistributeurCommissions') ? 'active-page' : '' }}">
+                            <a href="#"><i data-feather="gift"></i>Commissions <i class="fa fa-chevron-right dropdown-icon"></i></a>
+                            <ul style="{{ request()->routeIs('listAgentCommissions', 'listDistributeurCommissions') ? 'display: block;' : '' }}">
+                                 <li><a class="{{ request()->routeIs('listAgentCommissions') ? 'active-page' : '' }}" href="{{ route('listAgentCommissions') }}"><i class="fa fa-star"></i>Agents</a></li>
+                                <li><a class="{{ request()->routeIs('listDistributeurCommissions') ? 'active-page' : '' }}" href="{{ route('listDistributeurCommissions') }}"><i class="fa fa-star"></i>Distributeurs</a></li>
+                            </ul>
+                        </li>
+                    @endif
             @endif
 
             @if(Auth::user()->hasRole(['super-admin', 'Administrateur', 'Back-office']))
