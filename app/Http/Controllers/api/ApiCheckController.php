@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Enums\ServiceEnum;
 use App\Http\Enums\UserRolesEnum;
+use App\Models\ApproDistributeur;
 use App\Models\Service;
 use App\Models\Transaction;
 use App\Models\User;
@@ -44,6 +45,33 @@ class ApiCheckController extends Controller
         return $rang;
     }
 
+    public function GenereRangApproDistributeur(){
+
+        $rang = "";
+        $chaine = ApproDistributeur::all()->count();
+        $longueur = strlen($chaine);
+
+        if($longueur==0){
+            $rang = "00001";
+        }
+        if ( $longueur == 1){
+            $rang="0000".($chaine+1);
+        }
+        if ( $longueur == 2){
+            $rang="000".($chaine+1);
+        }
+        if ( $longueur == 3){
+            $rang="00".($chaine+1);
+        }
+        if ( $longueur == 4){
+            $rang="0".($chaine+1);
+        }
+        if ( $longueur > 4){
+            $rang=($chaine+1);
+        }
+
+        return $rang;
+    }
     function genererChaineAleatoire($longueur = 10)
     {
         // $caracteres = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -159,13 +187,6 @@ class ApiCheckController extends Controller
             }
         }catch (\Exception $e){
             DB::rollback();
-            Log::error([
-                'function' => 'init_Depot',
-                'user' => Auth::user()->id,
-                'Service'=>$service,
-                'erreur Message' => $e->getMessage(),
-            ]);
-
             return response()->json([
                 'success' => false,
                 'message' =>"Exception : Une exception a été détectée, veuillez contacter votre superviseur si le problème persiste",

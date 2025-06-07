@@ -119,6 +119,17 @@ class ApiProdTransactionsController extends Controller
             ], 404);
         }
 
+//        $transactions = DB::table('transactions')
+//            ->join('services', 'transactions.service_id', '=', 'services.id')
+//            ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
+//            ->join('users','users.id','=','transactions.source')
+//            ->select('transactions.reference as TransactionId','transactions.reference_partenaire as ReferencePartenaire','transactions.paytoken as PayToken','transactions.date_transaction as DateTransaction','transactions.debit as Debit','transactions.credit as Credit' ,'transactions.fees as Fees','transactions.balance_before as BalanceBefore','transactions.balance_after as BalanceAfter' ,'transactions.customer_phone as CustomerPhone','transactions.description as Status','services.name_service as ServiceName','type_services.name_type_service as TypeService','users.telephone as Agent','transactions.marchand_transaction_id as MarchandTransactionID','transactions.date_end_trans as DateEndTransaction')
+//            ->where("fichier","agent")
+//            ->whereIn('transactions.status',[1,2,3])
+//            ->where("transactions.date_transaction",">=",$startDate.' 00:00:00')
+//            ->where("transactions.date_transaction","<=",$endDate.' 23:59:59')
+//            ->whereIn('transactions.source',$listAgent)->orderBy('transactions.date_transaction', 'desc')->get();
+
         $transactions = DB::table('transactions')
             ->join('services', 'transactions.service_id', '=', 'services.id')
             ->join('type_services', 'services.type_service_id', '=', 'type_services.id')
@@ -128,7 +139,7 @@ class ApiProdTransactionsController extends Controller
             ->whereIn('transactions.status',[1,2,3])
             ->where("transactions.date_transaction",">=",$startDate.' 00:00:00')
             ->where("transactions.date_transaction","<=",$endDate.' 23:59:59')
-            ->whereIn('transactions.source',$listAgent)->orderBy('transactions.date_transaction', 'desc')->get();
+            ->whereIn('transactions.source',Auth::user()->id)->orderBy('transactions.date_transaction', 'desc')->get();
 
         if($transactions->isEmpty()){
             return response()->json([

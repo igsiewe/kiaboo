@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\web;
 
+use App\Http\Controllers\api\ApiCheckController;
 use App\Http\Controllers\api\ApiSmsController;
 use App\Http\Controllers\Controller;
 use App\Http\Enums\UserRolesEnum;
@@ -13,7 +14,6 @@ use App\Models\Ville;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
@@ -32,18 +32,6 @@ class WebAgentController extends Controller
         $agents = $agents->with('ville','distributeur')->orderBy("name")->orderBy("surname")->get();
         $ville = Ville::where("status",1)->orderBy("name_ville","asc")->get();
         return view('pages.agents.listagent', compact('agents','ville','mesdistributeurs'));
-    }
-
-    public function genererChaineAleatoire($longueur = 10)
-    {
-        $caracteres = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $longueurMax = strlen($caracteres);
-        $chaineAleatoire = '';
-        for ($i = 0; $i < $longueur; $i++) {
-            $chaineAleatoire .= $caracteres[rand(0, $longueurMax - 1)];
-        }
-
-        return $chaineAleatoire;
     }
 
     public function setNewAgent(Request $request){
@@ -79,7 +67,8 @@ class WebAgentController extends Controller
         if($checkDateCni==true){
             return redirect()->back()->withErrors('Please check the date of your CNI. It cannot great than today');
         }
-        $newPassword = $this->genererChaineAleatoire(8);
+        $mesFonctions = new ApiCheckController();
+        $newPassword = $mesFonctions->genererChaineAleatoire(8);
         $newAgent = new User();
         $newAgent->name = $request->name;
         $newAgent->surname = $request->surname;
@@ -99,7 +88,7 @@ class WebAgentController extends Controller
         $newAgent->numcni = $request->numcni;
         $newAgent->datecni = $request->datecni;
         $newAgent->seuilapprovisionnement=$request->seuil;
-        $newAgent->moncodeparrainage = "KI".$this->genererChaineAleatoire(8);
+        $newAgent->moncodeparrainage = "KI".$mesFonctions->genererChaineAleatoire(8);
         $newAgent->save();
 
         $sms = new ApiSmsController();

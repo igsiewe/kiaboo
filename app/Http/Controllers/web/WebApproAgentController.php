@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\web;
 
+use App\Http\Controllers\api\ApiCheckController;
 use App\Http\Controllers\api\ApiSmsController;
 use App\Http\Controllers\Controller;
 use App\Http\Enums\UserRolesEnum;
@@ -70,7 +71,8 @@ class WebApproAgentController extends Controller
 
         try{
             DB::beginTransaction();
-            $payToken = "AP".Carbon::now()->format('ymd').".".Carbon::now()->format('His').".V".$this->GenereRang();
+            $mesFonctions = new ApiCheckController();
+            $payToken = "AP".Carbon::now()->format('ymd').".".Carbon::now()->format('His').".V".$mesFonctions->GenereRangApproDistributeur();
             //Mise à jour sous distributeur
 
             $Distributeur->first()->update([
@@ -177,45 +179,11 @@ class WebApproAgentController extends Controller
             return redirect()->back()->with('success', 'Approvisionnement agent effectué avec succès');
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error([
-                    'User'=>Auth::user()->id,
-                    'Service'=>3,
-                    'Agent'=>$request->agent,
-                    'Distributeur'=>$Distributeur_id,
-                    'amount'=>$request->amount,
-                    'error'=>$e->getMessage(),
-            ]);
             return redirect()->back()->withErrors('Une erreur est survenue lors de l\'approvisionnement de l\'agent '.$e->getMessage());
         }
     }
 
-    public function GenereRang(){
 
-        $rang = "";
-        $chaine = ApproDistributeur::all()->count();
-        $longueur = strlen($chaine);
-
-        if($longueur==0){
-            $rang = "00001";
-        }
-        if ( $longueur == 1){
-            $rang="0000".($chaine+1);
-        }
-        if ( $longueur == 2){
-            $rang="000".($chaine+1);
-        }
-        if ( $longueur == 3){
-            $rang="00".($chaine+1);
-        }
-        if ( $longueur == 4){
-            $rang="0".($chaine+1);
-        }
-        if ( $longueur > 4){
-            $rang=($chaine+1);
-        }
-
-        return $rang;
-    }
 
     public function getDetailAgentTopUpd($id){
         $agent = User::where('id',$id)->with('ville')->get()->first();

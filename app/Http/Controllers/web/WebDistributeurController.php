@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\web;
 
+use App\Http\Controllers\api\ApiCheckController;
+use App\Http\Controllers\api\ApiSmsController;
 use App\Http\Controllers\Controller;
 use App\Http\Enums\TypeServiceEnum;
 use App\Http\Enums\UserRolesEnum;

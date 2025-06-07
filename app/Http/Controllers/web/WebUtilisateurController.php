@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\web;
 
+use App\Http\Controllers\api\ApiCheckController;
 use App\Http\Controllers\Controller;
 use App\Http\Enums\UserRolesEnum;
 use App\Mail\UserNotificationMail;
@@ -39,17 +40,17 @@ class WebUtilisateurController extends Controller
     }
 
 
-    public function genererChaineAleatoire($longueur = 10)
-    {
-        $caracteres = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $longueurMax = strlen($caracteres);
-        $chaineAleatoire = '';
-        for ($i = 0; $i < $longueur; $i++) {
-            $chaineAleatoire .= $caracteres[rand(0, $longueurMax - 1)];
-        }
-
-        return $chaineAleatoire;
-    }
+//    public function genererChaineAleatoire($longueur = 10)
+//    {
+//        $caracteres = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+//        $longueurMax = strlen($caracteres);
+//        $chaineAleatoire = '';
+//        for ($i = 0; $i < $longueur; $i++) {
+//            $chaineAleatoire .= $caracteres[rand(0, $longueurMax - 1)];
+//        }
+//
+//        return $chaineAleatoire;
+//    }
 
     public function setNewUtilisateur(Request $request){
         $validator = Validator::make($request->all(), [
@@ -84,7 +85,8 @@ class WebUtilisateurController extends Controller
         if($checkDateCni==true){
             return redirect()->back()->withErrors('Please check the date of your CNI. It cannot great than today');
         }
-        $newPassword = $this->genererChaineAleatoire(8);
+        $MesFonctions = new ApiCheckController();
+        $newPassword = $MesFonctions->genererChaineAleatoire(12);
         $newUtilisateur = new User();
         $newUtilisateur->name = $request->name;
         $newUtilisateur->surname = $request->surname;
@@ -103,8 +105,14 @@ class WebUtilisateurController extends Controller
         $newUtilisateur->status = 1;
         $newUtilisateur->numcni = $request->numcni;
         $newUtilisateur->datecni = $request->datecni;
-        $newUtilisateur->moncodeparrainage = "KIAB".$this->genererChaineAleatoire(8);
+        $newUtilisateur->moncodeparrainage = "KIAB".$MesFonctions->genererChaineAleatoire(8);
         $newUtilisateur->status_delete =0;
+        if($request->typeuser==UserRolesEnum::DISTRIBUTEUR->value){
+            $newUtilisateur->application =2;
+        }else{
+            $newUtilisateur->application =1;
+        }
+
         $newUtilisateur->save();
 
         $data=[
