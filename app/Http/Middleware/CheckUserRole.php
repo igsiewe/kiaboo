@@ -16,10 +16,20 @@ class CheckUserRole
     public function handle($request, Closure $next, ...$roles)
     {
         $userRole = strtolower(auth()->user()->type->name_type_user);
-        if (!in_array($userRole, array_map('strtolower', $roles))) {
+
+        // Si $roles contient une seule chaîne avec des virgules, on la transforme en tableau
+        if (count($roles) === 1 && str_contains($roles[0], ',')) {
+            $roles = explode(',', $roles[0]);
+        }
+
+        $roles = array_map('strtolower', array_map('trim', $roles));
+
+        if (!in_array($userRole, $roles)) {
             abort(403, 'Accès non autorisé');
         }
+
         return $next($request);
     }
+
 
 }
