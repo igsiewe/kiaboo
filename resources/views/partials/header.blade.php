@@ -10,9 +10,7 @@
                 <li class="nav-item"><a class="nav-link" href="#">Help</a></li>
             </ul>
         </div>
-        <div class="logo">
-            <a class="navbar-brand" href="#">Kiaboo</a>
-        </div>
+
         <div id="headerNav">
             <ul class="navbar-nav">
                 <li class="nav-item dropdown">
