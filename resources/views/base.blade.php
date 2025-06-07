@@ -55,20 +55,20 @@
     <div class="page-sidebar">
         <ul class="list-unstyled accordion-menu">
             <li class="sidebar-title">Main</li>
-            @if(Auth::user()->hasRole(['super-administrateur', 'administrateur', 'analyste']))
+            @if(Auth::user()->hasRole(['super-admin', 'administrateur', 'analyste']))
                 <li class="{{ request()->routeIs('dashboard') ? 'active-page' : '' }}">
                     <a href="{{ route('dashboard') }}"><i data-feather="home"></i>Dashboard</a>
                 </li>
             @endif
 
-            @if(Auth::user()->hasRole(['super-administrateur', 'administrateur', 'analyste', 'auditeur']))
+            @if(Auth::user()->hasRole(['super-admin', 'administrateur', 'analyste', 'auditeur']))
                 <li class="sidebar-title">Transactions</li>
                 <li class="{{ request()->routeIs('listTransactions') ? 'active-page' : '' }}">
                     <a href="{{ route('listTransactions') }}"><i data-feather="list"></i>Transactions</a>
                 </li>
             @endif
 
-            @if(Auth::user()->hasRole(['super-administrateur', 'administrateur', 'comptable']))
+            @if(Auth::user()->hasRole(['super-admin', 'administrateur', 'comptable']))
                 <li class="{{ request()->routeIs('listAgentCommissions', 'listDistributeurCommissions') ? 'active-page' : '' }}">
                     <a href="#"><i data-feather="gift"></i>Commissions <i class="fa fa-chevron-right dropdown-icon"></i></a>
                     <ul style="{{ request()->routeIs('listAgentCommissions', 'listDistributeurCommissions') ? 'display: block;' : '' }}">
@@ -78,7 +78,7 @@
                 </li>
             @endif
 
-            @if(Auth::user()->hasRole(['super-administrateur', 'back-office']))
+            @if(Auth::user()->hasRole(['super-admin', 'back-office']))
                 <li class="{{ request()->routeIs('transactionEnattente') ? 'active-page' : '' }}">
                     <a href="#"><i data-feather="alert-circle"></i>Réconciliation <i class="fa fa-chevron-right dropdown-icon"></i></a>
                     <ul style="{{ request()->routeIs('transactionEnattente') ? 'display: block;' : '' }}">
@@ -87,7 +87,7 @@
                 </li>
             @endif
 
-            @if(Auth::user()->hasRole(['super-administrateur', 'front-office', 'back-office']))
+            @if(Auth::user()->hasRole(['super-admin', 'front-office', 'back-office']))
                 <li class="sidebar-title">Opérations</li>
                 <li class="{{ request()->routeIs('topupAgent') ? 'active-page' : '' }}">
                     <a href="{{ route('topupAgent') }}"><i data-feather="bell"></i>Recharge agent</a>
@@ -97,7 +97,7 @@
                 </li>
             @endif
 
-            @if(Auth::user()->hasRole(['super-administrateur', 'administrateur']))
+            @if(Auth::user()->hasRole(['super-admin', 'administrateur']))
                 <li class="sidebar-title">Management</li>
                 <li class="{{ request()->routeIs('listDistributeur', 'listAgent', 'listProspect') ? 'active-page' : '' }}">
                     <a href="#"><i data-feather="smile"></i>Partenaires <i class="fa fa-chevron-right dropdown-icon"></i></a>
@@ -109,7 +109,7 @@
                 </li>
             @endif
 
-            @if(Auth::user()->hasRole(['super-administrateur', 'it']))
+            @if(Auth::user()->hasRole(['super-admin', 'it']))
                 <li class="{{ request()->routeIs('grilleCommission') ? 'active-page' : '' }}">
                     <a href="#"><i data-feather="settings"></i>Paramètres <i class="fa fa-chevron-right dropdown-icon"></i></a>
                     <ul style="{{ request()->routeIs('grilleCommission') ? 'display: block;' : '' }}">
@@ -120,13 +120,13 @@
                 </li>
             @endif
 
-            @if(Auth::user()->hasRole(['super-administrateur', 'administrateur']))
+            @if(Auth::user()->hasRole(['super-admin', 'administrateur']))
                 <li class="{{ request()->routeIs('listUtilisateurs') ? 'active-page' : '' }}">
                     <a href="{{ route('listUtilisateurs') }}"><i data-feather="users"></i>Utilisateurs</a>
                 </li>
             @endif
 
-            @if(Auth::user()->hasRole(['super-administrateur', 'auditeur']))
+            @if(Auth::user()->hasRole(['super-admin', 'auditeur']))
                 <li class="sidebar-title">Contrôle</li>
                 <li class="{{ request()->routeIs('log-viewer.index') ? 'active-page' : '' }}">
                     <a href="#"><i data-feather="globe"></i>Journal <i class="fa fa-chevron-right dropdown-icon"></i></a>
