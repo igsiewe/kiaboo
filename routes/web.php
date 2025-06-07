@@ -41,7 +41,7 @@ Route::get('/', function () {
 Route::any('/', [WebAuthController::class, 'login'])->name('login');
 Route::get('/reload-captcha', [WebAuthController::class, 'reloadCaptcha']);
 Route::middleware(['auth','checkStatus'])->group(function (){
-    Route::middleware(['auth', 'role:'.UserRolesEnum::SUPADMIN->name])->group(function () {
+    Route::middleware(['auth', 'role:'.UserRolesEnum::SUPADMIN->value])->group(function () {
         // Routes protégées
     });
     Route::any('/dashboard', [WebDashBoardController::class,'dashboard'])->name("dashboard");
