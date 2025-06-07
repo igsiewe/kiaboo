@@ -54,14 +54,14 @@
     @include('partials.header')
     <div class="page-sidebar">
         <ul class="list-unstyled accordion-menu">
-            <li class="sidebar-title">Main</li>
-            @if(Auth::user()->hasRole(['super-admin', 'Administrateur', 'Front-office', 'Back-office']))
+            @if(Auth::user()->hasRole(['super-admin', 'Administrateur', 'Distributeur', 'Front-office', 'Back-office']))
+                <li class="sidebar-title">Main</li>
                 <li class="{{ request()->routeIs('dashboard') ? 'active-page' : '' }}">
                     <a href="{{ route('dashboard') }}"><i data-feather="home"></i>Dashboard</a>
                 </li>
             @endif
 
-            @if(Auth::user()->hasRole(['super-admin', 'Administrateur', 'Distributeur', 'Front-office', 'Back-office']))
+            @if(Auth::user()->hasRole(['super-admin', 'Administrateur', 'Distributeur', 'Front-office', 'Back-office', 'View']))
                 <li class="sidebar-title">Transactions</li>
                 <li class="{{ request()->routeIs('listTransactions') ? 'active-page' : '' }}">
                     <a href="{{ route('listTransactions') }}"><i data-feather="list"></i>Transactions</a>
@@ -78,7 +78,7 @@
                 </li>
             @endif
 
-            @if(Auth::user()->hasRole(['super-admin', 'Administrateur', 'Distributeur', 'Front-office', 'Back-office']))
+            @if(Auth::user()->hasRole(['super-admin', 'Administrateur', 'Back-office']))
                 <li class="{{ request()->routeIs('transactionEnattente') ? 'active-page' : '' }}">
                     <a href="#"><i data-feather="alert-circle"></i>Réconciliation <i class="fa fa-chevron-right dropdown-icon"></i></a>
                     <ul style="{{ request()->routeIs('transactionEnattente') ? 'display: block;' : '' }}">
@@ -89,27 +89,35 @@
 
             @if(Auth::user()->hasRole(['super-admin', 'Administrateur', 'Distributeur', 'Front-office', 'Back-office']))
                 <li class="sidebar-title">Opérations</li>
-                <li class="{{ request()->routeIs('topupAgent') ? 'active-page' : '' }}">
-                    <a href="{{ route('topupAgent') }}"><i data-feather="bell"></i>Recharge agent</a>
-                </li>
-                <li class="{{ request()->routeIs('getApproDistributor') ? 'active-page' : '' }}">
-                    <a href="{{ route('getApproDistributor') }}"><i data-feather="credit-card"></i>Recharge distributeur</a>
-                </li>
+                    @if(Auth::user()->hasRole(['Back-office']))
+                        <li class="{{ request()->routeIs('topupAgent') ? 'active-page' : '' }}">
+                            <a href="{{ route('topupAgent') }}"><i data-feather="bell"></i>Recharge agent</a>
+                        </li>
+                    @endif
+                    @if(Auth::user()->hasRole(['Front-office', 'Back-office']))
+                        <li class="{{ request()->routeIs('getApproDistributor') ? 'active-page' : '' }}">
+                            <a href="{{ route('getApproDistributor') }}"><i data-feather="credit-card"></i>Recharge distributeur</a>
+                        </li>
+                    @endif
             @endif
 
-            @if(Auth::user()->hasRole(['super-admin', 'Administrateur', 'Distributeur', 'Front-office', 'Back-office']))
+            @if(Auth::user()->hasRole(['super-admin', 'Administrateur', 'Distributeur', 'Back-office']))
                 <li class="sidebar-title">Management</li>
                 <li class="{{ request()->routeIs('listDistributeur', 'listAgent', 'listProspect') ? 'active-page' : '' }}">
                     <a href="#"><i data-feather="smile"></i>Partenaires <i class="fa fa-chevron-right dropdown-icon"></i></a>
                     <ul style="{{ request()->routeIs('listDistributeur', 'listAgent', 'listProspect') ? 'display: block;' : '' }}">
-                        <li><a class="{{ request()->routeIs('listDistributeur') ? 'active-page' : '' }}" href="{{ route('listDistributeur') }}"><i class="fa fa-handshake"></i>Distributeurs</a></li>
-                        <li><a class="{{ request()->routeIs('listAgent') ? 'active-page' : '' }}" href="{{ route('listAgent') }}"><i class="fa fa-user-cog"></i>Agents</a></li>
-                        <li><a class="{{ request()->routeIs('listProspect') ? 'active-page' : '' }}" href="{{ route('listProspect') }}"><i class="fa fa-users"></i>Prospects</a></li>
+                        @if(Auth::user()->hasRole(['super-admin', 'Administrateur', 'Back-office']))
+                            <li><a class="{{ request()->routeIs('listProspect') ? 'active-page' : '' }}" href="{{ route('listProspect') }}"><i class="fa fa-users"></i>Prospects</a></li>
+                            <li><a class="{{ request()->routeIs('listDistributeur') ? 'active-page' : '' }}" href="{{ route('listDistributeur') }}"><i class="fa fa-handshake"></i>Distributeurs</a></li>
+                        @endif
+                        @if(Auth::user()->hasRole(['super-admin', 'Administrateur', 'Distributeur', 'Back-office']))
+                            <li><a class="{{ request()->routeIs('listAgent') ? 'active-page' : '' }}" href="{{ route('listAgent') }}"><i class="fa fa-user-cog"></i>Agents</a></li>
+                        @endif
                     </ul>
                 </li>
             @endif
 
-            @if(Auth::user()->hasRole(['super-admin', 'Administrateur', 'Distributeur', 'Front-office', 'Back-office']))
+            @if(Auth::user()->hasRole(['super-admin', 'Administrateur', 'Back-office']))
                 <li class="{{ request()->routeIs('grilleCommission') ? 'active-page' : '' }}">
                     <a href="#"><i data-feather="settings"></i>Paramètres <i class="fa fa-chevron-right dropdown-icon"></i></a>
                     <ul style="{{ request()->routeIs('grilleCommission') ? 'display: block;' : '' }}">
@@ -120,7 +128,7 @@
                 </li>
             @endif
 
-            @if(Auth::user()->hasRole(['super-admin', 'Administrateur', 'Distributeur', 'Front-office', 'Back-office']))
+            @if(Auth::user()->hasRole(['super-admin', 'Administrateur', 'Back-office']))
                 <li class="{{ request()->routeIs('listUtilisateurs') ? 'active-page' : '' }}">
                     <a href="{{ route('listUtilisateurs') }}"><i data-feather="users"></i>Utilisateurs</a>
                 </li>
