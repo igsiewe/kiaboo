@@ -134,13 +134,12 @@
                 </li>
             @endif
 
-            @if(Auth::user()->hasRole(['super-admin', 'Administrateur', 'Distributeur', 'Front-office', 'Back-office']))
+            @if(Auth::user()->hasRole(['super-admin']))
                 <li class="sidebar-title">Contrôle</li>
                 <li class="{{ request()->routeIs('log-viewer.index') ? 'active-page' : '' }}">
                     <a href="#"><i data-feather="globe"></i>Journal <i class="fa fa-chevron-right dropdown-icon"></i></a>
                     <ul style="{{ request()->routeIs('log-viewer.index') ? 'display: block;' : '' }}">
                         <li><a class="{{ request()->routeIs('log-viewer.index') ? 'active-page' : '' }}" href="{{ route('log-viewer.index') }}"><i class="fa fa-folder"></i>Log</a></li>
-                        <li><a href="#"><i class="fa fa-calendar"></i>Activités</a></li>
                     </ul>
                 </li>
             @endif
