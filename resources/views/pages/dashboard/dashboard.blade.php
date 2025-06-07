@@ -42,8 +42,13 @@
                             <i class="fa fa-credit-card"></i>
                         </div>
                         <div class="folder-info">
-                            <a href="#"><h6>Revenue</h6></a>
-                            <span><h5>{{number_format($revenue, 0, ',', ' ')." ".$money}}</h5></span>
+                            @if(Auth::user()->application==2)
+                                <a href="#"><h6>Frais</h6></a>
+                                <span><h5>{{number_format($frais, 0, ',', ' ')." ".$money}}</h5></span>
+                            @else
+                                <a href="#"><h6>Revenue</h6></a>
+                                <span><h5>{{number_format($revenue, 0, ',', ' ')." ".$money}}</h5></span>
+                            @endif
                         </div>
                     </div>
                 </div>

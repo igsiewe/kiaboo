@@ -35,6 +35,7 @@ class WebDashBoardController extends Controller
         $volumeofTransaction=0;
         $currentBalance=0;
         $revenue=0;
+        $frais=0;
         $agent=0;
         $money = "F CFA";
         $lastTransactions=[];
@@ -54,6 +55,7 @@ class WebDashBoardController extends Controller
             $volumeofTransaction = $query->sum("debit")+$query->sum("credit");
 
             $revenue = $query->get()->sum("commission");
+            $frais = $query->get()->sum("fees");
 
             $lastTransactions = $query->orderBy('transactions.date_transaction', 'desc')->limit(5)->get();
 
@@ -82,6 +84,7 @@ class WebDashBoardController extends Controller
                     ->get();
 
                 $revenue = $transAgent->get()->sum("commission");
+                $frais = $transAgent->get()->sum("fees");
 
             }
 
@@ -128,7 +131,7 @@ class WebDashBoardController extends Controller
 
         }
 
-        return view('pages.dashboard.dashboard', compact('volumeofTransaction','currentBalance','revenue','agent','money','lastTransactions','bestAgents','envoi','retrait','paiement'));
+        return view('pages.dashboard.dashboard', compact('volumeofTransaction','currentBalance','revenue','agent','money','lastTransactions','bestAgents','envoi','retrait','paiement','frais'));
 
     }
 }
