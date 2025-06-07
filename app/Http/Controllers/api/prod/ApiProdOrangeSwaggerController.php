@@ -90,6 +90,13 @@ class ApiProdOrangeSwaggerController extends Controller
                 ],403);
             }
 
+            if(!$apiCheck->checkDistributeurValidity()){
+                return response()->json([
+                    'status'=>false,
+                    'message'=>"Operation non authorisée pour le moment",
+                ],403);
+            }
+
             // On vérifie si les frais sont paramétrées
             $functionFees = new ApiCommissionController();
             $lesfees =$functionFees->getFeesByService($service,$request->amount);

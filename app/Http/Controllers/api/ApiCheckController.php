@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Enums\ServiceEnum;
 use App\Http\Enums\UserRolesEnum;
 use App\Models\ApproDistributeur;
+use App\Models\Distributeur;
 use App\Models\Service;
 use App\Models\Transaction;
 use App\Models\User;
@@ -99,6 +100,18 @@ class ApiCheckController extends Controller
 
     }
 
+    function checkDistributeurValidity(){
+
+        $distributeur = Distributeur::where("id", Auth::user()->distributeur_id);
+        if($distributeur->isEmpty()){
+           return false;
+        }
+        if($distributeur->first()->status==0){
+            return false;
+        }
+        return true;
+
+    }
     function checkUserBalance($montant)
     {
         if (Auth::user()->balance_after < $montant) {

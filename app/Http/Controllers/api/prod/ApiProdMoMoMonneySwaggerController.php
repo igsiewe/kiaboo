@@ -171,10 +171,18 @@ class ApiProdMoMoMonneySwaggerController extends Controller
         }
 
 
+
         if(!$apiCheck->checkUserValidity()){
             return response()->json([
                 'status'=>false,
                 'message'=>'Votre compte est désactivé. Veuillez contacter votre distributeur',
+            ],403);
+        }
+
+        if(!$apiCheck->checkDistributeurValidity()){
+            return response()->json([
+                'status'=>false,
+                'message'=>"Opération non authorisée pour le moment",
             ],403);
         }
 
@@ -617,6 +625,13 @@ class ApiProdMoMoMonneySwaggerController extends Controller
                 'success'=>false,
                 'message'=>'Votre compte est désactivé. Veuillez contacter votre distributeur',
             ],401);
+        }
+
+        if(!$apiCheck->checkDistributeurValidity()){
+            return response()->json([
+                'status'=>false,
+                'message'=>"Opération non authorisée pour le moment",
+            ],403);
         }
 
         // Vérifie si le solde de l'utilisateur lui permet d'effectuer cette opération
