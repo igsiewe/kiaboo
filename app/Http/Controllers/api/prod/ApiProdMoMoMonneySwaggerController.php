@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\prod;
 use App\Http\Controllers\api\ApiCheckController;
 use App\Http\Controllers\api\ApiCommissionController;
 use App\Http\Controllers\api\v1\fonctions\MoMo_Controller;
+use App\Http\Controllers\api\v1\fonctions\Orange_Controller;
 use App\Http\Controllers\ApiLog;
 use App\Http\Controllers\Controller;
 use App\Http\Enums\ServiceEnum;
@@ -917,4 +918,121 @@ class ApiProdMoMoMonneySwaggerController extends Controller
         }
     }
 
+    /**
+     * @OA\Get (
+     * path="/api/v1/prod/mtn/money/payment/push/{payToken}",
+     * summary="Perform the MOMO Payment confirmation transaction",
+     * description="Open a prompt to the user to perform the MOMO Payment confirmation transaction",
+     * tags={"MTN - Payment"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(
+     *     name="payToken",
+     *     description="reference of transaction",
+     *     required=true,
+     *     in="path",
+     *     @OA\Schema(
+     *        type="string"
+     *     )
+     * ),
+     * @OA\Response(
+     *    response=200,
+     *    description="Notification successfully enqueued",
+     *    @OA\JsonContent(
+     *      @OA\Property(property="success", type="boolean", example="true"),
+     *      @OA\Property(property="message", type="boolean", example="Push sent to customer"),
+     *    )
+     * ),
+     *  @OA\Response(
+     *     response=400,
+     *     description="Bad request. Invalid data was sent in the request",
+     *     @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="true"),
+     *       @OA\Property(property="message", type="boolean", example="Bad request"),
+     *     )
+     *  ),
+     * @OA\Response(
+     *    response=404,
+     *    description="Resource not found. The reference ID does not exist, or the calling user is not the owner of the financial transaction",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="false"),
+     *       @OA\Property(property="message", type="string", example="The reference ID does not exist, or the calling user is not the owner of the financial transaction"),
+     *    )
+     *  ),
+     * @OA\Response(
+     *     response=409,
+     *     description="The transaction is not successfully completed",
+     *     @OA\JsonContent(
+     *        @OA\Property(property="success", type="boolean", example="false"),
+     *        @OA\Property(property="message", type="string", example="Conflict"),
+     *     )
+     * ),
+     *  @OA\Response(
+     *      response=410,
+     *      description="The delivery notification opportunity has expired",
+     *      @OA\JsonContent(
+     *         @OA\Property(property="success", type="boolean", example="false"),
+     *         @OA\Property(property="message", type="string", example="Gone"),
+     *      )
+     *  ),
+     *  @OA\Response(
+     *      response=429,
+     *      description="Too many attempts for the same ID has been made recently. This will only occur if a successful attempt has previously been performed",
+     *      @OA\JsonContent(
+     *         @OA\Property(property="success", type="boolean", example="false"),
+     *         @OA\Property(property="message", type="string", example="Too many requests."),
+     *      )
+     *  ),
+     * @OA\Response(
+     *    response=500,
+     *    description="an error occurred",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="false"),
+     *       @OA\Property(property="message", type="string", example="an error occurred"),
+     *    )
+     *  ),
+     * )
+     * )
+     */
+
+    public function MoMoPaymentPush($payToken){
+        // On cherche la transaction dans la table transaction
+
+        $transaction = Transaction::where("paytoken", $payToken)->where("service_id",ServiceEnum::PAYMENT_MOMO->value)->where("created_by",Auth::user()->id)->get();
+
+        if( $transaction->count() == 0 ){
+            return response()->json(
+                [
+                    'success'=>false,
+                    'message'=>"This id transaction does not exist"
+                ],404
+            );
+        }
+
+        //On génère le token de la transation
+        $MoMoFunction = new MoMo_Controller();
+        $responseToken = $MoMoFunction->MOMO_Payment_GetTokenAccess();
+        if($responseToken->status()!=200){
+            return response()->json(
+                [
+                    'success'=>false,
+                    'statusCode'=>$responseToken->status(),
+                    'message'=>$responseToken["message"],
+                ],$responseToken->status()
+            );
+        }
+
+        $dataAcessToken = json_decode($responseToken->getContent());
+        $accessToken = $dataAcessToken->access_token;
+        $response = $MoMoFunction->OM_PaymentPush($accessToken, $payToken);
+
+        $data = json_decode($response->getContent());
+
+        if($response->status()==200){
+            return response()->json($data,200);
+        }else{
+            return response()->json($data,$response->status()
+            );
+        }
+
+    }
 }

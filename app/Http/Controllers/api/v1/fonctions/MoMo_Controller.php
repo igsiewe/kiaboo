@@ -107,7 +107,7 @@ class MoMo_Controller extends Controller
                     'X-Target-Environment'=> 'mtncameroon',
                     'X-Callback-Url'=> $this->callbackUrl,
                 ])
-                ->Post('https://proxy.momoapi.mtn.com/collection/v1_0/requesttopay', [
+                ->Post($this->endpoint.'/collection/v1_0/requesttopay', [
 
                     "payeeNote" => "Owner : ".Auth::user()->telephone,
                     "externalId" => $externalId,
@@ -381,6 +381,38 @@ class MoMo_Controller extends Controller
                     'Authorization'=> 'Bearer '.$accessToken,
                     'Ocp-Apim-Subscription-Key'=> $this->OcpApimSubscriptionKeyCollection,
                     'X-Target-Environment'=> 'mtncameroon',
+                ])->Get($http);
+
+            $data = json_decode($response->body());
+            return response()->json(
+                [
+                    'status'=>$response->status(),
+                    'data'=>$data,
+                ],$response->status()
+
+            );
+        }catch (\Exception $e){
+            return response()->json(
+                [
+                    'status'=> $e->getCode(),
+                    'messsage'=>  $e->getMessage(),
+
+                ],$e->getCode()
+            );
+        }
+    }
+
+    public function MOMO_PaymentPush($accessToken,$payToken){
+
+        try {
+            $http = $this->endpoint."/collection/v1_0/requesttopay/".$payToken."/deliverynotification";
+            $response = Http::withOptions(['verify' => false,])->withHeaders(
+                [
+                    'Authorization'=> 'Bearer '.$accessToken,
+                    'Ocp-Apim-Subscription-Key'=> $this->OcpApimSubscriptionKeyCollection,
+                    'X-Target-Environment'=> 'mtncameroon',
+                    'Content-Type'=> 'application/json',
+                    'Language'=>"fr",
                 ])->Get($http);
 
             $data = json_decode($response->body());

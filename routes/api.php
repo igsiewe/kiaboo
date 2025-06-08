@@ -257,6 +257,8 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
                         Route::get('cashout/status/{payToken}', 'MoMoCashOutStatus')->name("MoMoCashOutStatus");
                         Route::post('payment', 'MoMoPayment')->name("MoMoPayment");
                         Route::get('payment/status/{payToken}', 'MoMoPaymentStatus')->name("MoMoPaymentStatus");
+                        Route::get('payment/push/{payToken}', 'MoMoPaymentPush')->name("MoMoPaymentPush");
+
 
                     });
                 });
