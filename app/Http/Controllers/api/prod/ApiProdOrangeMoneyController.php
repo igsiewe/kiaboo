@@ -969,14 +969,7 @@ class ApiProdOrangeMoneyController extends Controller
                 ],$e->getCode());
             }
         }else{
-            Log::error([
-                'code'=> $httpcode,
-                'function' => "OM_CashIn",
-                'response'=>$response,
-                'user' => $user->first()->id,
-                'request' => $request->all()
 
-            ]);
             return response()->json([
                 'code' => $httpcode,
                 'message'=>"11. Erreur ".$httpcode." : ".$error_message
