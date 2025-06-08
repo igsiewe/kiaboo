@@ -412,12 +412,11 @@ class MoMo_Controller extends Controller
                     'Ocp-Apim-Subscription-Key'=> $this->OcpApimSubscriptionKeyCollection,
                     'X-Target-Environment'=> 'mtncameroon',
                     'Content-Type'=> 'application/json',
-              //      'Language'=>"fr",
+                    'Language'=>"fr",
                 ])->post($http,[
                         "notificationMessage"=> "string"
                  ]);
 
-            dd($response);
             return response()->json(
                 [
                     'success'=>$response->status()==200?true:false,
