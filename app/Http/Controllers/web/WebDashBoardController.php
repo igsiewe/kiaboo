@@ -56,7 +56,7 @@ class WebDashBoardController extends Controller
 
             $revenue = $query->get()->sum("commission");
             $frais = $query->get()->sum("fees");
-dd($frais);
+
             $lastTransactions = $query->orderBy('transactions.date_transaction', 'desc')->limit(5)->get();
 
             $transAgent = DB::table("transactions")
@@ -85,7 +85,7 @@ dd($frais);
 
                 $revenue = $transAgent->get()->sum("commission");
                 $frais = $transAgent->get()->sum("fees");
-
+                dd($frais);
             }
 
 
