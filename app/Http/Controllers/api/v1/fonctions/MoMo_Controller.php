@@ -415,7 +415,7 @@ class MoMo_Controller extends Controller
                     'Language'=>"fr",
                 ])->post($http);
 
-            dd($response->status());
+            dd($response);
             return response()->json(
                 [
                     'success'=>$response->status()==200?true:false,
