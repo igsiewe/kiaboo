@@ -413,7 +413,7 @@ class MoMo_Controller extends Controller
                     'X-Target-Environment'=> 'mtncameroon',
                     'Content-Type'=> 'application/json',
                     'Language'=>"fr",
-                ])->Get($http);
+                ])->post($http);
 
             $data = json_decode($response->body());
             return response()->json(
