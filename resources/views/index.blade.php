@@ -121,7 +121,7 @@
     </div>
 </div>
 
-<script src="{{ asset('/sw.js') }}"></script>
+{{--<script src="{{ asset('/sw.js') }}"></script>--}}
 <script>
     if ("serviceWorker" in navigator) {
         // Register a service worker hosted at the root of the
