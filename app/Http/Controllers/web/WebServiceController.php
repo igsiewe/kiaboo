@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 class WebServiceController extends Controller
 {
    public function getServicePartenaire($idPartenaire){
+
        if($idPartenaire != null) {
            $listservices = Service::where("partenaire_id", $idPartenaire)->orderBy("name_service")->get();
        }
