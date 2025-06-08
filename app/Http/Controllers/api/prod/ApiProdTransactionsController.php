@@ -139,7 +139,7 @@ class ApiProdTransactionsController extends Controller
             ->whereIn('transactions.status',[1,2,3])
             ->where("transactions.date_transaction",">=",$startDate.' 00:00:00')
             ->where("transactions.date_transaction","<=",$endDate.' 23:59:59')
-            ->whereIn('transactions.source',Auth::user()->id)->orderBy('transactions.date_transaction', 'desc')->get();
+            ->where('transactions.source',Auth::user()->id)->orderBy('transactions.date_transaction', 'desc')->get();
 
         if($transactions->isEmpty()){
             return response()->json([
