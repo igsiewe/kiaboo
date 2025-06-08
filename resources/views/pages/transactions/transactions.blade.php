@@ -317,7 +317,6 @@
 
         function getService(idPartenaire) {
           //  document.getElementById("service").options.length=0;
-            alert("Choix = "+idPartenaire);
             $("#services").html("");
             $.ajax({
                 url: "/services/partenaire/"+idPartenaire,
