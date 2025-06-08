@@ -1023,7 +1023,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
 
         $dataAcessToken = json_decode($responseToken->getContent());
         $accessToken = $dataAcessToken->access_token;
-        $response = $MoMoFunction->OM_PaymentPush($accessToken, $payToken);
+        $response = $MoMoFunction->MOMO_PaymentPush($accessToken, $payToken);
 
         $data = json_decode($response->getContent());
 
