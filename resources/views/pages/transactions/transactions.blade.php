@@ -316,7 +316,8 @@
         }
 
         function getService(idPartenaire) {
-            document.getElementById("service").options.length=0;
+          //  document.getElementById("service").options.length=0;
+            $("#services").html("");
             $.ajax({
                 url: "/services/partenaire/"+idPartenaire,
                 type: "GET",
