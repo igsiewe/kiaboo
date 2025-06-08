@@ -32,7 +32,7 @@
                                                 <label class="form-label" for="partenaire">Partenaires</label>
 
                                                     <select class="form-select"  id="partenaire" name="partenaire" onchange="getService(this.value)">
-                                                        <option value="">Tous les partenaires</option>
+                                                        <option value="0">Tous les partenaires</option>
 
                                                         @if($listpartenaires)
                                                             @foreach($listpartenaires as $s)
