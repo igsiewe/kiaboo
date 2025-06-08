@@ -132,7 +132,12 @@
 
                                                 <div class="tr-text">
                                                     <h4 title="Turnover">{{number_format($best->volume,0,","," ")." ".$money}}</h4>
-                                                    <p title="Commission">{{number_format($best->commission,0,","," ")." ".$money}}</p>
+                                                    @if(Auth::user()->application == 2)
+                                                        <p title="Frais">{{number_format($best->frais,0,","," ")." ".$money}}</p>
+                                                    @else
+                                                        <p title="Commission">{{number_format($best->commission,0,","," ")." ".$money}}</p>
+                                                    @endif
+
                                                 </div>
                                                 </p>
                                             </div>
