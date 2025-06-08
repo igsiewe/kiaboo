@@ -184,6 +184,16 @@
                                                 <th scope="col" title="Partner transaction ID">PartnerTransID</th>
                                                 <th scope="col">Service</th>
                                                 <th scope="col">Amount</th>
+                                                @if(Auth::user()->hasRole(['super-admin', 'Administrateur', 'Front-office', 'Back-office', 'View']))
+                                                   <th scope="col">Commission</th>
+                                                   <th scope="col">Frais</th>
+                                                @elseif(Auth::user()->hasRole(['Distributeur']))
+                                                    @if(\Illuminate\Support\Facades\Auth::user()->application == 2)
+                                                        <th scope="col">Frais</th>
+                                                    @else
+                                                        <th scope="col">Commission</th>
+                                                    @endif
+                                                @endif
                                                 <th scope="col">Balance After</th>
                                                 <th scope="col">Customer</th>
                                                 <th scope="col">Agent</th>
@@ -208,6 +218,16 @@
                                                                 <td nowrap style="color: black" align="right">{{number_format($c->credit,0,',',' ')." ".$money}}</span></td>
                                                             @else
                                                                 <td nowrap style="color: red" align="right">{{number_format($c->debit,0,',',' ')." ".$money}}</span></td>
+                                                            @endif
+                                                            @if(Auth::user()->hasRole(['super-admin', 'Administrateur', 'Front-office', 'Back-office', 'View']))
+                                                                <td nowrap style="color: black" align="right">{{number_format($c->commission,0,',',' ')." ".$money}}</span></td>
+                                                                <td nowrap style="color: black" align="right">{{number_format($c->fees,0,',',' ')." ".$money}}</span></td>
+                                                            @elseif(Auth::user()->hasRole(['Distributeur']))
+                                                                @if(\Illuminate\Support\Facades\Auth::user()->application == 2)
+                                                                    <td nowrap style="color: black" align="right">{{number_format($c->fees,0,',',' ')." ".$money}}</span></td>
+                                                                @else
+                                                                    <td nowrap style="color: black" align="right">{{number_format($c->commission,0,',',' ')." ".$money}}</span></td>
+                                                                @endif
                                                             @endif
                                                             <td align="right">{{number_format($c->balance_after,0,',',' ')." ".$money}}</td>
                                                             <td align="center">{{substr($c->customer_phone, 0, 3) . '***' . substr($c->customer_phone, -3)}}</td>
