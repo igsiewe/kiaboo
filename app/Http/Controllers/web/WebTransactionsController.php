@@ -74,7 +74,7 @@ class WebTransactionsController extends BaseController
             return redirect()->back()->withInput()->withErrors(['error' => 'La date de début doit être inférieure à la date de fin']);
         }
 
-        $listagents = User::where("type_user_id",UserRolesEnum::AGENT->value)->where('application',1);
+        $listagents = User::where("type_user_id", UserRolesEnum::AGENT->value);
         $auth = Auth::user()->type_user_id==UserRolesEnum::DISTRIBUTEUR->value ? User::where("type_user_id",UserRolesEnum::AGENT->value)->where("distributeur_id",Auth::user()->distributeur_id)->pluck('id') :  User::where("type_user_id",UserRolesEnum::AGENT->value)->pluck('id');
 
          $query = Transaction::with(['service.typeService','auteur.distributeur'])
@@ -93,6 +93,7 @@ class WebTransactionsController extends BaseController
                 $query->where("id",$request->agent);
             });
         }
+        dd($request->partenaire);
         if($request->partenaire != null){
            $query = $query->whereHas('service',function ($query) use ($request){
                 $query->where("partenaire_id",$request->partenaire);
