@@ -411,10 +411,11 @@ class MoMo_Controller extends Controller
                     'Authorization'=> 'Bearer '.$accessToken,
                     'Ocp-Apim-Subscription-Key'=> $this->OcpApimSubscriptionKeyCollection,
                     'X-Target-Environment'=> 'mtncameroon',
-                    'notificationMessage'=>"dd",
                     'Content-Type'=> 'application/json',
                     'Language'=>"fr",
-                ])->post($http);
+                ])->post($http,[
+                        "notificationMessage"=> "string"
+                 ]);
 
             dd($response);
             return response()->json(
