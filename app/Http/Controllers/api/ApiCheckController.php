@@ -103,7 +103,7 @@ class ApiCheckController extends Controller
     function checkDistributeurValidity(){
 
         $distributeur = Distributeur::where("id", Auth::user()->distributeur_id);
-        if($distributeur->isEmpty()){
+        if($distributeur->count()==0){
            return false;
         }
         if($distributeur->first()->status==0){
