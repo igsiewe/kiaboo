@@ -48,6 +48,11 @@ class WebAgentController extends Controller
             'datecni'=>'required',
 
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator->errors()->first());
+        }
+
         if(Auth::user()->status == 0){
             return redirect()->back()->withErrors('You cannot authorize to perform this operation');
         }
@@ -55,12 +60,6 @@ class WebAgentController extends Controller
             return redirect()->back()->withErrors('You cannot authorize to perform this operation');
         }
 
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator->errors()->first());
-        }
-//        if(Auth::user()->type_user_id != UserRolesEnum::SUPADMIN->value || Auth::user()->type_user_id == UserRolesEnum::ADMIN->value || Auth::user()->type_user_id == UserRolesEnum::DISTRIBUTEUR->value){
-//            return redirect()->back()->withErrors('You cannot authorize to perform this operation');
-//        }
         $datecni = $request->datecni;
         $now = Carbon::now();
         $checkDateCni = $now->gt($datecni);
@@ -88,7 +87,8 @@ class WebAgentController extends Controller
         $newAgent->numcni = $request->numcni;
         $newAgent->datecni = $request->datecni;
         $newAgent->seuilapprovisionnement=$request->seuil;
-        $newAgent->moncodeparrainage = "KI".$mesFonctions->genererChaineAleatoire(8);
+        $newAgent->moncodeparrainage = "KI".$mesFonctions->genererChaineAleatoire(12);
+        $newAgent->application = Auth::user()->application;
         $newAgent->save();
 
         $sms = new ApiSmsController();
@@ -126,22 +126,18 @@ class WebAgentController extends Controller
 
         $updateAgent = User::find($id);
 
+        if(Auth::user()->type_user_id != UserRolesEnum::DISTRIBUTEUR->value ){
+            return redirect()->back()->withErrors('You cannot authorize to modify users of this type : AGENT');
+        }
+
         if(Auth::user()->type_user_id == UserRolesEnum::DISTRIBUTEUR->value){
             if($updateAgent->type_user_id != UserRolesEnum::AGENT->value ){
                 return redirect()->back()->withErrors('You cannot authorize to modify users of this type');
             }
-
-//            if($request->seuil==null || $request->seuil==0){
-//                return redirect()->back()->withErrors('Veuillez définir le plafon de cet agent');
-//            }
         }
 
 
-        if(Auth::user()->type_user_id == UserRolesEnum::ADMIN->value || Auth::user()->type_user_id == UserRolesEnum::SUPADMIN->value ){
-            if($updateAgent->type_user_id == UserRolesEnum::AGENT->value ){
-                return redirect()->back()->withErrors('You cannot authorize to modify users of this type : AGENT');
-            }
-        }
+
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator->errors()->first());
         }
@@ -198,42 +194,68 @@ class WebAgentController extends Controller
     }
 
     public function debloqueAgent($id){
-
-        $agent = User::find($id);
-        $agent->status = 1;
-        $agent->updated_at = now();
-        $agent->updated_by = auth()->user()->id;
-        $agent->save();
+        if(Auth::user()->type_user_id != UserRolesEnum::DISTRIBUTEUR->value ){
+            return redirect()->back()->withErrors('You cannot authorize to modify users of this type : AGENT');
+        }
+        $user = User::where('id', $id)->where("distributeur_id",Auth::user()->distributeur_id)->first();
+        if($user == null || $user->type_user_id != UserRolesEnum::AGENT->value || $user->count()==0){
+            return redirect()->back()->withErrors('You cannot authorize to modify users of this type');
+        }
+        $user->status = 1;
+        $user->updated_at = now();
+        $user->updated_by = Auth::user()->id;
+        $user->save();
+//        $agent = User::find($id);
+//        $agent->status = 1;
+//        $agent->updated_at = now();
+//        $agent->updated_by = auth()->user()->id;
+//        $agent->save();
         return redirect()->back()->with('success', 'Agent débloqué avec succès');
     }
 
     public function bloqueAgent($id){
 
+        if(Auth::user()->type_user_id != UserRolesEnum::DISTRIBUTEUR->value ){
+            return redirect()->back()->withErrors('You cannot authorize to modify users of this type : AGENT');
+        }
+        $user = User::where('id', $id)->where("distributeur_id",Auth::user()->distributeur_id)->first();
+        if($user == null || $user->type_user_id != UserRolesEnum::AGENT->value || $user->count()==0){
+            return redirect()->back()->withErrors('You cannot authorize to modify users of this type');
+        }
+        $user->status = 0;
+        $user->updated_at = now();
+        $user->updated_by = Auth::user()->id;
+        $user->save();
 
-        $agent = User::find($id);
-        $agent->status = 0;
-        $agent->updated_at = now();
-        $agent->updated_by = auth()->user()->id;
-        $agent->save();
+//        $agent = User::find($id);
+//        $agent->status = 0;
+//        $agent->updated_at = now();
+//        $agent->updated_by = auth()->user()->id;
+//        $agent->save();
         return redirect()->back()->with('success', 'Agent bloqué avec succès');
     }
 
     public function deleteAgent($id){
 
-
-        $agent = User::find($id);
+        if(Auth::user()->type_user_id != UserRolesEnum::DISTRIBUTEUR->value ){
+            return redirect()->back()->withErrors('You cannot authorize to modify users of this type : AGENT');
+        }
+        $user = User::where('id', $id)->where("distributeur_id",Auth::user()->distributeur_id)->first();
+        if($user == null || $user->type_user_id != UserRolesEnum::AGENT->value || $user->count()==0){
+            return redirect()->back()->withErrors('You cannot authorize to modify users of this type');
+        }
 
         //On vérifie si son solde est à 0
-        if($agent->balance_after != 0){
+        if($user->balance_after != 0){
             return redirect()->back()->withErrors('Impossible de supprimer cet agent car son solde n\'est pas à 0');
         }
 
         //On vérifie s'il est dans la table transactions
 
-        if($agent->transactions->count() > 0){ //On vérifie s'il a des transactions d'approvisionnement
+        if($user->transactions->count() > 0){ //On vérifie s'il a des transactions d'approvisionnement
             return redirect()->back()->withErrors('Impossible de supprimer cet agent car il a des transactions');
         }
-        $agent->delete();
+        $user->delete();
         return redirect()->back()->with('success', 'Agent supprimé avec succès');
     }
 }
