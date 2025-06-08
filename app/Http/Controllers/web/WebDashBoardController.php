@@ -85,7 +85,7 @@ class WebDashBoardController extends Controller
 
                 $revenue = $transAgent->get()->sum("commission");
                 $frais = $transAgent->get()->sum("fees");
-                dd($frais);
+                dd($transAgent);
             }
 
 
