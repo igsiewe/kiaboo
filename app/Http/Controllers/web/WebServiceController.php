@@ -12,7 +12,7 @@ class WebServiceController extends Controller
    public function getServicePartenaire($idPartenaire){
 
        if($idPartenaire == null || $idPartenaire == "" || $idPartenaire == "0"  || $idPartenaire == 0) {
-           $listservices = Service::where("display",1)->ordeBy("name_service")->get();
+           $listservices = Service::where("display",1)->orderBy("name_service")->get();
        }
        else{
            $listservices = Service::where("partenaire_id", $idPartenaire)->where("display",1)->orderBy("name_service")->get();
