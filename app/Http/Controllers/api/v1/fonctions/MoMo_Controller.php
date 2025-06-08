@@ -415,12 +415,12 @@ class MoMo_Controller extends Controller
                     'Language'=>"fr",
                 ])->post($http);
 
-
+            dd($response);
             return response()->json(
                 [
                     'success'=>$response->status()==200?true:false,
                     'code'=>$response->status(),
-                    'message'=>"Push sent",
+                    'message'=>$response->status()==200?"Push sent":"Push not sent",
                 ],$response->status());
 
         }catch (\Exception $e){
