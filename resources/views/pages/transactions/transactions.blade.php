@@ -256,7 +256,7 @@
                                                 <td style="border: none">
                                                     @isset($transactions)
                                                         @if($transactions->isNotEmpty())
-                                                            <div style="text-align: center">{{"Envoi = ".number_format($transactions->sum("debit"),0,',',' ')." ".$money." / Retrait = ".number_format($transactions->sum("credit"),0,',',' ')." ".$money." / Paiement =".number_format($transactions->sum("credit"),0,',',' ')." ".$money." / Nombre de transactions = ".number_format($transactions->count(),0,',',' ')." / Commission distributeur = ".number_format($transactions->sum("commission_distributeur"),0,',',' ')." ".$money}} </div>
+                                                            <div style="text-align: center">{{"Envoi = ".number_format($transactions->sum("debit"),0,',',' ')." ".$money." / Retrait = ".number_format($transactions->sum("credit"),0,',',' ')." / Nombre de transactions = ".number_format($transactions->count(),0,',',' ')." / Commission distributeur = ".number_format($transactions->sum("commission_distributeur"),0,',',' ')." ".$money}} </div>
                                                         @endif
                                                     @endisset
                                                 </td>
