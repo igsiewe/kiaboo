@@ -93,11 +93,12 @@ class WebTransactionsController extends BaseController
                 $query->where("id",$request->agent);
             });
         }
-        dd($request->partenaire);
+
         if($request->partenaire != null){
            $query = $query->whereHas('service',function ($query) use ($request){
                 $query->where("partenaire_id",$request->partenaire);
             });
+           dd($query);
         }
         if($request->service != null){
            $query = $query->where("service_id",$request->service);
