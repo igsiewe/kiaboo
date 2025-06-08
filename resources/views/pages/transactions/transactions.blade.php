@@ -31,7 +31,7 @@
                                             <div class="form-group">
                                                 <label class="form-label" for="partenaire">Partenaires</label>
 
-                                                    <select class="form-select"  id="partenaire" name="partenaire" onchange="javascript:getService(this.value)">
+                                                    <select class="form-select"  id="partenaire" name="partenaire" onchange="getService(this.value)">
                                                         <option value="">Tous les partenaires</option>
 
                                                         @if($listpartenaires)
@@ -325,8 +325,6 @@
                 }
             });
         }
-
-
 
     </script>
 

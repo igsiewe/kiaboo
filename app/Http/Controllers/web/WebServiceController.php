@@ -10,7 +10,13 @@ use Illuminate\Support\Facades\DB;
 class WebServiceController extends Controller
 {
    public function getServicePartenaire($idPartenaire){
-       $listservices = Service::where("partenaire_id", $idPartenaire)->orderBy("name_service")->get();
+       if($idPartenaire != null) {
+           $listservices = Service::where("partenaire_id", $idPartenaire)->orderBy("name_service")->get();
+       }
+       else{
+           $listservices = Service::all()->sortBy("name_service");
+       }
+
        return view('pages.transactions.show_service_partenaire', compact('listservices'));
    }
 }
