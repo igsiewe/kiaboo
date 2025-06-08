@@ -68,7 +68,7 @@ class WebDashBoardController extends Controller
                 ->where('transactions.status',StatusTransEnum::VALIDATED->value)
                 ->whereIn("type_services.id", [TypeServiceEnum::ENVOI->value,TypeServiceEnum::RETRAIT->value,TypeServiceEnum::PAYMENT->value]);
 
-            $bestAgents =$transAgent->selectRaw('kb_users.id, kb_users.login, kb_users.name, kb_users.surname, kb_distributeurs.name_distributeur, sum(kb_transactions.debit+kb_transactions.credit) as volume, sum(kb_transactions.commission) as commission')
+            $bestAgents =$transAgent->selectRaw('kb_users.id, kb_users.login, kb_users.name, kb_users.surname, kb_distributeurs.name_distributeur, sum(kb_transactions.debit+kb_transactions.credit) as volume, sum(kb_transactions.commission) as commission, sum(kb_transactions.fees) as frais')
                 ->groupBy('users.name', 'users.surname','users.login','users.id')
                 ->orderBy('volume', 'desc')
                 ->limit(5)
@@ -77,7 +77,7 @@ class WebDashBoardController extends Controller
             if(Auth::user()->type_user_id==UserRolesEnum::DISTRIBUTEUR->value){
                 $transAgent = $transAgent ->where("users.distributeur_id", Auth::user()->distributeur_id);
 
-                $bestAgents =$transAgent->selectRaw('kb_users.id, kb_users.login, kb_users.name, kb_users.surname, kb_distributeurs.name_distributeur, sum(kb_transactions.debit+kb_transactions.credit) as volume, sum(kb_transactions.commission_agent) as commission')
+                $bestAgents =$transAgent->selectRaw('kb_users.id, kb_users.login, kb_users.name, kb_users.surname, kb_distributeurs.name_distributeur, sum(kb_transactions.debit+kb_transactions.credit) as volume, sum(kb_transactions.commission_agent) as commission, sum(kb_transactions.fees) as frais')
                     ->groupBy('users.name', 'users.surname','users.login','users.id')
                     ->orderBy('volume', 'desc')
                     ->limit(5)
