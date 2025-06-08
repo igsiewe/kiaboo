@@ -920,7 +920,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
 
     /**
      * @OA\Get (
-     * path="/api/v1/prod/mtn/money/payment/push/{payToken}",
+     * path="/api/v1/prod/mtn/payment/push/{payToken}",
      * summary="Perform the MOMO Payment confirmation transaction",
      * description="Open a prompt to the user to perform the MOMO Payment confirmation transaction",
      * tags={"MTN - Payment"},
