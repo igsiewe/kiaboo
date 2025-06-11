@@ -416,7 +416,7 @@ class MoMo_Controller extends Controller
                 ])->post($http,[
                         "notificationMessage"=> $notificatiionMessage
                  ]);
-
+            dd($response);
             return response()->json(
                 [
                     'success'=>$response->status()==200?true:false,
