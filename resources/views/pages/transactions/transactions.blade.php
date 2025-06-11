@@ -255,7 +255,7 @@
                                                 </td>
                                                 <td style="border: none">
                                                     @isset($transactions)
-                                                        {{dd($transactions->service)}}
+                                                        {{dd($transactions)}}
                                                         @if($transactions->isNotEmpty())
                                                             <div style="text-align: center">{{"Envoi = ".number_format($transactions->where("service.type_service_id",4)->sum("debit"),0,',',' ')." ".$money." / Retrait = ".number_format($transactions->where("service.type_service_id",5)->sum("credit"),0,',',' ')." ".$money." / Paiement =".number_format($transactions->where("service.type_service_id",7)->sum("credit"),0,',',' ')." ".$money." / Transactions = ".number_format($transactions->count(),0,',',' ')." / Commission = ".number_format($transactions->sum("commission_distributeur"),0,',',' ')." ".$money." / Frais = ".number_format($transactions->sum("fees"),0,',',' ')." ".$money}} </div>
                                                         @endif
