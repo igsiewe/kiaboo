@@ -264,6 +264,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
                     'message'=>"Transaction initiée avec succès. Le client doit confirmer le paiement avec son code secret",
                     'paytoken'=>$referenceID,
                     'transactionId'=>$reference,//$idTransaction,
+                    'token'=>$accessToken,
                 ],202
             );
 
