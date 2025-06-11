@@ -419,8 +419,6 @@ class MoMo_Controller extends Controller
                 ]
             );
 
-dd($response);
-
             return response()->json(
                 [
                     'success'=>$response->status()==200?true:false,
