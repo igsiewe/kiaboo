@@ -402,7 +402,7 @@ class MoMo_Controller extends Controller
         }
     }
 
-    public function MOMO_PaymentPush($accessToken,$payToken){
+    public function MOMO_PaymentPush($accessToken,$payToken, $notificatiionMessage){
 
         try {
             $http = $this->endpoint."/collection/v1_0/requesttopay/".$payToken."/deliverynotification";
@@ -412,9 +412,10 @@ class MoMo_Controller extends Controller
                     'Ocp-Apim-Subscription-Key'=> $this->OcpApimSubscriptionKeyCollection,
                     'X-Target-Environment'=> 'mtncameroon',
                     'Content-Type'=> 'application/json',
+                    'notificationMessage'=> $notificatiionMessage,
                     'Language'=>"fr",
                 ])->post($http,[
-                        "notificationMessage"=> "string"
+                        "notificationMessage"=> $notificatiionMessage
                  ]);
 
             return response()->json(

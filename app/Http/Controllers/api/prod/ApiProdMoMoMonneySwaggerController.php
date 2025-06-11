@@ -264,7 +264,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
                     'message'=>"Transaction initiée avec succès. Le client doit confirmer le paiement avec son code secret",
                     'paytoken'=>$referenceID,
                     'transactionId'=>$reference,//$idTransaction,
-                    'token'=>$accessToken,
+
                 ],202
             );
 
@@ -999,7 +999,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
         // On cherche la transaction dans la table transaction
 
         $transaction = Transaction::where("paytoken", $payToken)->where("service_id",ServiceEnum::PAYMENT_MOMO->value)->where("created_by",Auth::user()->id)->get();
-
+        $notificationMessage = "Veuillez valider la transaction";
         if( $transaction->count() == 0 ){
             return response()->json(
                 [
@@ -1024,7 +1024,7 @@ class ApiProdMoMoMonneySwaggerController extends Controller
 
         $dataAcessToken = json_decode($responseToken->getContent());
         $accessToken = $dataAcessToken->access_token;
-        $response = $MoMoFunction->MOMO_PaymentPush($accessToken, $payToken);
+        $response = $MoMoFunction->MOMO_PaymentPush($accessToken, $payToken, $notificationMessage);
 
         $data = json_decode($response->getContent());
 
