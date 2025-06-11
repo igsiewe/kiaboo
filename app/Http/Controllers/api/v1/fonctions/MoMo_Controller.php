@@ -413,9 +413,7 @@ class MoMo_Controller extends Controller
                     'X-Target-Environment'=> 'mtncameroon',
                     'Content-Type'=> 'application/json',
                     'notificationMessage'=> $notificatiionMessage,
-                ])->post($http,[
-                        "notificationMessage"=> $notificatiionMessage
-                 ]);
+                ])->post($http);
             dd($response);
             return response()->json(
                 [
