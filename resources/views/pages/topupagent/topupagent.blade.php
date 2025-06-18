@@ -391,7 +391,7 @@
 
     <script>
         function getdetailAgentTopUpd(id) {
-            //  $("#detailAgentTopUpd").html("");
+            $("#detailAgentTopUpd").html("");
             $.ajax({
                 url: "/approvisionnement/agent/edit/"+id,
                 type: "GET",
