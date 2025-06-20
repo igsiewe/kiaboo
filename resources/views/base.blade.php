@@ -177,22 +177,22 @@
                             <div class="col-md-12 col-lg-12">
                                 <label class="form-label" for="Mot de passe">Mot de passe *</label>
                                 <div class="input-group mb-12">
-                                    <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                    <span class="input-group-text"><i class="fa fa-key"></i></span>
                                     <input type="password" id="name" name="password" class="form-control" placeholder="Password *" aria-label="Mot de passe" required>
                                 </div>
                             </div>
                             <div class="col-md-12 col-lg-12">
                                 <label class="form-label" for="surname">Nouveau mot de passe *</label>
                                 <div class="input-group mb-12">
-                                    <span class="input-group-text"><i class="fa fa-user"></i></span>
-                                    <input type="password" id="newpassword" name="newpassword" class="form-control" placeholder="Nouveau mot de passe *" aria-label="Nouveau mot de passe" required>
+                                    <span class="input-group-text"><i class="fa fa-key"></i></span>
+                                    <input type="password" id="newpassword" name="newpassword" minlength="12" class="form-control" placeholder="Nouveau mot de passe *" aria-label="Nouveau mot de passe" required>
                                 </div>
                             </div>
-                            <div class="col-md-12 col-lg-6">
+                            <div class="col-md-12 col-lg-12">
                                 <label class="form-label" for="surname">Confirmer mot de passe *</label>
                                 <div class="input-group mb-12">
-                                    <span class="input-group-text"><i class="fa fa-user"></i></span>
-                                    <input type="password" id="confirmation" name="confirmation" class="form-control" placeholder="Confirmer nouveau mot de passe *" aria-label="Confirmer nouveau mot de passe" required>
+                                    <span class="input-group-text"><i class="fa fa-key"></i></span>
+                                    <input type="password" id="confirmation" minlength="12" name="confirmation" class="form-control" placeholder="Confirmer nouveau mot de passe *" aria-label="Confirmer nouveau mot de passe" required>
                                 </div>
                             </div>
                         </div>
