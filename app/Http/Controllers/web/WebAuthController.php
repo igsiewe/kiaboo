@@ -86,7 +86,9 @@ class WebAuthController extends BaseController
 
         #Update the new Password
         User::whereId(auth()->user()->id)->update([
-            'password' => Hash::make($request->new_password)
+            'password' => Hash::make($request->new_password),
+            'updated_at' => Carbon::now(),
+            'updated_by' =>Auth::user()->id
         ]);
 
         Session::flush();
