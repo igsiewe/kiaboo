@@ -14,6 +14,13 @@
     <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
     <execution />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -211,6 +218,9 @@
       <recent name="$PROJECT_DIR$/public" />
       <recent name="$PROJECT_DIR$/resources/views/pages/prospect" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/public/assets/js" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration name="Main" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
@@ -241,7 +251,7 @@
       <workItem from="1746079982183" duration="163912000" />
       <workItem from="1746827915110" duration="57994000" />
       <workItem from="1748455539956" duration="26356000" />
-      <workItem from="1748969075672" duration="122901000" />
+      <workItem from="1748969075672" duration="123543000" />
     </task>
     <servers />
   </component>

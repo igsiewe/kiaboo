@@ -170,7 +170,7 @@
                     <h5 class="modal-title" id="staticBackdropLabel">Changer mot de passe</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form id="frmUpdatePassword" name="frmUpdatePassword" onsubmit="return validatePasswordMatch()">
+                <form id="frmUpdatePassword" name="frmUpdatePassword" onsubmit="return validatePasswordMatch()" action="{{route("setUpdatePassword")}}">
                     @csrf
                     <div class="modal-body">
                         <div class="row">
