@@ -121,17 +121,20 @@ Route::middleware(['auth','checkStatus'])->group(function (){
         });
         Route::group(['prefix' => 'commissions'], function () {
             Route::controller(WebCommissionController::class)->group(function () {
-                Route::any('/grille/', 'grilleCommission')->name("grilleCommission");
-                Route::any('/percues/agent', 'listAgentCommissions')->name("listAgentCommissions");
-                Route::any('/percues/agent/search', 'listAgentCommissionsSearch')->name("listAgentCommissions.search");
-                Route::get('/percues/agent/detail/{reference}', 'getDetailCommission')->name("getDetailCommission");
-
-                Route::any('/percues/distributeur', 'listDistributeurCommissions')->name("listDistributeurCommissions");
-                Route::any('/percues/distributeur/search', 'listDistributeurCommissionsSearch')->name("listDistributeurCommissionsSearch.search");
-                Route::any('/percues/distributeur/execute', 'setRemboursementCommissionDistributeur')->name("setRemboursementCommissionDistributeur");
-                Route::get('/percues/distributeur/detail/{reference}', 'getDetailCommissionDistributeur')->name("getDetailCommissionDistributeur");
-                Route::any('/cancel/{id}', 'deleteCommission')->name('deleteCommission');
-                Route::any('/grille/new/commission', 'addNewCommission')->name('addNewCommission');
+                Route::middleware(['auth', 'role:Administrateur, Super-Admin, Back-office, Distributeur'])->group(function () {
+                    Route::any('/grille/', 'grilleCommission')->name("grilleCommission");
+                    Route::any('/percues/agent', 'listAgentCommissions')->name("listAgentCommissions");
+                    Route::any('/percues/agent/search', 'listAgentCommissionsSearch')->name("listAgentCommissions.search");
+                    Route::get('/percues/agent/detail/{reference}', 'getDetailCommission')->name("getDetailCommission");
+                    Route::any('/percues/distributeur', 'listDistributeurCommissions')->name("listDistributeurCommissions");
+                    Route::any('/percues/distributeur/search', 'listDistributeurCommissionsSearch')->name("listDistributeurCommissionsSearch.search");
+                    Route::any('/percues/distributeur/execute', 'setRemboursementCommissionDistributeur')->name("setRemboursementCommissionDistributeur");
+                    Route::get('/percues/distributeur/detail/{reference}', 'getDetailCommissionDistributeur')->name("getDetailCommissionDistributeur");
+                });
+                Route::middleware(['auth', 'role:Administrateur, Super-Admin, Back-office'])->group(function () {
+                    Route::any('/cancel/{id}', 'deleteCommission')->name('deleteCommission');
+                    Route::any('/grille/new/commission', 'addNewCommission')->name('addNewCommission');
+                });
             });
         });
         Route::group(['prefix' => 'utilisateur'], function () {
