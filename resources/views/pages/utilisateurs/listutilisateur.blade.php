@@ -151,7 +151,7 @@
 
     <div class="modal fade" id="confirmationUpdatePassword" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-2" aria-labelledby="confirmationUpdatePasswordLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content" style="background: #d1d2d4">
+            <div class="modal-content" style="background: #ffffff">
                 <div class="modal-header">
                     <h5 class="modal-title" id="confirmationUpdatePasswordLabel">Confirmation</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
