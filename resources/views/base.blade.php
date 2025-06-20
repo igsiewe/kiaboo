@@ -175,21 +175,21 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-12 col-lg-12">
-                                <label class="form-label" for="Mot de passe">Mot de passe *</label>
+                                <label class="form-label" for="password">Mot de passe *</label>
                                 <div class="input-group mb-12">
                                     <span class="input-group-text"><i class="fa fa-key"></i></span>
                                     <input type="password" id="name" name="password" class="form-control" placeholder="Password *" aria-label="Mot de passe" required>
                                 </div>
                             </div>
                             <div class="col-md-12 col-lg-12">
-                                <label class="form-label" for="surname">Nouveau mot de passe *</label>
+                                <label class="form-label" for="newpassword">Nouveau mot de passe *</label>
                                 <div class="input-group mb-12">
                                     <span class="input-group-text"><i class="fa fa-key"></i></span>
                                     <input type="password" id="newpassword" name="newpassword" minlength="12" class="form-control" placeholder="Nouveau mot de passe *" aria-label="Nouveau mot de passe" required>
                                 </div>
                             </div>
                             <div class="col-md-12 col-lg-12">
-                                <label class="form-label" for="surname">Confirmer mot de passe *</label>
+                                <label class="form-label" for="confirmation">Confirmer mot de passe *</label>
                                 <div class="input-group mb-12">
                                     <span class="input-group-text"><i class="fa fa-key"></i></span>
                                     <input type="password" id="confirmation" minlength="12" name="confirmation" class="form-control" placeholder="Confirmer nouveau mot de passe *" aria-label="Confirmer nouveau mot de passe" required>
@@ -224,51 +224,6 @@
 <script src="{{ asset('assets/plugins/DataTables/datatables.min.js') }}"></script>
 <script src="{{ asset('assets/js/main.min.js') }}"></script>
 <script src="{{ asset('assets/js/pages/datatables.js') }}"></script>
-<script>
-    function validatePasswordMatch() {
-        const password = document.getElementById("newpassword").value;
-        const confirmation = document.getElementById("confirmation").value;
-        const errorDiv = document.getElementById("password-error");
-
-        // Règles de complexité du mot de passe
-        const regexUpper = /[A-Z]/;
-        const regexLower = /[a-z]/;
-        const regexDigit = /[0-9]/;
-        const regexSpecial = /[^A-Za-z0-9]/;
-
-        if (password !== confirmation) {
-            errorDiv.textContent = "Les mots de passe ne correspondent pas.";
-            return false;
-        }
-
-        if (password.length < 12) {
-            errorDiv.textContent = "Le mot de passe doit contenir au moins 12 caractères.";
-            return false;
-        }
-
-        if (!regexUpper.test(password)) {
-            errorDiv.textContent = "Le mot de passe doit contenir au moins une lettre majuscule.";
-            return false;
-        }
-
-        if (!regexLower.test(password)) {
-            errorDiv.textContent = "Le mot de passe doit contenir au moins une lettre minuscule.";
-            return false;
-        }
-
-        if (!regexDigit.test(password)) {
-            errorDiv.textContent = "Le mot de passe doit contenir au moins un chiffre.";
-            return false;
-        }
-
-        if (!regexSpecial.test(password)) {
-            errorDiv.textContent = "Le mot de passe doit contenir au moins un caractère spécial.";
-            return false;
-        }
-
-        errorDiv.textContent = ""; // Aucun problème
-        return true;
-    }
-</script>
+<script src="{{ asset('assets/js/mainsave.min.js') }}"></script>
 </body>
 </html>
