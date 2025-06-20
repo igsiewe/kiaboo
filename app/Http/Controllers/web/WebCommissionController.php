@@ -190,7 +190,7 @@ class WebCommissionController extends Controller
         $detailOperation  = Transaction::join("users","users.id","transactions.created_by")
             ->join("distributeurs","distributeurs.id","users.distributeur_id")
             ->join("services","services.id","transactions.service_id")
-            ->select("transactions.id","transactions.reference","transactions.reference_partenaire","transactions.ref_remb_com_agent","transactions.credit","transactions.debit","transactions.commission_agent","transactions.commission_distributeur","transactions.customer_phone","services.name_service","transactions.date_transaction","users.name","users.surname","users.telephone")
+            ->select("transactions.id","transactions.reference","transactions.reference_partenaire","transactions.ref_remb_com_agent","transactions.credit","transactions.debit","transactions.commission_agent","transactions.commission_distributeur","transactions.fees","transactions.customer_phone","services.name_service","transactions.date_transaction","users.name","users.surname","users.telephone")
              ->where("ref_remb_com_agent",$reference)
             ->whereIn("services.type_service_id",[TypeServiceEnum::ENVOI->value,TypeServiceEnum::RETRAIT->value,TypeServiceEnum::FACTURE->value])
             ->orderByDesc('transactions.created_at')->get();
@@ -416,7 +416,7 @@ class WebCommissionController extends Controller
         $detailOperation  = Transaction::join("users","users.id","transactions.created_by")
             ->join("distributeurs","distributeurs.id","users.distributeur_id")
             ->join("services","services.id","transactions.service_id")
-            ->select("transactions.id","transactions.reference","transactions.reference_partenaire","transactions.ref_remb_com_distributeur","transactions.credit","transactions.debit","transactions.commission_agent","transactions.commission_distributeur","transactions.customer_phone","services.name_service","transactions.date_transaction","users.name","users.surname","users.telephone","distributeurs.name_distributeur")
+            ->select("transactions.id","transactions.reference","transactions.reference_partenaire","transactions.ref_remb_com_distributeur","transactions.credit","transactions.debit","transactions.commission_agent","transactions.commission_distributeur","transactions.fees","transactions.customer_phone","services.name_service","transactions.date_transaction","users.name","users.surname","users.telephone","distributeurs.name_distributeur")
             ->where("ref_remb_com_distributeur",$reference)
             ->whereIn("services.type_service_id",[TypeServiceEnum::ENVOI->value,TypeServiceEnum::RETRAIT->value,TypeServiceEnum::FACTURE->value])
             ->orderByDesc('transactions.created_at')->get();

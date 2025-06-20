@@ -185,7 +185,7 @@ class WebAgentController extends Controller
             $mesdistributeurs = $mesdistributeurs->where("id",Auth::user()->distributeur_id);
         }
         $mesdistributeurs = $mesdistributeurs->orderBy("name_distributeur","asc")->get();
-        dd($mesdistributeurs);
+      //  dd($mesdistributeurs);
         return view('pages.agents.editagent', compact('detailagent','ville','mesdistributeurs'));
     }
 
