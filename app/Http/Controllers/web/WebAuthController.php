@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\web;
 use App\Http\Controllers\BaseController;
 use App\Http\Enums\UserRolesEnum;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 
 class WebAuthController extends BaseController
@@ -64,5 +66,33 @@ class WebAuthController extends BaseController
             $string .= $chars[rand(0, strlen($chars)-1)];
         }
         return $string;
+    }
+
+    public function setUpdatePassword(Request $request){
+        # Validation
+        $request->validate([
+            'old_password' => 'required|string|max:50',
+            'new_password' => 'required|min:12|max:50|confirmed',
+        ]);
+
+
+        #Match The Old Password
+        $check = Hash::check($request->old_password, auth()->user()->password);
+        if($check !=1){
+            return redirect()->back()->withErrors('Votre mot de passe est incorrect');
+
+        }
+
+
+        #Update the new Password
+        User::whereId(auth()->user()->id)->update([
+            'password' => Hash::make($request->new_password)
+        ]);
+
+        Session::flush();
+        Auth::logout();
+        return Redirect('/')->with("Mot de passe changé avec succes");
+
+
     }
 }
