@@ -70,10 +70,11 @@ class WebAuthController extends BaseController
 
     public function setUpdatePassword(Request $request){
         # Validation
-        dd($request->all());
+
         $request->validate([
-            'old_password' => 'required|string|max:24|confirmed',
+            'old_password' => 'required|string|max:24',
             'new_password' => 'required|min:12|max:24',
+            'confirmation' => 'required|string|min:12|max:24|same:new_password',
         ]);
 
 
