@@ -149,6 +149,24 @@
 
     </div>
 
+    <div class="modal fade" id="confirmationUpdatePassword" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-2" aria-labelledby="confirmationUpdatePasswordLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="background: #d1d2d4">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmationUpdatePasswordLabel">Confirmation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    Voulez-vous réinitialiser le mot de passe de cet utilisateur ?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="3" data-bs-dismiss="modal">Non</button>
+                    <button type="button" class="btn btn-success" id="4" onclick="Javascript:validerReinitialisationPassword()">Oui</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal -->
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered">
@@ -318,6 +336,16 @@
                 });
             }
 
+        }
+
+
+            function validerReinitialisationPassword() {
+            // Fermer la modale
+            const modal = bootstrap.Modal.getInstance(document.getElementById('confirmationUpdatePassword'));
+            modal.hide();
+
+            // Soumettre le formulaire
+            document.getElementById('confirmationUpdatePassword').submit();
         }
 
     </script>
