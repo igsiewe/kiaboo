@@ -114,7 +114,7 @@
                         <a href="register.html">Mot de passe oublié ?</a></p>
                     </div>
                     <hr/>
-                    <div class="text-center opacity-8 mt-3">Copyright © Kiaboo {{\Carbon\Carbon::now()->format('YYYY')}}</div>
+                    <div class="text-center opacity-8 mt-3">Copyright © Kiaboo {{\Carbon\Carbon::now()->format('Y')}}</div>
                 </div>
             </div>
         </div>
