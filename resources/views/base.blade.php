@@ -170,7 +170,7 @@
                     <h5 class="modal-title" id="staticBackdropLabel">Changer mot de passe</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="{{route("setUpdatePassword")}}" id="frmUpdatePassword" name="frmUpdatePassword">
+                <form action="{{route("setUpdatePassword")}}" id="frmUpdatePassword" name="frmUpdatePassword" onsubmit="return validatePasswordMatch()">
                     @csrf
                     <div class="modal-body">
                         <div class="row">
@@ -194,6 +194,9 @@
                                     <span class="input-group-text"><i class="fa fa-key"></i></span>
                                     <input type="password" id="confirmation" minlength="12" name="confirmation" class="form-control" placeholder="Confirmer nouveau mot de passe *" aria-label="Confirmer nouveau mot de passe" required>
                                 </div>
+                            </div>
+                            <div class="col-md-12 col-lg-12">
+                            <div id="password-error" style="color: red; margin-top: 5px;"></div>
                             </div>
                         </div>
                         <p/>
@@ -221,5 +224,6 @@
 <script src="{{ asset('assets/plugins/DataTables/datatables.min.js') }}"></script>
 <script src="{{ asset('assets/js/main.min.js') }}"></script>
 <script src="{{ asset('assets/js/pages/datatables.js') }}"></script>
+
 </body>
 </html>
