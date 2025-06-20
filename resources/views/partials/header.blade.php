@@ -20,7 +20,10 @@
                         <img src="{{ asset('assets/images/avatars/profile-image-1.png') }}" alt="Profile">
                     </a>
                     <div class="dropdown-menu dropdown-menu-end profile-drop-menu">
-                        <a class="dropdown-item" href="#"><i data-feather="key"></i> Password</a>
+
+                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#staticBackdropUpdatePassword" title="Modifier mot de passe">
+                            <i data-feather="key"></i> Password</a>
+                        </a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{{ route('fermer') }}"><i data-feather="log-out"></i> Logout</a>
                     </div>

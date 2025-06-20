@@ -162,6 +162,54 @@
     <main>
         @yield('content')
     </main>
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdropUpdatePassword" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Changer mot de passe</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{route("setUpdatePassword")}}" id="frmUpdatePassword" name="frmUpdatePassword">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12 col-lg-6">
+                                <label class="form-label" for="Mot de passe">Mot de passe *</label>
+                                <div class="input-group mb-12">
+                                    <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                    <input type="password" id="name" name="password" class="form-control" placeholder="Password *" aria-label="Mot de passe" required>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-lg-6">
+                                <label class="form-label" for="surname">Nouveau mot de passe *</label>
+                                <div class="input-group mb-12">
+                                    <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                    <input type="password" id="newpassword" name="newpassword" class="form-control" placeholder="Nouveau mot de passe *" aria-label="Nouveau mot de passe" required>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-lg-6">
+                                <label class="form-label" for="surname">Confirmer mot de passe *</label>
+                                <div class="input-group mb-12">
+                                    <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                    <input type="password" id="confirmation" name="confirmation" class="form-control" placeholder="Confirmer nouveau mot de passe *" aria-label="Confirmer nouveau mot de passe" required>
+                                </div>
+                            </div>
+                        </div>
+                        <p/>
+
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Fermer</button>
+                        <button type="submit" class="btn btn-danger">Enregistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <!-- Scripts -->
