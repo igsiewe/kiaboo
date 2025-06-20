@@ -174,14 +174,14 @@
                     @csrf
                     <div class="modal-body">
                         <div class="row">
-                            <div class="col-md-12 col-lg-6">
+                            <div class="col-md-12 col-lg-12">
                                 <label class="form-label" for="Mot de passe">Mot de passe *</label>
                                 <div class="input-group mb-12">
                                     <span class="input-group-text"><i class="fa fa-user"></i></span>
                                     <input type="password" id="name" name="password" class="form-control" placeholder="Password *" aria-label="Mot de passe" required>
                                 </div>
                             </div>
-                            <div class="col-md-12 col-lg-6">
+                            <div class="col-md-12 col-lg-12">
                                 <label class="form-label" for="surname">Nouveau mot de passe *</label>
                                 <div class="input-group mb-12">
                                     <span class="input-group-text"><i class="fa fa-user"></i></span>
