@@ -178,7 +178,7 @@
                                 <label class="form-label" for="password">Mot de passe *</label>
                                 <div class="input-group mb-12">
                                     <span class="input-group-text"><i class="fa fa-key"></i></span>
-                                    <input type="password" minlength="12" maxlength="24" id="old_password" name="old_password" class="form-control" placeholder="Password *" aria-label="Mot de passe" required>
+                                    <input type="password"  maxlength="24" id="old_password" name="old_password" class="form-control" placeholder="Password *" aria-label="Mot de passe" required>
                                 </div>
                             </div>
                             <div class="col-md-12 col-lg-12">
