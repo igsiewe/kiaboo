@@ -15,7 +15,7 @@
                             <i class="fa fa-credit-card fa-2x"></i>
                             </span>
                         <span class="d-inline-block"><h4><b>&nbsp;
-                                    @if(\Illuminate\Support\Facades\Auth::user()->type_user_id==\App\Http\Enums\UserRolesEnum::DISTRIBUTEUR->value)
+                                    @if(Auth::user()->hasRole(['Distributeur']))
                                     MES APPROVISIONNEMENTS
                                     @else
                                     APPROVISIONNEMENTS DES DISTRIBUTEURS
@@ -144,7 +144,7 @@
                             <div role="group" class="btn-group-sm btn-group-lg">
                                 <form action="#" method="POST" name="exportform" enctype="multipart/form-data" method="post">
                                     @csrf
-                                    @if(\Illuminate\Support\Facades\Auth::user()->type_user_id==\App\Http\Enums\UserRolesEnum::FRONTOFFICE->value || \Illuminate\Support\Facades\Auth::user()->type_user_id==\App\Http\Enums\UserRolesEnum::SUPADMIN->value)
+                                    @if(Auth::user()->hasRole(['super-admin', 'Front-office']))
                                         <button type="button" class="btn btn-kiaboo" data-bs-toggle="modal" data-bs-target="#staticBackdropAppro">
                                             <i class="fa fa-plus"></i>  Nouvel approvisionnement
                                         </button>
@@ -351,8 +351,8 @@
             </div>
         </div>
     </div>
-    @if(\Illuminate\Support\Facades\Auth::user()->type_user_id==\App\Http\Enums\UserRolesEnum::FRONTOFFICE->value || \Illuminate\Support\Facades\Auth::user()->type_user_id==\App\Http\Enums\UserRolesEnum::SUPADMIN->value)
-    <div class="modal fade" id="staticBackdropAppro" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    @if(Auth::user()->hasRole(['super-admin', 'Front-office']))
+        <div class="modal fade" id="staticBackdropAppro" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -426,7 +426,7 @@
                  </div>
         </div>
     </div>
-    @if(\Illuminate\Support\Facades\Auth::user()->type_user_id==\App\Http\Enums\UserRolesEnum::BACKOFFICE->value || \Illuminate\Support\Facades\Auth::user()->type_user_id==\App\Http\Enums\UserRolesEnum::SUPADMIN->value)
+    @if(Auth::user()->hasRole(['super-admin', 'Back-office']))
     <div class="modal fade" id="staticBackdropSolde" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
