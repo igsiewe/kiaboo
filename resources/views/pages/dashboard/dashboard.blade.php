@@ -68,6 +68,16 @@
             </div>
 
         </div>
+        @if(session('error'))
+            <div class="row">
+                <div class="col-12 col-sm-12">
+                    <div class='alert alert-danger alert-dismissible'>
+                        <button type='button' class='close' data-bs-dismiss='alert' aria-hidden='true' title="Close">×</button>
+                        <span><h6><i class='icon fa fa-ban'></i> Erreur! {{session('error')}}</h6></span>
+                    </div>
+                </div>
+            </div>
+        @endif
         <div class="row">
             <div class="col-sm-6 col-xl-8">
                 <div class="card">
