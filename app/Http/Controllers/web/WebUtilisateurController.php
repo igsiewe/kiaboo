@@ -20,7 +20,10 @@ class WebUtilisateurController extends Controller
 {
     public function listUtilisateurs(){
 
-        $utilisateurs = User::where('type_user_id', "!=",UserRolesEnum::AGENT->value)->where("id", "!=", Auth::user()->id)->where("status_delete",0)->where("view",1);
+        $utilisateurs = User::where('type_user_id', "!=",UserRolesEnum::AGENT->value)
+           // ->where("id", "!=", Auth::user()->id)
+            ->whereNotIn("id", array(Auth::user()->id,7,8))
+            ->where("status_delete",0)->where("view",1);
         $mesdistributeurs=Distributeur::all()->sortBy("name_distributeur");
         $typeUtilisateurs = TypeUser::where("status",1)->orderBy("name_type_user")->where('id','<>',UserRolesEnum::AGENT->value)->where('id','<>',UserRolesEnum::SUPADMIN->value)->get();
 
@@ -34,23 +37,6 @@ class WebUtilisateurController extends Controller
         $ville = Ville::where("status",1)->orderBy("name_ville","asc")->get();
         return view('pages.utilisateurs.listutilisateur', compact('utilisateurs','ville','mesdistributeurs','typeUtilisateurs'));
     }
-
-    public function editeUtilisateur($id){
-
-    }
-
-
-//    public function genererChaineAleatoire($longueur = 10)
-//    {
-//        $caracteres = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-//        $longueurMax = strlen($caracteres);
-//        $chaineAleatoire = '';
-//        for ($i = 0; $i < $longueur; $i++) {
-//            $chaineAleatoire .= $caracteres[rand(0, $longueurMax - 1)];
-//        }
-//
-//        return $chaineAleatoire;
-//    }
 
     public function setNewUtilisateur(Request $request){
         $validator = Validator::make($request->all(), [
