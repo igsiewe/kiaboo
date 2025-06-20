@@ -68,7 +68,7 @@
                 </li>
             @endif
 
-            @if(Auth::user()->hasRole(['super-admin', 'Administrateur', 'Front-office', 'Back-office']))
+            @if(Auth::user()->hasRole(['super-admin', 'Administrateur', 'Back-office']))
                 <li class="{{ request()->routeIs('listAgentCommissions', 'listDistributeurCommissions') ? 'active-page' : '' }}">
                     <a href="#"><i data-feather="gift"></i>Commissions <i class="fa fa-chevron-right dropdown-icon"></i></a>
                     <ul style="{{ request()->routeIs('listAgentCommissions', 'listDistributeurCommissions') ? 'display: block;' : '' }}">
