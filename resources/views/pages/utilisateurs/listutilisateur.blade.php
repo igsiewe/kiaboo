@@ -125,6 +125,11 @@
                                                             <a href="{{route("deleteUtilisateur",[$c->id])}}" type="button" class="btn" style="border: none; color: red" title="Supprimer l'utilisateur" >
                                                                 <i class="fa fa-trash"></i>
                                                             </a>
+                                                            @if(Auth::user()->hasRole(['super-admin', 'Administrateur', 'Back-office']))
+                                                                <a href="{{route("deleteUtilisateur",[$c->id])}}" type="button" class="btn" style="border: none; color: red" title="Réinitialiser le mot de passe" >
+                                                                    <i class="fa fa-key"></i>
+                                                                </a>
+                                                            @endif
                                                         </td>
                                                     </tr>
                                                 @endforeach
