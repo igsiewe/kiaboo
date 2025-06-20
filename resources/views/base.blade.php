@@ -205,7 +205,7 @@
 
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Fermer</button>
+                        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Annuler</button>
                         <button type="submit" class="btn btn-danger">Enregistrer</button>
                     </div>
                 </form>
