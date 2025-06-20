@@ -89,7 +89,7 @@
                     @endif
             @endif
 
-            @if(Auth::user()->hasRole(['super-admin', 'Administrateur', 'Back-office']))
+            @if(Auth::user()->hasRole(['super-admin', 'Administrateur', 'Back-office', 'Distributeur', 'Support']))
                 <li class="{{ request()->routeIs('transactionEnattente') ? 'active-page' : '' }}">
                     <a href="#"><i data-feather="alert-circle"></i>Réconciliation <i class="fa fa-chevron-right dropdown-icon"></i></a>
                     <ul style="{{ request()->routeIs('transactionEnattente') ? 'display: block;' : '' }}">

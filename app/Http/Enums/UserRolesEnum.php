@@ -16,6 +16,6 @@ enum UserRolesEnum:int
     case IT = 10;
     case ACCOUNTABLE = 11;
     case VIEW = 12;
-
     Case Stagiaire = 13;
+    Case Support = 14;
 }

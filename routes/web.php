@@ -111,7 +111,7 @@ Route::middleware(['auth','checkStatus'])->group(function (){
 
         Route::group(['prefix' => 'reconciliation'], function () {
             Route::controller(WebReconciliationController::class)->group(function () {
-                Route::middleware(['auth', 'role:Back-office'])->group(function () {
+                Route::middleware(['auth', 'role:Administrateur, Super-Admin, Back-office, Distributeur'])->group(function () {
                     Route::any('/transactions/attente', 'transactionEnattente')->name("transactionEnattente");
                     Route::any('/transactions/attente/search', 'transactionEnattenteSearch')->name("transactionEnattente.filtre");
                     Route::any('/transactions/corrigees', 'transactionCorrigees')->name("transactionCorrigees");
