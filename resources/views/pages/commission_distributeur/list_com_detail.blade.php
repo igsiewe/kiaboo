@@ -16,7 +16,6 @@
                             <th scope="col" nowrap>Service</th>
                             <th scope="col" nowrap>Montant</th>
                             <th scope="col" nowrap title="Commission">Commission</th>
-                            <th scope="col" nowrap title="Frais">Frais</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -31,7 +30,6 @@
                                          <td align="left" nowrap>{{$c->name_service}}</td>
                                         <td nowrap style="color: black" align="right" nowrap>{{number_format($c->credit==0?$c->debit:$c->credit,0,","," ")." ".$money}}</td>
                                         <td nowrap align="right" nowrap>{{number_format($c->commission_distributeur,0,","," ")." ".$money}}</td>
-                                        <td nowrap align="right" nowrap>{{number_format($c->fees,0,","," ")." ".$money}}</td>
                                     </tr>
                                 @endforeach
                             @endif
