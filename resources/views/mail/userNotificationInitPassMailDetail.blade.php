@@ -8,7 +8,7 @@
 
 <br>Bonjour M./Mme {{ $data['name'] }}, </br>
 <br>Votre mot de passe vient d'être réinitialisé. Si vous n'êtes pas à l'origine de cette demande, veuillez informer immédiatement Kiaboo. </br><p><p/>
-Mot de passe :  {{ $data['password'] }} <br/>
+Nouveau mot de passe :  {{ $data['password'] }} <br/>
 <br>Merci de le changer dès votre première connexion</br><p><p/>
 Cordialement<br/>
 PS : Ceci est un mail automatique, merci de ne pas y répondre<br/><br/>

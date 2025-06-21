@@ -114,7 +114,7 @@ class WebAuthController extends BaseController
                     return redirect()->back()->withErrors('Vous ne disposez pas de droit pour cette opération');
                 }
             }else{
-                $newPassword = $this->passwordGenerate();
+                $newPassword = $this->passwordGenerate(12);
                 $data=[
                     'name'=>$user->surname." ".mb_strtoupper($user->name),
                     'login'=>$user->email,

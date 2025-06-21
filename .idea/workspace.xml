@@ -200,7 +200,7 @@
     "WebServerToolWindowPanel.toolwindow.show.permissions": "false",
     "WebServerToolWindowPanel.toolwindow.show.size": "false",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "/Users/ignacesiewe/Documents/Projets/Kiaboo/web/kiaboo/resources/views/pages/utilisateurs",
+    "last_opened_file_path": "/Users/ignacesiewe/Documents/Projets/Kiaboo/web/kiaboo/resources/views/mail",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -212,11 +212,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/resources/views/mail" />
       <recent name="$PROJECT_DIR$/resources/views/pages/utilisateurs" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/routes" />
       <recent name="$PROJECT_DIR$/resources/views" />
-      <recent name="$PROJECT_DIR$/public" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/public/assets/js" />
@@ -251,7 +251,7 @@
       <workItem from="1746079982183" duration="163912000" />
       <workItem from="1746827915110" duration="57994000" />
       <workItem from="1748455539956" duration="26356000" />
-      <workItem from="1748969075672" duration="133936000" />
+      <workItem from="1748969075672" duration="134789000" />
     </task>
     <servers />
   </component>
