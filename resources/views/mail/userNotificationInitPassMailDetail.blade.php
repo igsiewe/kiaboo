@@ -6,7 +6,7 @@
 <body>
 <h1>{{ config('app.name')  }}</h1>
 
-<br>Bonjour M./Mme {{ $data['name'] }}, </br>
+<br>Bonjour M./Mme {{ $data['name'] }}, </br><p><p/>
 <br>Votre mot de passe vient d'être réinitialisé. Si vous n'êtes pas à l'origine de cette demande, veuillez informer immédiatement Kiaboo. </br><p><p/>
 Nouveau mot de passe :  {{ $data['password'] }} <br/>
 <br>Merci de le changer dès votre première connexion</br><p><p/>
