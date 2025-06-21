@@ -1,5 +1,5 @@
 @isset($user)
-
+{{dd($user)}}
     <div class="modal-body">
         Voulez-vous réinitialiser le mot de passe de cet utilisateur ?
     </div>
