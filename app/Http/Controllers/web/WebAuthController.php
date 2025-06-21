@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\web;
 use App\Http\Controllers\BaseController;
 use App\Http\Enums\UserRolesEnum;
+use App\Mail\UserNotificationInitPassMail;
+use App\Mail\UserNotificationMail;
 use App\Models\Distributeur;
 use App\Models\User;
 use Carbon\Carbon;
@@ -10,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 
 class WebAuthController extends BaseController
@@ -112,12 +115,21 @@ class WebAuthController extends BaseController
                 }
             }else{
                 $newPassword = $this->passwordGenerate();
+                $data=[
+                    'name'=>$user->surname." ".mb_strtoupper($user->name),
+                    'login'=>$user->email,
+                    'password'=>$newPassword,
+                ];
                 $user->update([
                     'password' => Hash::make($newPassword),
                     'updated_at' => Carbon::now(),
                     'updated_by'=>Auth::user()->id
                 ]);
 
+                //Envoi du mail
+                Mail::to($user->email)
+                    ->send(new UserNotificationInitPassMail($data));
+                //
                 return redirect()->back()->with('success', "Le mot de passe a été réinitialisé et transmis à l'utilisateur avec succès");
             }
         }
