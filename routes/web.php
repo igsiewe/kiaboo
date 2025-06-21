@@ -43,7 +43,8 @@ Route::get('/reload-captcha', [WebAuthController::class, 'reloadCaptcha']);
 Route::middleware(['auth','checkStatus'])->group(function (){
     Route::any('/update/password', [WebAuthController::class,'setUpdatePassword'])->name("setUpdatePassword");
     Route::middleware(['auth', 'role:Administrateur, Super-admin, Distributeur, Back-office'])->group(function () {
-         Route::any('/init/password', [WebAuthController::class,'InitPasswordUserProfil'])->name("InitPasswordUserProfil");
+         Route::any('/init/password/{id}', [WebAuthController::class,'InitPasswordUserProfil'])->name("InitPasswordUserProfil");
+        Route::any('/user/info/select/{id}', [WebUtilisateurController::class,'getinfoUserSelect'])->name("getinfoUserSelect");
     });
     Route::middleware(['auth', 'role:Administrateur, Super-admin, Distributeur, Back-office, Front-office'])->group(function () {
 
