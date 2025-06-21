@@ -96,7 +96,7 @@ class WebAuthController extends BaseController
 
         Session::flush();
         Auth::logout();
-        return Redirect('/')->with("Mot de passe changé avec succes");
+        return Redirect('/')->with("success","Mot de passe changé avec succes");
 
 
     }
@@ -117,7 +117,7 @@ class WebAuthController extends BaseController
                     'updated_at' => Carbon::now(),
                     'updated_by'=>Auth::user()->id
                 ]);
-                return redirect()->back()->with("Le mot de passe a été réinitialisé et transmis à l'utilisateur avec succès");
+                return redirect()->back()->with('success', "Le mot de passe a été réinitialisé et transmis à l'utilisateur avec succès");
             }
         }
     }
