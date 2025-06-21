@@ -126,7 +126,7 @@
                                                                 <i class="fa fa-trash"></i>
                                                             </a>
                                                             @if(Auth::user()->hasRole(['super-admin', 'Administrateur', 'Back-office']))
-                                                                <a href="{{route("InitPasswordUserProfil",[$c->id])}}" type="button" class="btn" style="border: none; color: red" data-bs-toggle="modal" data-bs-target="#confirmationUpdatePassword" title="Réinitialiser le mot de passe" >
+                                                                <a type="button" class="btn" style="border: none; color: red" data-bs-toggle="modal" data-bs-target="#confirmationUpdatePassword" title="Réinitialiser le mot de passe" onclick="getInitPassword({{$c->id}})">
                                                                     <i class="fa fa-key"></i>
                                                                 </a>
                                                             @endif
@@ -156,13 +156,10 @@
                     <h5 class="modal-title" id="confirmationUpdatePasswordLabel">Confirmation</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
                 </div>
-                <div class="modal-body">
-                    Voulez-vous réinitialiser le mot de passe de cet utilisateur ?
+                <div id="initPassword">
+
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="3" data-bs-dismiss="modal">Non</button>
-                    <button type="button" class="btn btn-success" id="4" onclick="Javascript:validerReinitialisationPassword()">Oui</button>
-                </div>
+
             </div>
         </div>
     </div>
@@ -338,14 +335,14 @@
 
         }
 
-
-            function validerReinitialisationPassword() {
-            // Fermer la modale
-            const modal = bootstrap.Modal.getInstance(document.getElementById('confirmationUpdatePassword'));
-            modal.hide();
-
-            // Soumettre le formulaire
-            document.getElementById('confirmationUpdatePassword').submit();
+       function getInitPassword(id) {
+            $.ajax({
+                url: "/user/init/edit/"+id,
+                type: "GET",
+                success: function (data) {
+                    $("#initPassword").html(data);
+                }
+            });
         }
 
     </script>
