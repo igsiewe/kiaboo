@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\web;
 use App\Http\Controllers\BaseController;
 use App\Http\Enums\UserRolesEnum;
+use App\Models\Distributeur;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -98,5 +99,26 @@ class WebAuthController extends BaseController
         return Redirect('/')->with("Mot de passe changé avec succes");
 
 
+    }
+
+    public function InitPasswordUserProfil($id){
+
+        $user = User::where('id', $id)->where("status_delete",0)->where("view",1)->first();
+        if($user){
+            $distributeur = $user->distributeur_id;
+            if(Auth::user()->type_user_id==UserRolesEnum::DISTRIBUTEUR->value){
+                if($distributeur !=Auth::user()->type_user_id){
+                    return redirect()->back()->withErrors('Vous ne disposez pas de droit pour cette opération');
+                }
+            }else{
+                $newPassword = $this->passwordGenerate();
+                $user->update([
+                    'password' => Hash::make($newPassword),
+                    'updated_at' => Carbon::now(),
+                    'updated_by'=>Auth::user()->id
+                ]);
+                return redirect()->back()->with("Le mot de passe a été réinitialisé et transmis à l'utilisateur avec succès");
+            }
+        }
     }
 }
