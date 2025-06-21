@@ -126,7 +126,7 @@
                                                                 <i class="fa fa-trash"></i>
                                                             </a>
                                                             @if(Auth::user()->hasRole(['super-admin', 'Administrateur', 'Back-office']))
-                                                                <a type="button" class="btn" style="border: none; color: red" data-bs-toggle="modal" data-bs-target="#confirmationUpdatePassword" title="Réinitialiser le mot de passe" onclick="getInitPassword({{$c->id}})">
+                                                                <a type="button" class="btn" style="border: none; color: red" data-bs-toggle="modal" data-bs-target="#confirmationUpdatePassword" title="Réinitialiser le mot de passe" onclick="getInfoUserSelect({{$c->id}})">
                                                                     <i class="fa fa-key"></i>
                                                                 </a>
                                                             @endif
@@ -335,9 +335,9 @@
 
         }
 
-       function getInitPassword(id) {
+       function getInfoUserSelect(id) {
             $.ajax({
-                url: "/user/init/edit/"+id,
+                url: "/user/info/select/"+id,
                 type: "GET",
                 success: function (data) {
                     $("#initPassword").html(data);

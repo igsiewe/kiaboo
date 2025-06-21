@@ -165,7 +165,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" id="5" data-bs-dismiss="modal">Non</button>
-                    <button type="button" class="btn btn-success" id="6" onclick="Javascript:rejeterFormulaire()">Oui</button>
+                    <button type="button" class="btn btn-success" id="6" onclick="rejeterFormulaire()">Oui</button>
                 </div>
             </div>
         </div>

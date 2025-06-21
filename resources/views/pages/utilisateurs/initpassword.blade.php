@@ -1,11 +1,11 @@
-@isset($detailutilisateur)
+@isset($user)
 
     <div class="modal-body">
         Voulez-vous réinitialiser le mot de passe de cet utilisateur ?
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" id="3" data-bs-dismiss="modal">Non</button>
-        <form action="{{ route('InitPasswordUserProfil', [$detailutilisateur->id]) }}" id="frmValidateProspect" name="frmValidateProspect">
+        <form action="{{ route('InitPasswordUserProfil', [$user->id]) }}" id="frmInitPassword" name="frmInitPassword">
             @csrf
             <button type="button" class="btn btn-success" id="4" onclick="validerReinitialisationPassword()">Oui</button>
         </form>

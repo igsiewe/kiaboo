@@ -200,6 +200,10 @@ class WebUtilisateurController extends Controller
         return view('pages.utilisateurs.editutilisateur', compact('detailutilisateur','ville','mesdistributeurs','typeUtilisateurs'));
     }
 
+    public function getinfoUserSelect($id){
+        $user  = User::where('id', $id)->where("status_delete",0)->where("view",1)->first();
+        return view('pages.utilisateurs.initpassword', compact('user'));
+    }
 
     public function debloqueUtilisateur($id){
         if(Auth::user()->id==$id){
