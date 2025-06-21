@@ -117,6 +117,7 @@ class WebAuthController extends BaseController
                     'updated_at' => Carbon::now(),
                     'updated_by'=>Auth::user()->id
                 ]);
+
                 return redirect()->back()->with('success', "Le mot de passe a été réinitialisé et transmis à l'utilisateur avec succès");
             }
         }
