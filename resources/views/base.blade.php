@@ -135,8 +135,8 @@
                 <li class="{{ request()->routeIs('grilleCommission') ? 'active-page' : '' }}">
                     <a href="#"><i data-feather="settings"></i>Paramètres <i class="fa fa-chevron-right dropdown-icon"></i></a>
                     <ul style="{{ request()->routeIs('grilleCommission') ? 'display: block;' : '' }}">
-                        <li><a href="#"><i class="fa fa-box"></i>Partenaires</a></li>
-                        <li><a href="#"><i class="fa fa-wind"></i>Services</a></li>
+{{--                        <li><a href="#"><i class="fa fa-box"></i>Partenaires</a></li>--}}
+{{--                        <li><a href="#"><i class="fa fa-wind"></i>Services</a></li>--}}
                         <li><a class="{{ request()->routeIs('grilleCommission') ? 'active-page' : '' }}" href="{{ route('grilleCommission') }}"><i class="fa fa-star"></i>Grille commission</a></li>
                     </ul>
                 </li>
