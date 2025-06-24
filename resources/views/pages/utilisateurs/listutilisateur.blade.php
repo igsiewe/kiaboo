@@ -25,7 +25,7 @@
                     <div class="col-12 col-sm-12">
                         <div class='alert alert-danger alert-dismissible'>
                             <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close" title="Close">x</button>
-                            <span><h6><i class='icon fa fa-ban'></i>{{$errors->first()}}</h6></span>
+                            <span><h6>{{$errors->first()}}</h6></span>
                         </div>
                     </div>
                 </div>
@@ -35,7 +35,7 @@
                     <div class="col-12 col-sm-12">
                         <div class='alert alert-danger alert-dismissible'>
                             <button type='button' class='close' data-bs-dismiss='alert' aria-hidden='true' title="Close">×</button>
-                            <span><h6><i class='icon fa fa-ban'></i>{{session('error')}}</h6></span>
+                            <span><h6>{{session('error')}}</h6></span>
                         </div>
                     </div>
                 </div>
@@ -45,7 +45,7 @@
                     <div class="col-12 col-sm-12">
                         <div class='alert alert-success alert-dismissible'>
                             <button type='button' class='close' data-bs-dismiss='alert' aria-hidden='true' title="Close">×</button>
-                            <span><h6><i class='icon fa fa-user-check'></i> {{session('success')}}</h6></span>
+                            <span><h6>{{session('success')}}</h6></span>
                         </div>
                     </div>
                 </div>
