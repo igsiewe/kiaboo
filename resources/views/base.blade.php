@@ -142,7 +142,7 @@
                 </li>
             @endif
 
-            @if(Auth::user()->hasRole(['super-admin', 'Administrateur', 'Back-office']))
+            @if(Auth::user()->hasRole(['super-admin', 'Administrateur','IT']))
                 <li class="{{ request()->routeIs('listUtilisateurs') ? 'active-page' : '' }}">
                     <a href="{{ route('listUtilisateurs') }}"><i data-feather="users"></i>Utilisateurs</a>
                 </li>

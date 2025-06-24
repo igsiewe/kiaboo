@@ -142,7 +142,7 @@ Route::middleware(['auth','checkStatus'])->group(function (){
             });
         });
         Route::group(['prefix' => 'utilisateur'], function () {
-            Route::middleware(['auth', 'role:Administrateur, Super-admin, IT, Back-office'])->group(function () {
+            Route::middleware(['auth', 'role:Administrateur, Super-admin, IT'])->group(function () {
                 Route::controller(WebUtilisateurController::class)->group(function () {
                     Route::any('/list', 'listUtilisateurs')->name("listUtilisateurs");
                     Route::any('/create', 'setNewUtilisateur')->name('setNewUtilisateur');
