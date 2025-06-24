@@ -127,7 +127,7 @@ class WebUtilisateurController extends Controller
         ]);
 
         if (!Auth::user()->hasRole(['super-admin', 'Administrateur'])){
-            return redirect()->back()->withErrors('You cannot authorize to perform this operation.');
+            return redirect()->back()->withErrors('You cannot authorize to perform this operation....');
         }
         if(Auth::user()->status == 0){
             return redirect()->back()->withErrors('You cannot authorize to perform this operation.');
