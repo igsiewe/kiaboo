@@ -121,7 +121,7 @@ class WebUtilisateurController extends Controller
             'ville'=>'required|integer',
             'quartier'=>'required|string',
             'adresse'=>'required|string',
-            'seuil'=>'required|integer',
+         //   'seuil'=>'required|integer',
             'numcni'=>'required|string',
             'datecni'=>'required',
         ]);
