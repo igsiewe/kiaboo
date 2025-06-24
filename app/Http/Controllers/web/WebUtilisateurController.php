@@ -136,7 +136,7 @@ class WebUtilisateurController extends Controller
 //        if(Auth::user()->type_user_id != UserRolesEnum::DISTRIBUTEUR->value){
 //            return redirect()->back()->withErrors('You cannot authorize to modify users of this type');
 //        }
-        dd($request->all());
+
 //        if(Auth::user()->type_user_id == UserRolesEnum::DISTRIBUTEUR->value){ //Les distributeur ne peuvent créer que des distributeurs
 //            if($request->typeuser !=UserRolesEnum::DISTRIBUTEUR->value){
 //                return redirect()->back()->withErrors('You cannot authorize to perform this operation');
@@ -176,16 +176,16 @@ class WebUtilisateurController extends Controller
             $updateAgent->ville_id = $request->ville;
             $updateAgent->quartier = $request->quartier;
             $updateAgent->adresse = $request->adresse;
-            $updateAgent->seuilapprovisionnement=$request->seuil;
+         //   $updateAgent->seuilapprovisionnement=$request->seuil;
             $updateAgent->distributeur_id = $request->mondistributeur;
             $updateAgent->numcni = $request->numcni;
             $updateAgent->datecni = $request->datecni;
             $updateAgent->updated_at = now();
             $updateAgent->updated_by = auth()->user()->id;
             $updateAgent->save();
-            return redirect()->back()->with('success', 'Agent updated successfully');
+            return redirect()->back()->with('success', 'Utilisateur updated successfully');
         }else{
-            return redirect()->back()->withErrors('Agent to be updated not found ');
+            return redirect()->back()->withErrors('User to be updated not found ');
         }
 
     }
