@@ -125,7 +125,7 @@ class WebUtilisateurController extends Controller
             'numcni'=>'required|string',
             'datecni'=>'required',
         ]);
-
+dd($request->all());
         if (!Auth::user()->hasRole(['super-admin', 'Administrateur'])){
             return redirect()->back()->withErrors('You cannot authorize to perform this operation....');
         }
