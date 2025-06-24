@@ -164,7 +164,7 @@ class WebUtilisateurController extends Controller
         }
 
         if($updateAgent->status_delete== 1){
-            return redirect()->back()->withErrors('You cannot update this agent');
+            return redirect()->back()->withErrors('You cannot update this agent...');
         }
         if($updateAgent->id== Auth::user()->id){
             return redirect()->back()->withErrors('You cannot update yourself');
