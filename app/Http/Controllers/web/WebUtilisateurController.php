@@ -178,6 +178,7 @@ class WebUtilisateurController extends Controller
             $updateAgent->adresse = $request->adresse;
          //   $updateAgent->seuilapprovisionnement=$request->seuil;
             $updateAgent->distributeur_id = $request->mondistributeur;
+            $updateAgent->type_user_id = $request->typeuser;
             $updateAgent->numcni = $request->numcni;
             $updateAgent->datecni = $request->datecni;
             $updateAgent->updated_at = now();
