@@ -125,22 +125,23 @@ class WebUtilisateurController extends Controller
             'numcni'=>'required|string',
             'datecni'=>'required',
         ]);
-dd($request->all());
+
         if (!Auth::user()->hasRole(['super-admin', 'Administrateur'])){
             return redirect()->back()->withErrors('You cannot authorize to perform this operation....');
         }
+
         if(Auth::user()->status == 0){
             return redirect()->back()->withErrors('You cannot authorize to perform this operation.');
         }
         if(Auth::user()->type_user_id != UserRolesEnum::DISTRIBUTEUR->value){
             return redirect()->back()->withErrors('You cannot authorize to modify users of this type');
         }
-
-        if(Auth::user()->type_user_id == UserRolesEnum::DISTRIBUTEUR->value){ //Les distributeur ne peuvent créer que des distributeurs
-            if($request->typeuser !=UserRolesEnum::DISTRIBUTEUR->value){
-                return redirect()->back()->withErrors('You cannot authorize to perform this operation');
-            }
-        }
+        dd($request->all());
+//        if(Auth::user()->type_user_id == UserRolesEnum::DISTRIBUTEUR->value){ //Les distributeur ne peuvent créer que des distributeurs
+//            if($request->typeuser !=UserRolesEnum::DISTRIBUTEUR->value){
+//                return redirect()->back()->withErrors('You cannot authorize to perform this operation');
+//            }
+//        }
 
         if(Auth::user()->id==$id){
             return redirect()->back()->withErrors('You cannot update your own account');
