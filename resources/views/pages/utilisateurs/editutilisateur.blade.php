@@ -1,5 +1,5 @@
 @isset($detailutilisateur)
-    <form action="{{route("setUpdateAgent",[$detailutilisateur->id])}}" id="frmUpdateUser" name="frmOperation">
+    <form action="{{route("setUpdateUtilisateur",[$detailutilisateur->id])}}" id="frmUpdateUser" name="frmOperation">
         @csrf
         <div class="modal-body">
             <div class='loader'>

@@ -150,6 +150,7 @@ Route::middleware(['auth','checkStatus'])->group(function (){
                     Route::any('/debloque/{id}', 'debloqueUtilisateur')->name('debloqueUtilisateur');
                     Route::any('/delete/{id}', 'deleteUtilisateur')->name('deleteUtilisateur');
                     Route::any('/edit/{id}', 'getUpdateUtilisateur')->name('getUpdateUtilisateur');
+                    Route::any('/update/{id}', 'setUpdateUtilisateur')->name('setUpdateUtilisateur');
                 });
             });
         });
