@@ -195,7 +195,7 @@ class WebUtilisateurController extends Controller
         $detailutilisateur  = User::where('id', $id)->where("status_delete",0)->with('ville')->where("view",1)->first();
         $ville = ville::where("status",1)->orderBy("name_ville","asc")->get();
         $mesdistributeurs = Distributeur::where("status",1);
-        $typeUtilisateurs = TypeUser::where("status",1)->whereNotIn("id",(1))->orderBy("name_type_user")->get();
+        $typeUtilisateurs = TypeUser::where("status",1)->where("id","<>",1)->orderBy("name_type_user")->get();
         if(Auth::user()->type_user_id==UserRolesEnum::DISTRIBUTEUR->value){
             $mesdistributeurs = $mesdistributeurs->where("id",Auth::user()->distributeur_id);
             $typeUtilisateurs = TypeUser::where("status",1)->where("id",UserRolesEnum::DISTRIBUTEUR->value)->orderBy("name_type_user")->get();
