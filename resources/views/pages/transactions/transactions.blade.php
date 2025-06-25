@@ -232,7 +232,7 @@
                                                             <td align="right">{{number_format($c->balance_after,0,',',' ')." ".$money}}</td>
                                                             <td align="center">{{substr($c->customer_phone, 0, 3) . '***' . substr($c->customer_phone, -3)}}</td>
 
-                                                            <td>{{$c->auteur->telephone}}</td>
+                                                            <td align="center">{{$c->auteur->telephone}}</td>
 {{--                                                            @if(\Illuminate\Support\Facades\Auth::user()->type_user_id != \App\Http\Enums\UserRolesEnum::DISTRIBUTEUR->value)--}}
 {{--                                                            <td>{{$c->auteur->distributeur->name_distributeur}}</td>--}}
 {{--                                                            @endif--}}
