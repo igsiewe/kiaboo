@@ -211,9 +211,9 @@
                                                             @endif
                                                             <td align="right">{{number_format($c->balance_after,0,',',' ')." ".$money}}</td>
                                                             @if($c->status==2)
-                                                                <td nowrap style="color: black"  class="btn btn-warning">PENDING</td>
+                                                                <td nowrap style="color: black"><span class="btn btn-warning">PENDING</span></td>
                                                             @else
-                                                                <td nowrap style="color: red"  class="btn btn-danger">ECHEC</td>
+                                                                <td nowrap style="color: red"><span class="btn btn-danger">ECHEC</span></td>
                                                             @endif
                                                             <td align="center">{{$c->customer_phone}}</td>
                                                             <td>{{$c->auteur->telephone}}</td>
