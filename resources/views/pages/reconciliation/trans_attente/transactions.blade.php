@@ -183,7 +183,6 @@
                                                 <th scope="col">TransactionID</th>
                                                 <th scope="col">Service</th>
                                                 <th scope="col">Amount</th>
-                                                <th scope="col">Balance After</th>
                                                 <th scope="col">Status</th>
                                                 <th scope="col">Customer</th>
                                                 <th scope="col">Agent</th>
@@ -209,7 +208,6 @@
                                                             @else
                                                                 <td nowrap style="color: red" align="right">{{number_format($c->debit,0,',',' ')." ".$money}}</td>
                                                             @endif
-                                                            <td align="right">{{number_format($c->balance_after,0,',',' ')." ".$money}}</td>
                                                             @if($c->status==2)
                                                                 <td nowrap style="color: black"><span class="badge bg-warning">PENDING</span></td>
                                                             @else
