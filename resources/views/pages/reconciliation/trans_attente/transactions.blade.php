@@ -230,20 +230,7 @@
 
                                             </tbody>
                                         </table>
-                                        <table class="table table-hover table-striped table-bordered dataTable dtr-inline" role="grid">
-                                            <tr>
-                                                <td style="border: none">
 
-                                                </td>
-                                                <td style="border: none">
-                                                    @isset($transactions)
-                                                        @if($transactions->isNotEmpty())
-                                                            <div style="text-align: center">{{"Total Envoi = ".number_format($transactions->sum("debit"),0,',',' ')." ".$money." / Total Retrait = ".number_format($transactions->sum("credit"),0,',',' ')." ".$money." / Nombre de transactions = ".number_format($transactions->count(),0,',',' ')." / Commission distributeur = ".number_format($transactions->sum("commission_distributeur"),0,',',' ')." ".$money}} </div>
-                                                        @endif
-                                                    @endisset
-                                                </td>
-                                            </tr>
-                                        </table>
                                 </div>
                             </div>
                         </div>
