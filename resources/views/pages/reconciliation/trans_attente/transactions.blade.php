@@ -184,6 +184,7 @@
                                                 <th scope="col">Service</th>
                                                 <th scope="col">Amount</th>
                                                 <th scope="col">Balance After</th>
+                                                <th scope="col">Status</th>
                                                 <th scope="col">Customer</th>
                                                 <th scope="col">Agent</th>
                                                 @if(\Illuminate\Support\Facades\Auth::user()->type_user_id != \App\Http\Enums\UserRolesEnum::DISTRIBUTEUR->value)
@@ -209,6 +210,7 @@
                                                                 <td nowrap style="color: red" align="right">{{number_format($c->debit,0,',',' ')." ".$money}}</span></td>
                                                             @endif
                                                             <td align="right">{{number_format($c->balance_after,0,',',' ')." ".$money}}</td>
+                                                            <td align="center">{{$c->status}}</td>
                                                             <td align="center">{{$c->customer_phone}}</td>
                                                             <td>{{$c->auteur->telephone}}</td>
                                                             @if(\Illuminate\Support\Facades\Auth::user()->type_user_id != \App\Http\Enums\UserRolesEnum::DISTRIBUTEUR->value)
