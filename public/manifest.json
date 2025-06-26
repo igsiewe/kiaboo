@@ -6,19 +6,19 @@
         {
             "purpose": "maskable",
             "sizes": "853.3333333333334x853.3333333333334",
-            "src": "maskable_icon.png",
+            "src": "logo.png",
             "type": "image/png"
         },
         {
             "purpose": "maskable",
             "sizes": "192x192",
-            "src": "maskable_icon_x192.png",
+            "src": "logo_x192.png",
             "type": "image/png"
         },
         {
             "purpose": "maskable",
             "sizes": "512x512",
-            "src": "maskable_icon_x512.png",
+            "src": "logo_x512.png",
             "type": "image/png"
         }
     ],
