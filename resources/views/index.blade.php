@@ -4,12 +4,6 @@
 <!-- Mirrored from polygons.space/circl/theme/templates/admin/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 17 Aug 2023 14:19:17 GMT -->
 <head>
 
-    <!-- PWA  -->
-    <meta name="theme-color" content="#6777ef"/>
-    <link rel="apple-touch-icon" href="{{ asset('logo.png') }}">
-    <link rel="manifest" href="{{ asset('/manifest.json') }}">
-
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -31,6 +25,10 @@
     <!-- Theme Styles -->
     <link href="{{asset("assets/css/main.min.css")}}" rel="stylesheet">
     <link href="{{asset("assets/css/custom.css")}}" rel="stylesheet">
+    <!-- PWA  -->
+    <meta name="theme-color" content="#6777ef"/>
+    <link rel="apple-touch-icon" href="{{ asset('logo.png') }}">
+    <link rel="manifest" href="{{ asset('/manifest.json') }}">
 
 </head>
 <body class="login-page">
@@ -139,7 +137,6 @@
         });
     });
 </script>
-
 <script src="{{ asset('/sw.js') }}"></script>
 <script>
     if ("serviceWorker" in navigator) {
@@ -157,7 +154,6 @@
         console.error("Service workers are not supported.");
     }
 </script>
-
 </body>
 
 </html>
