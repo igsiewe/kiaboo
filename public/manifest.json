@@ -1,9 +1,9 @@
 {
-    "name": "Laravel Package Tutorial",
-    "short_name": "LPT",
+    "name": "Kiaboo",
+    "short_name": "Kiaboo",
     "start_url": "/index.php",
     "background_color": "#6777ef",
-    "description": "Tutorial of Laravel Package",
+    "description": "Cliquez pour installer Kiaboo",
     "display": "fullscreen",
     "theme_color": "#6777ef",
     "icons": [
