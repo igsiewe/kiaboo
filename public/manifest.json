@@ -1,17 +1,28 @@
 {
-    "name": "Kiaboo",
     "short_name": "Kiaboo",
-    "start_url": "/index.php",
-    "background_color": "#6777ef",
+    "name": "Kiaboo",
     "description": "Suivez vos transactions en toute sécurité",
-    "display": "fullscreen",
-    "theme_color": "#6777ef",
     "icons": [
         {
             "src": "logo.png",
-            "sizes": "512x512",
+            "sizes": "64x64 32x32 24x24 16x16",
+            "type": "image/png"
+        },
+        {
+            "src": "logo.png",
             "type": "image/png",
-            "purpose": "any maskable"
+            "sizes": "192x192"
+        },
+        {
+            "src": "logo.png",
+            "type": "image/png",
+            "sizes": "512x512"
         }
-    ]
+    ],
+    "dir": "ltr",
+    "start_url": ".",
+    "display": "standalone",
+    "theme_color": "#333556",
+    "background_color": "#da6138",
+    "orientation": "portrait"
 }
