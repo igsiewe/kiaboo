@@ -110,9 +110,9 @@
                             <button type="submit" class="btn btn-danger m-b-xs">Se connecter</button>
                         </div>
                     </form>
-                    <div class="authent-reg">
-                        <a href="register.html">Mot de passe oublié ?</a></p>
-                    </div>
+{{--                    <div class="authent-reg">--}}
+{{--                        <a href="register.html">Mot de passe oublié ?</a></p>--}}
+{{--                    </div>--}}
                     <hr/>
                     <div class="text-center opacity-8 mt-3">Copyright © Kiaboo {{\Carbon\Carbon::now()->format('Y')}}</div>
                 </div>
