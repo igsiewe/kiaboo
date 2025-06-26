@@ -91,9 +91,10 @@
 
             @if(Auth::user()->hasRole(['super-admin', 'Administrateur', 'Back-office', 'Distributeur', 'Support']))
                 <li class="{{ request()->routeIs('transactionEnattente') ? 'active-page' : '' }}">
-                    <a href="#"><i data-feather="alert-circle"></i>Réconciliation <i class="fa fa-chevron-right dropdown-icon"></i></a>
+                    <a href="#"><i data-feather="alert-search"></i>Réconciliation <i class="fa fa-chevron-right dropdown-icon"></i></a>
                     <ul style="{{ request()->routeIs('transactionEnattente') ? 'display: block;' : '' }}">
                         <li><a class="{{ request()->routeIs('transactionEnattente') ? 'active-page' : '' }}" href="{{ route('transactionEnattente') }}"><i class="fa fa-history"></i>Trans. en attente</a></li>
+                        <li><a class="{{ request()->routeIs('transactionEnEchec') ? 'active-page' : '' }}" href="{{ route('transactionEnEchec') }}"><i class="fa fa-times-circle"></i>Trans. en échec</a></li>
                     </ul>
                 </li>
             @endif

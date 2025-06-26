@@ -120,6 +120,9 @@ Route::middleware(['auth','checkStatus'])->group(function (){
                     Route::any('/transactions/attente/search', 'transactionEnattenteSearch')->name("transactionEnattente.filtre");
                     Route::any('/transactions/corrigees', 'transactionCorrigees')->name("transactionCorrigees");
                     Route::get('/transactions/edit/{id}', 'getDetailTransaction')->name("getDetailTransactionEnAttente");
+
+                    Route::any('/transactions/echech', 'transactionEnEchec')->name("transactionEnEchec");
+                    Route::any('/transactions/echec/search', 'transactionEnEchecSearch')->name("transactionEnEchec.filtre");
                 });
             });
         });
