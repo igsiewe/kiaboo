@@ -12,7 +12,7 @@
                 <div class="col-md-12 col-xl-12">
                     <div class="card-header stat-widget card-shadow-danger border-danger">
                             <span class="d-inline-block pr-2">
-                            <i class="fa fa-history fa-2x"></i>
+                            <i class="fa fa-clock fa-2x"></i>
                             </span>
                         <span class="d-inline-block"><h4><b>&nbsp;&nbsp;TRANSACTTIONS EN ATTENTE</b></h4></span>
                     </div>

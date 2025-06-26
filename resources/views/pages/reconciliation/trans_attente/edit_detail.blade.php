@@ -26,7 +26,12 @@
                                     style="text-decoration-line: underline; display: flex">{{$transactions->date_transaction}}</span>
                         </td>
                         <td nowrap>Statut :</td>
-                        <td nowrap><span class="badge bg-warning">{{$transactions->description}}</span></td>
+                        @if($transactions->status==2)
+                            <td nowrap style="color: black"><span class="badge bg-warning">{{$transactions->description}}</span></td>
+                        @else
+                            <td nowrap style="color: red"><span class="badge bg-danger">{{$transactions->description}}</span></td>
+                        @endif
+
                     </tr>
                     <tr>
                         <td nowrap>Service :</td>
