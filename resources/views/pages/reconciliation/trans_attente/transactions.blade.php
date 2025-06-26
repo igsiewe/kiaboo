@@ -205,12 +205,16 @@
                                                             <td>#{{$c->reference_partenaire}}</td>
                                                             <th scope="row"><img src="{{asset("assets/partenaires/".$c->service->logo_service)}}" alt="img">{{$c->service->name_service}}</th>
                                                             @if($c->debit==0)
-                                                                <td nowrap style="color: black" align="right">{{number_format($c->credit,0,',',' ')." ".$money}}</span></td>
+                                                                <td nowrap style="color: black" align="right">{{number_format($c->credit,0,',',' ')." ".$money}}</td>
                                                             @else
-                                                                <td nowrap style="color: red" align="right">{{number_format($c->debit,0,',',' ')." ".$money}}</span></td>
+                                                                <td nowrap style="color: red" align="right">{{number_format($c->debit,0,',',' ')." ".$money}}</td>
                                                             @endif
                                                             <td align="right">{{number_format($c->balance_after,0,',',' ')." ".$money}}</td>
-                                                            <td align="center">{{$c->status}}</td>
+                                                            @if($c->status==2)
+                                                                <td nowrap style="color: black"  class="btn btn-warning">PENDING</td>
+                                                            @else
+                                                                <td nowrap style="color: red"  class="btn btn-danger">ECHEC</td>
+                                                            @endif
                                                             <td align="center">{{$c->customer_phone}}</td>
                                                             <td>{{$c->auteur->telephone}}</td>
                                                             @if(\Illuminate\Support\Facades\Auth::user()->type_user_id != \App\Http\Enums\UserRolesEnum::DISTRIBUTEUR->value)
