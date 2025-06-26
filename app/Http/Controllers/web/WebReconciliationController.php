@@ -30,7 +30,7 @@ class WebReconciliationController extends Controller
             ->where("fichier","agent")
             ->where('status',StatusTransEnum::PENDING->value) //status = 2 Transactions en attente
             ->whereHas('service',function ($query){
-                $query->whereIn("type_service_id",[TypeServiceEnum::ENVOI->value,TypeServiceEnum::RETRAIT->value,TypeServiceEnum::FACTURE->value]);
+                $query->whereIn("type_service_id",[TypeServiceEnum::ENVOI->value,TypeServiceEnum::RETRAIT->value,TypeServiceEnum::PAYMENT->value]);
             })->whereHas('auteur',function ($query) use ($auth){
                 $query->whereIn("id",$auth);
             });
