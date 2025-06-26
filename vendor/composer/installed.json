@@ -2135,24 +2135,24 @@
         },
         {
             "name": "ladumor/laravel-pwa",
-            "version": "v0.0.4",
-            "version_normalized": "0.0.4.0",
+            "version": "v0.0.5",
+            "version_normalized": "0.0.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/shailesh-ladumor/laravel-pwa.git",
-                "reference": "1867899d6916803aef7ea02f489597555cc4ab02"
+                "reference": "50613c526cae7f7637a73afe634a5423d745697c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/shailesh-ladumor/laravel-pwa/zipball/1867899d6916803aef7ea02f489597555cc4ab02",
-                "reference": "1867899d6916803aef7ea02f489597555cc4ab02",
+                "url": "https://api.github.com/repos/shailesh-ladumor/laravel-pwa/zipball/50613c526cae7f7637a73afe634a5423d745697c",
+                "reference": "50613c526cae7f7637a73afe634a5423d745697c",
                 "shasum": ""
             },
             "require": {
                 "illuminate/support": ">=5.4",
                 "php": ">=5.6"
             },
-            "time": "2023-09-02T13:09:30+00:00",
+            "time": "2025-05-28T10:05:47+00:00",
             "type": "library",
             "extra": {
                 "laravel": {
@@ -2189,8 +2189,14 @@
             ],
             "support": {
                 "issues": "https://github.com/shailesh-ladumor/laravel-pwa/issues",
-                "source": "https://github.com/shailesh-ladumor/laravel-pwa/tree/v0.0.4"
+                "source": "https://github.com/shailesh-ladumor/laravel-pwa/tree/v0.0.5"
             },
+            "funding": [
+                {
+                    "url": "https://www.buymeacoffee.com/ladumor",
+                    "type": "custom"
+                }
+            ],
             "install-path": "../ladumor/laravel-pwa"
         },
         {

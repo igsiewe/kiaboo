@@ -1,12 +1,11 @@
-[![Latest Stable Version](http://poser.pugx.org/ladumor/laravel-pwa/v)](https://packagist.org/packages/ladumor/laravel-pwa)
-[![Daily Downloads](http://poser.pugx.org/ladumor/laravel-pwa/d/daily)](https://packagist.org/packages/ladumor/laravel-pwa)
-[![Monthly Downloads](http://poser.pugx.org/ladumor/laravel-pwa/d/monthly)](https://packagist.org/packages/ladumor/laravel-pwa)
-[![Total Downloads](http://poser.pugx.org/ladumor/laravel-pwa/downloads)](https://packagist.org/packages/ladumor/laravel-pwa)
-[![License](http://poser.pugx.org/ladumor/laravel-pwa/license)](https://packagist.org/packages/ladumor/laravel-pwa)
-[![PHP Version Require](http://poser.pugx.org/ladumor/laravel-pwa/require/php)](https://packagist.org/packages/ladumor/laravel-pwa)
+[![Latest Stable Version](https://poser.pugx.org/ladumor/laravel-pwa/v)](https://packagist.org/packages/ladumor/laravel-pwa)
+[![Daily Downloads](https://poser.pugx.org/ladumor/laravel-pwa/d/daily)](https://packagist.org/packages/ladumor/laravel-pwa)
+[![Monthly Downloads](https://poser.pugx.org/ladumor/laravel-pwa/d/monthly)](https://packagist.org/packages/ladumor/laravel-pwa)
+[![Total Downloads](https://poser.pugx.org/ladumor/laravel-pwa/downloads)](https://packagist.org/packages/ladumor/laravel-pwa)
+[![License](https://poser.pugx.org/ladumor/laravel-pwa/license)](https://packagist.org/packages/ladumor/laravel-pwa)
+[![PHP Version Require](https://poser.pugx.org/ladumor/laravel-pwa/require/php)](https://packagist.org/packages/ladumor/laravel-pwa)
 
 # Laravel PWA
-
 ## You can follow this video tutorial as well for installation.
 
 [<img src="https://img.youtube.com/vi/9H-T81KQPyo/0.jpg" width="250">](https://youtu.be/9H-T81KQPyo)
@@ -16,9 +15,10 @@
 
 ## Installation
 
-Install the package by the following command,
+Install the package by the following command, (try without `--dev` if you want to install it on production environment)
 
-    composer require ladumor/laravel-pwa
+    composer require --dev ladumor/laravel-pwa
+
 
 ## Add Provider
 
@@ -43,7 +43,7 @@ Run the following command to publish config file,
 
     <!-- PWA  -->
     <meta name="theme-color" content="#6777ef"/>
-    <link rel="apple-touch-icon" href="{{ asset('logo.PNG') }}">
+    <link rel="apple-touch-icon" href="{{ asset('logo.png') }}">
     <link rel="manifest" href="{{ asset('/manifest.json') }}">
 
 Add following code in root blade file in before close the body.
@@ -66,12 +66,25 @@ Add following code in root blade file in before close the body.
       }
     </script>
 
+### Custom Install Button
+You can add custom install button in your blade file by using the following code.
+
+    <!-- Add this inside <body> -->
+    <button id="pwa-install-btn" style="display:none; position: fixed; bottom: 20px; right: 20px; padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 8px; z-index: 1000;">
+       Install App
+    </button>
+
+Also include the JS: (Add following code in root blade file in before close the body.)
+
+     <script src="{{ asset('pwa-install.js') }}"></script>
+
 ### License
 The MIT License (MIT). Please see [License](LICENSE.md) File for more information   
 
+<a href="https://www.buymeacoffee.com/ladumor" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-red.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
 
 ## Note
- PWA only works with https. so, you need to run either with  `php artisan serve` or create virtual host with https.
- you can watch video for how to creat virtual host with https
+ PWA only works with https. so, you need to run either with  `php artisan serve` or create a virtual host with https.
+ you can watch the video for how to create a virtual host with HTTPS
 
 [<img src="https://img.youtube.com/vi/D5IqDcHyXSQ/0.jpg" width="550">](https://youtu.be/D5IqDcHyXSQ)

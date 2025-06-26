@@ -2,10 +2,13 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <!-- Mirrored from polygons.space/circl/theme/templates/admin/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 17 Aug 2023 14:19:17 GMT -->
-<head>    <!-- PWA  -->
+<head>
+
+    <!-- PWA  -->
     <meta name="theme-color" content="#6777ef"/>
-    <link rel="apple-touch-icon" href="{{ asset('assets/images/logo.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('logo.png') }}">
     <link rel="manifest" href="{{ asset('/manifest.json') }}">
+
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -29,10 +32,6 @@
     <link href="{{asset("assets/css/main.min.css")}}" rel="stylesheet">
     <link href="{{asset("assets/css/custom.css")}}" rel="stylesheet">
 
-{{--    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>--}}
-{{--    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>--}}
-
-    <![endif]-->
 </head>
 <body class="login-page">
 <div class='loader'>
@@ -121,24 +120,6 @@
     </div>
 </div>
 
-{{--<script src="{{ asset('/sw.js') }}"></script>--}}
-<script>
-    if ("serviceWorker" in navigator) {
-        // Register a service worker hosted at the root of the
-        // site using the default scope.
-        navigator.serviceWorker.register("/sw.js").then(
-            (registration) => {
-                console.log("Service worker registration succeeded:", registration);
-            },
-            (error) => {
-                console.error(`Service worker registration failed: ${error}`);
-            },
-        );
-    } else {
-        console.error("Service workers are not supported.");
-    }
-</script>
-
 <!-- Javascripts -->
 <script src="{{asset("assets/plugins/jquery/jquery-3.4.1.min.js")}}"></script>
 <script src="https://unpkg.com/@popperjs/core@2"></script>
@@ -157,6 +138,24 @@
             }
         });
     });
+</script>
+
+<script src="{{ asset('/sw.js') }}"></script>
+<script>
+    if ("serviceWorker" in navigator) {
+        // Register a service worker hosted at the root of the
+        // site using the default scope.
+        navigator.serviceWorker.register("/sw.js").then(
+            (registration) => {
+                console.log("Service worker registration succeeded:", registration);
+            },
+            (error) => {
+                console.error(`Service worker registration failed: ${error}`);
+            },
+        );
+    } else {
+        console.error("Service workers are not supported.");
+    }
 </script>
 
 </body>

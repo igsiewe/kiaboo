@@ -4,7 +4,26 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f91fca3f-e4da-40b0-9457-5f63c3b5d882" name="Changes" comment="" />
+    <list default="true" id="f91fca3f-e4da-40b0-9457-5f63c3b5d882" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/logo_x192.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/logo_x512.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/images/logo.png" beforeDir="false" afterPath="$PROJECT_DIR$/public/assets/images/logo.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/images/logo__.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/manifest.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/sw.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/sw.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/composer/autoload_classmap.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/composer/autoload_classmap.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/composer/autoload_static.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/composer/autoload_static.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/composer/installed.json" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/composer/installed.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/composer/installed.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/composer/installed.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/ladumor/laravel-pwa/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/ladumor/laravel-pwa/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/ladumor/laravel-pwa/src/commands/PublishPWA.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/ladumor/laravel-pwa/src/commands/PublishPWA.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/ladumor/laravel-pwa/src/stubs/manifest.stub" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/ladumor/laravel-pwa/src/stubs/manifest.stub" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/ladumor/laravel-pwa/src/stubs/sw.stub" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/ladumor/laravel-pwa/src/stubs/sw.stub" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -200,7 +219,7 @@
     "WebServerToolWindowPanel.toolwindow.show.permissions": "false",
     "WebServerToolWindowPanel.toolwindow.show.size": "false",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "/Users/ignacesiewe/Documents/Projets/Kiaboo/web/kiaboo/resources/views/pages/reconciliation",
+    "last_opened_file_path": "/Users/ignacesiewe/Documents/Projets/Kiaboo/web/kiaboo",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -212,11 +231,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/public/assets/images" />
+      <recent name="$PROJECT_DIR$/public" />
       <recent name="$PROJECT_DIR$/resources/views/pages/reconciliation" />
       <recent name="$PROJECT_DIR$/resources/views/mail" />
-      <recent name="$PROJECT_DIR$/resources/views/pages/utilisateurs" />
-      <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/routes" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/public/assets/js" />
@@ -251,7 +270,7 @@
       <workItem from="1746079982183" duration="163912000" />
       <workItem from="1746827915110" duration="57994000" />
       <workItem from="1748455539956" duration="26356000" />
-      <workItem from="1748969075672" duration="149708000" />
+      <workItem from="1748969075672" duration="150956000" />
     </task>
     <servers />
   </component>

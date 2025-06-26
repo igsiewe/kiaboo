@@ -1,33 +1,17 @@
 {
-    "short_name": "Kiaboo",
-    "name": "Kiaboo",
-    "description": "Suivez vos transactions en toute sécurité",
+    "name": "Laravel Package Tutorial",
+    "short_name": "LPT",
+    "start_url": "/index.php",
+    "background_color": "#6777ef",
+    "description": "Tutorial of Laravel Package",
+    "display": "fullscreen",
+    "theme_color": "#6777ef",
     "icons": [
         {
-            "purpose": "maskable",
-            "sizes": "853.3333333333334x853.3333333333334",
             "src": "logo.png",
-            "type": "image/png"
-        },
-        {
-            "purpose": "maskable",
-            "sizes": "192x192",
-            "src": "logo_x192.png",
-            "type": "image/png"
-        },
-        {
-            "purpose": "maskable",
             "sizes": "512x512",
-            "src": "logo_x512.png",
-            "type": "image/png"
+            "type": "image/png",
+            "purpose": "any maskable"
         }
-    ],
-    "dir": "ltr",
-    "id": "/",
-    "start_url": "/",
-    "display": "standalone",
-    "theme_color": "#333556",
-    "background_color": "#da6138",
-    "orientation": "portrait"
+    ]
 }
-
