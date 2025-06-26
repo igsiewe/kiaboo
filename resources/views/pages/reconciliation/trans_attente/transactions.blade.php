@@ -209,9 +209,9 @@
                                                                 <td nowrap style="color: red" align="right">{{number_format($c->debit,0,',',' ')." ".$money}}</td>
                                                             @endif
                                                             @if($c->status==2)
-                                                                <td nowrap style="color: black"><span class="badge bg-warning">PENDING</span></td>
+                                                                <td nowrap style="color: black"><span class="badge bg-warning">{{$c->description}}</span></td>
                                                             @else
-                                                                <td nowrap style="color: red"><span class="badge bg-danger">ECHEC</span></td>
+                                                                <td nowrap style="color: red"><span class="badge bg-danger">{{$c->description}}</span></td>
                                                             @endif
                                                             <td align="center">{{$c->customer_phone}}</td>
                                                             <td>{{$c->auteur->telephone}}</td>
