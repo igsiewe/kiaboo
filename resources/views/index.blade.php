@@ -52,7 +52,7 @@
                         <div class="mb-3">
                             <div class="form-floating">
                                 <input type="email" class="form-control" id="login" name="login" placeholder="name@example.com" required value="{{ (Cookie::get('email') !== null) ? Cookie::get('login') : old('login') }}" autofocus>
-                                <label for="floatingInput">Email address</label>
+                                <label for="login">Email address</label>
                             </div>
                         </div>
                         @error('login')
@@ -67,7 +67,7 @@
                         <div class="mb-3">
                             <div class="form-floating">
                                 <input type="password" class="form-control" id="password" name="password" placeholder="Password" value="{{ (Cookie::get('password') !== null) ? Cookie::get('password') : null }}">
-                                <label for="floatingPassword">Password</label>
+                                <label for="password">Password</label>
                             </div>
                         </div>
                         @error('password')

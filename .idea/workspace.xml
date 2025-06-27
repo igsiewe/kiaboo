@@ -179,7 +179,6 @@
       <path value="$PROJECT_DIR$/vendor/spatie/error-solutions" />
       <path value="$PROJECT_DIR$/vendor/intervention/gif" />
       <path value="$PROJECT_DIR$/vendor/google/auth" />
-      <path value="$PROJECT_DIR$/vendor/ladumor/laravel-pwa" />
     </include_path>
   </component>
   <component name="ProjectColorInfo">{
@@ -253,7 +252,7 @@
       <workItem from="1746827915110" duration="57994000" />
       <workItem from="1748455539956" duration="26356000" />
       <workItem from="1748969075672" duration="153466000" />
-      <workItem from="1750982717224" duration="1250000" />
+      <workItem from="1750982717224" duration="1573000" />
     </task>
     <servers />
   </component>
