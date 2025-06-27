@@ -92,7 +92,7 @@
                         <div class="form-group mt-4 mb-4">
                             <div class="captcha">
                                 <span>{!! captcha_img() !!}</span>
-                                <button type="button" class="btn btn-danger" class="reload" id="reload">
+                                <button type="button" class="btn btn-danger"  id="reload">
                                     &#x21bb;
                                 </button>
                             </div>
