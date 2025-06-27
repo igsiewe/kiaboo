@@ -42,11 +42,7 @@
                     <div class="authent-logo">
                         <img src="{{asset("assets/images/logo%402x.png")}}" alt="">
                     </div>
-                    <div class="authent-text">
-                        <p>KIABOO</p>
-
-                    </div>
-
+                    <div class="authent-text"><p>KIABOO</p></div>
                     <form method="post" action="{{route('login')}}" id="formConnexion" name="formConnexion">
                         @csrf
                         <div class="mb-3">
