@@ -56,7 +56,7 @@
                         <div class="mb-3">
                             <div class="form-floating">
                                 <input id="one_time_password" type="text" class="form-control @error('one_time_password') is-invalid @enderror" name="one_time_password" required autofocus>
-                                <label for="floatingPassword">Code OTP</label>
+                                <label for="one_time_password">Code OTP</label>
                             </div>
                         </div>
 
