@@ -139,6 +139,10 @@
     });
 </script>
 
+
+</body>
+
+</html>
 <script src="{{ asset('/sw.js') }}"></script>
 <script>
     if ("serviceWorker" in navigator) {
@@ -157,6 +161,3 @@
     }
 </script>
 <script src="{{ asset('pwa-install.js') }}"></script>
-</body>
-
-</html>
