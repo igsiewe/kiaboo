@@ -26,6 +26,10 @@
     <link href="{{asset("assets/css/main.min.css")}}" rel="stylesheet">
     <link href="{{asset("assets/css/custom.css")}}" rel="stylesheet">
 
+    <!-- PWA  -->
+    <meta name="theme-color" content="#6777ef"/>
+    <link rel="apple-touch-icon" href="{{ asset('logo.png') }}">
+    <link rel="manifest" href="{{ asset('/manifest.json') }}">
 
 </head>
 <body class="login-page">
@@ -34,6 +38,10 @@
         <span class='sr-only'>Loading...</span>
     </div>
 </div>
+<!-- Add this inside <body> -->
+<button id="pwa-install-btn" style="display:none; position: fixed; bottom: 20px; right: 20px; padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 8px; z-index: 1000;">
+    Install App
+</button>
 <div class="container">
     <div class="row justify-content-md-center">
         <div class="col-md-12 col-lg-6">
@@ -131,6 +139,24 @@
     });
 </script>
 
+<script src="{{ asset('/sw.js') }}"></script>
+<script>
+    if ("serviceWorker" in navigator) {
+        // Register a service worker hosted at the root of the
+        // site using the default scope.
+        navigator.serviceWorker.register("/sw.js").then(
+            (registration) => {
+                console.log("Service worker registration succeeded:", registration);
+            },
+            (error) => {
+                console.error(`Service worker registration failed: ${error}`);
+            },
+        );
+    } else {
+        console.error("Service workers are not supported.");
+    }
+</script>
+<script src="{{ asset('pwa-install.js') }}"></script>
 </body>
 
 </html>

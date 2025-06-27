@@ -166,6 +166,7 @@ class ComposerStaticIniteb78db160b31561aed61ac4f9b93b06f
             'Laravel\\Prompts\\' => 16,
             'Laravel\\Passport\\Database\\Factories\\' => 36,
             'Laravel\\Passport\\' => 17,
+            'Ladumor\\LaravelPwa\\' => 19,
             'L5Swagger\\' => 10,
         ),
         'I' => 
@@ -576,6 +577,10 @@ class ComposerStaticIniteb78db160b31561aed61ac4f9b93b06f
         'Laravel\\Passport\\' => 
         array (
             0 => __DIR__ . '/..' . '/laravel/passport/src',
+        ),
+        'Ladumor\\LaravelPwa\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/ladumor/laravel-pwa/src',
         ),
         'L5Swagger\\' => 
         array (
@@ -3927,6 +3932,9 @@ class ComposerStaticIniteb78db160b31561aed61ac4f9b93b06f
         'L5Swagger\\L5SwaggerFacade' => __DIR__ . '/..' . '/darkaonline/l5-swagger/src/L5SwaggerFacade.php',
         'L5Swagger\\L5SwaggerServiceProvider' => __DIR__ . '/..' . '/darkaonline/l5-swagger/src/L5SwaggerServiceProvider.php',
         'L5Swagger\\SecurityDefinitions' => __DIR__ . '/..' . '/darkaonline/l5-swagger/src/SecurityDefinitions.php',
+        'Ladumor\\LaravelPwa\\LaravelPwa' => __DIR__ . '/..' . '/ladumor/laravel-pwa/src/LaravelPwa.php',
+        'Ladumor\\LaravelPwa\\PWAServiceProvider' => __DIR__ . '/..' . '/ladumor/laravel-pwa/src/PWAServiceProvider.php',
+        'Ladumor\\LaravelPwa\\commands\\PublishPWA' => __DIR__ . '/..' . '/ladumor/laravel-pwa/src/commands/PublishPWA.php',
         'Laravel\\Passport\\ApiTokenCookieFactory' => __DIR__ . '/..' . '/laravel/passport/src/ApiTokenCookieFactory.php',
         'Laravel\\Passport\\AuthCode' => __DIR__ . '/..' . '/laravel/passport/src/AuthCode.php',
         'Laravel\\Passport\\Bridge\\AccessToken' => __DIR__ . '/..' . '/laravel/passport/src/Bridge/AccessToken.php',
