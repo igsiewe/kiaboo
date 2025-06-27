@@ -28,7 +28,7 @@
 
     <!-- PWA  -->
     <meta name="theme-color" content="#6777ef"/>
-    <link rel="apple-touch-icon" href="{{ asset('/logo_x512.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('/logo_x192.png') }}">
     <link rel="manifest" href="{{ asset('/manifest.json') }}">
 
 </head>
